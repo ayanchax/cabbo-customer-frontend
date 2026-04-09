@@ -1,0 +1,16 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {routes} from "@/routes";
+import { Login, Home } from "@/pages";
+
+const AppRouter = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path={routes.login} element={<Login />} />
+        <Route path={routes.home} element={<Home />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+export default AppRouter;
