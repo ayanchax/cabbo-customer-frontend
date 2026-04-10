@@ -3,16 +3,18 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
-import { CountryProvider } from "@/context";
+import { ToastProvider, GeographyProvider } from "@/context";
 
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <CountryProvider>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <ToastProvider>
+        <GeographyProvider>
+          <App />
+        </GeographyProvider>
+      </ToastProvider>
     </QueryClientProvider>
-    </CountryProvider>
   </React.StrictMode>,
 );
