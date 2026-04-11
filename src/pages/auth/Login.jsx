@@ -24,21 +24,38 @@ const Login = () => {
     }
   }, [shake]);
   const navigate = useNavigate();
-  const handleOtpSuccess = (fullPhone, displayPhone, flow) => {
+  const handleOtpSuccess = (fullPhone, displayPhone, flow, resendTimerData) => {
     navigate(routes.verify, {
       state: {
         phone: fullPhone,
         displayPhone,
         flow,
+        resendTimerData,
       },
     });
   };
 
   const handleOnboarding = async (full_phone_number) => {
     try {
-      await initiateOnboarding.mutateAsync({ phone_number: full_phone_number });
-      handleOtpSuccess(full_phone_number, phone, "onboarding");
+      const response = await initiateOnboarding.mutateAsync({
+        phone_number: full_phone_number,
+      });
+      const resend_timer_data = {
+        resend_after: response.data?.resend_interval_seconds || 60,
+        last_sent_time: response.data?.last_sent_at || new Date().toISOString(),
+      };
+      handleOtpSuccess(
+        full_phone_number,
+        phone,
+        "onboarding",
+        resend_timer_data,
+      );
     } catch (error) {
+      const error_code = error?.response?.data?.error_code || null;
+      if (error_code === "OTP_ALREADY_SENT") {
+        handleOtpSuccess(full_phone_number, phone, "onboarding");
+        return;
+      }
       console.error("Onboarding initiation failed:", error);
       showToast("Something went wrong", "error");
     } finally {
@@ -74,17 +91,29 @@ const Login = () => {
     const fullPhone = `${selectedCountry.phone_code}${sanitizedLocal}`;
 
     try {
-      await initiateLogin.mutateAsync({ phone_number: fullPhone });
-      handleOtpSuccess(fullPhone, phone, "login");
+      const response = await initiateLogin.mutateAsync({
+        phone_number: fullPhone,
+      });
+
+      const resend_timer_data = {
+        resend_after: response.data?.resend_interval_seconds || 60,
+        last_sent_time: response.data?.last_sent_at || new Date().toISOString(),
+      };
+      handleOtpSuccess(fullPhone, phone, "login", resend_timer_data);
     } catch (error) {
       const status = error?.response?.status;
+      const error_code = error?.response?.data?.error_code || null;
 
       if (status === 404) {
-        // 🔥 fallback to onboarding
+        // 🔥 fallback to onboarding as customer does not exist.
         await handleOnboarding(fullPhone);
       } else if (status === 429) {
         showToast("Too many attempts. Please try again later.", "error");
       } else if (status === 400) {
+        if (error_code === "OTP_ALREADY_SENT") {
+          handleOtpSuccess(fullPhone, phone, "login");
+          return;
+        }
         showToast("Invalid phone number.", "error");
       } else {
         showToast("Something went wrong", "error");

@@ -10,9 +10,10 @@ export const API_VERSION = import.meta.env.VITE_API_VERSION || "/api/v1";
 export const ENDPOINTS={
     AUTH:{
         INITIATE_ONBOARDING: `${API_VERSION}/auth/onboard/initiate`,
-        REGISTER_WITH_OTP: `${API_VERSION}/auth/register`,
+        VERIFY_ONBOARDING_WITH_OTP: `${API_VERSION}/auth/onboard/verify`,
         INITIATE_LOGIN: `${API_VERSION}/auth/login/initiate`,
-        VERIFY_LOGIN_WITH_OTP: `${API_VERSION}/auth/login`,
+        LOGIN_WITH_OTP: `${API_VERSION}/auth/login`,
+        RESEND_OTP: `${API_VERSION}/auth/resend-otp`,
     },
     GEOGRAPHY: `${API_VERSION}/geography`,
 }

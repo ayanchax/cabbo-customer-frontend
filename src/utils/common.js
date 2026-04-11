@@ -29,3 +29,15 @@ export const sanitizePhoneNumber = (input, countryCode) => {
 
   return phone;
 };
+
+export const parseUtcDate = (timestamp) => {
+  if (!timestamp) return null;
+
+  try {
+    return timestamp.endsWith("Z") || timestamp.includes("+")
+      ? new Date(timestamp)
+      : new Date(timestamp + "Z");
+  } catch {
+    return null;
+  }
+};
