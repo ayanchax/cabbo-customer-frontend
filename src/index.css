@@ -1,3 +1,21 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "flag-icons/css/flag-icons.min.css";
+@import "tailwindcss";
+@theme {
+--color-primary: #0B5FFF;
+--color-primary-hover: #084ed6;
+--color-secondary: #111827;
+--color-accent: #F59E0B;
+}
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+.animate-shake {
+  animation: shake 0.3s ease;
+}
+
+
