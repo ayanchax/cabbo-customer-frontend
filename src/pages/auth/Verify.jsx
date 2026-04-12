@@ -25,6 +25,8 @@ const Verify = () => {
     },
   } = state || {};
 
+  
+
   // Calculate remaining time for OTP resend based on last sent time and resend interval
   const last = parseUtcDate(resend_timer_data.last_sent_time).getTime();
   const now = Date.now();
@@ -122,7 +124,9 @@ const Verify = () => {
           otp: otpValue,
         });
 
-        navigate(routes.setup_account); // next step
+        navigate(routes.onboard, {state:{
+          phone
+        }}); // next step
       }
     } catch (err) {
       console.error("OTP verification failed", err);
@@ -151,6 +155,15 @@ const Verify = () => {
   useEffect(() => {
     inputRefs.current[0]?.focus();
   }, []);
+
+  useEffect(() => {
+    if (!state || !state.phone || !state.flow) {
+      navigate(routes.login, { replace: true });
+    }
+  }, [state, navigate]);
+  if (!state || !state.phone || !state.flow) {
+  return null;
+}
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">

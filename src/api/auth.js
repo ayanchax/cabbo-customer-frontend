@@ -20,3 +20,7 @@ export const loginWithOtp = (payload) => {
 export const resendOtp = (payload) => {
   return api.post(ENDPOINTS.AUTH.RESEND_OTP, payload);
 }
+
+export const onboardAndLogin = (payload) => {
+  return api.post(ENDPOINTS.AUTH.ONBOARD_AND_LOGIN, payload);
+}

@@ -30,6 +30,13 @@ export const sanitizePhoneNumber = (input, countryCode) => {
   return phone;
 };
 
+export const isValidEmail = (email) => {
+  if (!email) return false;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+
 export const parseUtcDate = (timestamp) => {
   if (!timestamp) return null;
 

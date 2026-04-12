@@ -114,6 +114,10 @@ const Login = () => {
           handleOtpSuccess(fullPhone, phone, "login");
           return;
         }
+        if (error_code === "ALREADY_LOGGED_IN") {
+          navigate(routes.home);
+          return;
+        }
         showToast("Invalid phone number.", "error");
       } else {
         showToast("Something went wrong", "error");
@@ -125,8 +129,8 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md p-6 bg-white rounded-2xl shadow-sm">
-        <div className="mb-4 text-center flex flex-col items-center">
+      <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-sm">
+        <div className="mb-6 text-center flex flex-col items-center">
           <img
             src={import.meta.env.VITE_APP_LOGO_URL}
             alt={APP.name}
@@ -142,52 +146,59 @@ const Login = () => {
             dismissible
           />
         )}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSendOtp();
+          }}
+        >
+          <div className="mb-4">
+            <label className="text-sm text-gray-500 mb-1 block" htmlFor="phone">
+              Phone number
+            </label>
 
-        <div className="mb-4">
-          <label className="text-sm text-gray-500 mb-1 block" htmlFor="phone">
-            Phone number
-          </label>
-
-          <div
-            className={`mt-1 flex items-center border rounded-lg overflow-hidden
+            <div
+              className={`mt-1 flex items-center border rounded-lg overflow-hidden
       transition-[box-shadow,border-color] duration-200 ease-in-out
       focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-1
       hover:border-gray-400
       ${error ? "border-red-500 focus-within:ring-red-500" : ""}
       ${shake ? "animate-shake" : ""}
     `}
-          >
-            {/* Country prefix */}
-            <div className="flex items-center gap-2 px-3 bg-gray-50 text-sm text-gray-700 border-r">
-              <span
-                className={`fi fi-${selectedCountry?.country_code?.toLowerCase()} w-5 h-4 rounded-sm`}
+            >
+              {/* Country prefix */}
+              <div className="flex items-center gap-2 px-3 bg-gray-50 text-sm text-gray-700 border-r">
+                <span
+                  className={`fi fi-${selectedCountry?.country_code?.toLowerCase()} w-5 h-4 rounded-sm`}
+                />
+                <span className="font-medium">
+                  {selectedCountry?.phone_code}
+                </span>
+              </div>
+
+              {/* Input */}
+              <input
+                type="tel"
+                id="phone"
+                maxLength={10}
+                ref={inputRef}
+                placeholder="Enter your phone number"
+                value={phone}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  if (error) setError("");
+                }}
+                className="flex-1 p-3 text-[15px] outline-none bg-transparent"
               />
-              <span className="font-medium">{selectedCountry?.phone_code}</span>
             </div>
 
-            {/* Input */}
-            <input
-              type="tel"
-              id="phone"
-              maxLength={10}
-              ref={inputRef}
-              placeholder="Enter your phone number"
-              value={phone}
-              onChange={(e) => {
-                setPhone(e.target.value);
-                if (error) setError("");
-              }}
-              className="flex-1 p-3 text-[15px] outline-none bg-transparent"
-            />
+            {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
           </div>
 
-          {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
-        </div>
-
-        <button
-          onClick={handleSendOtp}
-          disabled={initiateLogin.isPending}
-          className="
+          <button
+            type="submit"
+            disabled={initiateLogin.isPending}
+            className="
   w-full 
   bg-primary 
   text-white 
@@ -202,9 +213,10 @@ const Login = () => {
   disabled:cursor-not-allowed
   cursor-pointer
 "
-        >
-          {initiateLogin.isPending ? "Please wait..." : "Continue"}
-        </button>
+          >
+            {initiateLogin.isPending ? "Please wait..." : "Continue"}
+          </button>
+        </form>
       </div>
     </div>
   );
