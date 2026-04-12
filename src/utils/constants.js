@@ -17,4 +17,7 @@ export const ENDPOINTS={
         RESEND_OTP: `${API_VERSION}/auth/resend-otp`,
     },
     GEOGRAPHY: `${API_VERSION}/geography`,
+    CUSTOMER:{
+        IS_LOGGED_IN: `${API_VERSION}/customer/profile/is-logged-in`
+    }
 }
