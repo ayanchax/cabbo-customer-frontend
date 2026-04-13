@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { isPhoneNumberValid, sanitizePhoneNumber, APP } from "@/utils";
 import { useToast, useGeography, useAuth } from "@/hooks";
 import { Disclaimer } from "@/components";
-import { routes } from "@/routes";
+import { ROUTES } from "@/utils";
 
 const Login = () => {
   const { initiateLogin, initiateOnboarding } = useAuth();
@@ -25,7 +25,7 @@ const Login = () => {
   }, [shake]);
   const navigate = useNavigate();
   const handleOtpSuccess = (fullPhone, displayPhone, flow, resendTimerData) => {
-    navigate(routes.verify, {
+    navigate(ROUTES.VERIFY, {
       state: {
         phone: fullPhone,
         displayPhone,
@@ -115,7 +115,7 @@ const Login = () => {
           return;
         }
         if (error_code === "ALREADY_LOGGED_IN") {
-          navigate(routes.home);
+          navigate(ROUTES.HOME);
           return;
         }
         showToast("Invalid phone number.", "error");

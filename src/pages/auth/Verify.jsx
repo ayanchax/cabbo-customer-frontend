@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { routes } from "@/routes";
+import { ROUTES } from "@/utils";
 import { parseUtcDate } from "@/utils";
 import { useState, useRef, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
@@ -114,7 +114,7 @@ const Verify = () => {
         });
         if (response.data?.access_token) {
           setItem("token", response.data.access_token);
-          navigate(routes.home);
+          navigate(ROUTES.HOME);
           return;
         }
         throw new Error("No access token received");
@@ -124,7 +124,7 @@ const Verify = () => {
           otp: otpValue,
         });
 
-        navigate(routes.onboard, {state:{
+        navigate(ROUTES.ONBOARD, {state:{
           phone
         }}); // next step
       }
@@ -158,7 +158,7 @@ const Verify = () => {
 
   useEffect(() => {
     if (!state || !state.phone || !state.flow) {
-      navigate(routes.login, { replace: true });
+      navigate(ROUTES.LOGIN, { replace: true });
     }
   }, [state, navigate]);
   if (!state || !state.phone || !state.flow) {
@@ -177,7 +177,7 @@ const Verify = () => {
         <button
           onClick={() => {
             if (isVerifying) return;
-            navigate(routes.login);
+            navigate(ROUTES.LOGIN);
           }}
           className={`mb-6 transition ${
             isVerifying
@@ -202,7 +202,7 @@ const Verify = () => {
           <button
             onClick={() => {
               if (isVerifying) return;
-              navigate(routes.login);
+              navigate(ROUTES.LOGIN);
             }}
             className={`ml-1 font-medium ${
               isVerifying

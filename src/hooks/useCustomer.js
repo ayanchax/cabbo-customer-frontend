@@ -1,9 +1,11 @@
-import { useIsLoggedInQuery } from "@/hooks";
-const useCustomer = () => {
-    const { data: isCustomerLoggedIn, isLoading: isCustomerLoggedInStatusLoading, error: isCustomerLoggedInStatusError } = useIsLoggedInQuery();
+import { useContext } from "react";
+import { CustomerContext } from "@/context";
+export const useCustomer = () => {
+  const context = useContext(CustomerContext);
 
-    return { isCustomerLoggedIn, isCustomerLoggedInStatusLoading, isCustomerLoggedInStatusError };
+  if (!context) {
+    throw new Error("useCustomer must be used within CustomerProvider");
+  }
 
-}
-
-export { useCustomer }
+  return context;
+};

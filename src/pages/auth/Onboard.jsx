@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { routes } from "@/routes";
+import { ROUTES } from "@/utils";
 import { useAuth, useToast, useLocalStorage } from "@/hooks";
 import { isValidEmail } from "@/utils";
 
@@ -37,7 +37,7 @@ const Onboard = () => {
 
   // Guard (same pattern as Verify)
   if (!state || !state.phone) {
-    navigate(routes.login, { replace: true });
+    navigate(ROUTES.LOGIN, { replace: true });
     return null;
   }
   const handleSubmit = async () => {
@@ -78,7 +78,7 @@ const Onboard = () => {
       const response = await onboardAndLogin.mutateAsync(payload);
       if (response.data?.access_token) {
         setItem("token", response.data.access_token);
-        navigate(routes.home);
+        navigate(ROUTES.HOME);
         return;
       }
       throw new Error("No access token received");
