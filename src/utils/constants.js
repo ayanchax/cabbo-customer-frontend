@@ -18,6 +18,16 @@ export const ENDPOINTS={
     },
     GEOGRAPHY: `${API_VERSION}/geography`,
     CUSTOMER:{
-        IS_LOGGED_IN: `${API_VERSION}/customer/profile/is-logged-in`
+        IS_LOGGED_IN: `${API_VERSION}/customer/profile/is-logged-in`,
+        PROFILE: `${API_VERSION}/customer/profile`,
     }
 }
+
+export const ROUTES = {
+  LOGIN: "/login",
+  VERIFY: "/verify",
+  ONBOARD: "/onboard",
+  HOME: "/",
+  TRIPS: "/trips",
+  PROFILE: "/profile",
+};

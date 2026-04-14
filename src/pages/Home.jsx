@@ -1,5 +1,13 @@
+import {AppLayout} from "@/layouts";
+import {HomeHeader} from "@/components";
+import {SearchCard} from "@/components";
 const Home = () => {
-  return <div className="p-4">Home Page</div>;
+  return (
+    <AppLayout>
+      <HomeHeader />
+      <SearchCard/>
+    </AppLayout>
+  );
 };
 
 export default Home;

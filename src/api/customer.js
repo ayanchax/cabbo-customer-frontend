@@ -5,3 +5,8 @@ export const isLoggedIn = async () => {
     const { data } = await api.get(ENDPOINTS.CUSTOMER.IS_LOGGED_IN);
     return data;
 }
+
+export const getProfile = async () => {
+    const { data } = await api.get(ENDPOINTS.CUSTOMER.PROFILE);
+    return data;
+}
