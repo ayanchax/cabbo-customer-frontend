@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useReverseGeocodingQuery } from "@/hooks";
 
-export const useCurrentLocation = () => {
+export const useCurrentLocation = (enabled = true) => {
   const [location, setLocation] = useState(null);
   const [coords, setCoords] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -14,6 +14,10 @@ export const useCurrentLocation = () => {
   );
 
   useEffect(() => {
+    if (!enabled) {
+      setLoading(false);
+      return;
+    }
     if (!navigator.geolocation) {
       setError("Geolocation not supported");
       setLoading(false);
@@ -24,8 +28,8 @@ export const useCurrentLocation = () => {
       (position) => {
         const { latitude, longitude } = position.coords;
 
-        const newLat = Number(latitude.toFixed(6));
-        const newLng = Number(longitude.toFixed(6));
+        const newLat = Number(latitude.toFixed(2));
+        const newLng = Number(longitude.toFixed(2));
 
         setCoords((prev) => {
           // first time
@@ -68,14 +72,15 @@ export const useCurrentLocation = () => {
         timeout: 8000,
       }
     );
-  }, []);
+  }, [enabled]);
 
   useEffect(() => {
+    if (!enabled) return;
     if (data) {
       setLocation(data);
       setLoading(false);
     }
-  }, [data]);
+  }, [data, enabled]);
 
   return { location, loading, error };
 };

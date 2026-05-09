@@ -18,13 +18,17 @@ export const ENDPOINTS={
     },
     GEOGRAPHY: `${API_VERSION}/geography`,
     LOCATION:{
-        SUGGEST: `${API_VERSION}/locations/search`,
+        SEARCH: `${API_VERSION}/locations/search`,
         REVERSE_GEOCODE: `${API_VERSION}/locations/reverse-geocode`,
     },
     CUSTOMER:{
         IS_LOGGED_IN: `${API_VERSION}/customer/profile/is-logged-in`,
         PROFILE: `${API_VERSION}/customer/profile`,
+    },
+    TRIP:{
+        CLASSIFY_TYPE: `${API_VERSION}/trip/classify`,
     }
+
 }
 
 export const ROUTES = {

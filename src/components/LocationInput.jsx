@@ -8,14 +8,13 @@ const LocationInput = ({
   onFocus,
   onChange,
   isActive,
-  setIsActive
+  onChangeLocationActiveIndicator,
 }) => {
-
   const focused = isActive;
   const [query, setQuery] = useState("");
 
   const Icon = icon === "navigation" ? Navigation : MapPin;
-  
+
   const displayText = location?.display_name || placeholder;
 
   return (
@@ -24,22 +23,27 @@ const LocationInput = ({
         focused ? "bg-gray-50" : ""
       }`}
       onClick={() => {
-  if (!focused) {
-    setIsActive(true);;
-    setQuery(location?.display_name || ""); // set initial query to current location name
-    onFocus?.(location?.display_name || "");
-  }
-}}
-       
-      
+        if (!focused) {
+          onChangeLocationActiveIndicator(true);
+          setQuery(location?.display_name || ""); // set initial query to current location name
+          onFocus?.(location?.display_name || "");
+        }
+      }}
     >
-      {/* Icon stays ALWAYS */}
-      <Icon size={18} className="text-gray-500" />
-
+      {/* Icon */}
+      <div className="relative flex items-center justify-center">
+        {isActive && (
+          <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-30 animate-ping" />
+        )}
+        <Icon
+          size={18}
+          className={`relative text-gray-500 transition-colors duration-200 ${isActive ? "text-primary" : ""}`}
+        />
+      </div>
       {/* Content */}
       <div className="flex-1">
         {!focused && (
-          <span className="text-[15px] font-medium text-gray-800">
+          <span className="block md:text-[14px] text-[12px] font-medium text-gray-600 truncate">
             {displayText}
           </span>
         )}
@@ -49,14 +53,14 @@ const LocationInput = ({
             autoFocus
             value={query}
             onBlur={() => {
-    setTimeout(() => setIsActive(false), 150);
-  }}
+              onChangeLocationActiveIndicator(false);
+            }}
             onChange={(e) => {
               setQuery(e.target.value);
               onChange?.(e.target.value);
             }}
             placeholder={placeholder}
-            className="w-full bg-transparent outline-none text-[15px]"
+            className="w-full bg-transparent outline-none md:text-[14px] text-[12px] text-gray-800"
           />
         )}
       </div>
