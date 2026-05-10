@@ -5,12 +5,13 @@ const LocationSuggestions = ({
   onSelect,
   isPickup = false,
   isLoading = false,
+  isPickupSet = false,
 }) => {
   const { location } = useCurrentLocation(isPickup);
   return (
     <>
-      {/* 📍 Use Current Location (ONLY for pickup) */}
-      {isPickup && (
+      {/* 📍 Use Current Location (ONLY for pickup, and only when pickup is not already set) */}
+      {isPickup && !isPickupSet && (
         <button
           onClick={() => {
             if (location) onSelect?.(location);
@@ -34,7 +35,7 @@ const LocationSuggestions = ({
       )}
 
       {/* Divider (only if both exist) */}
-      {isPickup && suggestions.length > 0 && (
+      {isPickup && !isPickupSet && suggestions.length > 0 && (
         <div className="h-px bg-gray-100 my-1 ml-8" />
       )}
 

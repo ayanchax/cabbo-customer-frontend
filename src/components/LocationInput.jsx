@@ -19,8 +19,8 @@ const LocationInput = ({
 
   return (
     <div
-      className={`flex items-center gap-3 px-3 py-4 rounded-xl transition ${
-        focused ? "bg-gray-50" : ""
+      className={`flex items-center gap-3 px-3 py-3.5 min-h-13 rounded-xl transition-colors cursor-pointer ${
+        focused ? "bg-primary/5" : "hover:bg-gray-50 active:bg-gray-100"
       }`}
       onClick={() => {
         if (!focused) {
@@ -31,19 +31,23 @@ const LocationInput = ({
       }}
     >
       {/* Icon */}
-      <div className="relative flex items-center justify-center">
+      <div className="relative flex items-center justify-center shrink-0">
         {isActive && (
           <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-30 animate-ping" />
         )}
         <Icon
           size={18}
-          className={`relative text-gray-500 transition-colors duration-200 ${isActive ? "text-primary" : ""}`}
+          className={`relative transition-colors duration-200 ${
+            icon === "navigation" ? "text-emerald-400" : "text-rose-400"
+          }`}
         />
       </div>
       {/* Content */}
-      <div className="flex-1">
+      <div className="flex-1 min-w-0">
         {!focused && (
-          <span className="block md:text-[14px] text-[12px] font-medium text-gray-600 truncate">
+          <span className={`block text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] font-medium truncate ${
+            location ? "text-gray-900" : "text-gray-400"
+          }`}>
             {displayText}
           </span>
         )}
@@ -52,6 +56,7 @@ const LocationInput = ({
           <input
             autoFocus
             value={query}
+            onFocus={(e) => e.target.select()}
             onBlur={() => {
               onChangeLocationActiveIndicator(false);
             }}
@@ -60,7 +65,7 @@ const LocationInput = ({
               onChange?.(e.target.value);
             }}
             placeholder={placeholder}
-            className="w-full bg-transparent outline-none md:text-[14px] text-[12px] text-gray-800"
+            className="w-full bg-transparent outline-none text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] text-gray-900 placeholder:text-gray-400 font-medium"
           />
         )}
       </div>

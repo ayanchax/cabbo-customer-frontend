@@ -20,6 +20,7 @@ export const ENDPOINTS={
     LOCATION:{
         SEARCH: `${API_VERSION}/locations/search`,
         REVERSE_GEOCODE: `${API_VERSION}/locations/reverse-geocode`,
+        LOCATION_BY_PLACE_ID: `${API_VERSION}/locations/place-details`,
     },
     CUSTOMER:{
         IS_LOGGED_IN: `${API_VERSION}/customer/profile/is-logged-in`,

@@ -7,6 +7,8 @@
   --color-primary-hover: #084ed6;
   --color-secondary: #111827;
   --color-accent: #F59E0B;
+
+  --breakpoint-xs: 320px;
 }
 
 
