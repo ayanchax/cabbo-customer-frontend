@@ -1,33 +1,34 @@
-import { useCurrentLocation } from "@/hooks";
 import { MapPin, Navigation } from "lucide-react";
+import { ListLoaderSkeleton } from "@/components";
 const LocationSuggestions = ({
   suggestions = [],
   onSelect,
   isPickup = false,
   isLoading = false,
-  isPickupSet = false,
+  isPickupSet = false, // means is pickup already set to something (either current location or a search result)
+  currentLocation = null,
+
 }) => {
-  const { location } = useCurrentLocation(isPickup);
   return (
     <>
       {/* 📍 Use Current Location (ONLY for pickup, and only when pickup is not already set) */}
       {isPickup && !isPickupSet && (
         <button
           onClick={() => {
-            if (location) onSelect?.(location);
+            if (currentLocation) onSelect?.(currentLocation);
           }}
           onMouseDown={(e) => {
-            if (location) {
+            if (currentLocation) {
               e.preventDefault();
-              onSelect?.(location);
+              onSelect?.(currentLocation);
             }
           }}
-          disabled={!location}
-          className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-gray-50 transition cursor-pointer ${!location ? "cursor-not-allowed pointer-events-none opacity-50" : ""}`}
+          disabled={!currentLocation}
+          className={`w-full flex items-center gap-3 px-3 py-3 min-h-11 rounded-xl hover:bg-gray-50 transition cursor-pointer ${!currentLocation ? "cursor-not-allowed pointer-events-none opacity-50" : ""}`}
         >
-          <Navigation size={16} className="text-primary" />
+          <MapPin size={16} className="text-primary" />
           <div className="text-left">
-            <p className="text-[13px] font-medium text-gray-900">
+            <p className="text-[13px] font-medium text-gray-600 leading-snug">
               Use current location
             </p>
           </div>
@@ -39,9 +40,7 @@ const LocationSuggestions = ({
         <div className="h-px bg-gray-100 my-1 ml-8" />
       )}
 
-      {isLoading && (
-        <div className="px-3 py-2 text-xs text-gray-400">Searching...</div>
-      )}
+      {isLoading && <ListLoaderSkeleton />}
       {suggestions && suggestions.length > 0 && suggestions.map((item) => (
         <button
           key={item.place_id}
@@ -50,7 +49,7 @@ const LocationSuggestions = ({
             e.preventDefault();
             onSelect?.(item);
           }}
-          className="w-full flex items-start gap-3 px-3 py-2 rounded-xl hover:bg-gray-50 transition cursor-pointer animate-fade-in"
+          className="w-full flex items-start gap-3 px-3 py-2.5 min-h-11 rounded-xl hover:bg-gray-50 transition cursor-pointer animate-fade-in"
         >
           <MapPin size={16} className="text-gray-400 mt-1" />
           <div className="text-left">

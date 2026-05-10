@@ -9,6 +9,7 @@ const LocationInput = ({
   onChange,
   isActive,
   onChangeLocationActiveIndicator,
+  hideIcon = false,
 }) => {
   const focused = isActive;
   const [query, setQuery] = useState("");
@@ -19,8 +20,12 @@ const LocationInput = ({
 
   return (
     <div
-      className={`flex items-center gap-3 px-3 py-3.5 min-h-13 rounded-xl transition-colors cursor-pointer ${
-        focused ? "bg-primary/5" : "hover:bg-gray-50 active:bg-gray-100"
+      className={`flex items-center gap-3 px-3 py-2.5 min-h-11 transition-colors cursor-pointer ${
+        hideIcon
+          ? ""
+          : focused
+          ? "bg-primary/5"
+          : "hover:bg-gray-50 active:bg-gray-100"
       }`}
       onClick={() => {
         if (!focused) {
@@ -30,18 +35,20 @@ const LocationInput = ({
         }
       }}
     >
-      {/* Icon */}
-      <div className="relative flex items-center justify-center shrink-0">
-        {isActive && (
-          <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-30 animate-ping" />
-        )}
-        <Icon
-          size={18}
-          className={`relative transition-colors duration-200 ${
-            icon === "navigation" ? "text-emerald-400" : "text-rose-400"
-          }`}
-        />
-      </div>
+      {/* Icon — omitted when parent provides a shared timeline column */}
+      {!hideIcon && (
+        <div className="relative flex items-center justify-center shrink-0">
+          {isActive && (
+            <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-30 animate-ping" />
+          )}
+          <Icon
+            size={18}
+            className={`relative transition-colors duration-200 ${
+              icon === "navigation" ? "text-emerald-400" : "text-rose-400"
+            }`}
+          />
+        </div>
+      )}
       {/* Content */}
       <div className="flex-1 min-w-0">
         {!focused && (
