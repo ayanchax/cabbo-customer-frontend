@@ -17,10 +17,19 @@ export const ENDPOINTS={
         RESEND_OTP: `${API_VERSION}/auth/resend-otp`,
     },
     GEOGRAPHY: `${API_VERSION}/geography`,
+    LOCATION:{
+        SEARCH: `${API_VERSION}/locations/search`,
+        REVERSE_GEOCODE: `${API_VERSION}/locations/reverse-geocode`,
+        LOCATION_BY_PLACE_ID: `${API_VERSION}/locations/place-details`,
+    },
     CUSTOMER:{
         IS_LOGGED_IN: `${API_VERSION}/customer/profile/is-logged-in`,
         PROFILE: `${API_VERSION}/customer/profile`,
+    },
+    TRIP:{
+        CLASSIFY_TYPE: `${API_VERSION}/trip/classify`,
     }
+
 }
 
 export const ROUTES = {
