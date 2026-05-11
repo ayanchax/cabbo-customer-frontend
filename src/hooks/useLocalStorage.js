@@ -16,10 +16,12 @@ const useLocalStorage = () => {
   const getItem = (key) => {
     try {
       const item = localStorage.getItem(key);
-      if (typeof item === "string") {
-        return item;
+      if (item === null) return null;
+      try {
+        return JSON.parse(item);
+      } catch {
+        return item; // plain string, not JSON-serialised
       }
-      return item ? JSON.parse(item) : null;
     } catch (error) {
       console.error(`useLocalStorage.getItem: failed to get "${key}"`, error);
       return null;

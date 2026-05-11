@@ -17,7 +17,7 @@ const LocationInput = ({
   const Icon = icon === "navigation" ? Navigation : MapPin;
 
   const displayText = location?.display_name || placeholder;
-
+  const full_address = location?.address?? null;
   return (
     <div
       className={`flex items-center gap-3 px-3 py-2.5 min-h-11 transition-colors cursor-pointer ${
@@ -52,12 +52,25 @@ const LocationInput = ({
       {/* Content */}
       <div className="flex-1 min-w-0">
         {!focused && (
-          <span className={`block text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] font-medium truncate ${
-            location ? "text-gray-900" : "text-gray-400"
-          }`}>
-            {displayText}
-          </span>
+          <>
+            <span className={`block text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] font-medium truncate ${
+              location ? "text-gray-900" : "text-gray-400"
+            }`}>
+              {displayText}
+            </span>
+
+          {full_address && (
+            <span className="block text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 truncate">
+              {full_address}
+            </span>
+          )}
+
+        
+        
+      </>
         )}
+
+      
 
         {focused && (
           <input
