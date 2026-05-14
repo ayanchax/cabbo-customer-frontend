@@ -17,7 +17,7 @@ const SearchCard = () => {
 
   // null = untouched (auto-fill from currentLocation)
   const [pickup, setPickup] = useState(null); // raw selection (display only)
-  const [pickupCleared, setPickupCleared] = useState(false);
+  const [pickupCleared, setPickupCleared] = useState(false); //Field was cleared by user (empty string) vs never touched (null)
   const [drop, setDrop] = useState(null); // raw selection (display only)
 
   // Local session token — rotates after each select to correctly bound Google billing sessions.
@@ -107,12 +107,15 @@ const SearchCard = () => {
     }
 
     try {
-      const tripType = await classifyTripType.mutateAsync({
+      const response = await classifyTripType.mutateAsync({
         pickup: pickupForNav,
         dropoff: dropForNav,
+        validate_serviceable_area: true, // optional: whether to check if locations are within serviceable area
       });
+      console.log("Classified trip type:", response); // Debug log
+      return
 
-      switch (tripType) {
+      switch (response) {
         case "airport_pickup":
         case "airport_drop":
           navigate("/airport", {
@@ -218,6 +221,7 @@ const SearchCard = () => {
                   setDropQuery(value);
                   if (value === "") {
                     setDrop(null);
+                    setDropEnrichId(null);
                   }
                 }}
               />

@@ -1,0 +1,22 @@
+{
+    "trip_type": "airport_drop",
+    "origin": {
+        "display_name": "MG Road, Bengaluru, KA",
+        "lat": 12.9740,
+        "lng": 77.6122,
+        "place_id": "ChIJd8BlQ2BfUjoR7yE6k5h1K2I",
+        "address": "MG Road, Bengaluru, Karnataka, India",
+        "region_code":"BEN"
+    },
+    
+    "start_date": "2026-04-11T02:54:00",
+    "num_adults": 2,
+    "num_children": 1,
+    "num_large_suitcases": 2,
+    "num_carryons": 1,
+    "preferred_car_type": "Premium Sedan",
+    "preferred_fuel_type": "petrol",
+    "flight_number": "6E789",
+    "terminal_number": "T1",
+    "toll_road_preferred": false
+}
