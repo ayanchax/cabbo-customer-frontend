@@ -25,10 +25,10 @@ const BottomNav = () => {
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100">
       <div className="max-w-md mx-auto flex justify-between px-6 py-2">
         
-        {navItems.map(({ label, path, icon: Icon }) => (
+        {navItems.map((item) => (
           <NavLink
-            key={path}
-            to={path}
+            key={item.path}
+            to={item.path}
             className={({ isActive }) =>
               `flex flex-col items-center justify-center text-xs transition-colors ${
                 isActive
@@ -37,8 +37,8 @@ const BottomNav = () => {
               }`
             }
           >
-            <Icon size={22} strokeWidth={1.8} />
-            <span className="mt-1">{label}</span>
+            <item.icon size={22} strokeWidth={1.8} />
+            <span className="mt-1">{item.label}</span>
           </NavLink>
         ))}
       </div>

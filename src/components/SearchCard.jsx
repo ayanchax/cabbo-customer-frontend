@@ -8,6 +8,8 @@ import {
   useLocationByPlaceIdQuery,
   useCustomer,
   useCurrentLocation,
+  useRecentSuggestions,
+  useLocalStorage
 } from "@/hooks";
 
 const SearchCard = () => {
@@ -77,6 +79,17 @@ const SearchCard = () => {
     coordinates,
     sessionToken,
   );
+  
+  // Cached recent suggestions from online react query cache.
+  const { recentSuggestions } = useRecentSuggestions(["locationSearch"]);
+
+  // Cached recent suggestions from local storage, to show when API suggestions are not available (e.g. on first search or network issues). This is a fallback and may contain stale data, but ensures we can show something relevant to the user.
+   
+
+  const suggestionsToShow =
+    activeQuery.length >= 2 && apiSuggestions.length > 0
+      ? apiSuggestions
+      : recentSuggestions;
 
   const handleSwap = () => {
     setPickup(drop);
@@ -99,39 +112,30 @@ const SearchCard = () => {
     const dropForNav = finalDrop;
 
     if (!pickupForNav) return;
-
-    // Case 1: No drop → local
-    if (!dropForNav) {
-      navigate("/local", { state: { pickup: pickupForNav } });
-      return;
-    }
-
     try {
       const response = await classifyTripType.mutateAsync({
         pickup: pickupForNav,
         dropoff: dropForNav,
         validate_serviceable_area: true, // optional: whether to check if locations are within serviceable area
       });
-      console.log("Classified trip type:", response); // Debug log
-      return
 
-      switch (response) {
+      switch (response.trip_type) {
         case "airport_pickup":
         case "airport_drop":
           navigate("/airport", {
-            state: { pickup: pickupForNav, drop: dropForNav },
+            state: response,
           });
           break;
 
         case "outstation":
           navigate("/outstation", {
-            state: { pickup: pickupForNav, drop: dropForNav },
+            state: response,
           });
           break;
 
         default:
           navigate("/local", {
-            state: { pickup: pickupForNav, drop: dropForNav },
+            state: response,
           });
       }
     } catch (e) {
@@ -146,9 +150,10 @@ const SearchCard = () => {
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         {/* Input section — relative so swap button can be absolutely centered */}
         <div className="relative">
-
           {/* Pickup row */}
-          <div className={`flex items-center pr-10 transition-colors ${activeField === "pickup" ? "bg-primary/5" : "hover:bg-gray-50"}`}>
+          <div
+            className={`flex items-center pr-10 transition-colors ${activeField === "pickup" ? "bg-primary/5" : "hover:bg-gray-50"}`}
+          >
             <div className="pl-3 pr-2 flex items-center self-stretch shrink-0">
               <div className="relative w-3 h-3 flex items-center justify-center">
                 {activeField === "pickup" && (
@@ -195,7 +200,9 @@ const SearchCard = () => {
           </div>
 
           {/* Drop row */}
-          <div className={`flex items-center pr-10 transition-colors ${activeField === "drop" ? "bg-primary/5" : "hover:bg-gray-50"}`}>
+          <div
+            className={`flex items-center pr-10 transition-colors ${activeField === "drop" ? "bg-primary/5" : "hover:bg-gray-50"}`}
+          >
             <div className="pl-3 pr-2 flex items-center self-stretch shrink-0">
               <div className="relative w-3 h-3 flex items-center justify-center">
                 {activeField === "drop" && (
@@ -239,7 +246,6 @@ const SearchCard = () => {
               <ArrowUpDown size={12} className="text-gray-400" />
             </button>
           </div>
-
         </div>
 
         {/* Suggestions */}
@@ -249,7 +255,7 @@ const SearchCard = () => {
               currentLocation={currentLocation}
               isPickup={activeField === "pickup"}
               isPickupSet={isPickupCurrentLocation}
-              suggestions={activeQuery.length >= 2 ? apiSuggestions : []}
+              suggestions={suggestionsToShow}
               isLoading={isLoading}
               onSelect={(item) => {
                 if (activeField === "pickup") {
@@ -271,6 +277,7 @@ const SearchCard = () => {
                   setDropEnrichId(item.lat ? null : (item.place_id ?? null));
                   setDropQuery("");
                 }
+                //
                 rotateSession();
                 setActiveField(null);
               }}
