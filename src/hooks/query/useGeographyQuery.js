@@ -21,6 +21,7 @@ export const useGeographyQuery = () => {
         queryFn: fetchGeography,
         staleTime: Infinity, // never refetch automatically, as geography data is unlikely to change often and we want to minimize API calls
         cacheTime: Infinity, // keep forever
+        retry: false, // don't retry on failure, as we have a fallback and we don't want to spam the API if there's an issue
     });
 
     const clientGeographyCode = () => {

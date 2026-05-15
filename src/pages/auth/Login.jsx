@@ -128,15 +128,15 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-sm">
-        <div className="mb-6 text-center flex flex-col items-center">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-2">
+      <div className="w-full max-w-lg p-12 bg-white rounded-3xl shadow-lg border border-gray-100">
+        <div className="mb-8 text-center flex flex-col items-center">
           <img
             src={import.meta.env.VITE_APP_LOGO_URL}
             alt={APP.name}
-            className="w-28 h-auto mb-3"
+            className="w-28 h-auto mb-4"
           />
-          <p className="text-sm text-gray-500">{APP.tagline}</p>
+          <p className="text-base text-gray-500">{APP.tagline}</p>
         </div>
 
         {isMismatch && (
@@ -152,13 +152,13 @@ const Login = () => {
             handleSendOtp();
           }}
         >
-          <div className="mb-4">
-            <label className="text-sm text-gray-500 mb-1 block" htmlFor="phone">
+          <div className="mb-6">
+            <label className="text-sm text-gray-500 mb-2 block" htmlFor="phone">
               Phone number
             </label>
 
             <div
-              className={`mt-1 flex items-center border rounded-lg overflow-hidden
+              className={`mt-1 flex items-center border rounded-xl overflow-hidden
       transition-[box-shadow,border-color] duration-200 ease-in-out
       focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-1
       hover:border-gray-400
@@ -192,7 +192,7 @@ const Login = () => {
               />
             </div>
 
-            {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+            {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
           </div>
 
           <button
@@ -202,9 +202,10 @@ const Login = () => {
   w-full 
   bg-primary 
   text-white 
-  p-3 
-  rounded-lg 
-  font-medium 
+  py-3.5 
+  rounded-xl 
+  font-semibold 
+  text-base
   transition-all duration-200
   hover:bg-primary-hover
   hover:shadow-md

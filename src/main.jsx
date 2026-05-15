@@ -4,6 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import { ToastProvider, GeographyProvider } from "@/context";
+import { ErrorBoundary } from "@/components";
 
 const queryClient = new QueryClient();
 
@@ -12,7 +13,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <GeographyProvider>
-          <App />
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
         </GeographyProvider>
       </ToastProvider>
     </QueryClientProvider>
