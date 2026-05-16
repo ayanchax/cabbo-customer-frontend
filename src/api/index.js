@@ -1,4 +1,4 @@
-export {api} from "./client";
+export {api, isDevMode} from "./client";
 export {initiateLogin, loginWithOtp, initiateOnboarding, resendOtp, verifyOnboardingOtp, onboardAndLogin} from "./auth";
 export {fetchGeography} from "./geography";
 export {reverseGeocode, searchLocations, getLocationByPlaceId} from "./location";

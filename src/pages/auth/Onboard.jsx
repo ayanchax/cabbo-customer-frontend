@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/utils";
 import { useAuth, useToast, useLocalStorage } from "@/hooks";
 import { isValidEmail , LOCAL_STORAGE_KEYS} from "@/utils";
+import { isDevMode } from "@/api";
 
 const Onboard = () => {
   const navigate = useNavigate();
@@ -93,7 +94,9 @@ const Onboard = () => {
       } else {
         showToast("Something went wrong. Please try again.", "error");
       }
-      console.error("Onboarding failed", err);
+      if (isDevMode) {
+        console.error("Onboarding failed", err);
+      }
     }
   };
 

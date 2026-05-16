@@ -4,6 +4,8 @@ import { isPhoneNumberValid, sanitizePhoneNumber, APP } from "@/utils";
 import { useToast, useGeography, useAuth } from "@/hooks";
 import { Disclaimer } from "@/components";
 import { ROUTES } from "@/utils";
+import { isDevMode } from "@/api";
+
 
 const Login = () => {
   const { initiateLogin, initiateOnboarding } = useAuth();
@@ -56,7 +58,9 @@ const Login = () => {
         handleOtpSuccess(full_phone_number, phone, "onboarding");
         return;
       }
-      console.error("Onboarding initiation failed:", error);
+      if (isDevMode) {
+        console.error("Onboarding initiation failed:", error);
+      }
       showToast("Something went wrong", "error");
     } finally {
       setShake(false);

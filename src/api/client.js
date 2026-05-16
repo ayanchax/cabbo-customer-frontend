@@ -1,6 +1,7 @@
 import axios from "axios";
 import { LOCAL_STORAGE_KEYS } from "@/utils";
 
+const isDevMode = import.meta.env.VITE_DEV_MODE === "true";
 const api = axios.create({
   // Ensures that all requests are made to the correct API base URL, which can be configured via environment variables for different deployment environments (development, staging, production).
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -19,6 +20,9 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    if(!isDevMode){
+      return Promise.reject(error);
+    }
     // Network error (no response received)
     if (!error.response) {
       console.error("Network Error.", "No response received from the server.", "Error details:", {
@@ -42,4 +46,4 @@ api.interceptors.response.use(
   }
 );
 
-export { api };
+export { api, isDevMode };

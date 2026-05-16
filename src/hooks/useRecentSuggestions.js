@@ -2,6 +2,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalStorage } from "@/hooks";
 import { LOCAL_STORAGE_KEYS } from "@/utils";
+import { isDevMode } from "@/api";
+
 
 
 // Generic hook to manage recent suggestions for any query key. It checks the react-query cache for the most recent data for the specified query key(s) and falls back to localStorage if no recent data is found. It also provides a function to cache new suggestions to localStorage, ensuring that even if the user goes offline or the API is unavailable, they can still see their recent searches.
@@ -62,7 +64,9 @@ const useRecentSuggestions = (queryKey = [], cacheKey = LOCAL_STORAGE_KEYS.recen
             return true;
         }
         catch (error) {
-            console.error("Error caching suggestion to localStorage:", error);
+            if (isDevMode) {
+                console.error("Error caching suggestion to localStorage:", error);
+            }
             return false;
         }
 

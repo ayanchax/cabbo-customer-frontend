@@ -4,6 +4,7 @@ import { parseUtcDate } from "@/utils";
 import { useState, useRef, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useAuth, useToast, useLocalStorage } from "@/hooks";
+import { isDevMode } from "@/api";
 
 const OTPInput = {
   size: 6,
@@ -95,7 +96,9 @@ const Verify = () => {
       setSecondsLeft(newRemaining);
       showToast("OTP resent successfully, check your phone.", "success");
     } catch (err) {
-      console.error("Resend failed", err);
+      if (isDevMode) {
+        console.error("Resend failed", err);
+      }
       setSecondsLeft(resend_timer_data.resend_after || 60); // Reset to default on failure to prevent spamming
       showToast("Failed to resend OTP. Please try again.", "error");
     }
@@ -129,7 +132,9 @@ const Verify = () => {
         }}); // next step
       }
     } catch (err) {
-      console.error("OTP verification failed", err);
+      if (isDevMode) {
+        console.error("OTP verification failed", err);
+      }
       setOtp(Array(OTPInput.size).fill(""));
       inputRefs.current[0]?.focus();
       setShake(true);

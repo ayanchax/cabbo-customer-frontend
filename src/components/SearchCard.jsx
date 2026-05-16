@@ -10,6 +10,7 @@ import {
   useCurrentLocation,
   useRecentSuggestions,
 } from "@/hooks";
+import { isDevMode } from "@/api";
 
 const SearchCard = () => {
   const navigate = useNavigate();
@@ -137,7 +138,9 @@ const SearchCard = () => {
       }
     } catch (e) {
       // fallback UX
-      console.error("Trip classification failed", e);
+      if (isDevMode) {
+        console.error("Trip classification failed", e);
+      }
       alert("No rides available for this route");
     }
   };

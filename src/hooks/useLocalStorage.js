@@ -1,4 +1,4 @@
-
+import { isDevMode } from "@/api";
 const useLocalStorage = () => {
   const setItem = (key, value) => {
     try {
@@ -9,6 +9,7 @@ const useLocalStorage = () => {
         localStorage.setItem(key, value);
       }
     } catch (error) {
+      if (isDevMode) 
       console.error(`useLocalStorage.setItem: failed to set "${key}"`, error);
     }
   };
@@ -23,6 +24,7 @@ const useLocalStorage = () => {
         return item; // plain string, not JSON-serialised
       }
     } catch (error) {
+      if (isDevMode)
       console.error(`useLocalStorage.getItem: failed to get "${key}"`, error);
       return null;
     }
@@ -32,6 +34,7 @@ const useLocalStorage = () => {
     try {
       localStorage.removeItem(key);
     } catch (error) {
+      if (isDevMode)
       console.error(`useLocalStorage.removeItem: failed to remove "${key}"`, error);
     }
   };
