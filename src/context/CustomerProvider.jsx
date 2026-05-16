@@ -24,7 +24,6 @@ export const CustomerProvider = ({ children, isLoggedIn }) => {
         customer: customerProfile || null,
         coordinates: coords,
         isLoading: profileLoading || coordsLoading,
-        sessionToken : customerProfile?.id || null, // we can use customer ID as session token for location search, as it is required to get personalized results and prevent abuse
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import { MapPin, Navigation } from "lucide-react";
+import { MapPin, Navigation, Target } from "lucide-react";
 import { ListLoaderSkeleton } from "@/components";
 const LocationSuggestions = ({
   suggestions = [],
@@ -15,20 +15,20 @@ const LocationSuggestions = ({
       {isPickup && !isPickupSet && (
         <button
           onClick={() => {
-            if (currentLocation) onSelect?.(currentLocation);
+            if (currentLocation) onSelect?.(currentLocation, true);
           }}
           onMouseDown={(e) => {
             if (currentLocation) {
               e.preventDefault();
-              onSelect?.(currentLocation);
+              onSelect?.(currentLocation, true);
             }
           }}
           disabled={!currentLocation}
           className={`w-full flex items-center gap-3 px-3 py-3 min-h-11 rounded-xl hover:bg-gray-50 transition cursor-pointer ${!currentLocation ? "cursor-not-allowed pointer-events-none opacity-50" : ""}`}
         >
-          <MapPin size={16} className="text-primary" />
+          <Target size={16} className="text-primary" />
           <div className="text-left">
-            <p className="text-[13px] font-medium text-gray-600 leading-snug">
+            <p className="text-[12px] font-medium text-gray-700 leading-snug">
               Use current location
             </p>
           </div>
@@ -51,7 +51,9 @@ const LocationSuggestions = ({
           }}
           className="w-full flex items-start gap-3 px-3 py-2.5 min-h-11 rounded-xl hover:bg-gray-50 transition cursor-pointer animate-fade-in"
         >
-          <MapPin size={16} className="text-gray-400 mt-1" />
+          <span className="flex items-center justify-center h-6 w-6 flex-shrink-0">
+            <MapPin size={16} className="text-gray-400" />
+          </span>
           <div className="text-left">
             <p className="text-[12px] font-medium text-gray-800 leading-snug">
               {item.display_name}

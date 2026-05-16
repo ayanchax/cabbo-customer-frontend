@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/utils";
 import { useAuth, useToast, useLocalStorage } from "@/hooks";
-import { isValidEmail } from "@/utils";
+import { isValidEmail , LOCAL_STORAGE_KEYS} from "@/utils";
 
 const Onboard = () => {
   const navigate = useNavigate();
@@ -77,7 +77,7 @@ const Onboard = () => {
 
       const response = await onboardAndLogin.mutateAsync(payload);
       if (response.data?.access_token) {
-        setItem("token", response.data.access_token);
+        setItem(LOCAL_STORAGE_KEYS.token, response.data.access_token);
         navigate(ROUTES.HOME);
         return;
       }

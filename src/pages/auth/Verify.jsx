@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { ROUTES } from "@/utils";
+import { ROUTES, LOCAL_STORAGE_KEYS } from "@/utils";
 import { parseUtcDate } from "@/utils";
 import { useState, useRef, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
@@ -113,7 +113,7 @@ const Verify = () => {
           otp: otpValue,
         });
         if (response.data?.access_token) {
-          setItem("token", response.data.access_token);
+          setItem(LOCAL_STORAGE_KEYS.token, response.data.access_token);
           navigate(ROUTES.HOME);
           return;
         }

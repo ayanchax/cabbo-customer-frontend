@@ -1,17 +1,17 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
-import { useReverseGeocodingQuery, useLocalStorage } from "@/hooks";
-
+import { useReverseGeocodingQuery, useLocalStorage, useRecentSuggestions } from "@/hooks";
+import { LOCAL_STORAGE_KEYS } from "@/utils";
 export const useCurrentLocation = (enabled = true) => {
   const { getItem, setItem } = useLocalStorage();
-
-  const cachedLocation = getItem("current_location");
+  const cachedLocation = getItem(LOCAL_STORAGE_KEYS.currentLocation);
 
   const [location, setLocation] = useState(cachedLocation ?? null);
   const [loading, setLoading] = useState(!cachedLocation);
   const [error, setError] = useState(null);
   const [coords, setCoords] = useState(null);
- 
+ const {  cacheSuggestionToLocalStorage:cacheCurrentLocationAsRecentSuggestionItem } =
+    useRecentSuggestions();
  
   const { data } = useReverseGeocodingQuery(
     coords?.lat,
@@ -85,7 +85,9 @@ export const useCurrentLocation = (enabled = true) => {
     if (!enabled) return;
     if (data) {
       setLocation(data);
-      setItem("current_location", data);
+      setItem(LOCAL_STORAGE_KEYS.currentLocation, data);
+      // Cache the current location in recent suggestions as well, so it appears in the dropdown for easy access for first time, even if the user goes offline later. This also ensures consistency between the "current location" option and the recent suggestions list.
+      cacheCurrentLocationAsRecentSuggestionItem(data);
       setLoading(false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

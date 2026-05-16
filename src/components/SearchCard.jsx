@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowUpDown } from "lucide-react";
 import { LocationInput, LocationSuggestions } from "@/components";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,6 @@ import {
   useCustomer,
   useCurrentLocation,
   useRecentSuggestions,
-  useLocalStorage
 } from "@/hooks";
 
 const SearchCard = () => {
@@ -79,12 +78,10 @@ const SearchCard = () => {
     coordinates,
     sessionToken,
   );
-  
-  // Cached recent suggestions from online react query cache.
-  const { recentSuggestions } = useRecentSuggestions(["locationSearch"]);
 
-  // Cached recent suggestions from local storage, to show when API suggestions are not available (e.g. on first search or network issues). This is a fallback and may contain stale data, but ensures we can show something relevant to the user.
-   
+  // Cached recent suggestions from online react query key 'locationSearch' used in useLocationSearchQuery and offline localStorage, used as fallback when API suggestions are not available (e.g. short query, offline)
+  const { recentSuggestions, cacheSuggestionToLocalStorage } =
+    useRecentSuggestions(["locationSearch"]);
 
   const suggestionsToShow =
     activeQuery.length >= 2 && apiSuggestions.length > 0
@@ -144,6 +141,22 @@ const SearchCard = () => {
       alert("No rides available for this route");
     }
   };
+
+  useEffect(() => {
+    // Cache the selected suggestion to localStorage for offline access and recent history, only if it has a place_id (i.e. it's from the API, not a manually entered location)
+    if (pickup && enrichedPickup) {
+      cacheSuggestionToLocalStorage(enrichedPickup);
+    }
+    if (drop && enrichedDrop) {
+      cacheSuggestionToLocalStorage(enrichedDrop);
+    }
+  }, [
+    pickup,
+    drop,
+    cacheSuggestionToLocalStorage,
+    enrichedPickup,
+    enrichedDrop,
+  ]);
 
   return (
     <div className="px-4 mt-4 max-w-2xl mx-auto">
@@ -257,7 +270,11 @@ const SearchCard = () => {
               isPickupSet={isPickupCurrentLocation}
               suggestions={suggestionsToShow}
               isLoading={isLoading}
-              onSelect={(item) => {
+              onSelect={(item, didSelectCurrentLocation) => {
+                if (didSelectCurrentLocation) {
+                  // If user selected "Use current location", we want to set the pickup to currentLocation with lat/lng immediately, without waiting for enrichment (since we already have lat/lng), and skip enrichment step entirely for this selection (set enrichId to null so useLocationByPlaceIdQuery doesn't run)
+                  cacheSuggestionToLocalStorage(currentLocation); // Cache current location selection as well for consistency in recent suggestions and offline access
+                }
                 if (activeField === "pickup") {
                   setPickup((prev) => {
                     if (prev?.place_id === item.place_id) return prev;
@@ -277,7 +294,6 @@ const SearchCard = () => {
                   setDropEnrichId(item.lat ? null : (item.place_id ?? null));
                   setDropQuery("");
                 }
-                //
                 rotateSession();
                 setActiveField(null);
               }}
