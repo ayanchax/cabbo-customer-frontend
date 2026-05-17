@@ -6,7 +6,6 @@ import {
   useClassifyTripTypeMutation as useClassifyTripType,
   useLocationSearchQuery,
   useLocationByPlaceIdQuery,
-  useCustomer,
   useCurrentLocation,
   useRecentSuggestions,
 } from "@/hooks";
@@ -14,7 +13,6 @@ import { isDevMode } from "@/api";
 
 const SearchCard = () => {
   const navigate = useNavigate();
-  const { coordinates } = useCustomer();
   const classifyTripType = useClassifyTripType();
 
   // null = untouched (auto-fill from currentLocation)
@@ -57,7 +55,7 @@ const SearchCard = () => {
 
   const [activeField, setActiveField] = useState(null); // "pickup" | "drop"
 
-  const { location: currentLocation } = useCurrentLocation(true);
+  const { location: currentLocation, coords:coordinates } = useCurrentLocation(true);
 
   // When cleared: stay empty (no snap-back). When untouched: auto-fill with currentLocation.
   // For display: use raw pickup (instant feedback); enrichment happens in background.

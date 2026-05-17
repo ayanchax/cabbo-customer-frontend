@@ -6,7 +6,7 @@ function App() {
   return (
     <>
       <AppRouter />
-      {/* Industry standard positioning and ordering for toast notifications */}
+      {/* Industry standard positioning and ordering for toast notifications across the application */}
       <Toaster
         reverseOrder
         position="bottom-center"

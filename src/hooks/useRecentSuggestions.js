@@ -60,7 +60,7 @@ const useRecentSuggestions = (queryKey = [], cacheKey = LOCAL_STORAGE_KEYS.recen
             recent.unshift(suggestion);
             // Limit to specified number of items
             if (recent.length > limit) recent = recent.slice(0, limit);
-            setItem(cacheKey, recent);
+            setItem(cacheKey, recent); // Always limit the number of items stored in localStorage upto `limit` to prevent bloat
             return true;
         }
         catch (error) {

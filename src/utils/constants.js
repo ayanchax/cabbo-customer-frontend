@@ -18,7 +18,10 @@ export const ENDPOINTS={
         LOGIN_WITH_OTP: `${API_VERSION}/auth/login`,
         RESEND_OTP: `${API_VERSION}/auth/resend-otp`,
     },
-    GEOGRAPHY: `${API_VERSION}/geography`,
+    GEOGRAPHY: {
+        SERVER:`${API_VERSION}/geography`,
+        CLIENT:`${import.meta.env.VITE_CLIENT_GEOLOCATION_API_URL || "https://ipapi.co/json/"}`
+    },
     LOCATION:{
         SEARCH: `${API_VERSION}/locations/search`,
         REVERSE_GEOCODE: `${API_VERSION}/locations/reverse-geocode`,

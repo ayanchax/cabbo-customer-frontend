@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchGeography } from "@/api";
+import { fetchServerGeography, fetchClientGeography } from "@/api";
 
 export const useGeographyQuery = () => {
-
     const fallbackGeography = {
         country_name: "India",
         country_code: "IN",
@@ -13,58 +12,63 @@ export const useGeographyQuery = () => {
         currency_decimal_places: 2,
         currency_in_words: "Rupees",
         currency_international_name: "Indian Rupee",
-    }
-     
-
-    const { data, isLoading, error } = useQuery({
-        queryKey: ["geography"],
-        queryFn: fetchGeography,
-        staleTime: Infinity, // never refetch automatically, as geography data is unlikely to change often and we want to minimize API calls
-        cacheTime: Infinity, // keep forever
-        retry: false, // don't retry on failure, as we have a fallback and we don't want to spam the API if there's an issue
-    });
-
-    const clientGeographyCode = () => {
-        try {
-            return Intl.DateTimeFormat().resolvedOptions().locale.split("-")[1] || fallbackGeography.country_code;
-
-        }
-        catch {
-            return fallbackGeography.country_code;
-        }
-
-    }
-
-    const _serverGeographyData = () => {
-        try {
-            if (error || !data || !data.country_code) {
-                return fallbackGeography;
-            }
-            return data || fallbackGeography;
-        }
-        catch {
-            return fallbackGeography;
-        }
     };
 
-    const serverGeographyData = _serverGeographyData();
+    // Fetch client-side geography (from ipapi)
+    // NOTE: We use ipapi (IP-based geolocation) for client geography in this hook to determine broad, non-critical details
+    // such as country code, currency, and locale-specific units. This is used for platform-level display (e.g., currency symbol, country code)
+    // and is NOT used for features requiring precise user location (like pickup/dropoff or address search).
+    // For accurate user location, we use the browser's native geolocation API (with permission) [elsewhere] in the app.
+    // This separation ensures we show correct country-specific details without sacrificing privacy or accuracy for location-critical features.
 
-    const isClientGeographyMismatchedWithServerGeography = serverGeographyData.country_code !== clientGeographyCode();
+    const { data: clientData, error: clientError } = useQuery({
+        queryKey: ["clientGeography"],
+        queryFn: fetchClientGeography,
+        staleTime: Infinity,
+        cacheTime: Infinity,
+        retry: false,
+    });
 
-    const _clientGeographyData = () => {
-        if (isClientGeographyMismatchedWithServerGeography) {
-            // If there's a mismatch, we can choose to trust the client's geography for certain use cases (like displaying the flag or currency symbol), while still using server geography for other use cases (like determining available services). This is a design decision and can be adjusted based on specific requirements.
-            return {
+    // Fetch server-side geography.
+    const { data: serverData, isLoading, error } = useQuery({
+        queryKey: ["geography"],
+        queryFn: fetchServerGeography,
+        staleTime: Infinity,
+        cacheTime: Infinity,
+        retry: false,
+    });
+
+    // Use ipapi country_code if available, else fallback
+    const clientCountryCode = clientData?.country_code?.toUpperCase() || fallbackGeography.country_code;
+    const clientCountryName = clientData?.country_name || fallbackGeography.country_name;
+
+    // Compose client geography object
+    const clientGeography =
+        (!clientError && clientData && clientData.country_code)
+            ? {
                 ...fallbackGeography,
-                country_code: clientGeographyCode(),
-
+                ...clientData,
+                country_code: clientCountryCode,
+                country_name: clientCountryName,
             }
-        }
-        // If there's no mismatch, we can simply return the server geography data, which is likely more accurate for backend-related decisions.
-        return serverGeographyData;
+            : fallbackGeography;
 
-    }
-    const clientGeographyData = _clientGeographyData();
+    // Compose server geography object
+    const serverGeography = (!error && serverData && serverData.country_code)
+        ? serverData
+        : fallbackGeography;
 
-    return {clientGeographyData, serverGeographyData, serverGeographyLoading: isLoading, serverGeographyError: error, clientGeographyCode, fallbackGeography, isMismatch: isClientGeographyMismatchedWithServerGeography };
+    // Mismatch if country_code differs
+    const isMismatch = serverGeography.country_code !== clientGeography.country_code;
+
+    return {
+        clientGeographyData: clientGeography,
+        serverGeographyData: serverGeography,
+        serverGeographyLoading: isLoading,
+        serverGeographyError: error,
+        clientGeographyCode: clientCountryCode,
+        fallbackGeography,
+        isMismatch,
+        clientGeographyError: clientError,
+    };
 };

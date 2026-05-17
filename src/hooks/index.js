@@ -5,7 +5,6 @@ export { useAuth } from "./useAuth";
 export { useCustomer } from "./useCustomer";
 export { useCurrentLocation } from "./useCurrentLocation";
 export { useDebounce } from "./useDebounce";
-export {useCustomerCoordinates} from "./useCustomerCoordinates";
 export {useRecentSuggestions} from "./useRecentSuggestions";
 export * from "./query";
 export * from "./mutation";

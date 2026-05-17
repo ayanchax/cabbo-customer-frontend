@@ -10,9 +10,9 @@ export const useCurrentLocation = (enabled = true) => {
   const [loading, setLoading] = useState(!cachedLocation);
   const [error, setError] = useState(null);
   const [coords, setCoords] = useState(null);
- const {  cacheSuggestionToLocalStorage:cacheCurrentLocationAsRecentSuggestionItem } =
+  const { cacheSuggestionToLocalStorage: cacheCurrentLocationAsRecentSuggestionItem } =
     useRecentSuggestions();
- 
+
   const { data } = useReverseGeocodingQuery(
     coords?.lat,
     coords?.lng
@@ -78,7 +78,7 @@ export const useCurrentLocation = (enabled = true) => {
         timeout: 8000,
       }
     );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled]);
 
   useEffect(() => {
@@ -90,8 +90,8 @@ export const useCurrentLocation = (enabled = true) => {
       cacheCurrentLocationAsRecentSuggestionItem(data);
       setLoading(false);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, enabled]);
 
-  return { location, loading, error };
+  return { location, coords, loading, error };
 };

@@ -119,8 +119,12 @@ const Login = () => {
           return;
         }
         if (error_code === "ALREADY_LOGGED_IN") {
-          navigate(ROUTES.HOME);
-          return;
+        // In the future, we could enhance this flow by showing a modal with seeking consent from user to continue on this device with the new login which would invalidate the old session. For now, we will just show a toast message.
+        // We will not support login from multiple devices, as we are a ride-hailing app and it's safer to assume that a user should only be logged in from one device at a time to prevent misuse and ensure security.
+        // Refer backlogs.md for the future Consent-Based Device Switching flow todo
+        showToast("Looks like you are logged in on another device. Log out there to continue.", "error");
+        return;
+
         }
         showToast("Invalid phone number.", "error");
       } else {

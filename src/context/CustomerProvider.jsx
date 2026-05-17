@@ -1,13 +1,12 @@
 import { CustomerContext } from "@/context";
-import { useCustomerProfileQuery, useCustomerCoordinates } from "@/hooks";
+import { useCustomerProfileQuery } from "@/hooks";
 import { Splash } from "@/components";
 import { ROUTES } from "@/utils";
 import { Navigate } from "react-router-dom";
 
 export const CustomerProvider = ({ children, isLoggedIn }) => {
   const { data:customerProfile, isLoading: profileLoading, error: profileError } = useCustomerProfileQuery(!!isLoggedIn);
-  const { coords, loading: coordsLoading } = useCustomerCoordinates();
-  if (profileLoading || coordsLoading) {
+  if (profileLoading) {
     return <Splash />;
   }
 
@@ -22,8 +21,7 @@ export const CustomerProvider = ({ children, isLoggedIn }) => {
     <CustomerContext.Provider
       value={{
         customer: customerProfile || null,
-        coordinates: coords,
-        isLoading: profileLoading || coordsLoading,
+        isLoading: profileLoading,
       }}
     >
       {children}
