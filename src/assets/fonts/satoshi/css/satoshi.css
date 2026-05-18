@@ -5,14 +5,16 @@
 * Designed by: Deni Anggara
 * URL: https://www.fontshare.com/fonts/satoshi
 * © 2026 Indian Type Foundry
-* 
-* Currently self-hosting the following Satoshi font files for optimal performance:
-* Satoshi Regular 
-* Satoshi Medium 
-* Satoshi Bold 
-* Satoshi Black 
-* Satoshi Variable (Variable font)
 *
+* Currently self-hosting the following Satoshi font files for optimal performance:
+* - Satoshi Regular
+* - Satoshi Medium
+* - Satoshi Bold
+* - Satoshi Black
+* - Satoshi Variable (Variable font)
+*
+* Only these weights/styles are loaded to keep the bundle size minimal and performance optimal.
+* If you need additional weights, styles, or scripts in the future, add the relevant Satoshi font files and @font-face declarations here.
 */
  
 @font-face {

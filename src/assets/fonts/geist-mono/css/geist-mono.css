@@ -1,16 +1,18 @@
-/*
- * @license
- *
- * Font Family: Geist Mono
- * Designed by: Vercel
- * URL: https://vercel.com/font/mono
- *
- * We are self-hosting only the Latin subset (geist-mono-latin-*** files) for optimal performance.
- * Currently, we only use the Geist Mono Regular weight for displaying numeric, code, and system information in Cabbo's UI (prices, OTPs, IDs, metrics).
- * This covers all numerals, decimal points, and basic symbols used in Cabbo's UI for prices, OTPs, IDs, and metrics.
- *
- * If we ever need to support additional scripts (Cyrillic, Vietnamese, etc.), we can download the relevant font files from Vercel's font service and add them here with the appropriate @font-face declarations.
- */
+/**
+* @license
+*
+* Font Family: Geist Mono
+* Designed by: Vercel
+* URL: https://vercel.com/font/mono
+*
+* Currently self-hosting the following Geist Mono font files for optimal performance:
+* - Geist Mono Regular (Latin subset only)
+*
+* Only the Latin subset (geist-mono-latin-***) is loaded, as all numerals, decimal points, and basic symbols used in Cabbo's UI are covered by this set.
+* This keeps the bundle size minimal and performance optimal.
+*
+* If we ever need to support additional scripts (Cyrillic, Vietnamese, etc.), download the relevant font files from Vercel and add them here with the appropriate @font-face declarations.
+*/
 
 /* Geist Mono Regular: 400, normal and italic */
 @font-face {
