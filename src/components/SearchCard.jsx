@@ -10,6 +10,7 @@ import {
   useRecentSuggestions,
 } from "@/hooks";
 import { isDevMode } from "@/api";
+import NoRidesAvailable from "./NoRidesAvailable";
 
 const SearchCard = () => {
   const navigate = useNavigate();
@@ -323,6 +324,8 @@ const SearchCard = () => {
           </button>
         </div>
       </div>
+
+      <NoRidesAvailable/>
     </div>
   );
 };
