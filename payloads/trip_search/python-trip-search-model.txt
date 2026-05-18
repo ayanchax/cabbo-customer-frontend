@@ -1,0 +1,122 @@
+// This is the backend model class with which the payload of each trip type(local/hourly rental, airport transfer and outstation are made)
+
+class TripSearchRequest(BaseModel):
+    trip_type: TripTypeEnum
+    origin: Optional[LocationInfo] = (
+        None  # For airport trips, this is the pickup location
+    )
+    hops: Optional[Union[List[str], List[LocationInfo]]] = (
+        None  # Available for outstation and hourly rental multi-hop trips [Providing hops by customer helps us approximate the overages more efficiently and helps the customer get almost accurate rates upfront]
+    )
+    destination: Optional[LocationInfo] = None
+    start_date: str  # ISO date or datetime string
+    end_date: Optional[str] = None
+    expected_end_date: Optional[str] = (
+        None  # for local trips, we set it by package chosen
+    )
+    num_adults: int
+    num_children: int
+    num_large_suitcases: Optional[int] = 0  # Trolley bags, large suitcases
+    num_carryons: Optional[int] = 0
+    num_backpacks: Optional[int] = 0
+    num_other_bags: Optional[int] = 0
+    preferred_car_type: Optional[CarTypeEnum] = CarTypeEnum.sedan
+    preferred_fuel_type: Optional[FuelTypeEnum] = FuelTypeEnum.diesel
+    package_id: Optional[str] = None  # For local trips
+    flight_number: Optional[str] = None  # For airport pickup
+    terminal_number: Optional[str] = None  # For airport pickup
+    toll_road_preferred: Optional[bool] = (
+        False  # For airport trips Indicates if toll roads are preferred
+    )
+    placard_required: Optional[bool] = (
+        False  # For airport pickup Indicates if a placard is needed
+    )
+    placard_name: Optional[str] = (
+        None  # Name to display on the placard for airport pickup
+    )
+    passenger: Optional[Union[str, PassengerRequest]] = None
+
+    session_token: Optional[str] = Field(
+        None,
+        description="Session token to be passed to location service for caching related location requests and improving the accuracy of location suggestions and details",
+    )
+
+    # Validate trip type and ensure it is one of the supported types
+    @field_validator("trip_type", mode="before")
+    @classmethod
+    def validate_trip_type(cls, v):
+        valid_trip_types = [
+            TripTypeEnum.airport_pickup,
+            TripTypeEnum.airport_drop,
+            TripTypeEnum.local,
+            TripTypeEnum.outstation,
+        ]
+        if v not in valid_trip_types:
+            supported_types = ", ".join([t.value for t in valid_trip_types])
+            raise CabboException(
+                f"Invalid trip type. Supported types are: {supported_types}",
+                status_code=400,
+                error_code=INVALID_TRIP_TYPE,
+            )
+        return v
+
+
+# Trip Type Enum defines the type of trip being requested.
+# Stored in the database as a string as these are admin editable, but can be extended with more types in the future.
+class TripTypeEnum(str, enum.Enum):
+    local = "local"
+    outstation = "outstation"
+    airport_pickup = "airport_pickup"
+    airport_drop = "airport_drop"
+
+class LocationInfo(BaseModel):
+    display_name: Optional[str] = None
+    lat: Optional[float]=None
+    lng: Optional[float]=None
+    place_id: Optional[str] = None
+    address: Optional[str] = None
+
+    # ✅ Add structured geography fields (populated by Location provider)
+    country: Optional[str] = Field(None, description="Country name from Location provider")
+    country_code: Optional[str] = Field(None, description="ISO country code (e.g., IN, US)")
+    state: Optional[str] = Field(None, description="State/province name")
+    state_code: Optional[str] = Field(None, description="State code (e.g., KA, TN)")
+    region: Optional[str] = Field(None, description="City/region name")
+    region_code: Optional[str] = Field(None, description="Region code (e.g., BLR, MYS)")
+    postal_code: Optional[str] = Field(None, description="Postal/ZIP code")
+    mobility_hub: Optional[MobilityHub] = Field(None, description="Mobility establishment type (airport, railway station, etc.) — populated from Google place types")
+    class Config:
+        extra="allow"
+        exclude_none = True  # Exclude fields with None values from the model dump
+
+
+# Fuel Type Enum defines the type of fuel used by the vehicle.
+# Stored in the database as a string as these are admin editable, but can be extended with more types in the future.
+class FuelTypeEnum(str, enum.Enum):
+    diesel = "diesel"
+    petrol = "petrol"
+    cng = "cng"
+
+
+# Car Type Enum defines the type of car preferred for the trip.
+# Stored in the database as a string as these are admin editable, but can be extended with more types in the future.
+class CarTypeEnum(str, enum.Enum):
+    hatchback = "Hatchback"  # mini
+    sedan = "Sedan"
+    sedan_plus = "Premium Sedan"
+    suv = "SUV"
+    suv_plus = "SUV+"
+
+
+class PassengerRequest(BaseModel):
+    id: str
+    name: Optional[str] = None
+    phone_number: Optional[str] = None
+
+    
+    
+    class Config:
+        from_attributes = True
+        exclude_none = True  # Exclude fields with None values from the model dump
+
+

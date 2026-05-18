@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { ArrowUpDown } from "lucide-react";
-import { LocationInput, LocationSuggestions, NoRidesAvailable } from "@/components";
+import {
+  LocationInput,
+  LocationSuggestions,
+  NoRidesAvailable,
+} from "@/components";
 import { useNavigate } from "react-router-dom";
 import {
   useClassifyTripTypeMutation as useClassifyTripType,
@@ -56,7 +60,8 @@ const SearchCard = () => {
 
   const [activeField, setActiveField] = useState(null); // "pickup" | "drop"
 
-  const { location: currentLocation, coords:coordinates } = useCurrentLocation(true);
+  const { location: currentLocation, coords: coordinates } =
+    useCurrentLocation(true);
 
   // When cleared: stay empty (no snap-back). When untouched: auto-fill with currentLocation.
   // For display: use raw pickup (instant feedback); enrichment happens in background.
@@ -100,16 +105,20 @@ const SearchCard = () => {
     setDropQuery("");
     setActiveField(null);
   };
+  const [inProgress, setInProgress] = useState(false);
 
   const handleSearch = async () => {
-    // Use fully enriched location for navigation; fall back to raw if enrichment is still loading
-    const pickupForNav = pickupCleared
-      ? null
-      : (finalPickup ?? currentLocation);
-    const dropForNav = finalDrop;
-
-    if (!pickupForNav) return;
+    if (inProgress) return; // prevent multiple rapid clicks
     try {
+      setInProgress(true);
+      // Use fully enriched location for navigation; fall back to raw if enrichment is still loading
+
+      const pickupForNav = pickupCleared
+        ? null
+        : (finalPickup ?? currentLocation);
+      const dropForNav = finalDrop;
+
+      if (!pickupForNav) return;
       const response = await classifyTripType.mutateAsync({
         pickup: pickupForNav,
         dropoff: dropForNav,
@@ -140,6 +149,8 @@ const SearchCard = () => {
         console.error("Trip classification failed", e);
       }
       setNoRidesError(true);
+    } finally {
+      setInProgress(false);
     }
   };
 
@@ -314,14 +325,15 @@ const SearchCard = () => {
         {/* CTA */}
         <div className="p-3 border-t border-gray-100">
           <button
-            disabled={!effectivePickup}
+            disabled={!effectivePickup || inProgress}
             onClick={handleSearch}
             className={`w-full py-3.5 rounded-xl font-medium text-sm transition
               ${
                 effectivePickup
-                  ? "bg-primary text-white active:scale-[0.98] cursor-pointer"
+                  ? "bg-primary text-white active:scale-[0.98] cursor-pointer hover:bg-primary/90"
                   : "bg-gray-100 text-gray-400 cursor-not-allowed"
               }
+              ${inProgress ? "opacity-60 pointer-events-none" : ""}
             `}
           >
             {!effectivePickup
