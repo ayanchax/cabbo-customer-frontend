@@ -136,7 +136,6 @@ const SearchCard = () => {
           });
       }
     } catch (e) {
-      // fallback UX
       if (isDevMode) {
         console.error("Trip classification failed", e);
       }
