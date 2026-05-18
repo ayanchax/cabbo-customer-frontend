@@ -14,6 +14,7 @@ import {
   useRecentSuggestions,
 } from "@/hooks";
 import { isDevMode } from "@/api";
+import {TRIP_TYPES, ROUTES} from "@/utils"
 
 const SearchCard = () => {
   const navigate = useNavigate();
@@ -126,21 +127,22 @@ const SearchCard = () => {
       });
 
       switch (response.trip_type) {
-        case "airport_pickup":
-        case "airport_drop":
-          navigate("/airport", {
+        case TRIP_TYPES.AIRPORT_PICKUP:
+        case TRIP_TYPES.AIRPORT_DROPOFF:
+          navigate(ROUTES.AIRPORT, {
             state: response,
           });
           break;
 
-        case "outstation":
-          navigate("/outstation", {
+        case TRIP_TYPES.OUTSTATION:
+          navigate(ROUTES.OUTSTATION, {
             state: response,
           });
           break;
 
+        case TRIP_TYPES.LOCAL:
         default:
-          navigate("/local", {
+          navigate(ROUTES.LOCAL, {
             state: response,
           });
       }
