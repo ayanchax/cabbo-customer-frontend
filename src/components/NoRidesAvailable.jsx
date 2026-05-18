@@ -1,7 +1,7 @@
 import React from "react";
 import {EmptyState} from "@/components";
 
-// Example SVG illustration (replace with your own or use a Lottie animation)
+// Example SVG illustration (replace with any other svgm or Lottie animation as needed)
 const NoRidesSVG = (
   <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="96" height="96" rx="24" fill="#F3F4F6"/>
