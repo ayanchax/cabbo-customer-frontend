@@ -1,7 +1,14 @@
+
 import { useQuery } from "@tanstack/react-query";
-import { fetchServerGeography, fetchClientGeography } from "@/api";
+import { LOCAL_STORAGE_KEYS } from "@/utils";
+import {useLocalStorage} from "@/hooks";
+import {fetchClientGeography, fetchServerGeography} from "@/api";
+// LocalStorage cache key and TTL for client geography
+const CLIENT_GEO_CACHE_KEY = LOCAL_STORAGE_KEYS.clientGeography;
+const CLIENT_GEO_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours in ms
 
 export const useGeographyQuery = () => {
+    const {getItem, setItem} = useLocalStorage();
     const fallbackGeography = {
         country_name: "India",
         country_code: "IN",
@@ -14,18 +21,51 @@ export const useGeographyQuery = () => {
         currency_international_name: "Indian Rupee",
     };
 
-    // Fetch client-side geography (from ipapi)
+
+    // Fetch client-side geography (from ipapi) with localStorage cache (24h TTL)
     // NOTE: We use ipapi (IP-based geolocation) for client geography in this hook to determine broad, non-critical details
     // such as country code, currency, and locale-specific units. This is used for platform-level display (e.g., currency symbol, country code)
     // and is NOT used for features requiring precise user location (like pickup/dropoff or address search).
     // For accurate user location, we use the browser's native geolocation API (with permission) [elsewhere] in the app.
     // This separation ensures we show correct country-specific details without sacrificing privacy or accuracy for location-critical features.
 
+    const getCachedClientGeography = () => {
+        try {
+            const cached = getItem(CLIENT_GEO_CACHE_KEY);
+            if (!cached) return null;
+            // getItem already parses JSON, so cached is an object
+            const { data, timestamp } = cached;
+            if (Date.now() - timestamp < CLIENT_GEO_CACHE_TTL) {
+                return data;
+            }
+            return null;
+        } catch {
+            return null;
+        }
+    };
+
+    const setCachedClientGeography = (data) => {
+        try {
+            setItem(
+                CLIENT_GEO_CACHE_KEY,
+                JSON.stringify({ data, timestamp: Date.now() })
+            );
+        } catch {
+            // Ignore write errors (e.g., quota exceeded)
+        }
+    };
+
     const { data: clientData, error: clientError } = useQuery({
         queryKey: ["clientGeography"],
-        queryFn: fetchClientGeography,
+        queryFn: async () => {
+            const cached = getCachedClientGeography();
+            if (cached) return cached;
+            const fresh = await fetchClientGeography();
+            setCachedClientGeography(fresh);
+            return fresh;
+        },
         staleTime: Infinity,
-        cacheTime: Infinity,
+        gcTime: Infinity,
         retry: false,
     });
 
@@ -34,7 +74,7 @@ export const useGeographyQuery = () => {
         queryKey: ["geography"],
         queryFn: fetchServerGeography,
         staleTime: Infinity,
-        cacheTime: Infinity,
+        gcTime: Infinity,
         retry: false,
     });
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ArrowUpDown } from "lucide-react";
-import { LocationInput, LocationSuggestions } from "@/components";
+import { LocationInput, LocationSuggestions, NoRidesAvailable } from "@/components";
 import { useNavigate } from "react-router-dom";
 import {
   useClassifyTripTypeMutation as useClassifyTripType,
@@ -10,7 +10,6 @@ import {
   useRecentSuggestions,
 } from "@/hooks";
 import { isDevMode } from "@/api";
-import NoRidesAvailable from "./NoRidesAvailable";
 
 const SearchCard = () => {
   const navigate = useNavigate();
@@ -21,6 +20,7 @@ const SearchCard = () => {
   const [pickupCleared, setPickupCleared] = useState(false); //Field was cleared by user (empty string) vs never touched (null)
   const [drop, setDrop] = useState(null); // raw selection (display only)
 
+  const [noRidesError, setNoRidesError] = useState(false); // error state for no rides available scenario
   // Local session token — rotates after each select to correctly bound Google billing sessions.
   // Autocomplete + Place Details must share the same token; rotating after each select
   // groups them into one billing unit (~$0.017) instead of per-request Autocomplete charges.
@@ -140,7 +140,7 @@ const SearchCard = () => {
       if (isDevMode) {
         console.error("Trip classification failed", e);
       }
-      alert("No rides available for this route");
+      setNoRidesError(true);
     }
   };
 
@@ -160,8 +160,17 @@ const SearchCard = () => {
     enrichedDrop,
   ]);
 
+  if (noRidesError) {
+    return (
+      <div className="px-4 mt-4 max-w-2xl mx-auto">
+        <NoRidesAvailable onDismiss={() => setNoRidesError(false)} />
+      </div>
+    );
+  }
+
   return (
     <div className="px-4 mt-4 max-w-2xl mx-auto">
+      {/* SearchCard UI (inputs, suggestions, CTA) ... */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         {/* Input section — relative so swap button can be absolutely centered */}
         <div className="relative">
@@ -324,8 +333,6 @@ const SearchCard = () => {
           </button>
         </div>
       </div>
-
-      <NoRidesAvailable/>
     </div>
   );
 };

@@ -2,14 +2,22 @@
 import { useEffect, useState } from "react";
 import { useReverseGeocodingQuery, useLocalStorage, useRecentSuggestions } from "@/hooks";
 import { LOCAL_STORAGE_KEYS } from "@/utils";
+
 export const useCurrentLocation = (enabled = true) => {
   const { getItem, setItem } = useLocalStorage();
   const cachedLocation = getItem(LOCAL_STORAGE_KEYS.currentLocation);
 
+  // Set initial coords from cache if available, so bias is present on first paint, which downstream will be used to do the location search in SearchCard - e.g, if a user types 'Park' and we have their location biased coordinates, we will show park names in user's current location using the Google Autocomplete API, this is also called proximity biasing parameter in Google Places API. 
+  // This is particularly helpful for users in large cities with multiple locations with similar names, e.g, 'Park Street' in Kolkata vs 'Park Street' in Bangalore, with proximity biasing we will show the one in user's current city based on their coordinates. 
+  // If we don't have cached location, coords will be null and we won't do any biasing for location search until we get the user's current location for the first time.
   const [location, setLocation] = useState(cachedLocation ?? null);
   const [loading, setLoading] = useState(!cachedLocation);
   const [error, setError] = useState(null);
-  const [coords, setCoords] = useState(null);
+  const [coords, setCoords] = useState(
+    cachedLocation && cachedLocation.lat && cachedLocation.lng
+      ? { lat: cachedLocation.lat, lng: cachedLocation.lng }
+      : null
+  );
   const { cacheSuggestionToLocalStorage: cacheCurrentLocationAsRecentSuggestionItem } =
     useRecentSuggestions();
 
