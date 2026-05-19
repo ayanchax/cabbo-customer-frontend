@@ -51,7 +51,7 @@ const LocationSuggestions = ({
           }}
           className="w-full flex items-start gap-3 px-3 py-2.5 min-h-11 rounded-xl hover:bg-gray-50 transition cursor-pointer animate-fade-in"
         >
-          <span className="flex items-center justify-center h-6 w-6 flex-shrink-0">
+          <span className="flex items-center justify-center h-6 w-6 shrink-0">
             <MapPin size={16} className="text-gray-400" />
           </span>
           <div className="text-left">

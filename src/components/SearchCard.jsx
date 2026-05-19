@@ -12,13 +12,17 @@ import {
   useLocationByPlaceIdQuery,
   useCurrentLocation,
   useRecentSuggestions,
+  useOverlay
 } from "@/hooks";
 import { isDevMode } from "@/api";
 import {TRIP_TYPES, ROUTES} from "@/utils"
+import { LocalHourlyRideCityscape } from "@/components";
+
 
 const SearchCard = () => {
   const navigate = useNavigate();
   const classifyTripType = useClassifyTripType();
+  const { showOverlay, hideOverlay } = useOverlay();
 
   // null = untouched (auto-fill from currentLocation)
   const [pickup, setPickup] = useState(null); // raw selection (display only)
@@ -123,29 +127,55 @@ const SearchCard = () => {
       const response = await classifyTripType.mutateAsync({
         pickup: pickupForNav,
         dropoff: dropForNav,
-        validate_serviceable_area: true, // optional: whether to check if locations are within serviceable area
+        validate_serviceable_area: true,
       });
 
-      switch (response.trip_type) {
-        case TRIP_TYPES.AIRPORT_PICKUP:
-        case TRIP_TYPES.AIRPORT_DROPOFF:
-          navigate(ROUTES.AIRPORT, {
-            state: response,
-          });
-          break;
-
-        case TRIP_TYPES.OUTSTATION:
-          navigate(ROUTES.OUTSTATION, {
-            state: response,
-          });
-          break;
-
-        case TRIP_TYPES.LOCAL:
-        default:
-          navigate(ROUTES.LOCAL, {
-            state: response,
-          });
-      }
+      // Overlay and navigation mapping by trip type
+      const tripTypeConfig = {
+        [TRIP_TYPES.AIRPORT_PICKUP]: {
+          overlayProps: {
+            message: "Taking you to Cabbo airport transfers...",
+            illustration: null, // Replace with airport SVG if available
+            subtext: "Hassle-free airport pickups, almost on time",
+            nextActionText: "Next: add pickup time and other preferences", // customer picked from airport to destination
+          },
+          route: ROUTES.AIRPORT,
+        },
+        [TRIP_TYPES.AIRPORT_DROPOFF]: {
+          overlayProps: {
+            message: "Taking you to Cabbo airport transfers...",
+            illustration: null, // Replace with airport SVG if available
+            subtext: "Airport drop, schedule ahead, no-bluff pricing",
+            nextActionText: "Next: add pickup time and other preferences", // customer picked from source/origin to airport
+          },
+          route: ROUTES.AIRPORT,
+        },
+        [TRIP_TYPES.OUTSTATION]: {
+          overlayProps: {
+            message: "Taking you to Cabbo outstation...",
+            illustration: null, // Replace with outstation SVG if available
+            subtext: "Outstation trips, round trips, multi-day packages",
+            nextActionText: "Next: select dates and get going",
+          },
+          route: ROUTES.OUTSTATION,
+        },
+        [TRIP_TYPES.LOCAL]: {
+          overlayProps: {
+            message: "Taking you to Cabbo hourly rentals...",
+            illustration: <LocalHourlyRideCityscape className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />,
+            subtext: "Flexible in-city rides, multiple stops, hourly packages",
+            nextActionText: "Next: set your ride details",
+          },
+          route: ROUTES.LOCAL,
+        },
+      };
+      const config = tripTypeConfig[response.trip_type] || tripTypeConfig[TRIP_TYPES.LOCAL];
+      showOverlay(config.overlayProps);
+      // Hide overlay after 1.2s and navigate
+      setTimeout(() => {
+       hideOverlay();
+       navigate(config.route, { state: response });
+      }, 1200);
     } catch (e) {
       if (isDevMode) {
         console.error("Trip classification failed", e);

@@ -5,12 +5,14 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import { ToastProvider, GeographyProvider } from "@/context";
 import { ErrorBoundary } from "@/components";
+import { OverlayProvider } from "@/context";
 
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
+      <OverlayProvider>
       <ToastProvider>
         <GeographyProvider>
           <ErrorBoundary>
@@ -18,6 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           </ErrorBoundary>
         </GeographyProvider>
       </ToastProvider>
+      </OverlayProvider>
     </QueryClientProvider>
   </React.StrictMode>,
 );

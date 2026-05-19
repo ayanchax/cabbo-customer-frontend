@@ -7,6 +7,7 @@ export const LOCAL_STORAGE_KEYS = {
     "currentLocation": "currentLocation",
     "recentSuggestions": "recentSuggestions",
     "clientGeography": "clientGeography",
+    "serverGeography": "serverGeography",
 }
 export const API_VERSION = import.meta.env.VITE_API_VERSION || "/api/v1";
 

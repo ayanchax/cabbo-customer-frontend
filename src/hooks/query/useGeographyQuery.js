@@ -7,6 +7,9 @@ import {fetchClientGeography, fetchServerGeography} from "@/api";
 const CLIENT_GEO_CACHE_KEY = LOCAL_STORAGE_KEYS.clientGeography;
 const CLIENT_GEO_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours in ms
 
+const SERVER_GEO_CACHE_KEY = LOCAL_STORAGE_KEYS.serverGeography;
+const SERVER_GEO_CACHE_TTL = 60 * 60 * 1000; // 1 hour in ms, as server geography might change more frequently (e.g., due to CDN routing changes, env file updates) and is less expensive to fetch than client geography
+
 export const useGeographyQuery = () => {
     const {getItem, setItem} = useLocalStorage();
     const fallbackGeography = {
@@ -69,10 +72,44 @@ export const useGeographyQuery = () => {
         retry: false,
     });
 
+    const getCachedServerGeography = () => {
+        try {
+            const cached = getItem(SERVER_GEO_CACHE_KEY);
+            if (!cached) return null;
+            const { data, timestamp } = cached;
+            if (Date.now() - timestamp < SERVER_GEO_CACHE_TTL) {
+                return data;
+            }
+            return null;
+        }
+        catch {
+            return null;
+        }
+    };
+
+    const setCachedServerGeography = (data) => {
+        try {
+            setItem(
+                SERVER_GEO_CACHE_KEY,
+                JSON.stringify({ data, timestamp: Date.now() })
+            );
+        } catch {
+            // Ignore write errors (e.g., quota exceeded)
+        }
+    };
+
+
+
     // Fetch server-side geography.
     const { data: serverData, isLoading, error } = useQuery({
-        queryKey: ["geography"],
-        queryFn: fetchServerGeography,
+        queryKey: ["serverGeography"],
+        queryFn: async () => {
+            const cached = getCachedServerGeography();
+            if (cached) return cached;
+            const fresh = await fetchServerGeography();
+            setCachedServerGeography(fresh);
+            return fresh;
+        },
         staleTime: Infinity,
         gcTime: Infinity,
         retry: false,

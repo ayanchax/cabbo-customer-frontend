@@ -4,10 +4,10 @@
 @import "tailwindcss";
 
 /* Primary font is Satoshi Variable, with Satoshi as a fallback for browsers that don't support variable fonts. Then we fall back to Inter, and then a system font stack. */
-@import "assets/fonts/satoshi/css/satoshi.css";
+@import "./assets/fonts/satoshi/css/satoshi.css";
 
 /* Geist Mono is used on demand for styling prices, code snippets, and other monospaced text. */
-@import "assets/fonts/geist-mono/css/geist-mono.css";
+@import "./assets/fonts/geist-mono/css/geist-mono.css";
 
 @theme {
   --color-primary: #0B5FFF;

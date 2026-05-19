@@ -1,6 +1,7 @@
 import { AppRouter } from "@/routes";
 import { Toaster } from "react-hot-toast";
 import { useToast } from "@/hooks";
+
 function App() {
   const { DEFAULT_TOAST_OPTIONS } = useToast();
   return (
@@ -13,7 +14,7 @@ function App() {
         containerStyle={{ bottom: 20 }}
         toastOptions={DEFAULT_TOAST_OPTIONS}
       />
-    </>
+      </>
   );
 }
 
