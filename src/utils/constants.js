@@ -36,6 +36,7 @@ export const ENDPOINTS = {
     },
     TRIP: {
             CLASSIFY_TYPE: `${API_VERSION}/trips/trip-type-classification/classify`,
+            GET_PACKAGES_BY_TRIP_TYPE_AND_REGION: `${API_VERSION}/trips/trip-packages`, // expects query params ?trip_type=xxx&region_code=yyy
         }
 
 

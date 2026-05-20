@@ -4,3 +4,4 @@ export {fetchServerGeography, fetchClientGeography} from "./geography";
 export {reverseGeocode, searchLocations, getLocationByPlaceId} from "./location";
 export {isLoggedIn, getProfile} from "./customer";
 export {classifyTripType} from "./trip_type";
+export {getTripPackages} from "./trip_package";

@@ -1,27 +1,21 @@
-import { APP } from "@/utils";
+import { CabboSplashIllustration } from "@/components";
 
-const Splash = ({message='Loading...'}) => {
+const Splash = ({
+  message = "Preparing your ride..."
+}) => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 overflow-hidden">
       <div className="flex flex-col items-center">
-        
-        {/* Logo */}
-        <img
-          src={import.meta.env.VITE_APP_LOGO_URL}
-          alt={APP.name}
-          className="w-24 ml-4  h-auto mb-6 animate-fade-in"
-        />
 
-        {/* Loader */}
-        <div className="flex items-center gap-2">
+        <CabboSplashIllustration className="w-64 h-auto animate-fade-in" />
+
+        <div className="flex items-center gap-2 mt-2">
           <span className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]" />
           <span className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]" />
           <span className="w-2 h-2 bg-primary rounded-full animate-bounce" />
         </div>
 
-        {/* Optional subtle text */}
-        <p className="text-xs text-gray-400 mt-4">
+        <p className="text-sm text-gray-400 mt-5 tracking-wide">
           {message}
         </p>
 
@@ -30,4 +24,4 @@ const Splash = ({message='Loading...'}) => {
   );
 };
 
-export  {Splash};
+export { Splash };
