@@ -69,11 +69,41 @@ This means the frontend can safely omit these fields if the user does not provid
 
 ---
 
-## Next Steps
-- Build the Local/Hourly Rental context screen UI with the above fields and logic.
-- Integrate hourly package selection API.
-- Add validation for start_date (at least 6 hours from now).
-- Default passenger to self; add passenger management later.
+
+## Implementation Plan (2026)
+
+### 1. Required API Calls
+- **Fetch available hourly packages:**  
+    Use `useTripPackagesQuery(trip_type, region_code)` to get the list of packages for the user to select from.
+- **Fetch prior booking window:**  
+    Use `useTripPriorBookingWindowQuery(trip_type, jurisdiction_code)` to get the minimum hours in advance the trip can be scheduled (used to validate `start_date`).
+
+### 2. UI & State
+- Pickup location input (origin)
+- Start date/time picker (with validation: must be at least [prior booking window] hours from now)
+- Package selection (dropdown/cards, populated from packages API)
+- Optional: destination input
+- “Book” or “Search” button
+
+### 3. Submission
+- On submit, send required fields to `/search` API:
+    - `trip_type`: "local"
+    - `origin`: LocationInfo object
+    - `start_date`: ISO string, validated
+    - `package_id`: selected package
+- Optional fields (destination, preferences, bags) can be omitted; backend will default as per spec.
+
+### 4. Validation
+- Ensure `start_date` is at least `[prior booking window]` hours from now (from API).
+- All other required fields must be filled.
+
+### 5. Next Steps
+- Build UI skeleton with above fields.
+- Integrate both APIs for packages and prior booking window.
+- Add validation logic for start date.
+- Connect to `/search` API on submit.
+
+---
 
 ---
 

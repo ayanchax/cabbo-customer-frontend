@@ -1,7 +1,7 @@
 import { CabboSplashIllustration } from "@/components";
 
 const Splash = ({
-  message = "Preparing your ride..."
+  message = "Loading your experience..."
 }) => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 overflow-hidden">

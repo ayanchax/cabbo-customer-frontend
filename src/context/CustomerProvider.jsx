@@ -6,7 +6,7 @@ import { Navigate } from "react-router-dom";
 
 export const CustomerProvider = ({ children, isLoggedIn }) => {
   const { data:customerProfile, isLoading: profileLoading, error: profileError } = useCustomerProfileQuery(!!isLoggedIn);
-  if (!profileLoading) {
+  if (profileLoading) {
     return <Splash />;
   }
 
