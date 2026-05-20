@@ -78,12 +78,15 @@ This means the frontend can safely omit these fields if the user does not provid
 - **Fetch prior booking window:**  
     Use `useTripPriorBookingWindowQuery(trip_type, jurisdiction_code)` to get the minimum hours in advance the trip can be scheduled (used to validate `start_date`).
 
+
 ### 2. UI & State
-- Pickup location input (origin)
-- Start date/time picker (with validation: must be at least [prior booking window] hours from now)
-- Package selection (dropdown/cards, populated from packages API)
-- Optional: destination input
-- “Book” or “Search” button
+- **Origin:** Display only. The pickup location (origin) is passed via navigation state from the previous step and shown to the user for confirmation. No search/location input in this step.
+- **Destination:** Not shown. For local/hourly rentals, destination is not collected (similar to Uber Reserve and other industry standards).
+- **Start date/time picker:** With validation (must be at least [prior booking window] hours from now).
+- **Package selection:** Dropdown/cards, populated from packages API.
+- **Book/Search button:** For swift, easy booking flow.
+
+**Goal:** Minimize friction—user only confirms pickup, selects time and package, and books. No destination or location search in this context.
 
 ### 3. Submission
 - On submit, send required fields to `/search` API:
