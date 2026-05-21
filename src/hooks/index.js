@@ -7,5 +7,6 @@ export { useCurrentLocation } from "./useCurrentLocation";
 export { useDebounce } from "./useDebounce";
 export {useRecentSuggestions} from "./useRecentSuggestions";
 export { useOverlay } from "./useOverlay";
+export { useScrollCue } from "./useScrollCue";
 export * from "./query";
 export * from "./mutation";
