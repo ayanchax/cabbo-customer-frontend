@@ -9,12 +9,12 @@ import {
 import { TIME_SLOT_START_HOUR, TIME_SLOT_END_HOUR, DEFAULT_MINUTE_STEP } from '@/components/common/datetime-picker';
 
 export function roundToNextStep(date, step = DEFAULT_MINUTE_STEP) {
-  const minutes = date.getMinutes();
+  const d = new Date(date);
+  d.setSeconds(0, 0); // Always reset seconds and ms
+  const minutes = d.getMinutes();
   const remainder = minutes % step;
-
-  if (remainder === 0) return date;
-
-  return addMinutes(date, step - remainder);
+  if (remainder === 0) return d;
+  return addMinutes(d, step - remainder);
 }
 
 export function formatDisplayDate(date) {

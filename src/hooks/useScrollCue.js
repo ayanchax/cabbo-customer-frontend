@@ -7,11 +7,10 @@ import { useRef, useState, useEffect, useCallback } from "react";
  * @param {Array} options.deps - Dependency array for recalculating cues
  * @returns [atStart, atEnd, scrollRef, handleScroll]
  */
-export function useScrollCue({ direction = "vertical", deps = [] } = {}) {
+export function useScrollCue({ direction = "vertical", deps = [], EPSILON = 2 } = {}) {
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
   const scrollRef = useRef(null);
-  const EPSILON = 2; // px
 
   // Helper to check scroll position
   const checkScroll = useCallback(() => {
@@ -35,7 +34,7 @@ export function useScrollCue({ direction = "vertical", deps = [] } = {}) {
         setAtEnd(Math.abs(el.scrollWidth - el.scrollLeft - el.clientWidth) < EPSILON);
       }
     }
-  }, [direction]);
+  }, [EPSILON, direction]);
 
   // Effect to check on mount and when deps change
   useEffect(() => {

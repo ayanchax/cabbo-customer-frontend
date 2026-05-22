@@ -20,6 +20,7 @@ function DateTimePicker({
       />
 
       <DateTimeSheet
+        key={open ? value?.getTime() || 'empty' : 'closed'}
         open={open}
         value={value}
         onClose={() => setOpen(false)}

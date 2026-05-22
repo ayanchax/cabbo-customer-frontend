@@ -1,9 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useTripPackagesQuery } from "@/hooks/query/useTripPackage";
-import { useTripPriorBookingWindowQuery } from "@/hooks/query/useTripPriorBookingWindow";
+import { useTripPackagesQuery , useTripPriorBookingWindowQuery} from "@/hooks";
 import { DateTimePicker } from "@/components/common/datetime-picker";
-// UI components (replace with your design system or custom components)
+import { roundToNextStep } from "@/components/common/datetime-picker";
 // import PackageSelector from '@/components/PackageSelector';
 const DEFAULT_MINIMUM_BOOKING_HOURS = 6; // Default to 6 hours if API doesn't provide a value
 function LocalHourlyRental() {
@@ -27,14 +26,14 @@ function LocalHourlyRental() {
   // Validation: startDate must be at least [priorBookingWindow] hours from now
   const minStartDate = useMemo(() => {
     // Minimum start date is current time + prior booking window hours. If priorBookingWindow is not available, we won't enforce this constraint (we will set it to default 6 hours).
-    // This means that, a customer can only book a rental starting at least [priorBookingWindow] hours in the future. For example, if priorBookingWindow is 6, and current time is 3 PM, then the earliest start time they can select is 9 PM onwards.
+    // This means that, a customer can only book a rental starting at least [priorBookingWindow] hours in the future from now. For example, if priorBookingWindow is 6, and current time is 3 PM, then the earliest start time they can select is 9 PM onwards.
     const bookingWindow = priorBookingWindow || DEFAULT_MINIMUM_BOOKING_HOURS;
     const now = new Date();
     now.setHours(now.getHours() + bookingWindow);
     return now;
   }, [priorBookingWindow]);
   // State for form fields
-  const [startDate, setStartDate] = useState(minStartDate); // ISO string
+  const [startDate, setStartDate] = useState(() => roundToNextStep(minStartDate)); // ISO string
   const [selectedPackageId, setSelectedPackageId] = useState(null);
   const [error, setError] = useState(null);
 
