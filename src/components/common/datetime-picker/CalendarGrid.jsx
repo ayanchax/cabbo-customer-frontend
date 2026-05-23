@@ -53,6 +53,7 @@ function CalendarGrid({
           before: today,
           after: maxDate,
         }}
+        month ={selectedDate || today}
         startMonth={today}
         endMonth={maxDate}
         ariaLabel="Day Picker"

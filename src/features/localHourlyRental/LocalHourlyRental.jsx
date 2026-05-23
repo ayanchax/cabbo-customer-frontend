@@ -79,13 +79,13 @@ function LocalHourlyRental() {
         <label className="block text-gray-500 text-sm mb-1">
           Start date & time
         </label>
-        {/* Replace with your DateTimePicker component */}
         <DateTimePicker
           value={startDate}
           onChange={setStartDate}
           label="Pickup date & time"
           placeholder="Select pickup schedule"
           minDateTime={minStartDate}
+          type="pickup"
         />
       </div>
 

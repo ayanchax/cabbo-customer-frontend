@@ -7,6 +7,8 @@ function DateTimePicker({
   label = 'Date & time',
   placeholder = 'Select date & time',
   minDateTime,
+  ...rest
+  
 }) {
   const [open, setOpen] = useState(false);
 
@@ -17,6 +19,8 @@ function DateTimePicker({
         value={value}
         placeholder={placeholder}
         onClick={() => setOpen(true)}
+        {...rest}
+         
       />
 
       <DateTimeSheet
@@ -26,6 +30,8 @@ function DateTimePicker({
         onClose={() => setOpen(false)}
         onConfirm={onChange}
         minDateTime={minDateTime}
+        {...rest}
+         
       />
     </>
   );

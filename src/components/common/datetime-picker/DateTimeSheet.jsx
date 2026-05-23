@@ -1,13 +1,29 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { Clock3 } from "lucide-react";
 import { CalendarGrid, TimeSlots } from "@/components/common/datetime-picker";
 
-function DateTimeSheet({ open, onClose, value, onConfirm, minDateTime }) {
+function DateTimeSheet({ open, onClose, value, onConfirm, minDateTime, type="pickup" }) {
   const [draftDateTime, setDraftDateTime] = useState(value || null);
   const [timeSlotSelected, setTimeSlotSelected] = useState(false);
+  const [showScrollToSelection, setShowScrollToSelection] = useState(false);
+  const timeSlotsRef = useRef(null);
   if (!open) return null;
-  
-  
- 
+
+  const handleTimeSlotVisibility = () => {
+    if (timeSlotsRef.current) {
+      const userHasScrolled = timeSlotsRef.current.getUserHasScrolled();
+      const inView = timeSlotsRef.current.isSelectedSlotInView();
+      if (!inView && userHasScrolled) {
+        setShowScrollToSelection(true);
+      } else if (!inView && !userHasScrolled) {
+        // Auto-scroll if user hasn't scrolled
+        timeSlotsRef.current.scrollToSelectedSlot();
+        setShowScrollToSelection(false);
+      } else {
+        setShowScrollToSelection(false);
+      }
+    }
+  };
   const handleSelectedDateChange = (date) => {
     if (!date) return;
     const next = new Date(draftDateTime || date);
@@ -15,8 +31,12 @@ function DateTimeSheet({ open, onClose, value, onConfirm, minDateTime }) {
     next.setMonth(date.getMonth());
     next.setDate(date.getDate());
     setDraftDateTime(next);
-     
+    // After date change, check if selected slot is in view and if user has scrolled
+    setTimeout(() => {
+      handleTimeSlotVisibility();
+    }, 0);
   };
+
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center animate-slide-up transition ease-in-out duration-400">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
@@ -33,7 +53,7 @@ function DateTimeSheet({ open, onClose, value, onConfirm, minDateTime }) {
         <div className="pt-1 pb-2 flex flex-col items-center shrink-0 bg-white z-10">
           <div className="h-1 w-10 rounded-full bg-neutral-300 mb-2" />
           <div className="text-base sm:text-lg font-semibold mb-1">
-            Select pickup time
+            Choose date & time
           </div>
         </div>
 
@@ -50,11 +70,29 @@ function DateTimeSheet({ open, onClose, value, onConfirm, minDateTime }) {
               </div>
             </div>
             <div className="w-full lg:w-1/2">
+              {showScrollToSelection && (
+                <button
+                  type="button"
+                  title="Scroll to recently selected time"
+                  aria-label="Scroll to recently selected time"
+                  className="cursor-pointer fixed z-50 bottom-24 right-6 lg:bottom-16 lg:right-16 w-6 h-6 flex items-center justify-center rounded-full bg-primary text-white shadow-2xl hover:bg-primary/90 transition focus:outline-none focus:ring-2 focus:ring-primary/60"
+                  onClick={() => {
+                    if (timeSlotsRef.current) {
+                      timeSlotsRef.current.scrollToSelectedSlot();
+                      setShowScrollToSelection(false);
+                    }
+                  }}
+                >
+                  <Clock3 size={24} />
+                </button>
+              )}
               <TimeSlots
+                ref={timeSlotsRef}
                 selectedDate={draftDateTime}
                 selectedTime={draftDateTime}
                 onSelect={(time) => {
                   setDraftDateTime(time);
+                  setShowScrollToSelection(false); // Hide button on new selection
                 }}
                 minDateTime={minDateTime}
                 onSlotActiveChange={setTimeSlotSelected}
@@ -74,7 +112,7 @@ function DateTimeSheet({ open, onClose, value, onConfirm, minDateTime }) {
             }}
             className="w-full rounded-xl bg-primary py-3 text-base font-medium text-white transition disabled:opacity-50 cursor-pointer hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/75 focus:ring-opacity-30 disabled:cursor-not-allowed"
           >
-            Confirm pickup time
+            Confirm your choice
           </button>
         </div>
       </div>

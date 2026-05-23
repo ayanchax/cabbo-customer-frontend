@@ -1,15 +1,27 @@
-import React, { useEffect, useRef, useMemo } from "react";
-import { useScrollCue } from "@/hooks";
+import React, {
+  useEffect,
+  useRef,
+  useMemo,
+  useImperativeHandle,
+  forwardRef,
+  useState,
+} from "react";
+import { useScrollCue, useUIElement } from "@/hooks";
 import { format } from "date-fns";
 import { generateTimeSlots } from "@/components/common/datetime-picker/utils";
 
-function TimeSlots({
-  selectedDate,
-  selectedTime,
-  onSelect,
-  minDateTime,
-  onSlotActiveChange,
-}) {
+const TimeSlots = forwardRef(function TimeSlots(
+  {
+    selectedDate,
+    selectedTime,
+    onSelect,
+    minDateTime,
+    onSlotActiveChange,
+  },
+  ref,
+) {
+  // Track if user has scrolled after date change
+  const [userHasScrolled, setUserHasScrolled] = useState(false);
   // For vertical scroll cue (desktop and larger screens)
   const [atTop, atBottom, vertScrollRef, handleVertScroll] = useScrollCue({
     direction: "vertical",
@@ -21,18 +33,23 @@ function TimeSlots({
     deps: [selectedDate, minDateTime],
   });
 
+  const { isElementInView } = useUIElement();
+
   // Generate a 24 hour time slots for the selected date.
   // This shows time slots from 12:00 AM to 11:45 PM with a step of 15 minutes, if selected date is after the minDateTime. Otherwise, it shows time slots starting from the next available slot after minDateTime.
-   
+
   const slots = useMemo(() => {
-  return generateTimeSlots({
-    selectedDate,
-    minDateTime,
-  });
-}, [
-  selectedDate ,
-  minDateTime ,
-]);
+    const timeSlots = generateTimeSlots({
+      selectedDate,
+      minDateTime,
+    });
+
+    if (!timeSlots || timeSlots.length === 0) {
+      throw new Error("No available time slots for the selected date.");
+      // This will be caught by the ErrorBoundary of the App, we do not need to handle it here since if there are no available time slots, it is an exceptional case and we want to show the error fallback UI to the user.
+    }
+    return timeSlots;
+  }, [selectedDate, minDateTime]);
 
   // Refs for scrolling selected slot into view
   const slotRefs = useRef({});
@@ -55,7 +72,8 @@ function TimeSlots({
       scrollToSelectedSlot();
       didMount.current = true;
     }
-    // No auto-scroll on subsequent updates (like date changes)
+    // Reset userHasScrolled on slot list regeneration (date change)
+    setUserHasScrolled(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTime, onSlotActiveChange, slots]);
 
@@ -68,7 +86,32 @@ function TimeSlots({
     signalSlotActiveChange(true); //This will signal to parent that a slot is now active/selected
     // Wait for React state update + re-render
     scrollToSelectedSlot(true, slot); // Pass the newly selected slot to scroll to it after state updates and re-render occurs
-     
+    setUserHasScrolled(false); // Reset scroll intent on selection
+  };
+  // Expose scrollToSelectedSlot and isSelectedSlotInView to parent
+  useImperativeHandle(ref, () => ({
+    scrollToSelectedSlot,
+    isSelectedSlotInView,
+    resetUserHasScrolled: () => setUserHasScrolled(false),
+    setUserHasScrolledTrue: () => setUserHasScrolled(true),
+    getUserHasScrolled: () => userHasScrolled,
+  }));
+
+  // Check if selected slot is in view (either mobile or desktop)
+  const isSelectedSlotInView = () => {
+    if (!selectedTime) return true;
+    const slotKeyMobile = `responsive-slot-${selectedTime.getTime()}`;
+    const slotKeyDesktop = `vertical-slot-${selectedTime.getTime()}`;
+    const slotElMobile = slotRefs.current[slotKeyMobile];
+    const slotElDesktop = slotRefs.current[slotKeyDesktop];
+    let inView = true;
+    if (slotElMobile && horizScrollRef.current) {
+      inView = inView && isElementInView(slotElMobile, horizScrollRef.current);
+    }
+    if (slotElDesktop && vertScrollRef.current) {
+      inView = inView && isElementInView(slotElDesktop, vertScrollRef.current);
+    }
+    return inView;
   };
 
   const scrollToSelectedSlot = (withAnimationFrame = false, slot = null) => {
@@ -77,40 +120,54 @@ function TimeSlots({
         requestAnimationFrame(() => {
           const slotKeyMobile = `responsive-slot-${slot.getTime()}`;
           const slotKeyDesktop = `vertical-slot-${slot.getTime()}`;
-
-          slotRefs.current[slotKeyMobile]?.scrollIntoView({
-            behavior: "auto",
-            block: "center",
-            inline: "center",
-          });
-
-          slotRefs.current[slotKeyDesktop]?.scrollIntoView({
-            behavior: "auto",
-            block: "center",
-            inline: "center",
-          });
+          const slotElMobile = slotRefs.current[slotKeyMobile];
+          const slotElDesktop = slotRefs.current[slotKeyDesktop];
+          if (
+            slotElMobile &&
+            horizScrollRef.current &&
+            !isElementInView(slotElMobile, horizScrollRef.current)
+          ) {
+            slotElMobile.scrollIntoView({
+              behavior: "auto",
+              block: "center",
+              inline: "center",
+            });
+          }
+          if (
+            slotElDesktop &&
+            vertScrollRef.current &&
+            !isElementInView(slotElDesktop, vertScrollRef.current)
+          ) {
+            slotElDesktop.scrollIntoView({
+              behavior: "auto",
+              block: "center",
+              inline: "center",
+            });
+          }
         });
       } else {
+        if (!selectedTime) return;
+        const slotKeyMobile = `responsive-slot-${selectedTime.getTime()}`;
+        const slotKeyDesktop = `vertical-slot-${selectedTime.getTime()}`;
+        const slotElMobile = slotRefs.current[slotKeyMobile];
+        const slotElDesktop = slotRefs.current[slotKeyDesktop];
         if (
-          selectedTime &&
-          slotRefs.current[`responsive-slot-${selectedTime.getTime()}`]
+          slotElMobile &&
+          horizScrollRef.current &&
+          !isElementInView(slotElMobile, horizScrollRef.current)
         ) {
-          slotRefs.current[
-            `responsive-slot-${selectedTime.getTime()}`
-          ].scrollIntoView({
+          slotElMobile.scrollIntoView({
             behavior: "smooth",
             block: "center",
             inline: "center",
           });
         }
-
         if (
-          selectedTime &&
-          slotRefs.current[`vertical-slot-${selectedTime.getTime()}`]
+          slotElDesktop &&
+          vertScrollRef.current &&
+          !isElementInView(slotElDesktop, vertScrollRef.current)
         ) {
-          slotRefs.current[
-            `vertical-slot-${selectedTime.getTime()}`
-          ].scrollIntoView({
+          slotElDesktop.scrollIntoView({
             behavior: "smooth",
             block: "center",
             inline: "center",
@@ -126,7 +183,7 @@ function TimeSlots({
     <div className="mt-0  lg:mt-4">
       {slots.length > 0 && (
         <>
-          <div className="text-sm font-medium mb-3 px-4">Available times</div>
+          <div className="text-sm font-medium mb-3 px-4">{`Available time slots`}</div>
           <div className="relative">
             {/* Gradient overlays for scroll cue */}
             {/* Horizontal gradient for mobile/tablet */}
@@ -147,7 +204,10 @@ function TimeSlots({
             {/* Responsive slot scroller: horizontal on mobile/tablet, hidden on lg+ */}
             <div
               ref={horizScrollRef}
-              onScroll={handleHorizScroll}
+              onScroll={(e) => {
+                handleHorizScroll(e);
+                setUserHasScrolled(true);
+              }}
               className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide scroll-smooth lg:hidden overflow-scrolling-touch"
             >
               {slots.map((slot) => {
@@ -179,7 +239,10 @@ function TimeSlots({
               <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full border-2 border-dashed border-neutral-400 opacity-30 z-0" />
               <div
                 ref={vertScrollRef}
-                onScroll={handleVertScroll}
+                onScroll={(e) => {
+                  handleVertScroll(e);
+                  setUserHasScrolled(true);
+                }}
                 className="flex flex-col items-center max-h-72 overflow-y-auto scrollbar-hide scroll-smooth py-0 w-full relative z-10 overflow-scrolling-touch"
               >
                 {slots.map((slot) => {
@@ -199,8 +262,6 @@ function TimeSlots({
                           : "bg-white border-neutral-200"
                       }`}
                     >
-
-                      
                       {format(slot, "hh:mm a")}
                     </button>
                   );
@@ -220,6 +281,6 @@ function TimeSlots({
       )}
     </div>
   );
-}
+});
 
 export { TimeSlots };
