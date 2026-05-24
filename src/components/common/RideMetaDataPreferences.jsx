@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Info } from "lucide-react";
 import { PassengerCounter } from "@/components";
 
@@ -20,15 +19,17 @@ import { PassengerCounter } from "@/components";
  * - helperText: string (optional, user-friendly message)
  */
 export function RideMetaDataPreferences({
-  value = { num_adults: 1, num_children: 0 },
+  value = { num_adults: 1, num_children: 0,  },
+  id,
   onChange,
   showLuggage = false,
   minAdults = 1,
   maxAdults = 6,
   minChildren = 0,
   maxChildren = 4,
-  helperText='Tell us about your group and travel needs to help us match you with the most suitable ride',
+  helperText = "Tell us about your group and travel needs to help us match you with the most suitable ride",
 }) {
+  const rootRef = useRef(null);
   const handleChange = (field, delta, min, max) => {
     const newValue = {
       ...value,
@@ -36,30 +37,70 @@ export function RideMetaDataPreferences({
     };
     onChange?.(newValue);
   };
+  // Focus root element when label[for=id] is clicked from parent
+  useEffect(() => {
+    if (!id) return;
+    const label = document.querySelector(`label[for='${id}']`);
+
+    if (!label) return;
+    // eslint-disable-next-line no-unused-vars
+    const handler = (e) => {
+      if (rootRef.current) {
+        rootRef.current.focus();
+      }
+    };
+    label.addEventListener("click", handler);
+    return () => {
+      label.removeEventListener("click", handler);
+    };
+  }, [id]);
 
   return (
-    <div className="flex flex-col gap-2 bg-white rounded-lg border border-gray-100 p-3 shadow-sm max-w-md w-full">
+    <div
+      ref={rootRef}
+      id={id}
+      tabIndex={0}
+      className="flex flex-col gap-2 bg-white rounded-lg border border-gray-100 p-3 shadow-sm max-w-md w-full border-dashed  transition-shadow focus:outline-none focus:border-solid focus:border-primary focus:ring-2 focus:ring-primary/40"
+    >
       {helperText && (
         <div className="flex items-center gap-2 mb-1 text-xs text-gray-500">
           <Info size={16} className="text-blue-400" aria-hidden="true" />
           <span>{helperText}</span>
         </div>
       )}
-      <div className="flex flex-row gap-2">
-        <PassengerCounter
-          passengerType="adults"
-          count={value.num_adults}
-          onChange={newCount => handleChange("num_adults", newCount - value.num_adults, minAdults, maxAdults)}
-          minusDisabled={value.num_adults <= minAdults} // Prevent reducing adults if it would also reduce children below minimum
-          plusDisabled={value.num_adults >= maxAdults } // Prevent increasing adults if at max or if it would allow reducing adults below minimum while having children
-        />
-        <PassengerCounter
-          passengerType="children"
-          count={value.num_children}
-          onChange={newCount => handleChange("num_children", newCount - value.num_children, minChildren, maxChildren)}
-          minusDisabled={value.num_children <= minChildren} // Prevent reducing children below minimum
-          plusDisabled={value.num_children >= maxChildren} // Prevent increasing children above maximum
-        />
+      <div className="flex flex-row gap-x-8 justify-center items-center mt-2 mb-1">
+        <div className="flex-1 flex flex-col items-center">
+          <PassengerCounter
+            passengerType="adults"
+            count={value.num_adults}
+            onChange={(newCount) =>
+              handleChange(
+                "num_adults",
+                newCount - value.num_adults,
+                minAdults,
+                maxAdults,
+              )
+            }
+            minusDisabled={value.num_adults <= minAdults}
+            plusDisabled={value.num_adults >= maxAdults}
+          />
+        </div>
+        <div className="flex-1 flex flex-col items-center">
+          <PassengerCounter
+            passengerType="children"
+            count={value.num_children}
+            onChange={(newCount) =>
+              handleChange(
+                "num_children",
+                newCount - value.num_children,
+                minChildren,
+                maxChildren,
+              )
+            }
+            minusDisabled={value.num_children <= minChildren}
+            plusDisabled={value.num_children >= maxChildren}
+          />
+        </div>
       </div>
       {/* Luggage fields (future) */}
       {showLuggage && (

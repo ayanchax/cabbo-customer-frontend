@@ -15,7 +15,7 @@ function PassengerCounter({
       <div className="flex items-center gap-1">
         <button
           type="button"
-          className="w-7 h-7 rounded-full border border-gray-200 flex items-center justify-center text-base font-bold bg-gray-50 hover:bg-gray-100 disabled:opacity-40"
+          className="w-7 h-7 rounded-full border cursor-pointer border-gray-200 flex items-center justify-center text-base font-bold bg-gray-50 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
           onClick={() => onChange?.(Math.max(0, count - 1))}
           disabled={minusDisabled || count <= 0}
           aria-label={`Decrease ${passengerType}`}
@@ -25,7 +25,7 @@ function PassengerCounter({
         <span className="w-7 text-center text-sm font-semibold">{count}</span>
         <button
           type="button"
-          className="w-7 h-7 rounded-full border border-gray-200 flex items-center justify-center text-base font-bold bg-gray-50 hover:bg-gray-100 disabled:opacity-40"
+          className="w-7 h-7 rounded-full border cursor-pointer border-gray-200 flex items-center justify-center text-base font-bold bg-gray-50 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
           onClick={() => onChange?.(count + 1)}
           disabled={plusDisabled || disabled}
           aria-label={`Increase ${passengerType}`}

@@ -19,16 +19,21 @@ function LocalHourlyRental() {
  
   // Origin is passed in navigation state from previous step
   const origin = location.state?.pickup;
+  
   if (!origin) {
     throw new Error(
       "Origin (pickup location) is required to book a local hourly rental.",
     );
     // Error Boundary can catch this and show user-friendly fallback UI with option to go back to previous step
   }
+  const dropOff = location.state?.dropoff; // Optional dropoff location for display purposes, but we will not require it for booking since some rentals may not have a fixed dropoff location
   const { showToast } = useToast();
   const navigate = useNavigate();
-  const displayText = origin?.display_name ?? null;
-  const full_address = origin?.address ?? null;
+  const originDisplayText = origin?.display_name ?? null;
+  const originFullAddress = origin?.address ?? null;
+  const dropOffDisplayText = dropOff?.display_name ?? null;
+  const dropOffFullAddress = dropOff?.address ?? null;
+  
   const region_code = origin?.region_code;
   const trip_type = "local";
 
@@ -55,7 +60,7 @@ function LocalHourlyRental() {
   // State for form fields
   const [startDate, setStartDate] = useState(null); // ISO string
   const [selectedPackageId, setSelectedPackageId] = useState(null);
-
+  const [ridePreferences, setRidePreferences] = useState({ num_adults: 1, num_children: 0 }); // Example additional preferences
   const [inProgress, setInProgress] = useState(false);
 
   const handleBook = () => {
@@ -92,7 +97,7 @@ function LocalHourlyRental() {
             illustration: <GettingRideOptionsIllustration className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />,
             subtext: "Searching available cabs and packages in your area",
           }
-      //showOverlay(overlayProps);
+      showOverlay(overlayProps);
       console.log(origin, startDate, selectedPackageId, tz_info);
 
       // Submit to /search API (not implemented here)
@@ -137,7 +142,7 @@ function LocalHourlyRental() {
         <div className="text-gray-500 text-sm mb-1">Pickup location</div>
         <div className="flex items-center gap-1">
           <MapPin
-            className="w-4 h-4 text-primary shrink-0"
+            className="w-4 h-4 text-primary shrink-0 "
             aria-label="Pickup location"
           />
           <span
@@ -145,16 +150,42 @@ function LocalHourlyRental() {
               origin ? "text-gray-900" : "text-gray-400"
             }`}
           >
-            {displayText}
+            {originDisplayText}
           </span>
         </div>
 
-        {full_address && (
+        {originFullAddress && (
           <span className="block text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 truncate">
-            {full_address}
+            {originFullAddress}
           </span>
         )}
       </div>
+
+      {/* Optional dropoff location */}
+      {dropOff && (
+        <div className="mb-4">
+          <div className="text-gray-500 text-sm mb-1">Dropoff location</div>
+          <div className="flex items-center gap-1">
+            <MapPin
+              className="w-4 h-4 text-primary shrink-0 "
+              aria-label="Dropoff location"
+            />
+            <span
+              className={`block text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] font-medium truncate ${
+                dropOff ? "text-gray-900" : "text-gray-400"
+              }`}
+            >
+              {dropOffDisplayText}
+            </span>
+          </div>
+
+          {dropOffFullAddress && (
+            <span className="block text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 truncate">
+              {dropOffFullAddress}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Start date/time picker */}
       <div
@@ -197,7 +228,7 @@ function LocalHourlyRental() {
          <label htmlFor="ridePreferences" className="block text-gray-500 text-sm mb-2">
           Preferences
         </label>
-        <RideMetaDataPreferences id="ridePreferences"/>
+        <RideMetaDataPreferences value={ridePreferences} onChange={setRidePreferences} id="ridePreferences"/>
       </div>
      
       {/* Book button */}
