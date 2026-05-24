@@ -13,12 +13,13 @@ This document describes the core logic, required fields, and backend integration
 
 ## Optional Fields
 - **destination:** Optional for local rentals. User may specify a drop-off location, but can leave it blank (open-ended rental).
-- **num_adults, num_children, num_large_suitcases, num_carryons, num_backpacks, num_other_bags:** All optional. If not provided, backend will set sensible defaults.
-- **preferred_car_type, preferred_fuel_type:** Optional. Backend defaults to Sedan/Diesel if not provided.
+- **num_adults, num_children:** Optional. If not provided, backend will set sensible defaults. These are the only passenger fields shown for local/hourly rental, as luggage fields are not relevant for short in-city trips.
+- **preferred_car_type, preferred_fuel_type:** Optional. Backend defaults to Sedan/Diesel if not provided. (Not shown in UI for now.)
 - **passenger:** For now, always self (current user). "Book for someone else" will be added later.
 
 ## Not Used in Local/Hourly Rental
 - **hops:** Not supported for local rentals (only for outstation in future).
+- **Luggage fields:** (num_large_suitcases, num_carryons, num_backpacks, num_other_bags) are not shown for local/hourly rental. These are only relevant for airport and outstation trips.
 
 ---
 
@@ -56,16 +57,13 @@ This means the frontend can safely omit these fields if the user does not provid
 | start_date           | Yes      | Must be at least 6 hours from now                          |
 | package_id           | Yes      | Selected from available hourly packages                    |
 | destination          | Optional | User may specify, but can leave blank                      |
-| num_adults           | Optional | Defaults to 1 if not provided                              |
-| num_children         | Optional | Defaults to 0 if not provided                              |
-| num_large_suitcases  | Optional | Defaults to 0 if not provided                              |
-| num_carryons         | Optional | Defaults to 0 if not provided                              |
-| num_backpacks        | Optional | Defaults to 0 if not provided                              |
-| num_other_bags       | Optional | Defaults to 0 if not provided                              |
-| preferred_car_type   | Optional | Defaults to Sedan if not provided                          |
-| preferred_fuel_type  | Optional | Defaults to Diesel if not provided                         |
+| num_adults           | Optional | Defaults to 1 if not provided; only passenger field shown  |
+| num_children         | Optional | Defaults to 0 if not provided; only passenger field shown  |
+| preferred_car_type   | Optional | Defaults to Sedan if not provided (not shown in UI)        |
+| preferred_fuel_type  | Optional | Defaults to Diesel if not provided (not shown in UI)       |
 | passenger            | Optional | Always self for now; "Book for someone else" coming later  |
 | hops                 | Not used | Only for outstation trips                                  |
+| Luggage fields       | Not used | Only for airport/outstation trips                          |
 
 ---
 
@@ -88,7 +86,10 @@ This means the frontend can safely omit these fields if the user does not provid
 
 **Goal:** Minimize friction—user only confirms pickup, selects time and package, and books. No destination or location search in this context.
 
-### 3. Submission
+### 3. Optional Fields for Curated Results:
+For local/hourly rental, users can optionally specify number of adults and children to help the system recommend the best car/package. Luggage fields are not shown in this context, as they are not relevant for short in-city trips. If omitted, the backend will use sensible defaults.
+
+### 4. Submission
 - On submit, send required fields to `/search` API:
     - `trip_type`: "local"
     - `origin`: LocationInfo object
@@ -96,11 +97,11 @@ This means the frontend can safely omit these fields if the user does not provid
     - `package_id`: selected package
 - Optional fields (destination, preferences, bags) can be omitted; backend will default as per spec.
 
-### 4. Validation
+### 5. Validation
 - Ensure `start_date` is at least `[prior booking window]` hours from now (from API).
 - All other required fields must be filled.
 
-### 5. Next Steps
+### 6. Next Steps
 - Build UI skeleton with above fields.
 - Integrate both APIs for packages and prior booking window.
 - Add validation logic for start date.

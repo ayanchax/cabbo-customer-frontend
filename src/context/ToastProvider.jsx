@@ -46,7 +46,8 @@ const DEFAULT_TOAST_OPTIONS = {
             background: "#2563eb", // Industry standard tone used by platforms like Uber Dashboards, Stripe, and Slack
             color: "#fff",
         },
-    }
+    },
+    position: "bottom-center",
 }
 
 const getToastId = () =>
@@ -159,6 +160,7 @@ export const ToastProvider = ({ children }) => {
             activeToastsRef.current.filter((t) => t !== id);
           userOptions.onClose?.();
         },
+        
       };
 
       const content = dismissable

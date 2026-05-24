@@ -22,6 +22,8 @@ export const useGeographyQuery = () => {
         currency_decimal_places: 2,
         currency_in_words: "Rupees",
         currency_international_name: "Indian Rupee",
+        timezone: "Asia/Kolkata",
+        utc_offset: "+05:30",
     };
 
 

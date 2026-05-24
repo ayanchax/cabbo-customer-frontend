@@ -1,19 +1,31 @@
 import React, { useMemo, useState } from "react";
 import { ArrowLeft, MapPin } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useTripPackagesQuery, useTripPriorBookingWindowQuery } from "@/hooks";
-import { InlineDateTimePicker } from "@/components";
+import {
+  useTripPackagesQuery,
+  useTripPriorBookingWindowQuery,
+  useToast,
+  useTimezone,
+  useOverlay
+} from "@/hooks";
+import { InlineDateTimePicker , GettingRideOptionsIllustration, RideMetaDataPreferences} from "@/components";
 import { PackageCards } from "@/features/localHourlyRental/components";
 const DEFAULT_MINIMUM_BOOKING_HOURS = 6; // Default to 6 hours if API doesn't provide a value
 function LocalHourlyRental() {
   const location = useLocation();
+  const { timezone: tz_info } = useTimezone();
+  const { showOverlay, hideOverlay } = useOverlay();
   
+ 
   // Origin is passed in navigation state from previous step
   const origin = location.state?.pickup;
   if (!origin) {
-    throw new Error("Origin (pickup location) is required to book a local hourly rental.");
+    throw new Error(
+      "Origin (pickup location) is required to book a local hourly rental.",
+    );
     // Error Boundary can catch this and show user-friendly fallback UI with option to go back to previous step
   }
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const displayText = origin?.display_name ?? null;
   const full_address = origin?.address ?? null;
@@ -43,39 +55,62 @@ function LocalHourlyRental() {
   // State for form fields
   const [startDate, setStartDate] = useState(null); // ISO string
   const [selectedPackageId, setSelectedPackageId] = useState(null);
-  const [error, setError] = useState(null);
+
+  const [inProgress, setInProgress] = useState(false);
 
   const handleBook = () => {
-    setError(null);
-    console.log(origin, startDate, selectedPackageId);
-    if (!origin) {
-      setError("Pickup location missing.");
-      return;
+    if(inProgress) return; // Prevent multiple submissions
+    try {
+      setInProgress(true);
+      if (!origin) {
+        const msg =
+          "Pickup location is required to book a local hourly rental.";
+        showToast(msg, "error", {position: "top-center"});
+
+        return;
+      }
+      if (!startDate) {
+        const msg = "Please select a start date and time.";
+        showToast(msg, "error", {position: "top-center"});
+        return;
+      }
+      if (!selectedPackageId) {
+        const msg = "Please select a package.";
+        showToast(msg, "error", {position: "top-center"});
+        return;
+      }
+      if (
+        earliestRentalStartDate &&
+        new Date(startDate) < earliestRentalStartDate
+      ) {
+        const msg = `Start time must be at least ${priorBookingWindow || DEFAULT_MINIMUM_BOOKING_HOURS} hours from now.`;
+        showToast(msg, "error", {position: "top-center"});
+        return;
+      }
+      const overlayProps= {
+            message: "Getting the best rides for you...",
+            illustration: <GettingRideOptionsIllustration className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />,
+            subtext: "Searching available cabs and packages in your area",
+          }
+      //showOverlay(overlayProps);
+      console.log(origin, startDate, selectedPackageId, tz_info);
+
+      // Submit to /search API (not implemented here)
+      // ...
+      // navigate('/confirmation', { state: { ... } });
+    } catch (e) {
+      console.error("Error during booking:", e);
+      const msg = "An unexpected error occurred. Please try again.";
+      showToast(msg, "error", {position: "top-center"});
     }
-    if (!startDate) {
-      setError("Please select a start date and time.");
-      return;
+
+    finally {
+      setInProgress(false);
     }
-    if (!selectedPackageId) {
-      setError("Please select a package.");
-      return;
-    }
-    if (
-      earliestRentalStartDate &&
-      new Date(startDate) < earliestRentalStartDate
-    ) {
-      setError(
-        `Start time must be at least ${priorBookingWindow || DEFAULT_MINIMUM_BOOKING_HOURS} hours from now.`,
-      );
-      return;
-    }
-    // Submit to /search API (not implemented here)
-    // ...
-    // navigate('/confirmation', { state: { ... } });
   };
 
   return (
-    <div className="max-w-md mx-auto p-4">
+    <div  className={`max-w-md mx-auto p-4 ${inProgress ? "pointer-events-none opacity-70" : ""}`}>
       {/* Header: Back Button + Title */}
       <div className="flex items-center gap-2 mb-4">
         <button
@@ -157,14 +192,19 @@ function LocalHourlyRental() {
         />
       </div>
 
-      {/* Error message */}
-      {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
-
+      {/* Optional: Passenger information like num_adults and children */}
+      <div className="mb-4">
+         <label htmlFor="ridePreferences" className="block text-gray-500 text-sm mb-2">
+          Preferences
+        </label>
+        <RideMetaDataPreferences id="ridePreferences"/>
+      </div>
+     
       {/* Book button */}
       <button
         className="w-full cursor-pointer bg-primary text-white py-2 rounded font-semibold disabled:opacity-50"
         onClick={handleBook}
-        disabled={!origin || !startDate || !selectedPackageId}
+        disabled={!origin || !startDate || !selectedPackageId || inProgress}
       >
         Find rides
         {/* Suggestions:

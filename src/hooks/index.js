@@ -9,5 +9,6 @@ export {useRecentSuggestions} from "./useRecentSuggestions";
 export { useOverlay } from "./useOverlay";
 export { useScrollCue } from "./useScrollCue";
 export { useUIElement } from "./useUIElement";
+export { useTimezone } from "./useTimezone";
 export * from "./query";
 export * from "./mutation";
