@@ -2,7 +2,8 @@ import { useState, useRef } from "react";
 import { Clock3 } from "lucide-react";
 import { CalendarGrid, TimeSlots } from "@/components/common/datetime-picker";
 
-function DateTimeSheet({ open, onClose, value, onConfirm, minDateTime, type="pickup" }) {
+// eslint-disable-next-line no-unused-vars
+function DateTimeSheet({ open, onClose, value, onConfirm, minDateTime,...rest }) {
   const [draftDateTime, setDraftDateTime] = useState(value || null);
   const [timeSlotSelected, setTimeSlotSelected] = useState(false);
   const [showScrollToSelection, setShowScrollToSelection] = useState(false);

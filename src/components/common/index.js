@@ -3,6 +3,7 @@ export * from "./datetime-picker"
 export {Disclaimer} from "./Disclaimer";
 export {Splash} from "./Splash";
 export {ListLoaderSkeleton} from "./ListLoaderSkeleton";
+export {GridLoaderSkeleton} from "./GridLoaderSkeleton";
 export {ErrorBoundary} from "./ErrorBoundary";
 export {Footer} from "./Footer";
 export {EmptyState} from "./EmptyState";

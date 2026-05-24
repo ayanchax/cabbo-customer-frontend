@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 
@@ -42,6 +43,16 @@ function CalendarGrid({
   // Max selectable date = today + 90 days
   const maxDate = new Date();
   maxDate.setDate(today.getDate() + 90);
+  // Track the currently displayed month
+  const [month, setMonth] = useState(selectedDate || today);
+
+  // When selectedDate changes (e.g., on mount or remount), update the visible month
+  useEffect(() => {
+  if (selectedDate && (month?.getMonth() !== selectedDate.getMonth() || month?.getFullYear() !== selectedDate.getFullYear())) {
+    setMonth(selectedDate);
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [selectedDate]);
   return (
     <div className="flex w-full justify-center items-center px-0 sm:px-2 py-1 bg-white">
       <style>{compactDayPickerStyles}</style>
@@ -53,7 +64,8 @@ function CalendarGrid({
           before: today,
           after: maxDate,
         }}
-        month ={selectedDate || today}
+        month={month}
+        onMonthChange={setMonth}
         startMonth={today}
         endMonth={maxDate}
         ariaLabel="Day Picker"
