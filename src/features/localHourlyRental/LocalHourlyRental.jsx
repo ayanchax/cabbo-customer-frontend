@@ -7,9 +7,14 @@ import { PackageCards } from "@/features/localHourlyRental/components";
 const DEFAULT_MINIMUM_BOOKING_HOURS = 6; // Default to 6 hours if API doesn't provide a value
 function LocalHourlyRental() {
   const location = useLocation();
-  const navigate = useNavigate();
+  
   // Origin is passed in navigation state from previous step
   const origin = location.state?.pickup;
+  if (!origin) {
+    throw new Error("Origin (pickup location) is required to book a local hourly rental.");
+    // Error Boundary can catch this and show user-friendly fallback UI with option to go back to previous step
+  }
+  const navigate = useNavigate();
   const displayText = origin?.display_name ?? null;
   const full_address = origin?.address ?? null;
   const region_code = origin?.region_code;
@@ -28,6 +33,7 @@ function LocalHourlyRental() {
   const earliestRentalStartDate = useMemo(() => {
     // Minimum start date is current time + prior booking window hours. If priorBookingWindow is not available, we won't enforce this constraint (we will set it to default 6 hours).
     // This means that, a customer can only book a rental starting at least [priorBookingWindow] hours in the future from now. For example, if priorBookingWindow is 6, and current time is 3 PM, then the earliest start time they can select is 9 PM onwards.
+    // We do not throw error if priorBookingWindow is not available, because we want to allow booking without this constraint rather than blocking the entire flow. Instead, we will just use a default value for calculating earliestRentalStartDate, but we won't show any error to user about missing priorBookingWindow.
     const bookingWindow = priorBookingWindow || DEFAULT_MINIMUM_BOOKING_HOURS;
     const now = new Date();
     now.setHours(now.getHours() + bookingWindow);
@@ -41,6 +47,7 @@ function LocalHourlyRental() {
 
   const handleBook = () => {
     setError(null);
+    console.log(origin, startDate, selectedPackageId);
     if (!origin) {
       setError("Pickup location missing.");
       return;

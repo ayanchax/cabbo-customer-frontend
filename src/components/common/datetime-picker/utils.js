@@ -25,7 +25,7 @@ export function formatDisplayDate(date) {
 
 export function generateTimeSlots({
   selectedDate,
-  minDateTime,
+  earliestStartDate,
   step = DEFAULT_MINUTE_STEP,
 }) {
   if (!selectedDate) return [];
@@ -41,7 +41,7 @@ export function generateTimeSlots({
       let slot = setHours(startOfDay(selectedDate), hour);
       slot = setMinutes(slot, minute);
 
-      if (minDateTime && isBefore(slot, minDateTime)) {
+      if (earliestStartDate && isBefore(slot, earliestStartDate)) {
         // If slot is before the minimum date time, skip it
         continue;
       }
@@ -55,4 +55,46 @@ export function generateTimeSlots({
     }
   }
   return slots;
+}
+
+
+// Find index of slot matching lastSelectedTime (hour/minute), fallback to 0
+export const findSlotIdxByTime = (slotsArr, time) => {
+  if (!time) return 0;
+  const h = time.getHours();
+  const m = time.getMinutes();
+  const idx = slotsArr.findIndex(
+    (s) => s.getHours() === h && s.getMinutes() === m
+  );
+  return idx !== -1 ? idx : 0;
+}
+
+/**
+ * Returns a local-time ISO-like string (YYYY-MM-DDTHH:mm:ss) for a JS Date object.
+ *
+ * This does NOT convert to UTC or append a timezone. It simply formats the date/time
+ * as it appears in the local system clock, matching common backend expectations for
+ * naive datetimes (e.g., '2026-05-25T06:00:00').
+ *
+ * Use this when your backend expects local time and will handle timezone conversion.
+ *
+ * @param {Date} datetime - A JavaScript Date object (local time).
+ * @returns {string|null} ISO-like string in local time, or null if input is invalid.
+ */
+export const getIsoDateTime = (datetime) => {
+  try {
+    if (!datetime) return null;
+    const pad = n => n.toString().padStart(2, '0');
+    return (
+      datetime.getFullYear() +
+      '-' + pad(datetime.getMonth() + 1) +
+      '-' + pad(datetime.getDate()) +
+      'T' + pad(datetime.getHours()) +
+      ':' + pad(datetime.getMinutes()) +
+      ':' + pad(datetime.getSeconds())
+    );
+  } catch (e) {
+    console.error("Error converting datetime to ISO string:", e);
+    return null;
+  }
 }

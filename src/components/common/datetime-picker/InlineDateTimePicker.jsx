@@ -1,11 +1,14 @@
 import React, { useState, useMemo, useEffect , useRef} from "react";
 import { format, addDays, isToday } from "date-fns";
-import { generateTimeSlots } from "@/components/common/datetime-picker/utils";
+import { generateTimeSlots, findSlotIdxByTime, getIsoDateTime } from "@/components/common/datetime-picker/utils";
 import { useScrollCue } from "@/hooks";
 
 const GENERATE_DAYS_COUNT = 90;
 function InlineDateTimePicker({ id, earliestRentalStartDate, onConfirm }) {
-  
+  if(!earliestRentalStartDate) {
+    throw new Error("Earliest rental start date is required to show date/time picker.");
+    // Error Boundary can catch this and show user-friendly fallback UI
+  }
   // Height for the picker (show 3 items, center is selected)
   const pickerHeight = 60; // px
   
@@ -23,6 +26,7 @@ function InlineDateTimePicker({ id, earliestRentalStartDate, onConfirm }) {
     }
     return arr;
   }, [earliestRentalStartDate]);
+  
 
   // State for selected date index and selected date
   const [selectedDateIdx, setSelectedDateIdx] = useState(0);
@@ -33,24 +37,16 @@ function InlineDateTimePicker({ id, earliestRentalStartDate, onConfirm }) {
 
   // Generate slots for selected date
   const slots = useMemo(() => {
-    const timeSlots = generateTimeSlots({ selectedDate, earliestRentalStartDate });
+    const timeSlots = generateTimeSlots({ selectedDate, earliestStartDate: earliestRentalStartDate });
     if (!timeSlots || timeSlots.length === 0) {
       throw new Error("No available time slots for the selected date.");
+      // Error Boundary can catch this and show user-friendly fallback UI
     }
     return timeSlots;
   }, [selectedDate, earliestRentalStartDate]);
+   
 
-  // Find index of slot matching lastSelectedTime (hour/minute), fallback to 0
-  const findSlotIdxByTime = (slotsArr, time) => {
-    if (!time) return 0;
-    const h = time.getHours();
-    const m = time.getMinutes();
-    const idx = slotsArr.findIndex(
-      (s) => s.getHours() === h && s.getMinutes() === m
-    );
-    return idx !== -1 ? idx : 0;
-  }
-
+  
   // State for selected time index
   const [selectedTimeIdx, setSelectedTimeIdx] = useState(0);
 
@@ -96,7 +92,15 @@ function InlineDateTimePicker({ id, earliestRentalStartDate, onConfirm }) {
   // Call onConfirm whenever date or time changes
   useEffect(() => {
     if (typeof onConfirm === "function") {
-      onConfirm({ date: selectedDate, time: slots[selectedTimeIdx] });
+      // Only the date part (00:00:00) for 'date', full Date for 'datetime', and ISO string for API payload
+      const dateOnly = format(selectedDate, "EEE, dd MMM, yyyy");
+      const datetime = slots[selectedTimeIdx];
+      // Compose ISO string: combine dateOnly and time from datetime
+      let isoString = null;
+      if (datetime) {
+        isoString = getIsoDateTime(datetime);
+      }
+      onConfirm({ date: dateOnly, datetime, isoString });
     }
   }, [selectedDate, selectedTimeIdx, slots, onConfirm]);
 
@@ -109,7 +113,7 @@ function InlineDateTimePicker({ id, earliestRentalStartDate, onConfirm }) {
         btns[selectedTimeIdx].scrollIntoView({ block: "center", behavior: "smooth" });
       }
     }
-  }, [selectedTimeIdx, slots.length]);
+  }, [selectedTimeIdx, selectedDateIdx, slots.length]);
 
   // Scroll selected date into view when selectedDateIdx changes
   useEffect(() => {
@@ -120,7 +124,7 @@ function InlineDateTimePicker({ id, earliestRentalStartDate, onConfirm }) {
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDateIdx, days.length]);
+  }, [selectedDateIdx, selectedTimeIdx, days.length]);
 
   // Focus root element when label[for=id] is clicked from parent
   useEffect(() => {

@@ -15,7 +15,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
   const {
-    serverGeo: selectedCountry, // Server geography is the source of truth for country selection to ensure correct phone code and validation rules
+    serverGeo: selectedCountry, // Server geography is the source of truth for country selection to ensure correct phone code and validation rules. So, if there is a mismatch between client and server geographies, we will show a disclaimer message to user but we will still rely on server geography for phone number validation and formatting in the backend.
     isMismatch,
   } = useGeography();
 

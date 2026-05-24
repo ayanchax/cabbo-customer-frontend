@@ -101,6 +101,8 @@ export const useGeographyQuery = () => {
 
 
     // Fetch server-side geography.
+    // This is fetched primarily to detect mismatches with client geography, which can indicate potential issues with IP-based geolocation or CDN routing. We generally trust clientGeography for display purposes, but serverGeography can be used for logging, analytics, or fallback if needed.
+    // Additionally, server geography is consumed by the backend for features like phone number validation and formatting, so it's important to fetch it even if we have client geography.
     const { data: serverData, isLoading, error } = useQuery({
         queryKey: ["serverGeography"],
         queryFn: async () => {
@@ -140,7 +142,7 @@ export const useGeographyQuery = () => {
 
     return {
         clientGeographyData: clientGeography,
-        serverGeographyData: serverGeography,
+        serverGeographyData: serverGeography, // Is fetched just to see if there is a mismatch with client geography, which can indicate potential issues with IP-based geolocation or CDN routing. We generally trust clientGeography for display purposes, but serverGeography can be used for logging, analytics, or fallback if needed.
         serverGeographyLoading: isLoading,
         serverGeographyError: error,
         clientGeographyCode: clientCountryCode,

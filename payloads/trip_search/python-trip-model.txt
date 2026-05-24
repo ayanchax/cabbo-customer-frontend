@@ -1,0 +1,492 @@
+#Staging trip storage
+ class TempTrip(Base):
+    __tablename__ = "temp_trips"
+
+    id = Column(
+        MySQL_CHAR(36),
+        primary_key=True,
+        default=lambda: str(uuid.uuid4()),
+        unique=True,
+        index=True,
+    )
+    #  Creator information
+    creator_id = Column(MySQL_CHAR(36), nullable=False, index=True)
+    creator_type = Column(
+        Enum(RoleEnum),  # Assuming RoleEnum includes customer, driver, admin
+        default=RoleEnum.customer,
+        nullable=False,
+    )
+    #  Creator information - END
+
+    # Trip details
+    trip_type_id = Column(
+        MySQL_CHAR(36), nullable=False,
+    )  # FK to trip types master table
+
+    # Location information
+    origin=Column(JSON, nullable=False)  # Origin city name
+    destination=Column(JSON, nullable=False)  # Destination city name
+    hops = Column(
+        JSON, nullable=True
+    )  # JSON/text list of hops for outstation and hourly rental [Providing hops by customer helps us approximate the overages more efficiently]
+    is_interstate = Column(Boolean, default=False, nullable=False)
+    total_unique_states = Column(
+        Integer, nullable=True
+    )  ##Applicable for outstation trips which are interstate
+    unique_states = Column(
+        JSON, nullable=True
+    )  # comma separated list of unique states, applicable for outstation trips which are interstate
+    is_round_trip = Column(Boolean, default=False, nullable=False)
+    # Location information - END
+
+    # Package information selected by customer
+    # This is applicable only for hourly rental trips
+    package_id = Column(
+        MySQL_CHAR(36), nullable=True, index=True
+    )  # FK to trip package config table for hourly rental trips
+    package_label = Column(
+        String(255), nullable=True, default=None
+    )  # Label for the package, e.g., "4 Hours / 40 KM" 
+    package_label_short = Column(
+        String(100), nullable=True, default=None
+    )  # Short label for the package, e.g., "4H/40KM" 
+    # Package information selected by customer - END
+    
+    # Date and time information
+    start_datetime = Column(DateTime, nullable=False)
+    expected_end_datetime = Column(
+        DateTime, nullable=True
+    )  # Nullable | for local trips, we set it by package chosen
+    end_datetime = Column(DateTime, nullable=True)
+    total_days = Column(
+        Integer, nullable=False, default=1
+    )  # Total days for outstation trips
+    included_kms = Column(
+        Float, nullable=True, default=0.0
+    )  # Included km for hourly rental trips and outstation trips
+     
+    # Date and time information - END
+
+    # Passenger and luggage information
+    num_adults = Column(Integer, nullable=False, default=1)
+    num_children = Column(Integer, nullable=True, default=0)
+    num_large_suitcases = Column(
+        Integer, nullable=True, default=0
+    )  # Trolley bags, large suitcases
+    num_carryons = Column(Integer, nullable=True, default=0)
+    num_backpacks = Column(Integer, nullable=True, default=0)
+    num_other_bags = Column(
+        Integer, nullable=True, default=0
+    )  # Other bags, small items
+    num_luggages = Column(Integer, nullable=True, default=0)  # Total luggage count
+    num_passengers = Column(
+        Integer, nullable=True, default=1) # Total passengers including adults and children
+    # Passenger and luggage information - END
+
+    # Car and fuel preferences
+    preferred_car_type = Column(
+        Enum(CarTypeEnum), nullable=True, default=CarTypeEnum.sedan
+    )
+    preferred_fuel_type = Column(
+        Enum(FuelTypeEnum), nullable=True, default=FuelTypeEnum.diesel
+    )
+    in_car_amenities = Column(
+        JSON, nullable=True
+    )  # JSON/text list of in-car amenities (e.g., AC, music system, etc.)
+    # Car and fuel preferences - END
+
+  
+
+    # Financial fields
+    base_fare = Column(Float, nullable=True, default=0.0)  # Base fare for the trip
+    driver_allowance = Column(
+        Float, nullable=True, default=0.0
+    )  # Daily driver allowance for outstation trips
+    tolls = Column(
+        Float, nullable=True, default=0.0
+    )  #  tolls for the trip
+    parking = Column(
+        Float, nullable=True, default=0.0
+    )  #  parking charges for the trip
+    permit_fee = Column(
+        Float, nullable=True, default=0.0
+    )  # Interstate permit fee for outstation trips
+    platform_fee = Column(
+        Float, nullable=True, default=0.0
+    )  # Platform fee charged by the system
+    final_price = Column(Float, nullable=True, default=0.0)  # System-calculated
+    final_display_price = Column(
+        Float, nullable=True, default=0.0
+    )  # Price shown to driver admin (final) w/o platform fee/convenience fee
+    payment_provider_metadata = Column(
+        JSON, nullable=True
+    )  # JSON/text for payment details (e.g., payment mode, transaction ID, etc.)
+    price_breakdown = Column(
+        JSON, nullable=True 
+    )  # JSON/text for detailed price breakdown (base fare, driver allowance, tolls, parking, etc.)
+    overages = Column(
+        JSON, nullable=True
+    )  # JSON/text for overages (e.g., overage amount per km, overage estimate amount, etc.)
+
+     
+    # Inclusions and exclusions
+    inclusions = Column(
+        JSON, nullable=True
+    )  # JSON/text list of inclusions (e.g., driver meals, tolls)
+    exclusions = Column(
+        JSON, nullable=True
+    )  # JSON/text list of exclusions (e.g., fuel, parking, tolls
+    # Inclusions and exclusions - END
+
+    # Airport pickup/flight metadata
+    flight_number = Column(String(32), nullable=True)
+    terminal_number = Column(String(32), nullable=True)
+    toll_road_preferred = Column(
+        Boolean, default=False, nullable=False
+    )  # Customer opted for toll road usage for faster trip. This is applicable only for airport trips.
+    placard_required = Column(Boolean, nullable=True, default=False)
+    placard_name = Column(String(128), nullable=True)
+    # Airport pickup/flight metadata - END
+
+    # Trip metadata
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+
+    updated_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        nullable=False
+    )
+    # Trip metadata - END
+
+    # Additional metadata
+    estimated_km = Column(
+        Float, nullable=True, default=0.0)  # Estimated distance for the trip
+    indicative_overage_warning = Column(
+        Boolean, default=False, nullable=False
+    )  # does not apply to all hourly local trips
+    alternate_customer_phone = Column(String(32), nullable=True)
+    # Passenger info (nullable, for 'book for someone else' feature)
+    passenger_id = Column(
+        MySQL_CHAR(36),
+        nullable=True,
+    )
+    hash= Column(
+        String(255), nullable=True, unique=True
+    )  # Hash for trip details to prevent duplicate bookings initiated by same user
+    timezone= Column(String(64), nullable=True, default=settings.CABBO_DEFAULT_TIMEZONE)  # Timezone of the trip based on the origin location, e.g., "Asia/Kolkata". This is used to display the trip start and end datetime in the local timezone of the trip origin for better user experience, while all datetimes are stored in UTC in the database for consistency using the method validate_date_time() in utility.py
+    utc_offset = Column(Integer, nullable=True, default=settings.CABBO_DEFAULT_UTC_OFFSET)  # UTC offset in minutes for the trip origin timezone, e.g., 330 for IST (UTC+5:30). This is used to convert the stored UTC datetimes to local time for display purposes and also to validate that the start_datetime provided by the customer falls within the allowed booking window based on the trip type and jurisdiction using the method validate_date_time() in utility.py
+   
+    # Additional metadata - END
+ 
+
+#Main trip storage
+ class Trip(Base):
+    __tablename__ = "trips"
+
+    id = Column(
+        MySQL_CHAR(36),
+        primary_key=True,
+        default=lambda: str(uuid.uuid4()),
+        unique=True,
+        index=True,
+    )
+    booking_id = Column(
+        String(64), nullable=False, unique=True, index=True
+    )  # Unique booking reference ID which is shown to customer and driver
+    #  Creator information
+    creator_id = Column(
+        MySQL_CHAR(36),
+        ForeignKey("customers.id"),  # Explicitly define the foreign key
+        nullable=False,
+        index=True,
+    )
+    creator_type = Column(
+        Enum(RoleEnum),  # Assuming RoleEnum includes customer, driver, admin
+        default=RoleEnum.customer,
+        nullable=False,
+    )
+    #  Creator information - END
+
+    # Trip details
+    trip_type_id = Column(
+        MySQL_CHAR(36), ForeignKey("trip_types_master.id"), nullable=False, index=True
+    )  # FK to trip types master table
+
+    # Location information
+    origin = Column(JSON, nullable=False)  # Origin city name
+    destination = Column(JSON, nullable=False)  # Destination city name
+    hops = Column(
+        JSON, nullable=True
+    )  # JSON/text list of hops for outstation and hourly rental [Providing hops by customer helps us approximate the overages more efficiently]
+    is_interstate = Column(Boolean, default=False, nullable=False)
+    total_unique_states = Column(
+        Integer, nullable=True
+    )  ##Applicable for outstation trips which are interstate
+    unique_states = Column(
+        JSON, nullable=True
+    )  # comma separated list of unique states, applicable for outstation trips which are interstate
+    is_round_trip = Column(Boolean, default=False, nullable=False)
+    # Location information - END
+
+    # Package information selected by customer
+    # This is applicable only for hourly rental trips
+    package_id = Column(
+        MySQL_CHAR(36), ForeignKey("trip_package_config.id"), nullable=True, index=True
+    )
+    package_label = Column(
+        String(255), nullable=True, default=None
+    )  # Label for the package, e.g., "4 Hours / 40 KM"
+    package_label_short = Column(
+        String(100), nullable=True, default=None
+    )  # Short label for the package, e.g., "4H/40KM"
+    # FK to trip package config table for hourly rental trips
+    # Package information selected by customer - END
+
+    # Date and time information
+    start_datetime = Column(DateTime, nullable=False) #This field is always converted to UTC, refer validate_date_time() method in utility.py for details
+    expected_end_datetime = Column(
+        DateTime, nullable=True
+    )  # Nullable | for local trips, we set it by package chosen
+    end_datetime = Column(DateTime, nullable=True) #This field is always converted to UTC, refer validate_date_time() method in utility.py for details
+    total_days = Column(
+        Integer, nullable=False, default=1
+    )  # Total days for outstation trips
+    included_kms = Column(
+        Float, nullable=True, default=0.0
+    )  # Included km for hourly rental trips and outstation trips
+    # Date and time information - END
+
+    # Passenger and luggage information
+    num_adults = Column(Integer, nullable=False, default=1)
+    num_children = Column(Integer, nullable=True, default=0)
+    num_large_suitcases = Column(
+        Integer, nullable=True, default=0
+    )  # Trolley bags, large suitcases
+    num_carryons = Column(Integer, nullable=True, default=0)
+    num_backpacks = Column(Integer, nullable=True, default=0)
+    num_other_bags = Column(
+        Integer, nullable=True, default=0
+    )  # Other bags, small items
+    num_luggages = Column(Integer, nullable=True, default=0)  # Total luggage count
+    num_passengers = Column(
+        Integer, nullable=True, default=1
+    )  # Total passengers including adults and children
+
+    # Passenger and luggage information - END
+
+    # Car and fuel preferences
+    preferred_car_type = Column(
+        Enum(CarTypeEnum), nullable=True, default=CarTypeEnum.sedan
+    )
+    preferred_fuel_type = Column(
+        Enum(FuelTypeEnum), nullable=True, default=FuelTypeEnum.diesel
+    )
+    in_car_amenities = Column(
+        JSON, nullable=True
+    )  # JSON/text list of in-car amenities (e.g., AC, music system, etc.)
+    # Car and fuel preferences - END
+
+    # Driver assignment fields
+    driver_id = Column(
+        MySQL_CHAR(36),
+        ForeignKey("drivers.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )  # Nullable: Driver assigned to the trip, if any
+    # Driver assignment fields -END
+
+    status = Column(
+        Enum(TripStatusEnum), default=TripStatusEnum.created, nullable=False
+    )
+
+    # Financial fields
+    base_fare = Column(Float, nullable=True, default=0.0)  # Base fare for the trip
+    driver_allowance = Column(
+        Float, nullable=True, default=0.0
+    )  # Daily driver allowance for outstation trips
+    tolls = Column(Float, nullable=True, default=0.0)  #  tolls for the trip
+    parking = Column(Float, nullable=True, default=0.0)  #  parking charges for the trip
+    permit_fee = Column(
+        Float, nullable=True, default=0.0
+    )  # Interstate permit fee for outstation trips
+    platform_fee = Column(
+        Float, nullable=True, default=0.0
+    )  # Platform fee charged by the system is the fixed plus dynamic convenience fee
+    final_price = Column(Float, nullable=True, default=0.0)  # System-calculated
+    final_display_price = Column(
+        Float, nullable=True, default=0.0
+    )  # Price shown to driver admin (final) w/o platform fee/convenience fee
+    advance_payment = Column(
+        Float, nullable=True, default=0.0
+    )  # Advance payment made by customer(generally the platform fee/convenience fee), if any
+    balance_payment = Column(
+        Float, nullable=True, default=0.0
+    )  # Balance payment to be made by customer after trip completion
+
+    
+    payment_provider_metadata = Column(
+        JSON, nullable=True
+    )  # JSON/text for payment details (e.g., payment mode, transaction ID, etc.)
+    price_breakdown = Column(
+        JSON, nullable=True
+    )  # JSON/text for detailed price breakdown (base fare, driver allowance, tolls, parking, etc.)
+    overages = Column(
+        JSON, nullable=True
+    )  # JSON/text for overages (e.g., overage amount per km, overage estimate amount, etc.)
+
+    # Inclusions and exclusions
+    inclusions = Column(
+        JSON, nullable=True
+    )  # JSON/text list of inclusions (e.g., driver meals, tolls)
+    exclusions = Column(
+        JSON, nullable=True
+    )  # JSON/text list of exclusions (e.g., fuel, parking, tolls
+    # Inclusions and exclusions - END
+
+    # Airport pickup/flight metadata
+    flight_number = Column(String(32), nullable=True)
+    terminal_number = Column(String(32), nullable=True)
+    toll_road_preferred = Column(
+        Boolean, default=False, nullable=False
+    )  # Customer opted for toll road usage for faster trip. This is applicable only for airport trips.
+    placard_required = Column(Boolean, nullable=True, default=False)
+    placard_name = Column(String(128), nullable=True)
+    # Airport pickup/flight metadata - END
+
+    # Trip metadata
+    
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+
+    updated_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        nullable=False
+    )
+    # Trip metadata - END
+
+    # Additional metadata
+    special_needs_requests = Column(
+        Text, nullable=True
+    )  # Special needs or requests from customer, essentially customer notes that customer can update before trip starts[created, confirmed]
+
+    estimated_km = Column(
+        Float, nullable=True, default=0.0
+    )  # Estimated distance for the trip
+    indicative_overage_warning = Column(
+        Boolean, default=False, nullable=False
+    )  # does not apply to all hourly local trips
+    alternate_customer_phone = Column(String(32), nullable=True)
+    # Passenger info (nullable, for 'book for someone else' feature)
+    passenger_id = Column(
+        MySQL_CHAR(36),
+        ForeignKey("passengers.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+        comment="FK to passengers table; null if trip is for self",
+    )
+
+    is_active = Column(
+        Boolean, nullable=False, default=True
+    )  # Soft delete flag for trip record, which only super admins can toggle to false in case of any fraudulent or test trips that need to be deactivated, but we don't want to delete the record from the database for data integrity and audit purposes. When a trip is marked as inactive, it will be excluded from all active trip listings and queries in the system, but the record will still exist in the database with is_active set to false.
+    
+    timezone= Column(String(64), nullable=True, default=settings.CABBO_DEFAULT_TIMEZONE)  # Timezone of the trip based on the origin location, e.g., "Asia/Kolkata". This is used to display the trip start and end datetime in the local timezone of the trip origin for better user experience, while all datetimes are stored in UTC in the database for consistency using the method validate_date_time() in utility.py
+    utc_offset = Column(Integer, nullable=True, default=settings.CABBO_DEFAULT_UTC_OFFSET)  # UTC offset in minutes for the trip origin timezone, e.g., 330 for IST (UTC+5:30). This is used to convert the stored UTC datetimes to local time for display purposes and also to validate that the start_datetime provided by the customer falls within the allowed booking window based on the trip type and jurisdiction using the method validate_date_time() in utility.py
+    # Additional metadata - END
+
+
+    # Audit fields
+    status_audits = relationship("TripStatusAudit", back_populates="trip")
+    driver = relationship("Driver", back_populates="trips")
+    package = relationship("TripPackageConfig", back_populates="trips")
+    trip_type_master = relationship("TripTypeMaster", back_populates="trips")
+    passenger = relationship("Passenger", back_populates="trips")
+    customer = relationship(
+        "Customer",
+        back_populates="trips",
+        primaryjoin="and_(Trip.creator_id == Customer.id, Trip.creator_type == 'customer')",
+    )
+    # A trip can have one driver earning record associated with it, which is populated when the trip is completed and the driver payment is settled from Cabbo's end, so the relationship is one-to-one from Trip to DriverEarning and many-to-one from DriverEarning to Trip.
+    driver_earning = relationship(
+        "DriverEarning",
+        back_populates="trip",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+    trip_rating = relationship(
+        "TripRating",
+        back_populates="trip",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )  # A trip can have only one rating given by the customer but a driver can have multiple ratings from different customers for different trips, so the relationship is one-to-one from Trip to TripRating and one-to-many from Driver to TripRating.
+
+    refund = relationship(
+        "Refund",
+        primaryjoin="Refund.entity_id==Trip.id",
+        foreign_keys="[Refund.entity_id]",
+        uselist=False,
+        back_populates="trip",
+        passive_deletes=True,
+    )  # One-to-one relationship to Refund table based on entity_id, which is populated when a refund is initiated for the trip and the refund record is created in the refunds table.
+
+    #A trip can have one dispute associated with it, which is populated when a dispute is raised for the trip, so the relationship is one-to-one from Trip to Dispute and many-to-one from Dispute to Trip.
+    dispute = relationship(
+        "Dispute",
+        primaryjoin="Dispute.entity_id==Trip.id",
+        foreign_keys="[Dispute.entity_id]",
+        uselist=False,
+        back_populates="trip",
+        passive_deletes=True,
+    )
+    #A trip can have one cancellation record associated with it, which is populated when a trip is cancelled and the cancellation record is created in the cancellations table, so the relationship is one-to-one from Trip to Cancellation and many-to-one from Cancellation to Trip.
+    cancellation = relationship(
+        "Cancellation",
+        primaryjoin="Cancellation.entity_id==Trip.id",
+        foreign_keys="[Cancellation.entity_id]",
+        uselist=False,
+        back_populates="trip",
+        passive_deletes=True,
+    )
+    
+    # Audit fields - END
+
+
+def validate_date_time(date_time: Union[str, datetime], timezone_str: str = None, utc_offset: int = None) -> datetime:
+    """
+    Parse input (str or datetime). If naive, assume settings.CABBO_DEFAULT_TIMEZONE
+    (fallback to UTC). Always return an aware datetime in UTC.
+    """
+    try:
+        if isinstance(date_time, str):
+            try:
+                dt = isoparse(date_time)
+            except Exception as e:
+                raise CabboException("Invalid datetime format", status_code=400, error_code=INVALID_DATETIME_INPUT) from e
+        elif isinstance(date_time, datetime):
+            dt = date_time
+        else:
+            raise CabboException("Invalid datetime type", status_code=400, error_code=INVALID_DATETIME_INPUT)
+
+        # If naive, attach tzinfo using utc_offset if provided, else use timezone_str/default
+        if dt.tzinfo is None:
+            if utc_offset is not None:
+                # utc_offset is in minutes (preferred), fallback to hours if large
+                if abs(utc_offset) > 24:
+                    offset = timezone(timedelta(minutes=utc_offset))
+                else:
+                    offset = timezone(timedelta(hours=utc_offset))
+                dt = dt.replace(tzinfo=offset)
+            else:
+                #Always prefer timezone_str if provided, else fallback to settings.CABBO_DEFAULT_TIMEZONE, and if that is not set then fallback to UTC
+                tz_name = timezone_str or settings.CABBO_DEFAULT_TIMEZONE or "UTC"
+                try:
+                    local_tz = ZoneInfo(tz_name)
+                except Exception:
+                    local_tz = timezone.utc
+                dt = dt.replace(tzinfo=local_tz)
+        # Always convert to UTC after enriching with timezone info
+        return dt.astimezone(timezone.utc) # Return aware datetime in UTC
+    except Exception as e:
+        raise CabboException("Error processing datetime", status_code=400, error_code=DATETIME_PROCESSING_ERROR) from e
+

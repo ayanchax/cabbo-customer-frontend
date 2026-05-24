@@ -4,10 +4,8 @@ import { useLocalStorage } from "@/hooks";
 import { LOCAL_STORAGE_KEYS } from "@/utils";
 import { isDevMode } from "@/api";
 
-
-
 // Generic hook to manage recent suggestions for any query key. It checks the react-query cache for the most recent data for the specified query key(s) and falls back to localStorage if no recent data is found. It also provides a function to cache new suggestions to localStorage, ensuring that even if the user goes offline or the API is unavailable, they can still see their recent searches.
-const useRecentSuggestions = (queryKey = [], cacheKey = LOCAL_STORAGE_KEYS.recentSuggestions, limit=5) => {
+const useRecentSuggestions = (queryKey = [], cacheKey = LOCAL_STORAGE_KEYS.recentSuggestions, limit = 5) => {
 
     const queryClient = useQueryClient();
     const { getItem, setItem } = useLocalStorage();
@@ -21,7 +19,7 @@ const useRecentSuggestions = (queryKey = [], cacheKey = LOCAL_STORAGE_KEYS.recen
             .filter((query) => Array.isArray(query.state.data) && query.state.data.length > 0)
             .sort((a, b) => b.state.dataUpdatedAt - a.state.dataUpdatedAt)[0];
 
-        const recentData =  recentQuery?.state.data ?? [];
+        const recentData = recentQuery?.state.data ?? [];
         if (recentData.length === 0) {
             // If no recent data from queries, fallback to localStorage
             const localData = getItem(cacheKey) || [];
@@ -45,7 +43,9 @@ const useRecentSuggestions = (queryKey = [], cacheKey = LOCAL_STORAGE_KEYS.recen
     const cacheSuggestionToLocalStorage = (suggestion = {}) => {
         try {
             if (!suggestion || (typeof suggestion === "object" && Object.keys(suggestion).length === 0)) {
-                console.warn("Empty suggestion object provided, skipping caching.");
+                if (isDevMode) {
+                    console.warn("Empty suggestion object provided, skipping caching.");
+                }
                 return false;
             }
             let recent = getItem(cacheKey) || [];
