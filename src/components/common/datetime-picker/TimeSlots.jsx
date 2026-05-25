@@ -9,6 +9,7 @@ import React, {
 import { useScrollCue, useUIElement } from "@/hooks";
 import { format } from "date-fns";
 import { generateTimeSlots } from "@/components/common/datetime-picker/utils";
+import { isDevMode } from "@/api";
 
 const TimeSlots = forwardRef(function TimeSlots(
   {
@@ -175,7 +176,9 @@ const TimeSlots = forwardRef(function TimeSlots(
         }
       }
     } catch (e) {
+      if (isDevMode) {
       console.error("Error scrolling to selected slot:", e);
+      }
     }
   };
 

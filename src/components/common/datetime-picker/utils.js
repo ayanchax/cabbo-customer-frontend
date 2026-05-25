@@ -7,6 +7,8 @@ import {
   startOfDay,
 } from 'date-fns';
 import { TIME_SLOT_START_HOUR, TIME_SLOT_END_HOUR, DEFAULT_MINUTE_STEP } from '@/components/common/datetime-picker';
+import { isDevMode } from "@/api";
+
 
 export function roundToNextStep(date, step = DEFAULT_MINUTE_STEP) {
   const d = new Date(date);
@@ -94,7 +96,9 @@ export const getIsoDateTime = (datetime) => {
       ':' + pad(datetime.getSeconds())
     );
   } catch (e) {
-    console.error("Error converting datetime to ISO string:", e);
+    if (isDevMode) {
+      console.error("Error converting datetime to ISO string:", e);
+    }
     return null;
   }
 }

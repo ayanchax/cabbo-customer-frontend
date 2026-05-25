@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from "react";
-import { ArrowLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   useTripPackagesQuery,
@@ -10,7 +9,9 @@ import {
 } from "@/hooks";
 import { InlineDateTimePicker , GettingRideOptionsIllustration, RideMetaDataPreferences} from "@/components";
 import { PackageCards } from "@/features/localHourlyRental/components";
-import { RouteTimeline } from "@/components";
+import { RouteTimeline, PageHeader } from "@/components";
+import { isDevMode } from "@/api";
+
 const DEFAULT_MINIMUM_BOOKING_HOURS = 6; // Default to 6 hours if API doesn't provide a value
 function LocalHourlyRental() {
   const location = useLocation();
@@ -101,7 +102,9 @@ function LocalHourlyRental() {
       // ...
       // navigate('/confirmation', { state: { ... } });
     } catch (e) {
+        if (isDevMode) {
       console.error("Error during booking:", e);
+        }
       const msg = "An unexpected error occurred. Please try again.";
       showToast(msg, "error", {position: "top-center"});
     }
@@ -127,25 +130,13 @@ function LocalHourlyRental() {
       `}
     >
       {/* Header: Back Button + Title */}
-      <div className="flex items-center gap-2 mb-4">
-        <button
-          className="flex items-center text-primary hover:underline text-sm font-medium cursor-pointer"
-          onClick={() => navigate(-1)}
-          type="button"
-          aria-label="Go back"
-        >
-          <ArrowLeft className="mr-1 w-4 h-4" />
-        </button>
-        <h2 className="text-xl font-bold ml-2">
-          Plan your hourly rental ride
-          {/* Suggestions:
+      {/* Suggestions:
             Book an Hourly Rental
             Start Your Hourly Ride
             Schedule Your Local Rental
             Hourly Rental Booking
             */}
-        </h2>
-      </div>
+      <PageHeader onBack={() => navigate(-1)} title="Plan your hourly rental ride" />
       
       {/* Route timeline */}
       <RouteTimeline pickupLocation={origin} dropoffLocation={dropOff} />

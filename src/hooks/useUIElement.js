@@ -1,3 +1,5 @@
+import { isDevMode } from "@/api";
+
 export function useUIElement() {
 
     const isElementInView = (el, container) => {
@@ -13,7 +15,9 @@ export function useUIElement() {
             );
         }
         catch (e) {
+            if (isDevMode) {
             console.error("Error in isElementInView:", e);
+            }
             return false;
         }
 

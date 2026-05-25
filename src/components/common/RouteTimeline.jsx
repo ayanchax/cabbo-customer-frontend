@@ -65,6 +65,9 @@ function RouteTimeline({
 
   viewAsRouteTimeline = true, // If true, shows the vertical line connecting pickup and dropoff. If false, just shows the locations without the line, for a more compact display (e.g. in trip summary cards)
 
+  showPickupLabel = false, // Optionally show "Pickup" label above pickup location
+  showDropoffLabel = false, // Optionally show "Dropoff" label above dropoff location
+
   pickupIcon = (
     <MapPin
       className="w-4 h-4 text-primary shrink-0 "
@@ -77,60 +80,44 @@ function RouteTimeline({
       aria-label="Dropoff location"
     />
   ), // Customizable dropoff icon
+
 }) {
   return (
     <>
       {viewAsRouteTimeline &&
       dropoffLocation &&
       dropoffLocation.display_name ? (
-        <div className="relative flex">
-          {/* Timeline vertical line and dots */}
-          <div className="relative mr-2 flex flex-col items-center" style={{ width: 20 }}>
-            {/* Start dot (primary color) */}
-            <span className="w-4 h-4 rounded-full border border-white shadow-sm z-10 bg-emerald-400" style={{ position: 'relative', top: 0 }} />
-            {/* Vertical line: absolutely positioned, stretches only between the two dots */}
-            <div className="absolute left-1/2 -translate-x-1/2 bg-gray-200 opacity-60 w-px" style={{ top: 16, bottom: 16 }} />
-            {/* End dot (rose) */}
-            <span className="w-4 h-4 rounded-full bg-rose-400 border border-white shadow-sm z-10" style={{ position: 'relative', bottom: 0 }} />
+        <div style={{ marginBottom: gap }} className="flex">
+          {/* Timeline column: dots and line aligned with content */}
+          <div className="flex flex-col items-center mr-2 relative" style={{ width: 20 }}>
+            {/* Pickup dot */}
+            <span className="sm:w-3 sm:h-3 w-2 h-2 md:w-4 md:h-4 rounded-full border border-white shadow-sm z-10 bg-emerald-400 block" />
+            {/* Vertical line: flex-grow, stretches between dots */}
+            <div className="flex-1 w-px bg-gray-200 opacity-60" />
+            {/* Drop dot */}
+            <span className="sm:w-3 sm:h-3 w-2 h-2 md:w-4 md:h-4 rounded-full bg-rose-400 border border-white shadow-sm z-10 block" />
           </div>
-          <div className="flex-1">
+          <div className="flex-1 flex flex-col justify-between">
             {/* Pickup location */}
             <div style={{ marginBottom: gap }}>
-              <div className="text-gray-500 text-[13px] md:text-base mb-1">
-                Pickup
-              </div>
+              {showPickupLabel && <div className="text-gray-500 text-[13px] md:text-base mb-1">Pickup</div>}
               <div className="flex items-center gap-1">
                 {pickupIcon}
-                <span
-                  className={`block text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] font-medium truncate ${pickupLocation.display_name ? "text-gray-900" : "text-gray-400"}`}
-                >
-                  {pickupLocation.display_name}
-                </span>
+                <span className={`block text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] font-medium truncate ${pickupLocation.display_name ? "text-gray-900" : "text-gray-400"}`}>{pickupLocation.display_name}</span>
               </div>
               {pickupLocation.address && (
-                <span className="block text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 truncate">
-                  {pickupLocation.address}
-                </span>
+                <span className="block text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 truncate">{pickupLocation.address}</span>
               )}
             </div>
-            {/* We will add hops here in the future */}
             {/* Dropoff location */}
-            <div className="" style={{ marginBottom: gap }}>
-              <div className="text-gray-500 text-[13px] md:text-base mb-1">
-                Drop
-              </div>
+            <div>
+              {showDropoffLabel && <div className="text-gray-500 text-[13px] md:text-base mb-1">Dropoff</div>}
               <div className="flex items-center gap-1">
                 {dropoffIcon}
-                <span
-                  className={`block text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] font-medium truncate ${dropoffLocation.display_name ? "text-gray-900" : "text-gray-400"}`}
-                >
-                  {dropoffLocation.display_name}
-                </span>
+                <span className={`block text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] font-medium truncate ${dropoffLocation.display_name ? "text-gray-900" : "text-gray-400"}`}>{dropoffLocation.display_name}</span>
               </div>
               {dropoffLocation.address && (
-                <span className="block text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 truncate">
-                  {dropoffLocation.address}
-                </span>
+                <span className="block text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 truncate">{dropoffLocation.address}</span>
               )}
             </div>
           </div>
