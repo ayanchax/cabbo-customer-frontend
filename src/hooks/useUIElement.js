@@ -19,6 +19,22 @@ export function useUIElement() {
 
     }
 
-    return { isElementInView };
+    /**
+     * Programmatically focuses the given element if possible.
+     * @param {HTMLElement|React.RefObject} element - DOM node or ref to focus
+     */
+    const focusOnElement = (element) => {
+        if (!element) return;
+        let el = element;
+        // If a ref object is passed, get the current
+        if (typeof element === "object" && "current" in element) {
+            el = element.current;
+        }
+        if (el && typeof el.focus === "function") {
+            el.focus();
+        }
+    };
+
+    return { isElementInView, focusOnElement };
 
 }

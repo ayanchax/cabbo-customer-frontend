@@ -9,3 +9,4 @@ export {Footer} from "./Footer";
 export {EmptyState} from "./EmptyState";
 export {AppOverlay} from "./AppOverlay";
 export {RideMetaDataPreferences} from "./RideMetaDataPreferences";
+export {RouteTimeline} from "./RouteTimeline";

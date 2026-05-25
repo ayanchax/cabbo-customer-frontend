@@ -150,7 +150,7 @@ function InlineDateTimePicker({ id, earliestRentalStartDate, onConfirm }) {
       id={id}
       ref={rootRef}
       tabIndex={0}
-      className="flex flex-row gap-6 items-center w-full justify-center border border-dashed border-gray-400 rounded-md p-3 transition-shadow focus:outline-none focus:border-solid focus:border-primary focus:ring-2 focus:ring-primary/40"
+      className="flex flex-row gap-6 items-center w-full justify-center border border-dashed border-gray-400 rounded-md p-3 transition-shadow focus:outline-none focus:border-solid focus:border-primary focus:ring-2 focus:ring-primary/40 text-xs xs:text-sm sm:text-base md:text-base lg:text-lg xl:text-xl"
     >
       {/* Date Picker */}
       <div className="relative w-32" >
@@ -170,8 +170,10 @@ function InlineDateTimePicker({ id, earliestRentalStartDate, onConfirm }) {
           {days.map((date, idx) => (
             <button
               key={date.toISOString()}
-              className={`w-full h-10 flex items-center justify-center transition rounded-full border text-sm my-0.5
-                ${idx === selectedDateIdx ? "bg-primary text-white border-primary font-bold" : "bg-white border-neutral-200 text-gray-500"}
+              className={`w-full h-10 flex items-center justify-center transition rounded-full border my-0.5 cursor-pointer
+                px-2 sm:px-3
+                text-sm sm:text-base
+                ${idx === selectedDateIdx ? "bg-primary text-white border-primary font-bold" : "bg-white border-neutral-200 text-gray-500 font-medium"}
               `}
               style={{ minHeight: itemHeight, maxHeight: itemHeight }}
               onClick={() => setSelectedDateIdx(idx)}
@@ -198,8 +200,10 @@ function InlineDateTimePicker({ id, earliestRentalStartDate, onConfirm }) {
           {slots.map((slot, idx) => (
             <button
               key={slot.toISOString()}
-              className={`w-full h-10 flex items-center justify-center transition rounded-full border font-mono text-sm my-0.5
-                ${idx === selectedTimeIdx ? "bg-primary text-white border-primary font-bold" : "bg-white border-neutral-200 text-gray-500"}
+              className={`w-full h-10 flex items-center justify-center transition rounded-full border font-mono my-0.5 cursor-pointer
+                px-2 sm:px-3
+                text-sm sm:text-base
+                ${idx === selectedTimeIdx ? "bg-primary text-white border-primary font-bold" : "bg-white border-neutral-200 text-gray-500 font-medium"}
               `}
               style={{ minHeight: itemHeight, maxHeight: itemHeight }}
               onClick={() => setSelectedTimeIdx(idx)}

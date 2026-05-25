@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { Info } from "lucide-react";
 import { PassengerCounter } from "@/components";
-
+import { useUIElement } from "@/hooks";
 /**
  * RideMetaDataPreferences
  *
@@ -19,7 +19,7 @@ import { PassengerCounter } from "@/components";
  * - helperText: string (optional, user-friendly message)
  */
 export function RideMetaDataPreferences({
-  value = { num_adults: 1, num_children: 0,  },
+  value = { num_adults: 1, num_children: 0 },
   id,
   onChange,
   showLuggage = false,
@@ -30,6 +30,7 @@ export function RideMetaDataPreferences({
   helperText = "Tell us about your group and travel needs to help us match you with the most suitable ride",
 }) {
   const rootRef = useRef(null);
+  const { focusOnElement } = useUIElement();
   const handleChange = (field, delta, min, max) => {
     const newValue = {
       ...value,
@@ -45,9 +46,7 @@ export function RideMetaDataPreferences({
     if (!label) return;
     // eslint-disable-next-line no-unused-vars
     const handler = (e) => {
-      if (rootRef.current) {
-        rootRef.current.focus();
-      }
+      focusOnElement(rootRef);
     };
     label.addEventListener("click", handler);
     return () => {
@@ -60,11 +59,11 @@ export function RideMetaDataPreferences({
       ref={rootRef}
       id={id}
       tabIndex={0}
-      className="flex flex-col gap-2 bg-white rounded-lg border border-gray-100 p-3 shadow-sm max-w-md w-full border-dashed  transition-shadow focus:outline-none focus:border-solid focus:border-primary focus:ring-2 focus:ring-primary/40"
+      className="flex flex-col gap-2 bg-white rounded-lg border border-gray-100 p-3 shadow-sm w-full border-dashed  transition-shadow focus:outline-none focus:border-solid focus:border-primary focus:ring-2 focus:ring-primary/40 text-sm sm:text-base"
     >
       {helperText && (
-        <div className="flex items-center gap-2 mb-1 text-xs text-gray-500">
-          <Info size={16} className="text-blue-400" aria-hidden="true" />
+        <div className="flex items-center gap-2 mb-1 text-xs sm:text-sm text-gray-500">
+          <Info size={20} className="text-blue-400" aria-hidden="true" />
           <span>{helperText}</span>
         </div>
       )}
@@ -105,7 +104,7 @@ export function RideMetaDataPreferences({
       {/* Luggage fields (future) */}
       {showLuggage && (
         <div className="flex flex-col sm:flex-row gap-2 mt-1">
-          {/* Add luggage fields here as needed */}
+          {/* Add luggage fields here as needed while doing airport and outstation bookings */}
         </div>
       )}
     </div>

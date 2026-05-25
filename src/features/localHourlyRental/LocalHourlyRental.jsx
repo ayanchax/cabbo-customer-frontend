@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { ArrowLeft, MapPin } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   useTripPackagesQuery,
@@ -10,6 +10,7 @@ import {
 } from "@/hooks";
 import { InlineDateTimePicker , GettingRideOptionsIllustration, RideMetaDataPreferences} from "@/components";
 import { PackageCards } from "@/features/localHourlyRental/components";
+import { RouteTimeline } from "@/components";
 const DEFAULT_MINIMUM_BOOKING_HOURS = 6; // Default to 6 hours if API doesn't provide a value
 function LocalHourlyRental() {
   const location = useLocation();
@@ -29,10 +30,6 @@ function LocalHourlyRental() {
   const dropOff = location.state?.dropoff; // Optional dropoff location for display purposes, but we will not require it for booking since some rentals may not have a fixed dropoff location
   const { showToast } = useToast();
   const navigate = useNavigate();
-  const originDisplayText = origin?.display_name ?? null;
-  const originFullAddress = origin?.address ?? null;
-  const dropOffDisplayText = dropOff?.display_name ?? null;
-  const dropOffFullAddress = dropOff?.address ?? null;
   
   const region_code = origin?.region_code;
   const trip_type = "local";
@@ -115,7 +112,20 @@ function LocalHourlyRental() {
   };
 
   return (
-    <div  className={`max-w-md mx-auto p-4 ${inProgress ? "pointer-events-none opacity-70" : ""}`}>
+    <div
+      className={`
+        xl:w-3/4 min-h-screen overflow-y-auto
+        bg-gray-50 sm:bg-white
+        px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10
+        py-2 xs:py-3 sm:py-6 md:py-8 lg:py-10
+        mx-auto
+        overflow-visible
+        sm:max-w-screen-sm md:max-w-3xl lg:max-w-5xl xl:max-w-7xl 2xl:max-w-screen-2xl
+        sm:rounded-xl sm:shadow-lg
+        shadow-[0_2px_16px_0_rgba(16,30,54,0.08)] max-w-full
+        ${inProgress ? "pointer-events-none opacity-70" : ""}
+      `}
+    >
       {/* Header: Back Button + Title */}
       <div className="flex items-center gap-2 mb-4">
         <button
@@ -136,56 +146,9 @@ function LocalHourlyRental() {
             */}
         </h2>
       </div>
-
-      {/* Pickup location */}
-      <div className="mb-4">
-        <div className="text-gray-500 text-sm mb-1">Pickup location</div>
-        <div className="flex items-center gap-1">
-          <MapPin
-            className="w-4 h-4 text-primary shrink-0 "
-            aria-label="Pickup location"
-          />
-          <span
-            className={`block text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] font-medium truncate ${
-              origin ? "text-gray-900" : "text-gray-400"
-            }`}
-          >
-            {originDisplayText}
-          </span>
-        </div>
-
-        {originFullAddress && (
-          <span className="block text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 truncate">
-            {originFullAddress}
-          </span>
-        )}
-      </div>
-
-      {/* Optional dropoff location */}
-      {dropOff && (
-        <div className="mb-4">
-          <div className="text-gray-500 text-sm mb-1">Dropoff location</div>
-          <div className="flex items-center gap-1">
-            <MapPin
-              className="w-4 h-4 text-primary shrink-0 "
-              aria-label="Dropoff location"
-            />
-            <span
-              className={`block text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] font-medium truncate ${
-                dropOff ? "text-gray-900" : "text-gray-400"
-              }`}
-            >
-              {dropOffDisplayText}
-            </span>
-          </div>
-
-          {dropOffFullAddress && (
-            <span className="block text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 truncate">
-              {dropOffFullAddress}
-            </span>
-          )}
-        </div>
-      )}
+      
+      {/* Route timeline */}
+      <RouteTimeline pickupLocation={origin} dropoffLocation={dropOff} />
 
       {/* Start date/time picker */}
       <div
@@ -193,7 +156,7 @@ function LocalHourlyRental() {
       >
         <label
           htmlFor="startDateTime"
-          className="block text-gray-500 text-sm mb-2"
+          className="block text-gray-500 text-[13px] md:text-base mb-2"
         >
           When do you want to leave?
           {/* Suggestions:
@@ -212,10 +175,11 @@ function LocalHourlyRental() {
 
       {/* Package selection */}
       <div className="mb-4">
-        <label className="block text-gray-500 text-sm mb-2">
+        <label htmlFor="package" className="block text-gray-500 text-[13px] md:text-base mb-2">
           Select package
         </label>
         <PackageCards
+          id="package"
           packages={packages}
           selectedPackageId={selectedPackageId}
           onSelect={setSelectedPackageId}
@@ -223,28 +187,32 @@ function LocalHourlyRental() {
         />
       </div>
 
-      {/* Optional: Passenger information like num_adults and children */}
-      <div className="mb-4">
-         <label htmlFor="ridePreferences" className="block text-gray-500 text-sm mb-2">
+      {/* Optional: Preferences like num_adults and children */}
+      <div className="mb-16 xl:mb-4">
+         <label htmlFor="ridePreferences" className="block text-gray-500 text-[13px] md:text-base mb-2">
           Preferences
         </label>
         <RideMetaDataPreferences value={ridePreferences} onChange={setRidePreferences} id="ridePreferences"/>
       </div>
      
-      {/* Book button */}
-      <button
-        className="w-full cursor-pointer bg-primary text-white py-2 rounded font-semibold disabled:opacity-50"
-        onClick={handleBook}
-        disabled={!origin || !startDate || !selectedPackageId || inProgress}
+      {/* Book button - sticky up to xl, inside main content */}
+      <div
+        className="xl:sticky fixed left-0 right-0 bottom-0 z-20 bg-white xl:bg-transparent px-2 xs:px-3 xl:px-0 pb-2 pt-2 xl:pt-0 xl:pb-0 border-t border-gray-200 xl:border-0 shadow-[0_-2px_16px_0_rgba(16,30,54,0.04)] max-w-full mx-auto"
       >
-        Find rides
-        {/* Suggestions:
-          Book Now
-          Search Rides
-          Find My Ride
-          See Available Rides
+        <button
+          className="w-full cursor-pointer bg-primary text-white py-3 rounded font-semibold disabled:opacity-50 text-base shadow-sm"
+          onClick={handleBook}
+          disabled={!origin || !startDate || !selectedPackageId || inProgress}
+        >
+          Find rides
+          {/* Suggestions:
+            Book Now
+            Search Rides
+            Find My Ride
+            See Available Rides
           */}
-      </button>
+        </button>
+      </div>
     </div>
   );
 }
