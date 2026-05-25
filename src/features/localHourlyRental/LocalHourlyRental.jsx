@@ -5,9 +5,13 @@ import {
   useTripPriorBookingWindowQuery,
   useToast,
   useTimezone,
-  useOverlay
+  useOverlay,
 } from "@/hooks";
-import { InlineDateTimePicker , GettingRideOptionsIllustration, RideMetaDataPreferences} from "@/components";
+import {
+  InlineDateTimePicker,
+  GettingRideOptionsIllustration,
+  RideMetaDataPreferences,
+} from "@/components";
 import { PackageCards } from "@/features/localHourlyRental/components";
 import { RouteTimeline, PageHeader } from "@/components";
 import { isDevMode } from "@/api";
@@ -17,11 +21,10 @@ function LocalHourlyRental() {
   const location = useLocation();
   const { timezone: tz_info } = useTimezone();
   const { showOverlay, hideOverlay } = useOverlay();
-  
- 
+
   // Origin is passed in navigation state from previous step
   const origin = location.state?.pickup;
-  
+
   if (!origin) {
     throw new Error(
       "Origin (pickup location) is required to book a local hourly rental.",
@@ -31,7 +34,7 @@ function LocalHourlyRental() {
   const dropOff = location.state?.dropoff; // Optional dropoff location for display purposes, but we will not require it for booking since some rentals may not have a fixed dropoff location
   const { showToast } = useToast();
   const navigate = useNavigate();
-  
+
   const region_code = origin?.region_code;
   const trip_type = "local";
 
@@ -58,28 +61,31 @@ function LocalHourlyRental() {
   // State for form fields
   const [startDate, setStartDate] = useState(null); // ISO string
   const [selectedPackageId, setSelectedPackageId] = useState(null);
-  const [ridePreferences, setRidePreferences] = useState({ num_adults: 1, num_children: 0 }); // Example additional preferences
+  const [ridePreferences, setRidePreferences] = useState({
+    num_adults: 1,
+    num_children: 0,
+  }); // Example additional preferences
   const [inProgress, setInProgress] = useState(false);
 
   const handleBook = () => {
-    if(inProgress) return; // Prevent multiple submissions
+    if (inProgress) return; // Prevent multiple submissions
     try {
       setInProgress(true);
       if (!origin) {
         const msg =
           "Pickup location is required to book a local hourly rental.";
-        showToast(msg, "error", {position: "top-center"});
+        showToast(msg, "error", { position: "top-center" });
 
         return;
       }
       if (!startDate) {
         const msg = "Please select a start date and time.";
-        showToast(msg, "error", {position: "top-center"});
+        showToast(msg, "error", { position: "top-center" });
         return;
       }
       if (!selectedPackageId) {
         const msg = "Please select a package.";
-        showToast(msg, "error", {position: "top-center"});
+        showToast(msg, "error", { position: "top-center" });
         return;
       }
       if (
@@ -87,14 +93,16 @@ function LocalHourlyRental() {
         new Date(startDate) < earliestRentalStartDate
       ) {
         const msg = `Start time must be at least ${priorBookingWindow || DEFAULT_MINIMUM_BOOKING_HOURS} hours from now.`;
-        showToast(msg, "error", {position: "top-center"});
+        showToast(msg, "error", { position: "top-center" });
         return;
       }
-      const overlayProps= {
-            message: "Getting the best rides for you...",
-            illustration: <GettingRideOptionsIllustration className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />,
-            subtext: "Searching available cabs and packages in your area",
-          }
+      const overlayProps = {
+        message: "Getting the best rides for you...",
+        illustration: (
+          <GettingRideOptionsIllustration className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />
+        ),
+        subtext: "Searching available cabs and packages in your area",
+      };
       showOverlay(overlayProps);
       console.log(origin, startDate, selectedPackageId, tz_info);
 
@@ -102,21 +110,19 @@ function LocalHourlyRental() {
       // ...
       // navigate('/confirmation', { state: { ... } });
     } catch (e) {
-        if (isDevMode) {
-      console.error("Error during booking:", e);
-        }
+      if (isDevMode) {
+        console.error("Error during booking:", e);
+      }
       const msg = "An unexpected error occurred. Please try again.";
-      showToast(msg, "error", {position: "top-center"});
-    }
-
-    finally {
+      showToast(msg, "error", { position: "top-center" });
+    } finally {
       setInProgress(false);
     }
   };
 
   return (
     <div
-      className={`
+      className={` relative
         xl:w-3/4 min-h-screen overflow-y-auto
         bg-gray-50 sm:bg-white
         px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10
@@ -129,80 +135,99 @@ function LocalHourlyRental() {
         ${inProgress ? "pointer-events-none opacity-70" : ""}
       `}
     >
-      {/* Header: Back Button + Title */}
-      {/* Suggestions:
+      <img
+        src="/src/assets/illustrations/city-bg.svg"
+        alt=""
+        className="hidden sm:block lg:hidden pointer-events-none select-none absolute bottom-0 left-1/4 -translate-x-1/2 w-full max-w-md opacity-60 z-0"
+        aria-hidden="true"
+      />
+      <div className="relative z-10">
+        {/* Header: Back Button + Title */}
+        {/* Suggestions:
             Book an Hourly Rental
             Start Your Hourly Ride
             Schedule Your Local Rental
             Hourly Rental Booking
             */}
-      <PageHeader onBack={() => navigate(-1)} title="Plan your hourly rental ride" />
-      
-      {/* Route timeline */}
-      <RouteTimeline pickupLocation={origin} dropoffLocation={dropOff} />
+        <PageHeader
+          onBack={() => navigate(-1)}
+          title="Plan your hourly rental ride"
+        />
 
-      {/* Start date/time picker */}
-      <div
-        className={`mb-4 ${priorBookingWindowLoading ? "opacity-50 pointer-events-none" : ""}`}
-      >
-        <label
-          htmlFor="startDateTime"
-          className="block text-gray-500 text-[13px] md:text-base mb-2"
+        {/* Route timeline */}
+        <RouteTimeline pickupLocation={origin} dropoffLocation={dropOff} />
+
+        {/* Start date/time picker */}
+        <div
+          className={`mb-4 ${priorBookingWindowLoading ? "opacity-50 pointer-events-none" : ""}`}
         >
-          When do you want to leave?
-          {/* Suggestions:
+          <label
+            htmlFor="startDateTime"
+            className="block text-gray-500 text-[13px] md:text-base mb-2"
+          >
+            When do you want to leave?
+            {/* Suggestions:
           Select start date & time
           Pick your ride start time
           Choose when your ride begins
           When should your ride start?
           */}
-        </label>
-        <InlineDateTimePicker
-          id="startDateTime"
-          earliestRentalStartDate={earliestRentalStartDate}
-          onConfirm={setStartDate}
-        />
-      </div>
+          </label>
+          <InlineDateTimePicker
+            id="startDateTime"
+            earliestRentalStartDate={earliestRentalStartDate}
+            onConfirm={setStartDate}
+          />
+        </div>
 
-      {/* Package selection */}
-      <div className="mb-4">
-        <label htmlFor="package" className="block text-gray-500 text-[13px] md:text-base mb-2">
-          Select package
-        </label>
-        <PackageCards
-          id="package"
-          packages={packages}
-          selectedPackageId={selectedPackageId}
-          onSelect={setSelectedPackageId}
-          loading={packagesLoading}
-        />
-      </div>
+        {/* Package selection */}
+        <div className="mb-4">
+          <label
+            htmlFor="package"
+            className="block text-gray-500 text-[13px] md:text-base mb-2"
+          >
+            Select package
+          </label>
+          <PackageCards
+            id="package"
+            packages={packages}
+            selectedPackageId={selectedPackageId}
+            onSelect={setSelectedPackageId}
+            loading={packagesLoading}
+          />
+        </div>
 
-      {/* Optional: Preferences like num_adults and children */}
-      <div className="mb-16 xl:mb-4">
-         <label htmlFor="ridePreferences" className="block text-gray-500 text-[13px] md:text-base mb-2">
-          Preferences
-        </label>
-        <RideMetaDataPreferences value={ridePreferences} onChange={setRidePreferences} id="ridePreferences"/>
-      </div>
-     
-      {/* Book button - sticky up to xl, inside main content */}
-      <div
-        className="xl:sticky fixed left-0 right-0 bottom-0 z-20 bg-white xl:bg-transparent px-2 xs:px-3 xl:px-0 pb-2 pt-2 xl:pt-0 xl:pb-0 border-t border-gray-200 xl:border-0 shadow-[0_-2px_16px_0_rgba(16,30,54,0.04)] max-w-full mx-auto"
-      >
-        <button
-          className="w-full cursor-pointer bg-primary text-white py-3 rounded font-semibold disabled:opacity-50 text-base shadow-sm"
-          onClick={handleBook}
-          disabled={!origin || !startDate || !selectedPackageId || inProgress}
-        >
-          Find rides
-          {/* Suggestions:
+        {/* Optional: Preferences like num_adults and children */}
+        <div className="mb-16 xl:mb-4">
+          <label
+            htmlFor="ridePreferences"
+            className="block text-gray-500 text-[13px] md:text-base mb-2"
+          >
+            Preferences
+          </label>
+          <RideMetaDataPreferences
+            value={ridePreferences}
+            onChange={setRidePreferences}
+            id="ridePreferences"
+          />
+        </div>
+
+        {/* Book button - sticky up to xl, inside main content */}
+        <div className="xl:sticky fixed left-0 right-0 bottom-0 z-20 bg-white xl:bg-transparent px-2 xs:px-3 xl:px-0 pb-2 pt-2 xl:pt-0 xl:pb-0 border-t border-gray-200 xl:border-0 shadow-[0_-2px_16px_0_rgba(16,30,54,0.04)] max-w-full mx-auto">
+          <button
+            className="w-full cursor-pointer bg-primary text-white py-3 rounded font-semibold disabled:opacity-50 text-base shadow-sm"
+            onClick={handleBook}
+            disabled={!origin || !startDate || !selectedPackageId || inProgress}
+          >
+            Find rides
+            {/* Suggestions:
             Book Now
             Search Rides
             Find My Ride
             See Available Rides
           */}
-        </button>
+          </button>
+        </div>
       </div>
     </div>
   );
