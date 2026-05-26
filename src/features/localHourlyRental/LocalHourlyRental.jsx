@@ -117,9 +117,10 @@ function LocalHourlyRental() {
       }
       const response = await searchTrips.mutateAsync(payload);
       console.log("Search response:", response);
-      
+      hideOverlay();
       // navigate('/confirmation', { state: { ... } });
     } catch (e) {
+      hideOverlay();
       if (isDevMode) {
         console.error("Error during booking:", e);
       }

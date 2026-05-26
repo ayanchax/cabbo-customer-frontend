@@ -1,0 +1,341 @@
+{
+    "options": [
+        {
+            "car_type": "Sedan",
+            "fuel_type": "diesel",
+            "total_price": 1819,
+            "price_breakdown": {
+                "base_fare": 1680,
+                "platform_fee": 139,
+                "driver_allowance": 0
+            },
+            "included_kms": 60,
+            "included_hours": 6,
+            "package_short_label": "6Hours / 60KM",
+            "package": "6Hours / 60KM | AC Sedan(4+1) - (diesel)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 15,
+                "overage_amount_per_hour": 280,
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹280.0 per hour and/or ₹15.0 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+                ],
+                "extra_charges_disclaimers": "Extra charges may apply: \n - If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹280.0 per hour and/or ₹15.0 per km will apply.\n - You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.\n - Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+            },
+            "hash": "9275ddc1a2119ca471a8ce16d4ced2653bd4c601fa0dadc3831d6b6171938c60"
+        },
+        {
+            "car_type": "Sedan",
+            "fuel_type": "cng",
+            "total_price": 1749,
+            "price_breakdown": {
+                "base_fare": 1620,
+                "platform_fee": 129,
+                "driver_allowance": 0
+            },
+            "included_kms": 60,
+            "included_hours": 6,
+            "package_short_label": "6Hours / 60KM",
+            "package": "6Hours / 60KM | AC Sedan(4+1) - (cng)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 14,
+                "overage_amount_per_hour": 280,
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹280.0 per hour and/or ₹14.0 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+                ],
+                "extra_charges_disclaimers": "Extra charges may apply: \n - If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹280.0 per hour and/or ₹14.0 per km will apply.\n - You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.\n - Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+            },
+            "hash": "fbc64eb66f9db103977407794a6e90b9a2190e1528e9cd78dbdd8976d1cb79a7"
+        },
+        {
+            "car_type": "Sedan",
+            "fuel_type": "petrol",
+            "total_price": 1939,
+            "price_breakdown": {
+                "base_fare": 1800,
+                "platform_fee": 139,
+                "driver_allowance": 0
+            },
+            "included_kms": 60,
+            "included_hours": 6,
+            "package_short_label": "6Hours / 60KM",
+            "package": "6Hours / 60KM | AC Sedan(4+1) - (petrol)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 16,
+                "overage_amount_per_hour": 300,
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹300.0 per hour and/or ₹16.0 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+                ],
+                "extra_charges_disclaimers": "Extra charges may apply: \n - If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹300.0 per hour and/or ₹16.0 per km will apply.\n - You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.\n - Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+            },
+            "hash": "2d13d06967154027150a55a9d03bc19254bc4ba09c97c867cbd202a52689f86d"
+        },
+        {
+            "car_type": "Premium Sedan",
+            "fuel_type": "diesel",
+            "total_price": 2189,
+            "price_breakdown": {
+                "base_fare": 2040,
+                "platform_fee": 149,
+                "driver_allowance": 0
+            },
+            "included_kms": 60,
+            "included_hours": 6,
+            "package_short_label": "6Hours / 60KM",
+            "package": "6Hours / 60KM | AC Premium Sedan(4+1) - (diesel)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 17,
+                "overage_amount_per_hour": 340,
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹340.0 per hour and/or ₹17.0 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+                ],
+                "extra_charges_disclaimers": "Extra charges may apply: \n - If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹340.0 per hour and/or ₹17.0 per km will apply.\n - You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.\n - Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+            },
+            "hash": "851709fa11adc92da8407493af6e6c3a2936cc5847c16a45d39b0224b2843180"
+        },
+        {
+            "car_type": "SUV+",
+            "fuel_type": "diesel",
+            "total_price": 2689,
+            "price_breakdown": {
+                "base_fare": 2520,
+                "platform_fee": 169,
+                "driver_allowance": 0
+            },
+            "included_kms": 60,
+            "included_hours": 6,
+            "package_short_label": "6Hours / 60KM",
+            "package": "6Hours / 60KM | AC SUV+(7+1) - (diesel)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 21,
+                "overage_amount_per_hour": 420,
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹420.0 per hour and/or ₹21.0 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+                ],
+                "extra_charges_disclaimers": "Extra charges may apply: \n - If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹420.0 per hour and/or ₹21.0 per km will apply.\n - You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.\n - Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+            },
+            "hash": "b39bd213e04837ae4979b241f799d2d67f05b3dbb4802e86969213295833a54d"
+        },
+        {
+            "car_type": "Premium Sedan",
+            "fuel_type": "cng",
+            "total_price": 2129,
+            "price_breakdown": {
+                "base_fare": 1980,
+                "platform_fee": 149,
+                "driver_allowance": 0
+            },
+            "included_kms": 60,
+            "included_hours": 6,
+            "package_short_label": "6Hours / 60KM",
+            "package": "6Hours / 60KM | AC Premium Sedan(4+1) - (cng)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 16,
+                "overage_amount_per_hour": 330,
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹330.0 per hour and/or ₹16.0 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+                ],
+                "extra_charges_disclaimers": "Extra charges may apply: \n - If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹330.0 per hour and/or ₹16.0 per km will apply.\n - You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.\n - Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+            },
+            "hash": "f857265e7076d2032c1978c10d82f7e2645543fc63d54aaeebf19077c5aa2f37"
+        },
+        {
+            "car_type": "Premium Sedan",
+            "fuel_type": "petrol",
+            "total_price": 2249,
+            "price_breakdown": {
+                "base_fare": 2100,
+                "platform_fee": 149,
+                "driver_allowance": 0
+            },
+            "included_kms": 60,
+            "included_hours": 6,
+            "package_short_label": "6Hours / 60KM",
+            "package": "6Hours / 60KM | AC Premium Sedan(4+1) - (petrol)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 18,
+                "overage_amount_per_hour": 350,
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹350.0 per hour and/or ₹18.0 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+                ],
+                "extra_charges_disclaimers": "Extra charges may apply: \n - If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹350.0 per hour and/or ₹18.0 per km will apply.\n - You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.\n - Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+            },
+            "hash": "137a74d056a7100028e48a00e5601fdcce13d3738520fb984b262e9f1292c253"
+        },
+        {
+            "car_type": "SUV",
+            "fuel_type": "petrol",
+            "total_price": 2569,
+            "price_breakdown": {
+                "base_fare": 2400,
+                "platform_fee": 169,
+                "driver_allowance": 0
+            },
+            "included_kms": 60,
+            "included_hours": 6,
+            "package_short_label": "6Hours / 60KM",
+            "package": "6Hours / 60KM | AC SUV(6+1) - (petrol)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 20,
+                "overage_amount_per_hour": 400,
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹400.0 per hour and/or ₹20.0 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+                ],
+                "extra_charges_disclaimers": "Extra charges may apply: \n - If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹400.0 per hour and/or ₹20.0 per km will apply.\n - You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.\n - Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+            },
+            "hash": "c433e5bee1060aa78c60a790def831a05bbe90486f172aaac384768021d2833a"
+        },
+        {
+            "car_type": "SUV+",
+            "fuel_type": "petrol",
+            "total_price": 2879,
+            "price_breakdown": {
+                "base_fare": 2700,
+                "platform_fee": 179,
+                "driver_allowance": 0
+            },
+            "included_kms": 60,
+            "included_hours": 6,
+            "package_short_label": "6Hours / 60KM",
+            "package": "6Hours / 60KM | AC SUV+(7+1) - (petrol)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 22,
+                "overage_amount_per_hour": 450,
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹450.0 per hour and/or ₹22.0 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+                ],
+                "extra_charges_disclaimers": "Extra charges may apply: \n - If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹450.0 per hour and/or ₹22.0 per km will apply.\n - You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.\n - Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+            },
+            "hash": "97e432a5ff3f4f3ab65c6f8a16b2820569192ef5a528f7a831ebca3aa16a9510"
+        },
+        {
+            "car_type": "Hatchback",
+            "fuel_type": "cng",
+            "total_price": 1629,
+            "price_breakdown": {
+                "base_fare": 1500,
+                "platform_fee": 129,
+                "driver_allowance": 0
+            },
+            "included_kms": 60,
+            "included_hours": 6,
+            "package_short_label": "6Hours / 60KM",
+            "package": "6Hours / 60KM | AC Hatchback(4+1) - (cng)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 15,
+                "overage_amount_per_hour": 250,
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹250.0 per hour and/or ₹15.0 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+                ],
+                "extra_charges_disclaimers": "Extra charges may apply: \n - If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹250.0 per hour and/or ₹15.0 per km will apply.\n - You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.\n - Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+            },
+            "hash": "399d3953badd45687a53a8248205dd0b37c96993f06a3ef627f849c2ba904454"
+        }
+    ],
+    "preferences": {
+        "trip_type": "local",
+        "origin": {
+            "display_name": "Padmeshwari Nagar, Medahalli",
+            "lat": 13.0261281,
+            "lng": 77.712046,
+            "place_id": "ChIJO70GgGMRrjsRtiVld-t0Kts",
+            "address": "2PG6+FR3, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+            "country": "India",
+            "country_code": "IN",
+            "state": "Karnataka",
+            "state_code": "KA",
+            "region": "Bangalore",
+            "region_code": "BLR",
+            "postal_code": "560049"
+        },
+        "destination": {
+            "display_name": "Infosys gate 4",
+            "lat": 12.8495613,
+            "lng": 77.66381919999999,
+            "place_id": "ChIJ5duVHQBtrjsRNYRV53Ls4L0",
+            "address": "RMX7+RGG, Infosys Rd, Konappana Agrahara, Electronic City, Konappana Agrahara, Karnataka 560100, India",
+            "country": "India",
+            "country_code": "IN",
+            "state": "Karnataka",
+            "state_code": "KA",
+            "region": "Bangalore",
+            "region_code": "BLR",
+            "postal_code": "560100"
+        },
+        "start_date": "2026-05-27T07:30:00",
+        "expected_end_date": "2026-05-27 08:00:00+00:00",
+        "num_adults": 1,
+        "num_children": 0,
+        "num_large_suitcases": 0,
+        "num_carryons": 0,
+        "num_backpacks": 0,
+        "num_other_bags": 0,
+        "preferred_car_type": "Sedan",
+        "preferred_fuel_type": "diesel",
+        "package_id": "88ab1e08-16ac-4342-b17e-7ccb88763b53",
+        "toll_road_preferred": false,
+        "placard_required": false,
+        "passenger": "self",
+        "timezone": "Asia/Kolkata",
+        "utc_offset": 330
+    },
+    "metadata": {
+        "inclusions": [
+            "Base fare",
+            "Premium AC cab with professional driver",
+            "Doorstep pickup and drop",
+            "Platform/Convenience fee",
+            "Well-maintained and sanitized vehicle",
+            "24/7 customer support",
+            "Water bottles and tissues"
+        ],
+        "exclusions": [
+            "Personal expenses",
+            "Self sponsored driver meals",
+            "Tolls(if applicable)",
+            "Paid parking(if applicable)"
+        ],
+        "in_car_amenities": {
+            "ac": true,
+            "music_system": true,
+            "water_bottle": true,
+            "tissues": true,
+            "phone_charger": true,
+            "aux_cable": true
+        },
+        "total_trip_days": 1,
+        "included_hours": 6,
+        "included_kms": 60,
+        "choices": 10,
+        "is_round_trip": true
+    }
+}
