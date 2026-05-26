@@ -13,7 +13,8 @@ import {
   RideMetaDataPreferences,
 } from "@/components";
 import { PackageCards } from "@/features/localHourlyRental/components";
-import { RouteTimeline, PageHeader } from "@/components";
+import { useLocalTripSearch } from "@/features/localHourlyRental/hooks";
+import { RouteTimeline, PageHeader, AmbientIllustration } from "@/components";
 import { isDevMode } from "@/api";
 
 const DEFAULT_MINIMUM_BOOKING_HOURS = 6; // Default to 6 hours if API doesn't provide a value
@@ -21,7 +22,7 @@ function LocalHourlyRental() {
   const location = useLocation();
   const { timezone: tz_info } = useTimezone();
   const { showOverlay, hideOverlay } = useOverlay();
-
+  const searchTrips = useLocalTripSearch();
   // Origin is passed in navigation state from previous step
   const origin = location.state?.pickup;
 
@@ -67,7 +68,7 @@ function LocalHourlyRental() {
   }); // Example additional preferences
   const [inProgress, setInProgress] = useState(false);
 
-  const handleBook = () => {
+  const handleBook = async () => {
     if (inProgress) return; // Prevent multiple submissions
     try {
       setInProgress(true);
@@ -104,10 +105,19 @@ function LocalHourlyRental() {
         subtext: "Searching available cabs and packages in your area",
       };
       showOverlay(overlayProps);
-      console.log(origin, startDate, selectedPackageId, tz_info);
-
-      // Submit to /search API (not implemented here)
-      // ...
+      const payload ={
+        trip_type,
+        origin,
+        destination: dropOff || null, // Optional, some rentals may not have fixed destination
+        start_date: startDate.isoString,
+        ...ridePreferences,
+        package_id: selectedPackageId,
+        timezone:tz_info.timezone,
+        utc_offset: tz_info.utc_offset_minutes,
+      }
+      const response = await searchTrips.mutateAsync(payload);
+      console.log("Search response:", response);
+      
       // navigate('/confirmation', { state: { ... } });
     } catch (e) {
       if (isDevMode) {
@@ -135,12 +145,6 @@ function LocalHourlyRental() {
         ${inProgress ? "pointer-events-none opacity-70" : ""}
       `}
     >
-      <img
-        src="/src/assets/illustrations/city-bg.svg"
-        alt=""
-        className="hidden sm:block lg:hidden pointer-events-none select-none absolute bottom-0 left-1/4 -translate-x-1/2 w-full max-w-md opacity-60 z-0"
-        aria-hidden="true"
-      />
       <div className="relative z-10">
         {/* Header: Back Button + Title */}
         {/* Suggestions:
@@ -211,9 +215,12 @@ function LocalHourlyRental() {
             id="ridePreferences"
           />
         </div>
+        
+        {/* Ambient illustration - city background to enhance visual appeal */}
+        <AmbientIllustration src="/src/assets/illustrations/city-bg.svg" className="opacity-20" containerClassName="mt-8 mb-24 lg:hidden" />
 
         {/* Book button - sticky up to xl, inside main content */}
-        <div className="xl:sticky fixed left-0 right-0 bottom-0 z-20 bg-white xl:bg-transparent px-2 xs:px-3 xl:px-0 pb-2 pt-2 xl:pt-0 xl:pb-0 border-t border-gray-200 xl:border-0 shadow-[0_-2px_16px_0_rgba(16,30,54,0.04)] max-w-full mx-auto">
+        <div className="xl:sticky fixed left-0 right-0 bottom-0 z-20 bg-gray-50 sm:bg-white xl:bg-transparent px-2 xs:px-3 xl:px-0 pb-2 pt-2 xl:pt-0 xl:pb-0 border-t border-gray-200 xl:border-0 shadow-[0_-2px_16px_0_rgba(16,30,54,0.04)] max-w-full mx-auto ">
           <button
             className="w-full cursor-pointer bg-primary text-white py-3 rounded font-semibold disabled:opacity-50 text-base shadow-sm"
             onClick={handleBook}

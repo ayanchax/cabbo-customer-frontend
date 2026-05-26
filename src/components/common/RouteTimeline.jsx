@@ -80,44 +80,75 @@ function RouteTimeline({
       aria-label="Dropoff location"
     />
   ), // Customizable dropoff icon
-
 }) {
   return (
     <>
       {viewAsRouteTimeline &&
       dropoffLocation &&
       dropoffLocation.display_name ? (
-        <div style={{ marginBottom: gap }} className="flex">
-          {/* Timeline column: dots and line aligned with content */}
-          <div className="flex flex-col items-center mr-2 relative" style={{ width: 20 }}>
-            {/* Pickup dot */}
-            <span className="sm:w-3 sm:h-3 w-2 h-2 md:w-4 md:h-4 rounded-full border border-white shadow-sm z-10 bg-emerald-400 block" />
-            {/* Vertical line: flex-grow, stretches between dots */}
-            <div className="flex-1 w-px bg-gray-200 opacity-60" />
-            {/* Drop dot */}
-            <span className="sm:w-3 sm:h-3 w-2 h-2 md:w-4 md:h-4 rounded-full bg-rose-400 border border-white shadow-sm z-10 block" />
+        <div className="flex gap-3 mb-4">
+          {/* Timeline */}
+          <div className="relative flex flex-col items-center pt-1">
+            {/* Top dot */}
+            <span className="w-3 h-3 md:w-4 md:h-4 rounded-full bg-emerald-400 border-2 border-white shadow-sm z-10" />
+
+            {/* Line */}
+            <div className="w-px flex-1 bg-gray-300 my-1 opacity-60" />
+
+            {/* Bottom dot */}
+            <span className="w-3 h-3 md:w-4 md:h-4 rounded-full bg-rose-400 border-2 border-white shadow-sm z-10" />
           </div>
-          <div className="flex-1 flex flex-col justify-between">
-            {/* Pickup location */}
-            <div style={{ marginBottom: gap }}>
-              {showPickupLabel && <div className="text-gray-500 text-[13px] md:text-base mb-1">Pickup</div>}
-              <div className="flex items-center gap-1">
+
+          {/* Content */}
+          <div className="flex-1 min-w-0">
+            {/* Pickup */}
+            <div className="mb-5">
+                {showPickupLabel && <div className="text-gray-500 text-[13px] md:text-base mb-1">Pickup</div>}
+
+              <div className="flex items-center gap-1 min-w-0">
                 {pickupIcon}
-                <span className={`block text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] font-medium truncate ${pickupLocation.display_name ? "text-gray-900" : "text-gray-400"}`}>{pickupLocation.display_name}</span>
+                <span
+                  className={`truncate text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] font-medium ${
+                    pickupLocation.display_name
+                      ? "text-gray-900"
+                      : "text-gray-400"
+                  }`}
+                >
+                  {pickupLocation.display_name}
+                </span>
               </div>
+
               {pickupLocation.address && (
-                <span className="block text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 truncate">{pickupLocation.address}</span>
+                <span className="block truncate text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 pl-5">
+                  {pickupLocation.address}
+                </span>
               )}
             </div>
-            {/* Dropoff location */}
+
+            {/* Later, we will add hops here in the future */}
+
+            {/* Dropoff */}
             <div>
-              {showDropoffLabel && <div className="text-gray-500 text-[13px] md:text-base mb-1">Dropoff</div>}
-              <div className="flex items-center gap-1">
+                {showDropoffLabel && <div className="text-gray-500 text-[13px] md:text-base mb-1">Dropoff</div>}
+
+              <div className="flex items-center gap-1 min-w-0">
                 {dropoffIcon}
-                <span className={`block text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] font-medium truncate ${dropoffLocation.display_name ? "text-gray-900" : "text-gray-400"}`}>{dropoffLocation.display_name}</span>
+
+                <span
+                  className={`truncate text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] font-medium ${
+                    dropoffLocation.display_name
+                      ? "text-gray-900"
+                      : "text-gray-400"
+                  }`}
+                >
+                  {dropoffLocation.display_name}
+                </span>
               </div>
+
               {dropoffLocation.address && (
-                <span className="block text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 truncate">{dropoffLocation.address}</span>
+                <span className="block truncate text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 pl-5">
+                  {dropoffLocation.address}
+                </span>
               )}
             </div>
           </div>

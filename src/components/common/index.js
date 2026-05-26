@@ -11,3 +11,4 @@ export {AppOverlay} from "./AppOverlay";
 export {RideMetaDataPreferences} from "./RideMetaDataPreferences";
 export {RouteTimeline} from "./RouteTimeline";
 export {PageHeader} from "./PageHeader";
+export {AmbientIllustration} from "./AmbientIllustration";

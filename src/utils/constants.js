@@ -38,6 +38,7 @@ export const ENDPOINTS = {
             CLASSIFY_TYPE: `${API_VERSION}/trips/trip-type-classification/classify`,
             GET_PACKAGES_BY_TRIP_TYPE_AND_REGION: `${API_VERSION}/trips/trip-packages`, 
             GET_PRIOR_BOOKING_WINDOW: `${API_VERSION}/trips/prior-booking-window`, 
+            SEARCH: `${API_VERSION}/trips/search`,
         }
 
 
