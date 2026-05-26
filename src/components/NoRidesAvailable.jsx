@@ -14,11 +14,11 @@ const NoRidesSVG = (
   </svg>
 );
 
-const NoRidesAvailable = ({ onRetry, onDismiss }) => (
+const NoRidesAvailable = ({ onRetry, onDismiss, title="No rides available", message="We couldn't find any rides for your selected route. Please try a different pickup or drop location." , illustration=NoRidesSVG}) => (
   <EmptyState
-    illustration={NoRidesSVG}
-    title="No rides available"
-    message="We couldn't find any rides for your selected route. Please try a different pickup or drop location."
+    illustration={illustration}
+    title={title}
+    message={message}
     dismissable
     onDismiss={onDismiss}
     className="animate-slide-up"
