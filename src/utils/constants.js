@@ -63,3 +63,11 @@ export const TRIP_TYPES =
     OUTSTATION: "outstation", // long-distance multi day trips outside the city, also known as outstation or inter-city rides   
     LOCAL: "local", // short-distance same day trips within the city, also known as point-to-point or intra-city rides or hourly rentals
 }
+
+export const CAB_TYPES={
+    HATCHBACK: "Hatchback",
+    SEDAN: "Sedan",
+    SEDAN_PLUS: "Premium Sedan",
+    SUV: "SUV",
+    SUV_PLUS: "SUV+"
+}

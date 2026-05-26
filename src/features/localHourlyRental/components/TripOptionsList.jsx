@@ -1,8 +1,9 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { NoRidesAvailable } from "@/components";
-import {useLocalStorage} from "@/hooks"
-import {LOCAL_STORAGE_KEYS} from "@/utils"
+import { useLocalStorage } from "@/hooks";
+import { LOCAL_STORAGE_KEYS, CAB_TYPES } from "@/utils";
+import { HatchbackCabIcon, SedanCabIcon, SedanPlusCabIcon, SuvCabIcon, SuvPlusCabIcon } from "../../../components/common/svg/cabs";
 /**
  * TripOptionsList
  *
@@ -17,10 +18,10 @@ import {LOCAL_STORAGE_KEYS} from "@/utils"
  * - onSelect: Function(option) when user selects an option (optional)
  */
 function TripOptionsList({ options = [], onBack, onSelect }) {
-  
-  const {getItem} = useLocalStorage()
-  const fallbackCurrencySymbol = getItem(LOCAL_STORAGE_KEYS.serverGeography)?.data?.currency_symbol || "₹"; // Default to INR symbol if geography or currency symbol is not available
-    return (
+  const { getItem } = useLocalStorage();
+  const fallbackCurrencySymbol =
+    getItem(LOCAL_STORAGE_KEYS.serverGeography)?.data?.currency_symbol || "₹"; // Default to INR symbol if geography or currency symbol is not available
+  return (
     <div className="w-full max-w-2xl mx-auto px-2 sm:px-4 md:px-6 py-4 animate-slide-up duration-300 transition-all">
       <div className="flex items-center mb-4">
         <button
@@ -36,7 +37,10 @@ function TripOptionsList({ options = [], onBack, onSelect }) {
       <div className="flex flex-col gap-3">
         {options?.length === 0 ? (
           <div className="px-4 mt-4 max-w-2xl mx-auto">
-            <NoRidesAvailable title="No rides available" message="We couldn't find any rental options for you at the moment." />
+            <NoRidesAvailable
+              title="No rides available"
+              message="We couldn't find any rental options for you at the moment."
+            />
           </div>
         ) : (
           options?.map((opt) => (
@@ -45,13 +49,19 @@ function TripOptionsList({ options = [], onBack, onSelect }) {
               className={`w-full text-left rounded-xl border border-gray-200 bg-white shadow-sm px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary transition group ${opt.overages.indicative_overage_warning ? "border-rose-300" : ""}`}
               onClick={onSelect ? () => onSelect(opt) : undefined}
             >
+                <SedanCabIcon/>
+                <SuvCabIcon/>
+                <SuvPlusCabIcon/>
+                <SedanPlusCabIcon/>
+                <HatchbackCabIcon/>
               {/* Car type and fuel */}
               <div className="flex items-center gap-2 min-w-0 flex-1">
                 <span className="inline-block w-10 h-10 rounded-full bg-gray-50 border border-gray-200 items-center justify-center mr-2">
                   {/* Emoji or icon for car type */}
-                  {opt.car_type === "SUV" || opt.car_type === "SUV+"
+                  {opt.car_type === CAB_TYPES.SUV ||
+                  opt.car_type === CAB_TYPES.SUV_PLUS
                     ? "🚙"
-                    : opt.car_type === "Hatchback"
+                    : opt.car_type === CAB_TYPES.HATCHBACK
                       ? "🚗"
                       : "🚘"}
                 </span>
@@ -70,7 +80,8 @@ function TripOptionsList({ options = [], onBack, onSelect }) {
               {/* Price and included */}
               <div className="flex flex-col items-end min-w-25">
                 <div className="text-primary font-bold text-lg sm:text-xl">
-                  {opt?.currency?.symbol || fallbackCurrencySymbol}{opt.total_price}
+                  {opt?.currency?.symbol || fallbackCurrencySymbol}
+                  {opt.total_price}
                 </div>
                 <div className="text-xs text-gray-500">
                   {opt.included_hours}h / {opt.included_kms}km
