@@ -80,9 +80,10 @@ function RouteTimeline({
       aria-label="Dropoff location"
     />
   ), // Customizable dropoff icon
+  className = "", // Additional className for custom styling
 }) {
   return (
-    <>
+    <div className={className}>
       {viewAsRouteTimeline &&
       dropoffLocation &&
       dropoffLocation.display_name ? (
@@ -199,7 +200,7 @@ function RouteTimeline({
           )}
         </>
       )}
-    </>
+    </div>
   );
 }
 

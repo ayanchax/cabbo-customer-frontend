@@ -11,12 +11,18 @@ import {
   InlineDateTimePicker,
   GettingRideOptionsIllustration,
   RideMetaDataPreferences,
+  TripOptionsList,
+  RideTimings,
 } from "@/components";
-import { PackageCards } from "@/features/localHourlyRental/components";
+import {
+  PackageCards,
+  SelectedPackage,
+} from "@/features/localHourlyRental/components";
 import { useLocalTripSearch } from "@/features/localHourlyRental/hooks";
-import { RouteTimeline, PageHeader, AmbientIllustration } from "@/components";
+import { RouteTimeline, PageHeader, AmbientIllustration, TripDisclaimer } from "@/components";
 import { isDevMode } from "@/api";
-import { TripOptionsList } from "./components";
+import { Info } from "lucide-react";
+
 
 const DEFAULT_MINIMUM_BOOKING_HOURS = 6; // Default to 6 hours if API doesn't provide a value
 function LocalHourlyRental() {
@@ -69,6 +75,11 @@ function LocalHourlyRental() {
   }); // Example additional preferences
   const [inProgress, setInProgress] = useState(false);
   const [searchResults, setSearchResults] = useState(null); // Store search results to pass to next page
+  const selectedPackage = useMemo(() => {
+    return packages?.find((pkg) => pkg.id === selectedPackageId);
+  }, [packages, selectedPackageId]);
+
+  
   const handleBook = async () => {
     if (inProgress) return; // Prevent multiple submissions
     try {
@@ -117,10 +128,12 @@ function LocalHourlyRental() {
         utc_offset: tz_info.utc_offset_minutes,
       };
       const response = await searchTrips.mutateAsync(payload);
-      console.log("Search response:", response);
+      if (isDevMode) {
+        console.log("Search response:", response);
+      }
+      // Collect all overages disclaimers from options - since some options may have specific disclaimers related to their overages, we want to make sure to show all unique disclaimers in one place rather than showing separate disclaimers for each option which can be overwhelming for user. We will merge all unique disclaimers into one string to show on the next page.
       setSearchResults(response.data); // Store search results to pass to next page
       hideOverlay();
-      // navigate('/confirmation', { state: { ... } });
     } catch (e) {
       hideOverlay();
       if (isDevMode) {
@@ -134,8 +147,70 @@ function LocalHourlyRental() {
   };
 
   if (searchResults) {
-    // If we have search results, show the TripOptionsList component to display the available ride options for the user to choose from
-    return <TripOptionsList options={searchResults?.options} onSelect={(option) => console.log("Selected option:", option)} onBack={() => setSearchResults(null)} />;
+    return (
+      <div
+        className="relative
+        xl:w-3/4 min-h-screen overflow-y-auto
+        bg-gray-50 sm:bg-white
+        px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10
+        py-2 xs:py-3 sm:py-6 md:py-8 lg:py-10
+        mx-auto
+        overflow-visible
+        sm:max-w-screen-sm md:max-w-3xl lg:max-w-5xl xl:max-w-7xl 2xl:max-w-screen-2xl
+        sm:rounded-xl sm:shadow-lg
+        shadow-[0_2px_16px_0_rgba(16,30,54,0.08)] max-w-full"
+      >
+        <div className="relative z-10">
+          {/* Header: Back Button + Title */}
+          <PageHeader
+            onBack={() => setSearchResults(null)}
+            title="Available hourly rental rides"
+          />
+          {searchResults?.options && (
+            // Only show trip itinerary if there are search results to display, otherwise user will just see empty page with option to go back and change their search criteria
+            <>
+              <div className="py-2"></div>
+              {/* Trip Itinerary */}
+              {/* Route timeline */}
+              <RouteTimeline
+                pickupLocation={origin}
+                dropoffLocation={dropOff}
+                className="mb-4"
+              />
+              {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
+              <RideTimings
+                startDatetime={startDate}
+                className="px-4 mt-4 mb-4"
+                timezone={tz_info?.timezone}
+              />
+              {/* Selected package */}
+              {selectedPackage && (
+                <SelectedPackage
+                  selectedPackage={selectedPackage}
+                  className="px-4 mt-2 md:mb-4"
+                />
+              )}
+              {/* Horizontal divider */}
+              <div className="py-1">
+                <hr className="border-t border-gray-300" />
+              </div>
+            </>
+          )}
+
+          {/* Trip options list  */}
+          <TripOptionsList
+            options={searchResults?.options}
+            onSelect={(option) => console.log("Selected option:", option)}
+            className="px-2 sm:px-4 md:px-4 py-2 mb-4 w-full"
+          />
+          
+          {/* Trip general disclaimer/terms and conditions */}
+          {searchResults?.disclaimers && Array.isArray(searchResults.disclaimers) && (
+            <TripDisclaimer disclaimers={searchResults.disclaimers} className="px-4 mt-4 mb-4" />
+          )}
+        </div>
+      </div>
+    );
   } else {
     return (
       <div

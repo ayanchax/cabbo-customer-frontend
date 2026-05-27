@@ -1,2 +1,2 @@
 export { PackageCards } from './PackageCards';
-export {TripOptionsList} from './TripOptionsList';
+export {SelectedPackage} from './SelectedPackage';

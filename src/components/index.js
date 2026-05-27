@@ -6,3 +6,7 @@ export {default as LocationInput} from "./LocationInput";
 export {default as LocationSuggestions} from "./LocationSuggestions";
 export {default as NoRidesAvailable} from "./NoRidesAvailable";
 export {PassengerCounter} from "./PassengerCounter";
+export {TripOptionsList} from "./TripOptionsList";
+export {RideTimings} from "./RideTimings";
+export {TripOptionCard} from "./TripOptionCard";
+export {TripDisclaimer} from "./TripDisclaimer";

@@ -10,5 +10,6 @@ export { useOverlay } from "./useOverlay";
 export { useScrollCue } from "./useScrollCue";
 export { useUIElement } from "./useUIElement";
 export { useTimezone } from "./useTimezone";
+export { useLocale } from "./useLocale";
 export * from "./query";
 export * from "./mutation";

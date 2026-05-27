@@ -102,3 +102,16 @@ export const getIsoDateTime = (datetime) => {
     return null;
   }
 }
+
+export const humanReadableDateTime = (datetime, locale = undefined , timezone = undefined) => {
+  if (!datetime?.isoString) return "";
+  return new Date(datetime.isoString).toLocaleString(locale, {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: timezone,
+  });
+}
