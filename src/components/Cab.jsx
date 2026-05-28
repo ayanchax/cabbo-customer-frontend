@@ -7,7 +7,7 @@ function Cab({ cabType, className = "" }) {
     return (
       <div className={`suv-cab-icon ${className}`}>
         <SuvCabIcon
-          className={`${cabType === CAB_TYPES.SUV_PLUS ? "w-22" : "w-20"}`}
+          className={`${cabType === CAB_TYPES.SUV_PLUS ? "w-24" : "w-22"}`}
         />
       </div>
     );

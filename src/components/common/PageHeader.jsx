@@ -4,9 +4,10 @@ import { ArrowLeft } from "lucide-react";
 function PageHeader({
     onBack, // Optional callback for back button; if not provided, back button won't render
     title = "Unknown", // Default title if not provided
+    className = "", // Additional class names for styling
 }) {
   return (
-    <div className="flex items-center gap-2 mb-4">
+    <div className={`flex items-center gap-2 ${className}`}>
         {onBack && (
         <button
           className="flex items-center text-primary hover:underline text-sm font-medium cursor-pointer"

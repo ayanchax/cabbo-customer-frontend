@@ -14,17 +14,20 @@ import {
   TripOptionsList,
   RideTimings,
   PersonBoardingCabIllustration,
-  RouteTimeline, PageHeader, TripDisclaimer
+  RouteTimeline,
+  PageHeader,
+  TripDisclaimer,
 } from "@/components";
 import {
   PackageCards,
   SelectedPackage,
 } from "@/features/localHourlyRental/components";
 import { useLocalTripSearch } from "@/features/localHourlyRental/hooks";
-import {  } from "@/components";
+import {} from "@/components";
 import { isDevMode } from "@/api";
 import { Info } from "lucide-react";
-
+import { InCarAmenities } from "@/components";
+import {ROUTES} from "@/utils";
 
 const DEFAULT_MINIMUM_BOOKING_HOURS = 6; // Default to 6 hours if API doesn't provide a value
 function LocalHourlyRental() {
@@ -101,8 +104,7 @@ function LocalHourlyRental() {
     });
   };
 
-
-  const handleBook = async () => {
+  const handleRideOptionSearch = async () => {
     if (inProgress) return; // Prevent multiple submissions
     try {
       setInProgress(true);
@@ -157,7 +159,7 @@ function LocalHourlyRental() {
       // In each option, we will have calculated per minute and per km rates based on included hours/kms and total price, so we don't need to calculate it again in the TripOptionCard. We will just pass these values down to TripOptionCard to display to user.
       const enrichedOptions = enrichOptionsWithRates(data?.options || []);
       data.options = enrichedOptions;
-      
+
       setSearchResults(data); // Store search results to pass to next page
       hideOverlay();
     } catch (e) {
@@ -172,11 +174,23 @@ function LocalHourlyRental() {
     }
   };
 
+  const handleBook = (option) => {
+     setInProgress(true); 
+     const payload ={
+      option,
+      preferences: searchResults?.preferences || {},
+      metadata: searchResults?.metadata || {},
+    }
+     navigate(ROUTES.BOOKING, { state: { bookingPayload: payload } });
+     setInProgress(false);
+    }
+  
+
   if (searchResults) {
     return (
       <div
-        className="relative
-        xl:w-3/4 min-h-screen overflow-y-auto
+        className={`relative
+        xl:w-3/4 min-h-screen overflow-y-auto scrollbar-hide
         bg-gray-50 sm:bg-white
         px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10
         py-2 xs:py-3 sm:py-6 md:py-8 lg:py-10
@@ -184,19 +198,22 @@ function LocalHourlyRental() {
         overflow-visible
         sm:max-w-screen-sm md:max-w-3xl lg:max-w-5xl xl:max-w-7xl 2xl:max-w-screen-2xl
         sm:rounded-xl sm:shadow-lg
-        shadow-[0_2px_16px_0_rgba(16,30,54,0.08)] max-w-full"
+        shadow-[0_2px_16px_0_rgba(16,30,54,0.08)] max-w-full mb-4 ${inProgress ? "pointer-events-none opacity-70" : ""}`}
       >
-        <div className="relative z-10">
+        <div className="relative z-10 animate-slide-up duration-300 transition-all">
           {/* Header: Back Button + Title */}
           <PageHeader
             onBack={() => setSearchResults(null)}
             title="Available hourly rental rides"
+            className="px-0 mb-2"
           />
+
+          {/* Trip Itinerary */}
           {searchResults?.options && (
             // Only show trip itinerary if there are search results to display, otherwise user will just see empty page with option to go back and change their search criteria
-            <>
+            <div className="px-4">
               <div className="py-2"></div>
-              {/* Trip Itinerary */}
+
               {/* Route timeline */}
               <RouteTimeline
                 pickupLocation={origin}
@@ -206,34 +223,47 @@ function LocalHourlyRental() {
               {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
               <RideTimings
                 startDatetime={startDate}
-                className="px-4 mt-4 mb-4"
+                className=" mt-4 mb-4"
                 timezone={tz_info?.timezone}
               />
               {/* Selected package */}
               {selectedPackage && (
                 <SelectedPackage
                   selectedPackage={selectedPackage}
-                  className="px-4 mt-2 md:mb-4"
+                  className=" mt-2 md:mb-4"
                 />
               )}
               {/* Horizontal divider */}
               <div className="py-1">
                 <hr className="border-t border-gray-300" />
               </div>
-            </>
-          )}
+              
+              
+              {/* Trip options list  */}
+              <TripOptionsList
+                compact
+                options={searchResults?.options}
+                onSelect={handleBook}
+                className=" py-4 mb-4 w-full"
+              />
 
-          {/* Trip options list  */}
-          <TripOptionsList
-            compact
-            options={searchResults?.options}
-            onSelect={(option) => console.log("Selected option:", option)}
-            className="px-2 sm:px-4 md:px-4 py-2 mb-4 w-full"
-          />
-          
-          {/* Trip general disclaimer/terms and conditions */}
-          {searchResults?.disclaimers && Array.isArray(searchResults.disclaimers) && (
-            <TripDisclaimer disclaimers={searchResults.disclaimers} className="px-4 mt-4 mb-4" />
+              {searchResults?.metadata?.in_car_amenities && (
+                <div className="mb-2">
+                  <InCarAmenities {...searchResults?.metadata?.in_car_amenities} className="" header="Amenities you get in every ride:" />
+                </div>
+              )}
+
+              {/* Trip general disclaimer/terms and conditions */}
+              {searchResults?.disclaimers &&
+                searchResults.options?.length > 0 &&
+                // Only show disclaimers if there are search results to display, otherwise user will just see empty page with option to go back and change their search criteria
+                Array.isArray(searchResults.disclaimers) && (
+                  <TripDisclaimer
+                    disclaimers={searchResults.disclaimers}
+                    className=" mt-4 mb-4"
+                  />
+                )}
+            </div>
           )}
         </div>
       </div>
@@ -250,7 +280,7 @@ function LocalHourlyRental() {
         overflow-visible
         sm:max-w-screen-sm md:max-w-3xl lg:max-w-5xl xl:max-w-7xl 2xl:max-w-screen-2xl
         sm:rounded-xl sm:shadow-lg
-        shadow-[0_2px_16px_0_rgba(16,30,54,0.08)] max-w-full
+        shadow-[0_2px_16px_0_rgba(16,30,54,0.08)] max-w-full xl:mb-4
         ${inProgress ? "pointer-events-none opacity-70" : ""}
       `}
       >
@@ -265,87 +295,89 @@ function LocalHourlyRental() {
           <PageHeader
             onBack={() => navigate(-1)}
             title="Plan your hourly rental ride"
+            className="px-0 mb-4"
           />
 
-          {/* Route timeline */}
-          <RouteTimeline pickupLocation={origin} dropoffLocation={dropOff} />
+          <div className="px-4">
+            {/* Route timeline */}
+            <RouteTimeline pickupLocation={origin} dropoffLocation={dropOff} />
 
-          {/* Start date/time picker */}
-          <div
-            className={`mb-4 ${priorBookingWindowLoading ? "opacity-50 pointer-events-none" : ""}`}
-          >
-            <label
-              htmlFor="startDateTime"
-              className="block text-gray-500 text-[13px] md:text-base mb-2"
+            {/* Start date/time picker */}
+            <div
+              className={`mb-4 ${priorBookingWindowLoading ? "opacity-50 pointer-events-none" : ""}`}
             >
-              When do you want to leave?
-              {/* Suggestions:
+              <label
+                htmlFor="startDateTime"
+                className="block text-gray-500 text-[13px] md:text-base mb-2"
+              >
+                When do you want to leave?
+                {/* Suggestions:
           Select start date & time
           Pick your ride start time
           Choose when your ride begins
           When should your ride start?
           */}
-            </label>
-            <InlineDateTimePicker
-              id="startDateTime"
-              earliestRentalStartDate={earliestRentalStartDate}
-              onConfirm={setStartDate}
-            />
-          </div>
+              </label>
+              <InlineDateTimePicker
+                id="startDateTime"
+                earliestRentalStartDate={earliestRentalStartDate}
+                onConfirm={setStartDate}
+              />
+            </div>
 
-          {/* Package selection */}
-          <div className="mb-4">
-            <label
-              htmlFor="package"
-              className="block text-gray-500 text-[13px] md:text-base mb-2"
-            >
-              Select package
-            </label>
-            <PackageCards
-              id="package"
-              packages={packages}
-              selectedPackageId={selectedPackageId}
-              onSelect={setSelectedPackageId}
-              loading={packagesLoading}
-            />
-          </div>
+            {/* Package selection */}
+            <div className="mb-4">
+              <label
+                htmlFor="package"
+                className="block text-gray-500 text-[13px] md:text-base mb-2"
+              >
+                Select package
+              </label>
+              <PackageCards
+                id="package"
+                packages={packages}
+                selectedPackageId={selectedPackageId}
+                onSelect={setSelectedPackageId}
+                loading={packagesLoading}
+              />
+            </div>
 
-          {/* Optional: Preferences like num_adults and children */}
-          <div className="mb-16 xl:mb-4">
-            <label
-              htmlFor="ridePreferences"
-              className="block text-gray-500 text-[13px] md:text-base mb-2"
-            >
-              Preferences
-            </label>
-            <RideMetaDataPreferences
-              value={ridePreferences}
-              onChange={setRidePreferences}
-              id="ridePreferences"
-            />
-          </div>
+            {/* Optional: Preferences like num_adults and children */}
+            <div className="mb-16 xl:mb-4">
+              <label
+                htmlFor="ridePreferences"
+                className="block text-gray-500 text-[13px] md:text-base mb-2"
+              >
+                Preferences
+              </label>
+              <RideMetaDataPreferences
+                value={ridePreferences}
+                onChange={setRidePreferences}
+                id="ridePreferences"
+              />
+            </div>
 
-          {/* Ambient illustration - city background to enhance visual appeal */}
-          <PersonBoardingCabIllustration className="flex justify-center w-full max-w-xs sm:max-w-sm object-contain pointer-events-none select-none opacity-20 mt-8 mb-24 lg:hidden"/>
-         
+            {/* Ambient illustration - city background to enhance visual appeal */}
+            <PersonBoardingCabIllustration className="flex justify-center w-full max-w-xs sm:max-w-sm object-contain pointer-events-none select-none opacity-20 mt-8 mb-24 lg:hidden" />
 
-          {/* Book button - sticky up to xl, inside main content */}
-          <div className="xl:sticky fixed left-0 right-0 bottom-0 z-20 bg-gray-50 sm:bg-white xl:bg-transparent px-2 xs:px-3 xl:px-0 pb-2 pt-2 xl:pt-0 xl:pb-0 border-t border-gray-200 xl:border-0 shadow-[0_-2px_16px_0_rgba(16,30,54,0.04)] max-w-full mx-auto ">
-            <button
-              className="w-full cursor-pointer bg-primary text-white py-3 rounded font-semibold disabled:opacity-50 text-base shadow-sm"
-              onClick={handleBook}
-              disabled={
-                !origin || !startDate || !selectedPackageId || inProgress
-              }
-            >
-              Find rides
-              {/* Suggestions:
+            {/* Book button - sticky up to xl, inside main content */}
+            <div className="xl:sticky fixed left-0 right-0 bottom-0 z-20 bg-gray-50 sm:bg-white xl:bg-transparent px-2 xs:px-3 xl:px-0 pb-2 pt-2 xl:pt-0 xl:pb-0 border-t border-gray-200 xl:border-0 shadow-[0_-2px_16px_0_rgba(16,30,54,0.04)] max-w-full mx-auto ">
+              <button
+                className="w-full cursor-pointer bg-primary text-white py-3 rounded font-semibold disabled:opacity-50 text-base shadow-sm"
+                onClick={handleRideOptionSearch}
+                disabled={
+                  !origin || !startDate || !selectedPackageId || inProgress
+                }
+              >
+                Find rides
+                {/* Suggestions:
             Book Now
             Search Rides
             Find My Ride
             See Available Rides
           */}
-            </button>
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -35,28 +35,28 @@ function TripOptionsList({
   const fallbackCurrencySymbol =
     getItem(LOCAL_STORAGE_KEYS.serverGeography)?.data?.currency_symbol ||
     DEFAULT_CURRENCY_SYMBOL; // Default to INR symbol if geography or currency symbol is not available per backend response structure in the options.
-    
-    return (
-    <div
-      className={`animate-slide-up duration-300 transition-all ${className}`}
-    >
-      <div className="flex items-center mb-4">
-        {/* Back button */}
-        {onBack && (
-          <button
-            className="flex items-center gap-1 text-primary font-medium text-sm px-3 py-1 rounded hover:bg-primary/10 focus:outline-none focus:ring"
-            onClick={onBack}
-          >
-            <ArrowLeft className="w-4 h-4 mr-1" aria-hidden="true" />
-          </button>
-        )}
-        {header && (
-          <h2 className="flex-1 text-center text-lg sm:text-xl font-semibold text-gray-900">
-            {header}
-          </h2>
-        )}
-      </div>
-      
+
+  return (
+    <div className={` ${className}`}>
+      {onBack ||
+        (header && (
+          <div className="flex items-center mb-4">
+            {/* Back button */}
+            {onBack && (
+              <button
+                className="flex items-center gap-1 text-primary font-medium text-sm px-3 py-1 rounded hover:bg-primary/10 focus:outline-none focus:ring"
+                onClick={onBack}
+              >
+                <ArrowLeft className="w-4 h-4 mr-1" aria-hidden="true" />
+              </button>
+            )}
+            {header && (
+              <h2 className="flex-1 text-center text-lg sm:text-xl font-semibold text-gray-900">
+                {header}
+              </h2>
+            )}
+          </div>
+        ))}
       <div className="flex flex-col gap-3">
         {options?.length === 0 ? (
           <div className="px-4 mt-4 max-w-2xl mx-auto">

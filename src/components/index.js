@@ -10,4 +10,5 @@ export {TripOptionsList} from "./TripOptionsList";
 export {RideTimings} from "./RideTimings";
 export {TripOptionCard} from "./TripOptionCard";
 export {TripDisclaimer} from "./TripDisclaimer";
+export { InCarAmenities } from "./InCarAmenities";
 export { Cab } from "./Cab";

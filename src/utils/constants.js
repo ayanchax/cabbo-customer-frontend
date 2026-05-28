@@ -39,6 +39,7 @@ export const ENDPOINTS = {
             GET_PACKAGES_BY_TRIP_TYPE_AND_REGION: `${API_VERSION}/trips/trip-packages`, 
             GET_PRIOR_BOOKING_WINDOW: `${API_VERSION}/trips/prior-booking-window`, 
             SEARCH: `${API_VERSION}/trips/search`,
+            INITIATE_BOOKING: `${API_VERSION}/trips/initiate-booking`,
         }
 
 
@@ -54,6 +55,7 @@ export const ROUTES = {
     LOCAL: "/local-hourly-rental",
     OUTSTATION: "/outstation",
     AIRPORT: "/airport-transfers",
+    BOOKING: "/booking",
 };
 
 export const TRIP_TYPES =
