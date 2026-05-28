@@ -201,7 +201,7 @@ function SuvCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
                 d="M943.321 397.153C943.371 397.231 943.422 397.311 943.473 397.393C944.358 398.81 945.471 400.844 946.378 403.307C948.194 408.238 949.151 414.766 945.986 421.551C945.082 423.488 943.345 425.592 941.394 426.803C939.471 427.997 937.689 428.159 936.163 427.05C935.101 426.279 933.685 425.674 932.276 425.197C930.839 424.711 929.286 424.316 927.87 424.006C926.96 423.807 926.096 423.641 925.343 423.507L943.321 397.153Z"
                 stroke="white"
                 stroke-opacity="0.9"
-                stroke-width="3.41524"
+                strokeWidth="3.41524"
               ></path>{" "}
             </g>{" "}
             <g filter="url(#filter13_d_3_98)">
@@ -210,7 +210,7 @@ function SuvCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
                 d="M678.695 503.395L762.471 504.656C762.472 504.658 762.473 504.661 762.473 504.663C762.705 505.334 763 506.308 763.244 507.496C763.733 509.883 763.998 513.056 763.182 516.336C762.375 519.58 760.497 523 756.574 525.937C752.622 528.895 746.509 531.425 737.146 532.681C731.586 533.427 723.894 533.4 715.99 531.9C708.081 530.4 700.084 527.449 693.808 522.447C690.416 519.743 686.248 514.399 682.849 509.572C681.18 507.201 679.731 505.005 678.695 503.395Z"
                 stroke="white"
                 stroke-opacity="0.9"
-                stroke-width="3.41524"
+                strokeWidth="3.41524"
               ></path>{" "}
             </g>{" "}
           </g>{" "}
@@ -1536,8 +1536,8 @@ function SuvCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#3F3F3F"></stop>{" "}
-            <stop offset="1" stop-color="#5C5C5C"></stop>{" "}
+            <stop stopColor="#3F3F3F"></stop>{" "}
+            <stop offset="1" stopColor="#5C5C5C"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint1_linear_3_98"
@@ -1548,8 +1548,8 @@ function SuvCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#AAAAAA"></stop>{" "}
-            <stop offset="1" stop-color="#C2C2C2"></stop>{" "}
+            <stop stopColor="#AAAAAA"></stop>{" "}
+            <stop offset="1" stopColor="#C2C2C2"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint2_linear_3_98"
@@ -1560,8 +1560,8 @@ function SuvCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#3F3F3F"></stop>{" "}
-            <stop offset="1" stop-color="#5C5C5C"></stop>{" "}
+            <stop stopColor="#3F3F3F"></stop>{" "}
+            <stop offset="1" stopColor="#5C5C5C"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint3_linear_3_98"
@@ -1572,8 +1572,8 @@ function SuvCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#AAAAAA"></stop>{" "}
-            <stop offset="1" stop-color="#C2C2C2"></stop>{" "}
+            <stop stopColor="#AAAAAA"></stop>{" "}
+            <stop offset="1" stopColor="#C2C2C2"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint4_linear_3_98"
@@ -1584,8 +1584,8 @@ function SuvCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#CECBCB"></stop>{" "}
-            <stop offset="1" stop-color="white"></stop>{" "}
+            <stop stopColor="#CECBCB"></stop>{" "}
+            <stop offset="1" stopColor="white"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint5_linear_3_98"
@@ -1596,8 +1596,8 @@ function SuvCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#E1E1E1"></stop>{" "}
-            <stop offset="1" stop-color="white"></stop>{" "}
+            <stop stopColor="#E1E1E1"></stop>{" "}
+            <stop offset="1" stopColor="white"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint6_linear_3_98"
@@ -1608,9 +1608,9 @@ function SuvCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#E8EAE9"></stop>{" "}
-            <stop offset="0.498386" stop-color="#707072"></stop>{" "}
-            <stop offset="1" stop-color="#2F3032"></stop>{" "}
+            <stop stopColor="#E8EAE9"></stop>{" "}
+            <stop offset="0.498386" stopColor="#707072"></stop>{" "}
+            <stop offset="1" stopColor="#2F3032"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint7_linear_3_98"
@@ -1621,9 +1621,9 @@ function SuvCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#E8EAE9"></stop>{" "}
-            <stop offset="0.498386" stop-color="#707072"></stop>{" "}
-            <stop offset="1" stop-color="#2F3032"></stop>{" "}
+            <stop stopColor="#E8EAE9"></stop>{" "}
+            <stop offset="0.498386" stopColor="#707072"></stop>{" "}
+            <stop offset="1" stopColor="#2F3032"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint8_linear_3_98"
@@ -1634,8 +1634,8 @@ function SuvCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#ECEAEA"></stop>{" "}
-            <stop offset="1" stop-color="white" stop-opacity="0"></stop>{" "}
+            <stop stopColor="#ECEAEA"></stop>{" "}
+            <stop offset="1" stopColor="white" stopOpacity="0"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint9_linear_3_98"
@@ -1646,9 +1646,9 @@ function SuvCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#E8EAE9"></stop>{" "}
-            <stop offset="0.498386" stop-color="#707072"></stop>{" "}
-            <stop offset="1" stop-color="#2F3032"></stop>{" "}
+            <stop stopColor="#E8EAE9"></stop>{" "}
+            <stop offset="0.498386" stopColor="#707072"></stop>{" "}
+            <stop offset="1" stopColor="#2F3032"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint10_linear_3_98"
@@ -1659,9 +1659,9 @@ function SuvCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#E8EAE9"></stop>{" "}
-            <stop offset="0.498386" stop-color="#707072"></stop>{" "}
-            <stop offset="1" stop-color="#2F3032"></stop>{" "}
+            <stop stopColor="#E8EAE9"></stop>{" "}
+            <stop offset="0.498386" stopColor="#707072"></stop>{" "}
+            <stop offset="1" stopColor="#2F3032"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint11_linear_3_98"
@@ -1672,8 +1672,8 @@ function SuvCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#040404"></stop>{" "}
-            <stop offset="1" stop-color="#3C3C3C" stop-opacity="0"></stop>{" "}
+            <stop stopColor="#040404"></stop>{" "}
+            <stop offset="1" stopColor="#3C3C3C" stopOpacity="0"></stop>{" "}
           </linearGradient>{" "}
         </defs>{" "}
       </g>

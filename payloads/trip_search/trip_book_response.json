@@ -1,0 +1,26 @@
+{
+    "trip_id": "46a432cd-2570-4d54-a6e7-8aeb38b29b18",
+    "order_id": "order_SuvMFNOjj3wMAX",
+    "amount": 109,
+    "currency": "INR",
+    "description": "Trip booking for local trip by Ayan C",
+    "customer": {},
+    "status": "created",
+    "messages": {
+        "status": "created",
+        "status_text": "Your trip has been created!",
+        "next_steps": [
+            {
+                "id": "COMPLETE_ADVANCE_PAYMENT",
+                "step": "Complete Advance Payment",
+                "instruction": "Please complete the advance payment to confirm your trip.",
+                "reason": "This advance payment is our platform/convenience fee that helps us guarantee your trip booking."
+            },
+            {
+                "id": "AWAIT_CONFIRMATION",
+                "step": "Await Confirmation",
+                "instruction": "You will receive a confirmation once the payment is successful."
+            }
+        ]
+    }
+}

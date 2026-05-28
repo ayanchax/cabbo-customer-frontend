@@ -1,4 +1,4 @@
-import React, { useEffect, useState, lazy, Suspense } from "react";
+import React, { useEffect, useState, useRef, lazy, Suspense } from "react";
 import { useLocation } from "react-router-dom";
 import { useInitiateTripBookingMutation } from "@/hooks";
 import { Loader } from "@/components";
@@ -7,10 +7,11 @@ import { TRIP_TYPES } from "@/utils";
 function BookingPage() {
   const location = useLocation();
   const bookingPayload = location.state?.bookingPayload;
-  const trip_type =
-    bookingPayload?.option?.trip_type || bookingPayload?.preferences || null;
-  console.log(bookingPayload)
-  const [bookingData, setBookingData] = useState(null);
+  const {trip_type= null} = bookingPayload.preferences 
+    
+  const [bookingOrderData, setBookingOrderData] = useState(null);
+  const hasBookedRef = useRef(false);
+
 
   if (!bookingPayload || !trip_type) {
     throw new Error(
@@ -31,21 +32,24 @@ function BookingPage() {
   // Future: const AirportBooking = lazy(() => import("@/features/airport/AirportBooking"));
 
   useEffect(() => {
+    if (!bookingPayload || hasBookedRef.current) return;
+    hasBookedRef.current = true;
     const initiateBooking = async () => {
       try {
         const response = await bookingApi.mutateAsync(bookingPayload);
-        setBookingData(response?.data || null);
+        setBookingOrderData(response?.data || null);
         // eslint-disable-next-line no-unused-vars
       } catch (error) {
         throw new Error("Failed to initiate booking. Please try again later.");
         // Error Boundary can catch this and show user-friendly fallback UI
       }
     };
+    
     initiateBooking();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookingPayload]);
 
-  if (!bookingData) {
+  if (!bookingOrderData) {
     return <Loader message="Initiating your booking..." />;
   }
 
@@ -53,14 +57,14 @@ function BookingPage() {
   let BookingComponent = null;
   switch (trip_type) {
     case TRIP_TYPES.LOCAL:
-      BookingComponent = <LocalHourlyRentalBooking {...bookingData} />;
+      BookingComponent = <LocalHourlyRentalBooking orderData={bookingOrderData} bookingData={bookingPayload} />;
       break;
     // case TRIP_TYPES.OUTSTATION:
-    //   BookingComponent = <OutstationBooking {...bookingData} />;
+    //   BookingComponent = <OutstationBooking {...bookingOrderData} />;
     //   break;
     // case TRIP_TYPES.AIRPORT_PICKUP:
     // case TRIP_TYPES.AIRPORT_DROPOFF:
-    //   BookingComponent = <AirportBooking {...bookingData} />;
+    //   BookingComponent = <AirportBooking {...bookingOrderData} />;
     //   break;
     default:
       throw new Error("Unsupported trip type. Cannot render booking details.");

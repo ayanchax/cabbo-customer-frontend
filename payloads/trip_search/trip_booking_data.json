@@ -1,0 +1,117 @@
+{
+    "option": {
+        "car_type": "Sedan",
+        "fuel_type": "diesel",
+        "total_price": 1229,
+        "price_breakdown": {
+            "base_fare": 1120,
+            "platform_fee": 109,
+            "driver_allowance": 0
+        },
+        "included_kms": 40,
+        "included_hours": 4,
+        "package_short_label": "4Hours / 40KM",
+        "package": "4Hours / 40KM | AC Sedan(4+1) - (diesel)",
+        "overages": {
+            "indicative_overage_warning": false,
+            "overage_amount_per_km": 15,
+            "overage_amount_per_hour": 280,
+            "disclaimer": [
+                "If you exceed the included hours and/or kilometres in your selected package (4Hours / 40KM), an additional charge of ₹280.0 per hour and/or ₹15.0 per km will apply.",
+                "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+            ]
+        },
+        "currency": {
+            "symbol": "₹",
+            "decimal_places": 2,
+            "in_words": "Rupees",
+            "international_name": "Indian Rupee",
+            "symbol_position": "before",
+            "code_position": "after",
+            "thousand_separator": ",",
+            "decimal_separator": ".",
+            "lowest_unit_name": "Paise",
+            "lowest_unit_conversion_factor": 100
+        },
+        "hash": "e46e5313ae26bda15220b8a0ba6fef7c28acc0739c0192e4b063d421de253272",
+        "per_min": "5.12"
+    },
+    "preferences": {
+        "trip_type": "local",
+        "origin": {
+            "display_name": "Kodigehalli Road, Medahalli",
+            "lat": 13.0262608,
+            "lng": 77.7121698,
+            "place_id": "ChIJDyvGNU4QrjsR5uiUURGMeRw",
+            "address": "267, Kodigehalli Rd, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+            "country": "India",
+            "country_code": "IN",
+            "state": "Karnataka",
+            "state_code": "KA",
+            "region": "Bangalore",
+            "region_code": "BLR",
+            "postal_code": "560049"
+        },
+        "destination": {
+            "display_name": "Infosys",
+            "lat": 12.8495613,
+            "lng": 77.66381919999999,
+            "place_id": "ChIJ5duVHQBtrjsRNYRV53Ls4L0",
+            "address": "RMX7+RGG, Infosys Rd, Konappana Agrahara, Electronic City, Konappana Agrahara, Karnataka 560100, India",
+            "country": "India",
+            "country_code": "IN",
+            "state": "Karnataka",
+            "state_code": "KA",
+            "region": "Bangalore",
+            "region_code": "BLR",
+            "postal_code": "560100"
+        },
+        "start_date": "2026-05-29T08:30:00",
+        "expected_end_date": "2026-05-29 07:00:00+00:00",
+        "num_adults": 1,
+        "num_children": 0,
+        "num_large_suitcases": 0,
+        "num_carryons": 0,
+        "num_backpacks": 0,
+        "num_other_bags": 0,
+        "preferred_car_type": "Sedan",
+        "preferred_fuel_type": "diesel",
+        "package_id": "346aca54-e872-4333-a472-12757e9fd152",
+        "toll_road_preferred": false,
+        "placard_required": false,
+        "passenger": "self",
+        "timezone": "Asia/Kolkata",
+        "utc_offset": 330
+    },
+    "metadata": {
+        "inclusions": [
+            "Base fare",
+            "Premium AC cab with professional driver",
+            "Doorstep pickup and drop",
+            "Platform/Convenience fee",
+            "Well-maintained and sanitized vehicle",
+            "24/7 customer support",
+            "Water bottles and tissues"
+        ],
+        "exclusions": [
+            "Personal expenses",
+            "Self sponsored driver meals",
+            "Tolls(if applicable)",
+            "Paid parking(if applicable)"
+        ],
+        "in_car_amenities": {
+            "ac": true,
+            "music_system": true,
+            "water_bottle": true,
+            "tissues": true,
+            "phone_charger": true,
+            "aux_cable": true
+        },
+        "total_trip_days": 1,
+        "included_hours": 4,
+        "included_kms": 40,
+        "choices": 10,
+        "is_round_trip": true
+    }
+}

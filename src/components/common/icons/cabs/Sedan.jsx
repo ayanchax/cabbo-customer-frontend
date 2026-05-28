@@ -1468,8 +1468,8 @@ function SedanCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#3F3F3F"></stop>{" "}
-            <stop offset="1" stop-color="#5C5C5C"></stop>{" "}
+            <stop stopColor="#3F3F3F"></stop>{" "}
+            <stop offset="1" stopColor="#5C5C5C"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint1_linear_3_8"
@@ -1480,8 +1480,8 @@ function SedanCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#AAAAAA"></stop>{" "}
-            <stop offset="1" stop-color="#C2C2C2"></stop>{" "}
+            <stop stopColor="#AAAAAA"></stop>{" "}
+            <stop offset="1" stopColor="#C2C2C2"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint2_linear_3_8"
@@ -1492,8 +1492,8 @@ function SedanCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#3F3F3F"></stop>{" "}
-            <stop offset="1" stop-color="#5C5C5C"></stop>{" "}
+            <stop stopColor="#3F3F3F"></stop>{" "}
+            <stop offset="1" stopColor="#5C5C5C"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint3_linear_3_8"
@@ -1504,8 +1504,8 @@ function SedanCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#AAAAAA"></stop>{" "}
-            <stop offset="1" stop-color="#C2C2C2"></stop>{" "}
+            <stop stopColor="#AAAAAA"></stop>{" "}
+            <stop offset="1" stopColor="#C2C2C2"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint4_linear_3_8"
@@ -1516,8 +1516,8 @@ function SedanCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#D8D8D8"></stop>{" "}
-            <stop offset="1" stop-color="white"></stop>{" "}
+            <stop stopColor="#D8D8D8"></stop>{" "}
+            <stop offset="1" stopColor="white"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint5_linear_3_8"
@@ -1528,9 +1528,9 @@ function SedanCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#E8EAE9"></stop>{" "}
-            <stop offset="0.498386" stop-color="#707072"></stop>{" "}
-            <stop offset="1" stop-color="#2F3032"></stop>{" "}
+            <stop stopColor="#E8EAE9"></stop>{" "}
+            <stop offset="0.498386" stopColor="#707072"></stop>{" "}
+            <stop offset="1" stopColor="#2F3032"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint6_linear_3_8"
@@ -1541,9 +1541,9 @@ function SedanCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#E8EAE9"></stop>{" "}
-            <stop offset="0.498386" stop-color="#707072"></stop>{" "}
-            <stop offset="1" stop-color="#2F3032"></stop>{" "}
+            <stop stopColor="#E8EAE9"></stop>{" "}
+            <stop offset="0.498386" stopColor="#707072"></stop>{" "}
+            <stop offset="1" stopColor="#2F3032"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint7_linear_3_8"
@@ -1554,9 +1554,9 @@ function SedanCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#E8EAE9"></stop>{" "}
-            <stop offset="0.498386" stop-color="#707072"></stop>{" "}
-            <stop offset="1" stop-color="#2F3032"></stop>{" "}
+            <stop stopColor="#E8EAE9"></stop>{" "}
+            <stop offset="0.498386" stopColor="#707072"></stop>{" "}
+            <stop offset="1" stopColor="#2F3032"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint8_linear_3_8"
@@ -1567,8 +1567,8 @@ function SedanCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#ECEAEA"></stop>{" "}
-            <stop offset="1" stop-color="white" stop-opacity="0"></stop>{" "}
+            <stop stopColor="#ECEAEA"></stop>{" "}
+            <stop offset="1" stopColor="white" stopOpacity="0"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint9_linear_3_8"
@@ -1579,8 +1579,8 @@ function SedanCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#ECEAEA"></stop>{" "}
-            <stop offset="1" stop-color="white" stop-opacity="0"></stop>{" "}
+            <stop stopColor="#ECEAEA"></stop>{" "}
+            <stop offset="1" stopColor="white" stopOpacity="0"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint10_linear_3_8"
@@ -1591,8 +1591,8 @@ function SedanCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#040404"></stop>{" "}
-            <stop offset="1" stop-color="#3C3C3C" stop-opacity="0"></stop>{" "}
+            <stop stopColor="#040404"></stop>{" "}
+            <stop offset="1" stopColor="#3C3C3C" stopOpacity="0"></stop>{" "}
           </linearGradient>{" "}
           <linearGradient
             id="paint11_linear_3_8"
@@ -1603,8 +1603,8 @@ function SedanCabIcon({ className = "w-20 h-auto", color = "currentColor" }) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#4B4B4B"></stop>{" "}
-            <stop offset="0.899322" stop-opacity="0"></stop>{" "}
+            <stop stopColor="#4B4B4B"></stop>{" "}
+            <stop offset="0.899322" stopOpacity="0"></stop>{" "}
           </linearGradient>{" "}
         </defs>{" "}
       </g>
