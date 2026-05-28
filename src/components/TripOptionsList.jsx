@@ -29,6 +29,7 @@ function TripOptionsList({
   onSelect,
   className = "",
   header = null,
+  compact = false, // If true, show compact version without overage details
 }) {
   const { getItem } = useLocalStorage();
   const fallbackCurrencySymbol =
@@ -71,6 +72,7 @@ function TripOptionsList({
               option={opt}
               onSelect={onSelect ? () => onSelect(opt) : undefined}
               fallbackCurrencySymbol={fallbackCurrencySymbol}
+              compact={compact}
             />
           ))
         )}

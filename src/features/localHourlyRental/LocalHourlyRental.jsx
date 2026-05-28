@@ -225,6 +225,7 @@ function LocalHourlyRental() {
 
           {/* Trip options list  */}
           <TripOptionsList
+            compact
             options={searchResults?.options}
             onSelect={(option) => console.log("Selected option:", option)}
             className="px-2 sm:px-4 md:px-4 py-2 mb-4 w-full"
