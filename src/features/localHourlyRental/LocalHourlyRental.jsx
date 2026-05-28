@@ -13,13 +13,15 @@ import {
   RideMetaDataPreferences,
   TripOptionsList,
   RideTimings,
+  PersonBoardingCabIllustration,
+  RouteTimeline, PageHeader, TripDisclaimer
 } from "@/components";
 import {
   PackageCards,
   SelectedPackage,
 } from "@/features/localHourlyRental/components";
 import { useLocalTripSearch } from "@/features/localHourlyRental/hooks";
-import { RouteTimeline, PageHeader, AmbientIllustration, TripDisclaimer } from "@/components";
+import {  } from "@/components";
 import { isDevMode } from "@/api";
 import { Info } from "lucide-react";
 
@@ -79,7 +81,27 @@ function LocalHourlyRental() {
     return packages?.find((pkg) => pkg.id === selectedPackageId);
   }, [packages, selectedPackageId]);
 
-  
+  const calculatePerMinRate = (option) => {
+    if (option.included_hours && option.total_price) {
+      const totalMins = option.included_hours * 60;
+      return (option.total_price / totalMins).toFixed(2);
+    }
+    return null;
+  };
+
+  const enrichOptionsWithRates = (options) => {
+    return options.map((option) => {
+      if (option.included_hours && option.total_price) {
+        return {
+          ...option,
+          per_min: calculatePerMinRate(option),
+        };
+      }
+      return option;
+    });
+  };
+
+
   const handleBook = async () => {
     if (inProgress) return; // Prevent multiple submissions
     try {
@@ -131,8 +153,12 @@ function LocalHourlyRental() {
       if (isDevMode) {
         console.log("Search response:", response);
       }
-      // Collect all overages disclaimers from options - since some options may have specific disclaimers related to their overages, we want to make sure to show all unique disclaimers in one place rather than showing separate disclaimers for each option which can be overwhelming for user. We will merge all unique disclaimers into one string to show on the next page.
-      setSearchResults(response.data); // Store search results to pass to next page
+      const data = response.data;
+      // In each option, we will have calculated per minute and per km rates based on included hours/kms and total price, so we don't need to calculate it again in the TripOptionCard. We will just pass these values down to TripOptionCard to display to user.
+      const enrichedOptions = enrichOptionsWithRates(data?.options || []);
+      data.options = enrichedOptions;
+      
+      setSearchResults(data); // Store search results to pass to next page
       hideOverlay();
     } catch (e) {
       hideOverlay();
@@ -299,11 +325,8 @@ function LocalHourlyRental() {
           </div>
 
           {/* Ambient illustration - city background to enhance visual appeal */}
-          <AmbientIllustration
-            src="/src/assets/illustrations/city-bg.svg"
-            className="opacity-20"
-            containerClassName="mt-8 mb-24 lg:hidden"
-          />
+          <PersonBoardingCabIllustration className="flex justify-center w-full max-w-xs sm:max-w-sm object-contain pointer-events-none select-none opacity-20 mt-8 mb-24 lg:hidden"/>
+         
 
           {/* Book button - sticky up to xl, inside main content */}
           <div className="xl:sticky fixed left-0 right-0 bottom-0 z-20 bg-gray-50 sm:bg-white xl:bg-transparent px-2 xs:px-3 xl:px-0 pb-2 pt-2 xl:pt-0 xl:pb-0 border-t border-gray-200 xl:border-0 shadow-[0_-2px_16px_0_rgba(16,30,54,0.04)] max-w-full mx-auto ">

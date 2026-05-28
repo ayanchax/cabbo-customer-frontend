@@ -7,6 +7,7 @@ import {
   CAB_TYPES,
   DEFAULT_CURRENCY_SYMBOL,
 } from "@/utils";
+
 /**
  * TripOptionsList
  *
@@ -54,6 +55,7 @@ function TripOptionsList({
           </h2>
         )}
       </div>
+      
       <div className="flex flex-col gap-3">
         {options?.length === 0 ? (
           <div className="px-4 mt-4 max-w-2xl mx-auto">

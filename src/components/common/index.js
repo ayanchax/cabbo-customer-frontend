@@ -1,5 +1,6 @@
 export * from "./svg";
 export * from "./datetime-picker"
+export * from "./icons";
 export {Disclaimer} from "./Disclaimer";
 export {Splash} from "./Splash";
 export {ListLoaderSkeleton} from "./ListLoaderSkeleton";
@@ -11,4 +12,3 @@ export {AppOverlay} from "./AppOverlay";
 export {RideMetaDataPreferences} from "./RideMetaDataPreferences";
 export {RouteTimeline} from "./RouteTimeline";
 export {PageHeader} from "./PageHeader";
-export {AmbientIllustration} from "./AmbientIllustration";
