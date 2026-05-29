@@ -180,6 +180,7 @@ function LocalHourlyRental() {
       option,
       preferences: searchResults?.preferences || {},
       metadata: searchResults?.metadata || {},
+      disclaimers: searchResults?.disclaimers || [],
     }
      navigate(ROUTES.BOOKING, { state: { bookingPayload: payload } });
      setInProgress(false);

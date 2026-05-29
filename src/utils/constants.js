@@ -77,3 +77,6 @@ export const CAB_TYPES={
 export const DEFAULT_USER_LOCALE = "en-US";
 export const DEFAULT_USER_TIMEZONE = "UTC";
 export const DEFAULT_CURRENCY_SYMBOL = "₹";
+export const PAYMENT_ORDER_STATUS={
+    CREATED:"created"
+}
