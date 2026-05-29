@@ -56,6 +56,7 @@ function LocalHourlyRentalBooking({ orderData, bookingData }) {
           onBack={() => navigate(-1)}
           title="Review and confirm your booking"
           className="px-0 mb-4"
+          label="Hourly Rental"
         />
         <div className="px-4">
           <div className="py-2"></div>
