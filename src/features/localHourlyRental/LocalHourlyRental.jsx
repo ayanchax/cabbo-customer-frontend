@@ -26,7 +26,6 @@ import { useLocalTripSearch } from "@/features/localHourlyRental/hooks";
 import {} from "@/components";
 import { isDevMode } from "@/api";
 import { Info } from "lucide-react";
-import { InCarAmenities } from "@/components";
 import {ROUTES} from "@/utils";
 
 const DEFAULT_MINIMUM_BOOKING_HOURS = 6; // Default to 6 hours if API doesn't provide a value
@@ -181,6 +180,8 @@ function LocalHourlyRental() {
       preferences: searchResults?.preferences || {},
       metadata: searchResults?.metadata || {},
       disclaimers: searchResults?.disclaimers || [],
+      selectedPackage,
+      trip_type
     }
      navigate(ROUTES.BOOKING, { state: { bookingPayload: payload } });
      setInProgress(false);
@@ -242,17 +243,12 @@ function LocalHourlyRental() {
               
               {/* Trip options list  */}
               <TripOptionsList
-                compact
                 options={searchResults?.options}
                 onSelect={handleBook}
                 className=" py-4 mb-4 w-full"
               />
 
-              {searchResults?.metadata?.in_car_amenities && (
-                <div className="mb-2">
-                  <InCarAmenities {...searchResults?.metadata?.in_car_amenities} className="" header="Amenities you get in every ride:" />
-                </div>
-              )}
+               
 
               {/* Trip general disclaimer/terms and conditions */}
               {searchResults?.disclaimers &&

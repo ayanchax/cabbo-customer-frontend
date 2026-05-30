@@ -13,3 +13,4 @@ export {RideMetaDataPreferences} from "./RideMetaDataPreferences";
 export {RouteTimeline} from "./RouteTimeline";
 export {PageHeader} from "./PageHeader";
 export {Loader} from "./Loader";
+export {CollapsibleSection} from "./CollapsibleSection";

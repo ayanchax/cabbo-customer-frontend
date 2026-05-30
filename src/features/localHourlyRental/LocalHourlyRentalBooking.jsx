@@ -1,23 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  InlineDateTimePicker,
-  GettingRideOptionsIllustration,
-  RideMetaDataPreferences,
-  TripOptionsList,
   RideTimings,
-  PersonBoardingCabIllustration,
   RouteTimeline,
   PageHeader,
   TripDisclaimer,
   TripPaymentSummary,
   TripCabDetails,
+  InCarAmenities,
 } from "@/components";
 import { useTimezone } from "@/hooks";
 import { SelectedPackage } from "@/features/localHourlyRental/components";
 
-function LocalHourlyRentalBooking({ orderData, bookingData }) {
-  const navigate = useNavigate();
+function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
+  const navigate = useNavigate(); 
   const { timezone: tz_info } = useTimezone();
   const origin = bookingData?.preferences?.origin || null;
   let dropOff = bookingData?.preferences?.destination || null;
@@ -33,10 +29,38 @@ function LocalHourlyRentalBooking({ orderData, bookingData }) {
     );
     // Error Boundary can catch this and show user-friendly fallback UI with option to go back to previous step
   }
-  const selectedPackage = {
-    included_hours: bookingData?.option?.included_hours || null,
-    included_km: bookingData?.option?.included_kms || null,
-  };
+  if (!bookingData?.option) {
+    throw new Error(
+      "Missing required booking data: selected trip option is required.",
+    );
+    // Error Boundary can catch this and show user-friendly fallback UI with option to go back to previous step
+  }
+  const selectedPackage = bookingData?.selectedPackage || null;
+
+  const selectedFleet =
+    fleetData?.find((fleet) => fleet?.name === bookingData?.option?.car_type) ||
+    null;
+
+  const fleet = {
+    capacity: selectedFleet?.capacity || null,
+    car_type: bookingData?.option?.car_type || null,
+    fuel_type: bookingData?.option?.fuel_type || null,
+    per_min: bookingData?.option?.per_min || null,
+    currency: bookingData?.option?.currency || null,
+    description: selectedFleet?.description || null,
+    inventory_cab_names: selectedFleet?.inventory_cab_names || null,
+  }
+
+  const fareData ={
+    total_price: bookingData?.option?.total_price || null,
+    price_breakdown: bookingData?.option?.price_breakdown || null,
+    overages: bookingData?.option?.overages || null,
+    inclusions: bookingData?.metadata?.inclusions || null,
+    exclusions: bookingData?.metadata?.exclusions || null,
+    disclaimers: bookingData?.disclaimers || null,
+  }
+   
+
   return (
     <div
       className={` relative
@@ -52,6 +76,7 @@ function LocalHourlyRentalBooking({ orderData, bookingData }) {
       `}
     >
       <div className="relative z-10">
+        {/* Page header */}
         <PageHeader
           onBack={() => navigate(-1)}
           title="Review and confirm your booking"
@@ -60,10 +85,10 @@ function LocalHourlyRentalBooking({ orderData, bookingData }) {
         />
         <div className="px-4">
           <div className="py-2"></div>
-
+         
+          {/* Cab details */}
           <TripCabDetails
-            cabDetails={bookingData?.option}
-            
+            cabDetails={fleet}
             className="mb-4  py-2 px-0"
           />
 
@@ -82,19 +107,28 @@ function LocalHourlyRentalBooking({ orderData, bookingData }) {
           />
 
           {/* Selected package */}
-          {selectedPackage &&
-            selectedPackage.included_hours &&
-            selectedPackage.included_km && (
-              <SelectedPackage
-                selectedPackage={selectedPackage}
-                className=" mt-2 md:mb-4"
+          {selectedPackage && (
+            <SelectedPackage
+              selectedPackage={selectedPackage}
+              className=" mt-2 md:mb-4 mb-4"
+            />
+          )}
+
+          {/* In-car amenities */}
+          {bookingData?.metadata?.in_car_amenities && (
+            <div className="mb-2">
+              <InCarAmenities
+                {...bookingData?.metadata?.in_car_amenities}
+                className=""
+                header="You will get these amenities in your cab:"
               />
-            )}
+            </div>
+          )}
 
           {/* Payment summary and action */}
-          {orderData && (
+          {orderData && bookingData && (
             <div className="mt-6">
-              <TripPaymentSummary orderData={orderData} />
+              <TripPaymentSummary orderData={orderData} fareData={fareData} />
             </div>
           )}
         </div>

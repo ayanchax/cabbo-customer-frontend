@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, lazy, Suspense } from "react";
 import { useLocation } from "react-router-dom";
-import { useInitiateTripBookingMutation } from "@/hooks";
+import { useInitiateTripBookingMutation, useFleetQuery } from "@/hooks";
 import { Loader } from "@/components";
 import { TRIP_TYPES } from "@/utils";
 
@@ -19,6 +19,9 @@ function BookingPage() {
     );
     // Error Boundary can catch this and show user-friendly fallback UI
   }
+
+  const {data:fleetData, error:fleetError, isLoading:fleetLoading} = useFleetQuery(!!bookingPayload); // Don't fetch fleet data until bookingPayload is available, as we need the trip type from the payload to fetch the relevant fleet data
+  
 
   const bookingApi = useInitiateTripBookingMutation();
 
@@ -49,7 +52,13 @@ function BookingPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookingPayload]);
 
-  if (!bookingOrderData) {
+  if (fleetError) {
+    throw new Error("Failed to load fleet data. Please refresh the page.");
+    // Error Boundary can catch this and show user-friendly fallback UI with option to retry fetching fleet data
+  }
+
+
+  if (!bookingOrderData || fleetLoading) {
     return <Loader message="Initiating your booking..." />;
   }
 
@@ -57,7 +66,7 @@ function BookingPage() {
   let BookingComponent = null;
   switch (trip_type) {
     case TRIP_TYPES.LOCAL:
-      BookingComponent = <LocalHourlyRentalBooking orderData={bookingOrderData} bookingData={bookingPayload} />;
+      BookingComponent = <LocalHourlyRentalBooking orderData={bookingOrderData} bookingData={bookingPayload} fleetData={fleetData} />;
       break;
     // case TRIP_TYPES.OUTSTATION:
     //   BookingComponent = <OutstationBooking {...bookingOrderData} />;

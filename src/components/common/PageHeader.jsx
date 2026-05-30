@@ -30,9 +30,11 @@ function PageHeader({
       </div>
       {/* On mobile, label is below */}
       {label && (
-        <span className="sm:hidden ml-6 px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold">
-          {label}
-        </span>
+        <div className="sm:hidden flex justify-start w-full">
+          <span className="inline-block px-2 ml-5 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold w-auto">
+            {label}
+          </span>
+        </div>
       )}
     </div>
   );

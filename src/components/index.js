@@ -14,3 +14,8 @@ export { InCarAmenities } from "./InCarAmenities";
 export { Cab } from "./Cab";
 export { TripPaymentSummary } from "./TripPaymentSummary";
 export {TripCabDetails} from "./TripCabDetails";
+export {TripIncExc} from "./TripIncExc";
+export {TripPaymentInstructions} from "./TripPaymentInstructions";
+export {TripFareBreakdown} from "./TripFareBreakdown";
+export {PayRestToDriver} from "./PayRestToDriver";
+export {TripFareDetail} from "./TripFareDetail";

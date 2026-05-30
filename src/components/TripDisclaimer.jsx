@@ -9,7 +9,7 @@ function TripDisclaimer({
   if (!disclaimers || disclaimers.length === 0) return null; // Don't render if no disclaimers provided
   return (
     <div className={`${className}`}>
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-5">
         <div className="flex items-center mb-2">
           <Info className="w-5 h-5 text-blue-400 mr-2" aria-hidden="true" />
           {header && (
@@ -20,7 +20,7 @@ function TripDisclaimer({
         </div>
         <ul className="list-disc pl-6 text-gray-600 text-sm sm:text-base space-y-1">
           {disclaimers.map((text, idx) => (
-            <li key={idx}>{text}</li>
+            <li className="mb-1.5" key={idx}>{text}</li>
           ))}
         </ul>
       </div>

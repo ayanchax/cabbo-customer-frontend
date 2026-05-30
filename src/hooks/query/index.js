@@ -6,3 +6,4 @@ export {useLocationSearchQuery} from "./useLocationSearch";
 export {useLocationByPlaceIdQuery} from "./useLocationByPlaceId";
 export {useTripPackagesQuery} from "./useTripPackage";
 export {useTripPriorBookingWindowQuery} from "./useTripPriorBookingWindow";
+export {useFleetQuery} from "./useFleet";

@@ -40,7 +40,11 @@ export const ENDPOINTS = {
             GET_PRIOR_BOOKING_WINDOW: `${API_VERSION}/trips/prior-booking-window`, 
             SEARCH: `${API_VERSION}/trips/search`,
             INITIATE_BOOKING: `${API_VERSION}/trips/initiate-booking`,
-        }
+        },
+    FLEET:{
+        GET_AVAILABLE_CABS: `${API_VERSION}/trips/fleet/`,
+    }
+    
 
 
 }
