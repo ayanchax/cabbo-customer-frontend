@@ -58,7 +58,7 @@ function TripCabDetails({
           )}
         </div>
 
-        {option?.per_min && (
+        {option?.rate_per_min && (
           <div className="flex gap-4 mt-2 text-xs sm:text-sm text-gray-600 font-medium">
             <span className="flex items-center gap-1">
               <ArrowLeft
@@ -67,7 +67,7 @@ function TripCabDetails({
               />
               <span className="font-semibold text-gray-900">
                 {option?.currency?.symbol || fallbackCurrencySymbol}
-                {option?.per_min ? option.per_min : "-"}
+                {option?.rate_per_min ? option.rate_per_min : "-"}
               </span>
               <span className="text-gray-500 font-normal">/min</span>
             </span>

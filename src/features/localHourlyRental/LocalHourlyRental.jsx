@@ -26,7 +26,7 @@ import { useLocalTripSearch } from "@/features/localHourlyRental/hooks";
 import {} from "@/components";
 import { isDevMode } from "@/api";
 import { Info } from "lucide-react";
-import {ROUTES} from "@/utils";
+import {ROUTES, enrichOptionsWithRates} from "@/utils";
 
 const DEFAULT_MINIMUM_BOOKING_HOURS = 6; // Default to 6 hours if API doesn't provide a value
 function LocalHourlyRental() {
@@ -83,25 +83,7 @@ function LocalHourlyRental() {
     return packages?.find((pkg) => pkg.id === selectedPackageId);
   }, [packages, selectedPackageId]);
 
-  const calculatePerMinRate = (option) => {
-    if (option.included_hours && option.total_price) {
-      const totalMins = option.included_hours * 60;
-      return (option.total_price / totalMins).toFixed(2);
-    }
-    return null;
-  };
-
-  const enrichOptionsWithRates = (options) => {
-    return options.map((option) => {
-      if (option.included_hours && option.total_price) {
-        return {
-          ...option,
-          per_min: calculatePerMinRate(option),
-        };
-      }
-      return option;
-    });
-  };
+  
 
   const handleRideOptionSearch = async () => {
     if (inProgress) return; // Prevent multiple submissions
@@ -180,6 +162,7 @@ function LocalHourlyRental() {
       preferences: searchResults?.preferences || {},
       metadata: searchResults?.metadata || {},
       disclaimers: searchResults?.disclaimers || [],
+      refunds_and_cancellation_policies:searchResults?.refund_and_cancellation_policy || [],
       selectedPackage,
       trip_type
     }

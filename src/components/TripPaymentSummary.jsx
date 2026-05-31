@@ -1,5 +1,5 @@
-import React from "react";
-import { DEFAULT_CURRENCY_SYMBOL, PAYMENT_ORDER_STATUS} from "@/utils";
+import React, {useState, useEffect, useRef} from "react";
+import { DEFAULT_CURRENCY_SYMBOL} from "@/utils";
 import {
   CollapsibleSection,
   TripDisclaimer,
@@ -7,14 +7,31 @@ import {
   TripPaymentInstructions,
   TripFareBreakdown,
   PayRestToDriver,
-  TripFareDetail
+  TripFareDetail,
+  RefundsAndCancellationPolicies,
+  PayAndConfirmBooking
 } from "@/components";
 import { Info } from "lucide-react";
 
 
 function TripPaymentSummary({ orderData, fareData, onPay = () => {} }) {
+  const payBtnRef = useRef(null);
+  const [showStickyPay, setShowStickyPay] = useState(false);
+  useEffect(() => {
+    const btn = payBtnRef.current;
+    if (!btn) return;
+    const observer = new window.IntersectionObserver(
+      ([entry]) => {
+        setShowStickyPay(!entry.isIntersecting);
+      },
+      { root: null, threshold: 0 }
+    );
+    observer.observe(btn);
+    return () => observer.disconnect();
+  }, []);
   if (!orderData || !fareData) return null;
 
+  // eslint-disable-next-line no-unused-vars
   const { amount, currency_symbol, messages, status } = orderData;
   const {
     overages = {},
@@ -23,6 +40,7 @@ function TripPaymentSummary({ orderData, fareData, onPay = () => {} }) {
     inclusions = [],
     exclusions = [],
     disclaimers = [],
+    refunds_and_cancellation_policies=[]
     
   } = fareData || {};
 
@@ -46,6 +64,7 @@ function TripPaymentSummary({ orderData, fareData, onPay = () => {} }) {
       : null;
 
   return (
+    <div className="relative">
     <section
       className="w-full max-w-xl mx-auto  bg-white rounded-xl shadow p-4 flex flex-col gap-4 border border-gray-100"
       aria-label="Trip Payment Summary"
@@ -65,17 +84,8 @@ function TripPaymentSummary({ orderData, fareData, onPay = () => {} }) {
         className="mt-2 pt-4 border-t border-gray-200"
       />
 
-      {/* CTA */}
-      <button
-        className="mt-2 w-full py-2 px-4 rounded bg-primary text-white font-medium active:scale-[0.98] cursor-pointer hover:bg-primary/90 transition disabled:opacity-60 disabled:cursor-not-allowed"
-        onClick={onPay}
-        disabled={status !== PAYMENT_ORDER_STATUS.CREATED}
-        aria-disabled={status !== PAYMENT_ORDER_STATUS.CREATED}
-      >
-        {status === PAYMENT_ORDER_STATUS.CREATED
-          ? "Pay & Confirm Booking"
-          : "Payment Complete"}
-      </button>
+      {/* CTA - Pay button immediately after payment instructions */}
+      <div ref={payBtnRef}><PayAndConfirmBooking orderData={orderData} onPay={onPay} /></div>
 
       {/* Pay to driver note after CTA with enhancements */}
       {payToDriver > 0 && (
@@ -92,7 +102,7 @@ function TripPaymentSummary({ orderData, fareData, onPay = () => {} }) {
           <TripFareBreakdown
             priceBreakdown={price_breakdown}
             currencySymbol={currency_symbol}
-            className="mt-2"
+            className="mt-2 bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-5 mb-1"
           />
         </CollapsibleSection>
       )}
@@ -106,7 +116,21 @@ function TripPaymentSummary({ orderData, fareData, onPay = () => {} }) {
           <TripIncExc
             inclusions={inclusions}
             exclusions={exclusions}
-            className="bg-gray-50 p-3 rounded mb-1"
+            className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-5 mb-1"
+          />
+        </CollapsibleSection>
+      )}
+
+      {/* Refunds and Cancellations - Collapsible */}
+      {refunds_and_cancellation_policies && refunds_and_cancellation_policies.length > 0 && (
+        <CollapsibleSection
+          title="Refunds and Cancellations"
+          titleClassName="text-gray-500 text-sm md:text-base lg:text-md mb-1 font-normal"
+
+        >
+          <RefundsAndCancellationPolicies
+            policies={refunds_and_cancellation_policies}
+            className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-5 mb-1"
           />
         </CollapsibleSection>
       )}
@@ -118,6 +142,16 @@ function TripPaymentSummary({ orderData, fareData, onPay = () => {} }) {
         </div>
       )}
     </section>
+    {/* Sticky Pay button at bottom when original is out of view */}
+      {showStickyPay && (
+        <div className="fixed bottom-0 left-0 w-full z-30 bg-white/90 backdrop-blur-md border-t border-gray-200 px-0 sm:px-2 pt-2 pb-2 flex justify-center">
+          <div className="w-full max-w-xl">
+            <PayAndConfirmBooking orderData={orderData} onPay={onPay} />
+          </div>
+        </div>
+      )}
+    </div>
+   
   );
 }
 

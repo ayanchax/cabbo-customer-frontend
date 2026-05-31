@@ -45,7 +45,7 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
     capacity: selectedFleet?.capacity || null,
     car_type: bookingData?.option?.car_type || null,
     fuel_type: bookingData?.option?.fuel_type || null,
-    per_min: bookingData?.option?.per_min || null,
+    rate_per_min: bookingData?.option?.rate_per_min || null,
     currency: bookingData?.option?.currency || null,
     description: selectedFleet?.description || null,
     inventory_cab_names: selectedFleet?.inventory_cab_names || null,
@@ -58,6 +58,7 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
     inclusions: bookingData?.metadata?.inclusions || null,
     exclusions: bookingData?.metadata?.exclusions || null,
     disclaimers: bookingData?.disclaimers || null,
+    refunds_and_cancellation_policies: bookingData?.refunds_and_cancellation_policies || null,
   }
    
 

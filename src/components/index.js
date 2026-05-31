@@ -19,3 +19,5 @@ export {TripPaymentInstructions} from "./TripPaymentInstructions";
 export {TripFareBreakdown} from "./TripFareBreakdown";
 export {PayRestToDriver} from "./PayRestToDriver";
 export {TripFareDetail} from "./TripFareDetail";
+export {RefundsAndCancellationPolicies} from "./RefundsAndCancellationPolicies";
+export {PayAndConfirmBooking} from "./PayAndConfirmBooking";

@@ -35,7 +35,7 @@
             "lowest_unit_conversion_factor": 100
         },
         "hash": "e46e5313ae26bda15220b8a0ba6fef7c28acc0739c0192e4b063d421de253272",
-        "per_min": "5.12"
+        "rate_per_min": "5.12"
     },
     "preferences": {
         "trip_type": "local",
