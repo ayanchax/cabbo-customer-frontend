@@ -40,6 +40,8 @@ export const ENDPOINTS = {
             GET_PRIOR_BOOKING_WINDOW: `${API_VERSION}/trips/prior-booking-window`, 
             SEARCH: `${API_VERSION}/trips/search`,
             INITIATE_BOOKING: `${API_VERSION}/trips/initiate-booking`,
+            VERIFY_PAYMENT_AND_CONFIRM_TRIP: `${API_VERSION}/trips/confirm-booking`,
+            CLEANUP_STAGED_TRIP: `${API_VERSION}/trips/cleanup`
         },
     FLEET:{
         GET_AVAILABLE_CABS: `${API_VERSION}/trips/fleet/`,
@@ -81,6 +83,7 @@ export const CAB_TYPES={
 export const DEFAULT_USER_LOCALE = "en-US";
 export const DEFAULT_USER_TIMEZONE = "UTC";
 export const DEFAULT_CURRENCY_SYMBOL = "₹";
+export const DEFAULT_CURRENCY_CODE= "INR";
 export const PAYMENT_ORDER_STATUS={
     CREATED:"created"
 }

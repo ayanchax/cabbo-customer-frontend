@@ -6,3 +6,5 @@ export {useVerifyOnboardingOtpMutation} from "./useVerifyOnboardingOtp";
 export {useOnboardingMutation} from "./useOnboarding";
 export {useClassifyTripTypeMutation} from "./useClassifyTripType";
 export {useInitiateTripBookingMutation} from "./useTripBooking";
+export {useVerifyPaymentForTrip} from "./useVerifyPayment";
+export {useCleanupStagedTrip} from "./useCleanupStagedTrip";

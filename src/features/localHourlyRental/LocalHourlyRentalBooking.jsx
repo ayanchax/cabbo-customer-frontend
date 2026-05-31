@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   RideTimings,
@@ -9,12 +9,15 @@ import {
   TripCabDetails,
   InCarAmenities,
 } from "@/components";
-import { useTimezone } from "@/hooks";
+import { useTimezone, useRazorPay, useToast } from "@/hooks";
 import { SelectedPackage } from "@/features/localHourlyRental/components";
-
+import { isDevMode } from "@/api";
 function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const { timezone: tz_info } = useTimezone();
+  const { onPay } = useRazorPay();
+  const { showToast } = useToast();
+  const [inProgressPayment, setInProgressPayment] = useState(false);
   const origin = bookingData?.preferences?.origin || null;
   let dropOff = bookingData?.preferences?.destination || null;
   if (origin.place_id === dropOff?.place_id) {
@@ -49,22 +52,61 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
     currency: bookingData?.option?.currency || null,
     description: selectedFleet?.description || null,
     inventory_cab_names: selectedFleet?.inventory_cab_names || null,
-  }
+  };
 
-  const fareData ={
+  const fareData = {
     total_price: bookingData?.option?.total_price || null,
     price_breakdown: bookingData?.option?.price_breakdown || null,
     overages: bookingData?.option?.overages || null,
     inclusions: bookingData?.metadata?.inclusions || null,
     exclusions: bookingData?.metadata?.exclusions || null,
     disclaimers: bookingData?.disclaimers || null,
-    refunds_and_cancellation_policies: bookingData?.refunds_and_cancellation_policies || null,
-  }
+    refunds_and_cancellation_policies:
+      bookingData?.refunds_and_cancellation_policies || null,
+  };
 
-  const handlePay = () => {
-    console.log("Pay button clicked. Implement payment flow here.");
-  }
-   
+  const handlePay = async () => {
+    
+    if (inProgressPayment) {
+      // Prevent multiple clicks on Pay button
+      return;
+    }
+
+    try {
+      setInProgressPayment(true);
+      const result = await onPay(orderData);
+      if (!result || result instanceof Error) {
+        if (isDevMode) {
+          console.error(result?.message || "Payment failed");
+        }
+        // Pass to catch block to show user-friendly error message
+        throw result instanceof Error ? result : new Error("Payment failed");
+      } else {
+        // Payment was successful and verified, you can redirect the user or show a success message
+        if (isDevMode) {
+          console.log("Payment successful and verified:", result);
+        }
+        
+        navigate("/trips", {
+          state:{
+            fromBookingConfirmation: true,
+            data:result?.data || null, // Pass any relevant data to the trips page if needed
+            tripId:orderData?.trip_id || null,
+          }
+        }); // Redirect to trips page or any other page as needed
+      }
+    } catch (error) {
+      if (isDevMode) {
+        console.error("Payment process encountered an error:", error);
+      }
+      const msg =
+        "Payment failed. Please try again. If you were charged, contact support.";
+      showToast(msg, "error", { position: "top-center" });
+      // User stays on the same screen and can retry
+    } finally {
+      setInProgressPayment(false);
+    }
+  };
 
   return (
     <div
@@ -78,6 +120,7 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
         sm:max-w-screen-sm md:max-w-3xl lg:max-w-5xl xl:max-w-7xl 2xl:max-w-screen-2xl
         sm:rounded-xl sm:shadow-lg
         shadow-[0_2px_16px_0_rgba(16,30,54,0.08)] max-w-full xl:mb-4
+        ${inProgressPayment ? "pointer-events-none opacity-70" : "pointer-events-auto"}
       `}
     >
       <div className="relative z-10">
@@ -90,12 +133,9 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
         />
         <div className="px-4">
           <div className="py-2"></div>
-         
+
           {/* Cab details */}
-          <TripCabDetails
-            cabDetails={fleet}
-            className="mb-4  py-2 px-0"
-          />
+          <TripCabDetails cabDetails={fleet} className="mb-4  py-2 px-0" />
 
           {/* Route timeline */}
           <RouteTimeline
@@ -133,7 +173,11 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
           {/* Payment summary and action */}
           {orderData && bookingData && (
             <div className="mt-6">
-              <TripPaymentSummary orderData={orderData} fareData={fareData} onPay={handlePay}/>
+              <TripPaymentSummary
+                orderData={orderData}
+                fareData={fareData}
+                onPay={handlePay}
+              />
             </div>
           )}
         </div>
