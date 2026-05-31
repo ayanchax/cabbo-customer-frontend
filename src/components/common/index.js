@@ -14,3 +14,4 @@ export {RouteTimeline} from "./RouteTimeline";
 export {PageHeader} from "./PageHeader";
 export {Loader} from "./Loader";
 export {CollapsibleSection} from "./CollapsibleSection";
+export {SuccessOverlay} from "./SuccessOverlay";

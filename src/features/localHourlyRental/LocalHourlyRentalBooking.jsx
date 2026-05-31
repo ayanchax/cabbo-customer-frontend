@@ -8,16 +8,24 @@ import {
   TripPaymentSummary,
   TripCabDetails,
   InCarAmenities,
+  PaymentProcessingIllustration
 } from "@/components";
-import { useTimezone, useRazorPay, useToast } from "@/hooks";
+import { useTimezone, useRazorPay, useToast, useOverlay } from "@/hooks";
 import { SelectedPackage } from "@/features/localHourlyRental/components";
 import { isDevMode } from "@/api";
+import { SuccessOverlay } from "../../components/common/SuccessOverlay";
 function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
   const navigate = useNavigate();
   const { timezone: tz_info } = useTimezone();
+  const { showOverlay, hideOverlay } = useOverlay();
+  
   const { onPay } = useRazorPay();
   const { showToast } = useToast();
   const [inProgressPayment, setInProgressPayment] = useState(false);
+  const [paymentSuccessData, setPaymentSuccessData] = useState({
+    showPaymentSuccessOverlay: false,
+    data: null, // Mock data for testing, replace with actual data from payment result
+  });
   const origin = bookingData?.preferences?.origin || null;
   let dropOff = bookingData?.preferences?.destination || null;
   if (origin.place_id === dropOff?.place_id) {
@@ -66,13 +74,20 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
   };
 
   const handlePay = async () => {
-    
     if (inProgressPayment) {
       // Prevent multiple clicks on Pay button
       return;
     }
-
     try {
+      const overlayProps = {
+              message: "Processing your payment...",
+              illustration: (
+                <PaymentProcessingIllustration className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />
+              ),
+              subtext: "Hang tight, we're confirming your booking and processing payment securely.",
+            };
+      showOverlay(overlayProps);
+      return
       setInProgressPayment(true);
       const result = await onPay(orderData);
       if (!result || result instanceof Error) {
@@ -82,23 +97,32 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
         // Pass to catch block to show user-friendly error message
         throw result instanceof Error ? result : new Error("Payment failed");
       } else {
+        hideOverlay(); // Hide any loading overlay that might be present, so that our success overlay can be seen clearly without being covered by a loading spinner or backdrop. We want to make sure the user sees the confirmation message immediately after payment is successful, without any visual obstruction, to provide a satisfying user experience and clear feedback that their action was successful.
         // Payment was successful and verified, you can redirect the user or show a success message
         if (isDevMode) {
           console.log("Payment successful and verified:", result);
         }
-        
-        navigate("/trips", {
-          state:{
-            fromBookingConfirmation: true,
-            data:result?.data || null, // Pass any relevant data to the trips page if needed
-            tripId:orderData?.trip_id || null,
-          }
-        }); // Redirect to trips page or any other page as needed
+        setPaymentSuccessData({
+          showPaymentSuccessOverlay: true,
+          data: result?.data || null,
+        });
+        setTimeout(() => {
+          // Since we are navigating as next step in the event loop, we can be reasonably sure that the SuccessOverlay will render at least once before navigation happens, allowing the user to see the confirmation message.
+          // Thus we do not need to close the overlay manually here, as navigating away will unmount this component and remove the overlay from view. If we wanted to navigate while keeping this component mounted (e.g. showing the same overlay on the next page), we would need to manage the visibility of the overlay with state and set it to false before navigating.
+          navigate(`/booking/${result?.data?.booking_id}`, {
+            state: {
+              fromBookingConfirmation: true,
+              data: result?.data || null, // Pass any relevant data to the trips page if needed
+              tripId: orderData?.trip_id || null,
+            },
+          }); // Redirect to booking details page after successful payment and verification
+        }, 3000); // Show success overlay for 3 seconds before redirecting to booking details page, so that user is satisfied that their action was successful before being taken to the next page. This also allows time for the success message to be read, and for the user to see the booking ID if it's displayed on the overlay. Adjust the duration as needed based on user feedback and testing.
       }
     } catch (error) {
       if (isDevMode) {
         console.error("Payment process encountered an error:", error);
       }
+      hideOverlay(); // Hide any loading overlay that might be present
       const msg =
         "Payment failed. Please try again. If you were charged, contact support.";
       showToast(msg, "error", { position: "top-center" });
@@ -182,6 +206,29 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
           )}
         </div>
       </div>
+
+      {/* Success overlay */}
+      {paymentSuccessData?.showPaymentSuccessOverlay && (
+        <SuccessOverlay
+          visible={paymentSuccessData?.showPaymentSuccessOverlay}
+          message="Booking Confirmed"
+          route={`/booking/${paymentSuccessData?.data?.booking_id}`}
+          routeState={{
+            fromBookingConfirmation: true,
+            data: paymentSuccessData?.data || null,
+            tripId: orderData?.trip_id || null,
+          }}
+        >
+          {paymentSuccessData?.data?.booking_id && (
+            <div className="text-white text-sm opacity-90">
+              Booking ID: {paymentSuccessData?.data?.booking_id || "N/A"}
+            </div>
+          )}
+          <div className="text-white text-xs opacity-70 mt-1">
+            You’ll be redirected to your booking details shortly…
+          </div>
+        </SuccessOverlay>
+      )}
     </div>
   );
 }
