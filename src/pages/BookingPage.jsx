@@ -7,6 +7,8 @@ import { TRIP_TYPES } from "@/utils";
 function BookingPage() {
   const location = useLocation();
   const bookingPayload = location.state?.bookingPayload;
+  const [bookingError, setBookingError] = useState(null); // <-- Add this
+
   const {trip_type= null} = bookingPayload.preferences 
     
   const [bookingOrderData, setBookingOrderData] = useState(null);
@@ -43,14 +45,18 @@ function BookingPage() {
         setBookingOrderData(response?.data || null);
         // eslint-disable-next-line no-unused-vars
       } catch (error) {
-        throw new Error("Failed to initiate booking. Please try again later.");
-        // Error Boundary can catch this and show user-friendly fallback UI
+        setBookingError(new Error("Failed to initiate booking. Please try again later.")); // <-- Set error state
       }
     };
     
     initiateBooking();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookingPayload]);
+  if (bookingError) {
+    throw bookingError;
+    // Error Boundary can catch this and show user-friendly fallback UI
+
+  }
 
   if (fleetError) {
     throw new Error("Failed to load fleet data. Please refresh the page.");

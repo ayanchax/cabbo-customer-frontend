@@ -11,5 +11,6 @@ export { useScrollCue } from "./useScrollCue";
 export { useUIElement } from "./useUIElement";
 export { useTimezone } from "./useTimezone";
 export { useLocale } from "./useLocale";
+export { useSticky } from "./useSticky";
 export * from "./query";
 export * from "./mutation";

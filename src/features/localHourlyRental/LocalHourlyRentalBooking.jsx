@@ -60,6 +60,10 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
     disclaimers: bookingData?.disclaimers || null,
     refunds_and_cancellation_policies: bookingData?.refunds_and_cancellation_policies || null,
   }
+
+  const handlePay = () => {
+    console.log("Pay button clicked. Implement payment flow here.");
+  }
    
 
   return (
@@ -129,7 +133,7 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
           {/* Payment summary and action */}
           {orderData && bookingData && (
             <div className="mt-6">
-              <TripPaymentSummary orderData={orderData} fareData={fareData} />
+              <TripPaymentSummary orderData={orderData} fareData={fareData} onPay={handlePay}/>
             </div>
           )}
         </div>
