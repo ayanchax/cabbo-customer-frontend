@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CheckCircle } from "lucide-react";
+import { ThumbsUp } from "lucide-react";
 
 /**
  * SuccessOverlay Component
@@ -37,8 +37,6 @@ function SuccessOverlay({
   const navigate = useNavigate();
   const canRedirect = route ? true : false; // If route is provided, we can redirect. Otherwise, rely on redirect prop to decide whether to show "Redirecting..." text.
   const canShowCountdown = route ? true : false; // Only show countdown if we have a route to redirect to. If no route is provided, countdown doesn't make sense, so we ignore showCountdown in that case.
-  // NOTE: To reset countdown, use a key prop on SuccessOverlay in the parent:
-  // <SuccessOverlay key={visible + '-' + duration + '-' + route} ... />
   const [countdown, setCountdown] = useState(() => Math.ceil(duration / 1000));
 
   useEffect(() => {
@@ -76,13 +74,15 @@ function SuccessOverlay({
       style={{ minHeight: "100vh" }}
     >
       <div className="flex flex-col items-center">
-        {icon || (
-          <CheckCircle
-            size={iconSize}
-            className="mb-6 text-white"
-            strokeWidth={2.5}
-          />
-        )}
+        <div className="animate-success mb-6">
+          {icon || (
+            <ThumbsUp
+              size={iconSize}
+              className="text-white"
+              strokeWidth={2.5}
+            />
+          )}
+        </div>
         <div className="text-2xl font-bold text-white mb-2 text-center">
           {message}
         </div>

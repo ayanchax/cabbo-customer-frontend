@@ -8,20 +8,20 @@ import {
   TripPaymentSummary,
   TripCabDetails,
   InCarAmenities,
-  PaymentProcessingIllustration,
+  PaymentProcessingIllustration
 } from "@/components";
-import { useTimezone, useRazorPay, useToast, useOverlay } from "@/hooks";
+import { useTimezone, useRazorPay, useToast } from "@/hooks";
 import { SelectedPackage } from "@/features/localHourlyRental/components";
 import { isDevMode } from "@/api";
 import { SuccessOverlay } from "../../components/common/SuccessOverlay";
 function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
   const navigate = useNavigate();
   const { timezone: tz_info } = useTimezone();
-  const { showOverlay, hideOverlay } = useOverlay();
 
   const { onPay } = useRazorPay();
   const { showToast } = useToast();
   const [inProgressPayment, setInProgressPayment] = useState(false);
+
   const [paymentSuccessData, setPaymentSuccessData] = useState({
     showPaymentSuccessOverlay: false,
     data: null, // Mock data for testing, replace with actual data from payment result
@@ -79,34 +79,28 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
       return;
     }
     try {
-      const overlayProps = {
-        message: "Finalizing your booking...",
-        illustration: (
-          <PaymentProcessingIllustration className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />
-        ),
-        subtext:
-          "Hang tight! We're confirming your booking and processing your payment.",
-      };
-      showOverlay(overlayProps);
       setInProgressPayment(true);
-      const result = await onPay(orderData);
+      const overlayProps = {
+            message: "Finalizing your booking...",
+            illustration: (
+              <PaymentProcessingIllustration className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />
+            ),
+            subtext:
+              "Hang tight! We're confirming your booking and processing your payment.",
+          }
+      const result = await onPay(orderData, overlayProps);
       if (result && result?.data) {
         setPaymentSuccessData({
           showPaymentSuccessOverlay: true,
           data: result?.data || null,
         });
-        hideOverlay(); // Hide any loading overlay that might be present, so that our success overlay can be seen clearly without being covered by a loading spinner or backdrop. We want to make sure the user sees the confirmation message immediately after payment is successful, without any visual obstruction, to provide a satisfying user experience and clear feedback that their action was successful.
-        // Payment was successful and verified, you can redirect the user or show a success message
         if (isDevMode) {
           console.log("Payment successful and verified:", result);
         }
-      }
-      else {
-        // Payment failed or verification failed
+      } else {
         if (isDevMode) {
           console.error(result?.message || "Payment failed");
         }
-        // Pass to catch block to show user-friendly error message
         throw result instanceof Error ? result : new Error("Payment failed");
       }
     } catch (error) {
@@ -117,7 +111,6 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
         showPaymentSuccessOverlay: false,
         data: null,
       });
-      hideOverlay(); // Hide any loading overlay that might be present
       const msg =
         "Payment failed. Please try again. If you were charged, contact support.";
       showToast(msg, "error", { position: "top-center" });

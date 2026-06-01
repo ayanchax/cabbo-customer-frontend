@@ -13,3 +13,8 @@ export const verifyPaymentForTrip = (payload) => {
 export const cleanupStagedTrip = (trip_id) => {
     return api.delete(`${ENDPOINTS.TRIP.CLEANUP_STAGED_TRIP}/${trip_id}`);
 }
+
+export const getBookingDetails = async (booking_id) => {
+    const { data } = await api.get(`${ENDPOINTS.TRIP.GET_BOOKING}/${booking_id}`);
+    return data;
+}

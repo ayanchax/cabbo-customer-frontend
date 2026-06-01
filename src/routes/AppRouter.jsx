@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ROUTES } from "@/utils";
 import { Login, Verify, Onboard } from "@/pages/auth";
-import { Home , LocalHourlyRentalPage, BookingPage} from "@/pages";
+import { Home , LocalHourlyRentalPage, BookingPage, BookingDetailPage} from "@/pages";
 import {PublicRoute, ProtectedRoute } from "@/routes";
 
 const AppRouter = () => {
@@ -19,6 +19,7 @@ const AppRouter = () => {
           <Route path={ROUTES.HOME} element={<Home />} />
           <Route path={ROUTES.LOCAL} element={<LocalHourlyRentalPage />} />
           <Route path ={ROUTES.BOOKING} element={<BookingPage />} />
+          <Route path={ROUTES.BOOKING_DETAIL} element={<BookingDetailPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

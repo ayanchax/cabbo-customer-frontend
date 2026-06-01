@@ -1,11 +1,14 @@
 import { DEFAULT_CURRENCY_CODE, APP } from "@/utils"
-import { useVerifyPaymentForTrip, useCleanupStagedTrip } from "@/hooks";
+import { useOverlay, useCleanupStagedTrip, useVerifyPaymentForTrip} from "@/hooks";
 import { isDevMode } from "@/api";
 
 export const useRazorPay = () => {
     const verifyPaymentApi = useVerifyPaymentForTrip();
     const cleanupStagedTripApi = useCleanupStagedTrip();
-    const handlePay = async (orderData) => {
+    const { showOverlay, hideOverlay } = useOverlay();
+    
+    const handlePay = async (orderData, overlayProps) => {
+        showOverlay(overlayProps);
         // Dynamically load Razorpay script if not already loaded
         if (!window.Razorpay) {
             const script = document.createElement("script");
@@ -32,6 +35,7 @@ export const useRazorPay = () => {
                 },
                 handler: async function (response) {
                     if (!response.razorpay_payment_id || !response.razorpay_order_id || !response.razorpay_signature) {
+                        hideOverlay();
                         reject(new Error("Payment failed: Missing payment details in response."));
                         return;
                     }
@@ -45,6 +49,7 @@ export const useRazorPay = () => {
                     };
                     try {
                         const result = await verifyPaymentApi.mutateAsync(payload);
+                        hideOverlay(); // Dismiss before resolving so component renders SuccessOverlay into a clean screen
                         resolve(result);
                     } catch (error) {
                         if (isDevMode) {
@@ -58,11 +63,13 @@ export const useRazorPay = () => {
                                 console.error("Failed to cleanup staged trip after payment verification failure:", cleanupError);
                             }
                         }
+                        hideOverlay();
                         reject(new Error("Payment verification failed. Please contact support if your payment was successful but this error persists."));
                     }
                 },
                 modal: {
                     ondismiss: function () {
+                        hideOverlay();
                         reject(new Error("Payment cancelled by user."));
                     },
                 },

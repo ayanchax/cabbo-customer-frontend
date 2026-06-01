@@ -1,3 +1,4 @@
+
 export const APP = {
     name: "Cabbo",
     tagline: "Your ride, simplified"
@@ -41,7 +42,8 @@ export const ENDPOINTS = {
             SEARCH: `${API_VERSION}/trips/search`,
             INITIATE_BOOKING: `${API_VERSION}/trips/initiate-booking`,
             VERIFY_PAYMENT_AND_CONFIRM_TRIP: `${API_VERSION}/trips/confirm-booking`,
-            CLEANUP_STAGED_TRIP: `${API_VERSION}/trips/cleanup`
+            CLEANUP_STAGED_TRIP: `${API_VERSION}/trips/cleanup`,
+            GET_BOOKING: `${API_VERSION}/trips/bookings`, // Append booking ID to get details for specific booking
         },
     FLEET:{
         GET_AVAILABLE_CABS: `${API_VERSION}/trips/fleet/`,
@@ -62,6 +64,7 @@ export const ROUTES = {
     OUTSTATION: "/outstation",
     AIRPORT: "/airport-transfers",
     BOOKING: "/booking",
+    BOOKING_DETAIL: "/booking/:bookingId",
 };
 
 export const TRIP_TYPES =
@@ -87,3 +90,4 @@ export const DEFAULT_CURRENCY_CODE= "INR";
 export const PAYMENT_ORDER_STATUS={
     CREATED:"created"
 }
+
