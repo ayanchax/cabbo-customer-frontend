@@ -65,7 +65,8 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
     disclaimers: bookingDetail?.overages?.disclaimer || null,
     refunds_and_cancellation_policies:
       bookingDetail?.refund_and_cancellation_policy || null,
-  };
+    currency: bookingDetail?.currency || null,
+    };
   return (
     <div
       className={` relative
