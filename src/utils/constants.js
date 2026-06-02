@@ -91,3 +91,17 @@ export const PAYMENT_ORDER_STATUS={
     CREATED:"created"
 }
 
+export const DEFAULT_GEOGRAPHY = {
+        country_name: "India",
+        country_code: "IN",
+        phone_code: "+91",
+        flag: "🇮🇳",
+        currency: DEFAULT_CURRENCY_CODE,
+        currency_symbol: DEFAULT_CURRENCY_SYMBOL,
+        currency_decimal_places: 2,
+        currency_in_words: "Rupees",
+        currency_international_name: "Indian Rupee",
+        timezone: "Asia/Kolkata",
+        utc_offset: "+05:30",
+    };
+

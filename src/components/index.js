@@ -21,3 +21,4 @@ export {PayRestToDriver} from "./PayRestToDriver";
 export {TripFareDetail} from "./TripFareDetail";
 export {RefundsAndCancellationPolicies} from "./RefundsAndCancellationPolicies";
 export {PayAndConfirmBooking} from "./PayAndConfirmBooking";
+export {TripFareSummary} from "./TripFareSummary";

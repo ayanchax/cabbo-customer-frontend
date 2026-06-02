@@ -13,10 +13,11 @@ import {
 import { useTimezone, useRazorPay, useToast } from "@/hooks";
 import { SelectedPackage } from "@/features/localHourlyRental/components";
 import { isDevMode } from "@/api";
-import { SuccessOverlay } from "../../components/common/SuccessOverlay";
-function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
+import { SuccessOverlay } from "@/components";
+import {DEFAULT_USER_TIMEZONE} from "@/utils";
+function LocalHourlyRentalBooking({ orderData, bookingData }) {
   const navigate = useNavigate();
-  const { timezone: tz_info } = useTimezone();
+  const { timezone: client_timezone } = useTimezone();
 
   const { onPay } = useRazorPay();
   const { showToast } = useToast();
@@ -48,9 +49,8 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
   }
   const selectedPackage = bookingData?.selectedPackage || null;
 
-  const selectedFleet =
-    fleetData?.find((fleet) => fleet?.name === bookingData?.option?.car_type) ||
-    null;
+  const selectedFleet = orderData?.fleet || null;
+    
 
   const fleet = {
     capacity: selectedFleet?.capacity || null,
@@ -72,6 +72,8 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
     refunds_and_cancellation_policies:
       bookingData?.refunds_and_cancellation_policies || null,
   };
+
+  const server_timezone = bookingData?.preferences?.timezone || null;
 
   const handlePay = async () => {
     if (inProgressPayment) {
@@ -160,7 +162,7 @@ function LocalHourlyRentalBooking({ orderData, bookingData, fleetData }) {
           <RideTimings
             startDatetime={startDate}
             className=" mt-4 mb-4"
-            timezone={tz_info?.timezone}
+            timezone={client_timezone?.timezone || server_timezone || DEFAULT_USER_TIMEZONE}
           />
 
           {/* Selected package */}

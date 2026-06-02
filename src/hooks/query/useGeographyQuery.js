@@ -1,6 +1,6 @@
 
 import { useQuery } from "@tanstack/react-query";
-import { LOCAL_STORAGE_KEYS } from "@/utils";
+import { LOCAL_STORAGE_KEYS, DEFAULT_GEOGRAPHY } from "@/utils";
 import {useLocalStorage} from "@/hooks";
 import {fetchClientGeography, fetchServerGeography} from "@/api";
 // LocalStorage cache key and TTL for client geography
@@ -12,19 +12,9 @@ const SERVER_GEO_CACHE_TTL = 60 * 60 * 1000; // 1 hour in ms, as server geograph
 
 export const useGeographyQuery = () => {
     const {getItem, setItem} = useLocalStorage();
-    const fallbackGeography = {
-        country_name: "India",
-        country_code: "IN",
-        phone_code: "+91",
-        flag: "🇮🇳",
-        currency: "INR",
-        currency_symbol: "₹",
-        currency_decimal_places: 2,
-        currency_in_words: "Rupees",
-        currency_international_name: "Indian Rupee",
-        timezone: "Asia/Kolkata",
-        utc_offset: "+05:30",
-    };
+    const fallbackGeography = DEFAULT_GEOGRAPHY;
+
+         
 
 
     // Fetch client-side geography (from ipapi) with localStorage cache (24h TTL)

@@ -13,7 +13,8 @@ import {
 } from "@/components";
 import { useSticky } from "@/hooks";
 import { Info } from "lucide-react";
-
+// Component to display payment summary, fare breakdown, instructions, and disclaimers on the payment page after user selects a trip option and before they complete the payment. It also includes a sticky "Pay & Confirm Booking" button for better UX on long pages.
+// This summary is meant to be used across all trip booking flows for doing payments.
 function TripPaymentSummary({ orderData, fareData, onPay = () => {} }) {
   const payBtnRef = useRef(null);
   const isSticky = useSticky(payBtnRef);

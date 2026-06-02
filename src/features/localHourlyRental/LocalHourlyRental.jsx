@@ -26,12 +26,12 @@ import { useLocalTripSearch } from "@/features/localHourlyRental/hooks";
 import {} from "@/components";
 import { isDevMode } from "@/api";
 import { Info } from "lucide-react";
-import {ROUTES, enrichOptionsWithRates} from "@/utils";
+import {ROUTES, enrichOptionsWithRates, DEFAULT_USER_TIMEZONE} from "@/utils";
 
 const DEFAULT_MINIMUM_BOOKING_HOURS = 6; // Default to 6 hours if API doesn't provide a value
 function LocalHourlyRental() {
   const location = useLocation();
-  const { timezone: tz_info } = useTimezone();
+  const { timezone: client_timezone } = useTimezone();
   const { showOverlay, hideOverlay } = useOverlay();
   const searchTrips = useLocalTripSearch();
   // Origin is passed in navigation state from previous step
@@ -129,8 +129,8 @@ function LocalHourlyRental() {
         start_date: startDate.isoString,
         ...ridePreferences,
         package_id: selectedPackageId,
-        timezone: tz_info.timezone,
-        utc_offset: tz_info.utc_offset_minutes,
+        timezone: client_timezone.timezone,
+        utc_offset: client_timezone.utc_offset_minutes,
       };
       const response = await searchTrips.mutateAsync(payload);
       if (isDevMode) {
@@ -170,6 +170,9 @@ function LocalHourlyRental() {
      setInProgress(false);
     }
   
+  const fetchedStartDate = { isoString: searchResults?.preferences?.start_date || startDate || null };
+  
+  const fetchedTimezone = client_timezone?.timezone || searchResults?.preferences?.timezone || DEFAULT_USER_TIMEZONE;
 
   if (searchResults) {
     return (
@@ -207,9 +210,9 @@ function LocalHourlyRental() {
               />
               {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
               <RideTimings
-                startDatetime={startDate}
+                startDatetime={fetchedStartDate}
                 className=" mt-4 mb-4"
-                timezone={tz_info?.timezone}
+                timezone={fetchedTimezone}
               />
               {/* Selected package */}
               {selectedPackage && (

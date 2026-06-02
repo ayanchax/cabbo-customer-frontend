@@ -3,18 +3,69 @@ import {
   RideTimings,
   RouteTimeline,
   PageHeader,
-  TripDisclaimer,
-  TripPaymentSummary,
+  TripFareSummary,
   TripCabDetails,
   InCarAmenities,
-  PaymentProcessingIllustration,
 } from "@/components";
+import { useTimezone } from "@/hooks";
+import { SelectedPackage } from "@/features/localHourlyRental/components";
+
+import { DEFAULT_USER_TIMEZONE } from "@/utils";
 function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
+  const { timezone: client_timezone } = useTimezone();
+
   console.log(
     "Booking Detail in LocalHourlyRentalBookingDetail:",
     bookingDetail,
   ); // Debug log to check the received booking detail data
-  const { booking_id, fleet } = bookingDetail;
+  const {
+    booking_id,
+    fleet,
+    origin,
+    destination,
+    start_datetime,
+    timezone: server_timezone,
+  } = bookingDetail;
+  let dropOff = destination || null;
+  if (origin?.place_id === dropOff?.place_id) {
+    // If the origin and drop-off are the same, set dropOff to null to avoid confusion in the UI
+    dropOff = null;
+  }
+
+  const startDate = { isoString: start_datetime || null };
+  if (!origin || !startDate.isoString) {
+    throw new Error(
+      "Missing required booking data: origin and start date are required.",
+    );
+    // Error Boundary can catch this and show user-friendly fallback UI with option to go back to previous step
+  }
+
+  if (!bookingDetail) {
+    throw new Error(
+      "Missing required booking data: booking details are required to display this page.",
+    );
+    // Error Boundary can catch this and show user-friendly fallback UI with option to go back to previous step
+  }
+
+  const fleetData = {
+    rate_per_min: bookingDetail?.rate_per_min?.toFixed(2) || null,
+    currency: bookingDetail?.currency || null,
+    ...fleet,
+  };
+
+  const selectedPackage = bookingDetail?.package || null;
+  const fareData = {
+    advance_payment: bookingDetail?.advance_payment || null,
+    balance_payment: bookingDetail?.balance_payment || null,
+    total_price: bookingDetail?.final_price || null,
+    price_breakdown: bookingDetail?.price_breakdown || null,
+    overages: bookingDetail?.overages || null,
+    inclusions: bookingDetail?.inclusions || null,
+    exclusions: bookingDetail?.exclusions || null,
+    disclaimers: bookingDetail?.overages?.disclaimer || null,
+    refunds_and_cancellation_policies:
+      bookingDetail?.refund_and_cancellation_policy || null,
+  };
   return (
     <div
       className={` relative
@@ -41,7 +92,51 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
           <div className="py-2"></div>
 
           {/* Cab details */}
-          <TripCabDetails cabDetails={fleet} className="mb-4  py-2 px-0" />
+          <TripCabDetails cabDetails={fleetData} className="mb-4  py-2 px-0" />
+
+          {/* Route timeline */}
+          <RouteTimeline
+            pickupLocation={origin}
+            dropoffLocation={dropOff}
+            className="mb-4"
+          />
+
+          {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
+          <RideTimings
+            startDatetime={startDate}
+            className=" mt-4 mb-4"
+            timezone={
+              client_timezone?.timezone ??
+              server_timezone ??
+              DEFAULT_USER_TIMEZONE
+            }
+          />
+
+          {/* Selected package */}
+          {selectedPackage && (
+            <SelectedPackage
+              selectedPackage={selectedPackage}
+              className=" mt-2 md:mb-4 mb-4"
+            />
+          )}
+
+          {/* In-car amenities */}
+          {bookingDetail?.in_car_amenities && (
+            <div className="mb-2">
+              <InCarAmenities
+                {...bookingDetail?.in_car_amenities}
+                className=""
+                header="You will get these amenities in your cab:"
+              />
+            </div>
+          )}
+
+          {/* Fare summary */}
+          {fareData && (
+            <div className="mb-2">
+              <TripFareSummary fareData={fareData} />
+            </div>
+          )}
         </div>
       </div>
     </div>
