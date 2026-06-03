@@ -1,5 +1,5 @@
 import React from "react";
-import { Check, X, AlertTriangle, Info } from "lucide-react";
+import { Check, X, Plus, Info } from "lucide-react";
 import {
   CollapsibleSection,
   TripFareBreakdown,
@@ -78,23 +78,24 @@ function TripFareSummary({ fareData, className = "" }) {
         {/* Overage rates pill */}
         {hasOverages && (
           <div className="flex flex-wrap gap-2 pt-1">
-            {overages.overage_amount_per_km && (
-              <span className="inline-flex items-center gap-1 text-xs bg-amber-50 text-amber-700 border border-amber-200 rounded-full px-2.5 py-0.5">
-                <AlertTriangle className="w-3 h-3 shrink-0" />
-                {formatCurrency(overages.overage_amount_per_km, currencySymbol)}
-                /km overage
-              </span>
-            )}
             {overages.overage_amount_per_hour && (
               <span className="inline-flex items-center gap-1 text-xs bg-amber-50 text-amber-700 border border-amber-200 rounded-full px-2.5 py-0.5">
-                <AlertTriangle className="w-3 h-3 shrink-0" />
+                <Plus className="w-3 h-3 shrink-0" />
                 {formatCurrency(
-                  overages.overage_amount_per_hour,
+                  Math.ceil(overages.overage_amount_per_hour / 60),
                   currencySymbol,
                 )}
-                /hr overage
+                /extra min
               </span>
             )}
+            {overages.overage_amount_per_km && (
+              <span className="inline-flex items-center gap-1 text-xs bg-amber-50 text-amber-700 border border-amber-200 rounded-full px-2.5 py-0.5">
+                <Plus className="w-3 h-3 shrink-0" />
+                {formatCurrency(overages.overage_amount_per_km, currencySymbol)}
+                /extra km
+              </span>
+            )}
+            
           </div>
         )}
       </div>

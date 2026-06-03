@@ -4,6 +4,8 @@ import {
   LocationInput,
   LocationSuggestions,
   NoRidesAvailable,
+  PersonWaitingAtAirportForPickup,
+  CabLeavingFromAirportTerminal, //used for airport dropoff scenario
 } from "@/components";
 import { useNavigate } from "react-router-dom";
 import {
@@ -135,18 +137,18 @@ const SearchCard = () => {
         [TRIP_TYPES.AIRPORT_PICKUP]: {
           overlayProps: {
             message: "Taking you to Cabbo airport transfers...",
-            illustration: null, // Replace with airport SVG if available
-            subtext: "Hassle-free airport pickups, almost on time",
-            nextActionText: "Next: add pickup time and other preferences", // customer picked from airport to destination
+            illustration: <PersonWaitingAtAirportForPickup className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />, 
+            subtext: "Schedule your pickup around your landing",
+            nextActionText: "Next: add your pickup time and flight details", // customer picked from airport to destination
           },
           route: ROUTES.AIRPORT,
         },
         [TRIP_TYPES.AIRPORT_DROPOFF]: {
           overlayProps: {
             message: "Taking you to Cabbo airport transfers...",
-            illustration: null, // Replace with airport SVG if available
-            subtext: "Airport drop, schedule ahead, no-bluff pricing",
-            nextActionText: "Next: add pickup time and other preferences", // customer picked from source/origin to airport
+            illustration: <CabLeavingFromAirportTerminal className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />, 
+            subtext: "Leave home relaxed, reach the airport on time",
+            nextActionText: "Next: add your pickup time and other preferences", // customer picked from source/origin to airport
           },
           route: ROUTES.AIRPORT,
         },
@@ -173,8 +175,8 @@ const SearchCard = () => {
       showOverlay(config.overlayProps);
       // Hide overlay after 1.2s and navigate
       setTimeout(() => {
-       hideOverlay();
-       navigate(config.route, { state: response });
+      //  hideOverlay();
+      //  navigate(config.route, { state: response });
       }, 1200);
     } catch (e) {
       if (isDevMode) {

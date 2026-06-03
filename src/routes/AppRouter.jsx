@@ -1,8 +1,14 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ROUTES } from "@/utils";
 import { Login, Verify, Onboard } from "@/pages/auth";
-import { Home , LocalHourlyRentalPage, BookingPage, BookingDetailPage} from "@/pages";
-import {PublicRoute, ProtectedRoute } from "@/routes";
+import {
+  Home,
+  LocalHourlyRentalPage,
+  AirportTransferPage,
+  BookingPage,
+  BookingDetailPage,
+} from "@/pages";
+import { PublicRoute, ProtectedRoute } from "@/routes";
 
 const AppRouter = () => {
   return (
@@ -18,7 +24,11 @@ const AppRouter = () => {
           {/* Protected app routes, only accessible if user is logged in */}
           <Route path={ROUTES.HOME} element={<Home />} />
           <Route path={ROUTES.LOCAL} element={<LocalHourlyRentalPage />} />
-          <Route path ={ROUTES.BOOKING} element={<BookingPage />} />
+          <Route
+            path={ROUTES.AIRPORT_TRANSFER}
+            element={<AirportTransferPage />}
+          />
+          <Route path={ROUTES.BOOKING} element={<BookingPage />} />
           <Route path={ROUTES.BOOKING_DETAIL} element={<BookingDetailPage />} />
         </Route>
       </Routes>
