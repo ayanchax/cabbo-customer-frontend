@@ -112,3 +112,60 @@ For local/hourly rental, users can optionally specify number of adults and child
 ---
 
 _Last updated: May 2026_
+
+---
+
+## Implementation Status — Completed June 2026
+
+The full Local/Hourly Rental flow is live end-to-end. All implementation plan items above are done.
+
+### Completed Flow
+
+```
+Home (SearchCard)
+  → classify trip type (/trips/trip-type-classification/classify)
+  → LocalHourlyRentalPage  (/local-hourly-rental)
+      Packages API + Prior Booking Window API
+      Origin display, datetime picker (validated), package selection
+      → /search API → TripOptionsList
+  → BookingPage  (/booking)
+      useInitiateTripBookingMutation → /trips/initiate-booking
+      LocalHourlyRentalBooking (review screen)
+        TripCabDetails, RouteTimeline, RideTimings, SelectedPackage,
+        InCarAmenities, TripPaymentSummary
+        → Razorpay Checkout (useRazorPay)
+        → /trips/confirm-booking (signature verification)
+        → SuccessOverlay (animated ThumbsUp, countdown redirect)
+  → BookingDetailPage  (/booking/:bookingId)
+      useBookingDetailQuery → GET /trips/:bookingId
+      LocalHourlyRentalBookingDetail (read-only)
+        TripCabDetails, RouteTimeline, RideTimings, SelectedPackage,
+        InCarAmenities, TripFareSummary
+```
+
+### Key Implementation Notes
+
+- **UTC datetime normalisation:** Server returns naive datetimes (no `Z`). `RideTimings` normalises by appending `Z` before passing to `humanReadableDateTime`, so all times display correctly in the client's local timezone.
+- **Payment overlay:** `showOverlay`/`hideOverlay` live inside `useRazorPay` (not in the component). The overlay is dismissed _before_ the promise resolves, so `SuccessOverlay` renders into a clean screen with no flicker.
+- **TripFareSummary vs TripPaymentSummary:** `TripPaymentSummary` is interactive (pre-payment, has Pay button). `TripFareSummary` is read-only (post-payment detail page). Both reuse the same sub-components (`TripFareBreakdown`, `TripIncExc`, `RefundsAndCancellationPolicies`, `CollapsibleSection`).
+- **Routing:** `/booking` uses `location.state` for the initiate-booking flow. `/booking/:bookingId` (separate route, `ROUTES.BOOKING_DETAIL`) fetches fresh data from the API — bookmarkable and deeplink-safe.
+
+### Files Introduced / Modified
+
+| File | Role |
+|---|---|
+| `src/features/localHourlyRental/LocalHourlyRental.jsx` | Search/details input page |
+| `src/features/localHourlyRental/LocalHourlyRentalBooking.jsx` | Pre-payment review + Razorpay trigger |
+| `src/features/localHourlyRental/LocalHourlyRentalBookingDetail.jsx` | Post-payment read-only detail view |
+| `src/features/localHourlyRental/components/PackageCards.jsx` | Hourly package selection UI |
+| `src/features/localHourlyRental/components/SelectedPackage.jsx` | Selected package display chip |
+| `src/features/localHourlyRental/hooks/mutation/useLocalTripSearch.js` | `/search` mutation |
+| `src/hooks/useRazorPay.jsx` | Razorpay checkout + overlay + verify + cleanup |
+| `src/components/TripFareSummary.jsx` | Read-only fare summary (detail page) |
+| `src/components/TripPaymentSummary.jsx` | Interactive fare + Pay button (booking page) |
+| `src/components/common/SuccessOverlay.jsx` | Animated ThumbsUp success screen with countdown redirect |
+| `src/pages/BookingDetailPage.jsx` | Route shell for `/booking/:bookingId` |
+| `src/routes/AppRouter.jsx` | Added `ROUTES.BOOKING_DETAIL` route |
+| `src/utils/constants.js` | Added `ROUTES.BOOKING_DETAIL` |
+
+_Last updated: June 2026_
