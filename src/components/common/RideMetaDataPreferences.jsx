@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from "react";
 import { Info } from "lucide-react";
 import { PassengerCounter } from "@/components";
 import { useUIElement } from "@/hooks";
+import {TRIP_TYPES} from "@/utils"
 /**
  * RideMetaDataPreferences
  *
@@ -17,6 +18,7 @@ import { useUIElement } from "@/hooks";
  * - minChildren: number (default: 0)
  * - maxChildren: number (default: 4)
  * - helperText: string (optional, user-friendly message)
+ * - tripType: string (optional, can be used to conditionally show/hide fields or change helper text based on trip type, e.g. airport transfer might show luggage fields by default)
  */
 export function RideMetaDataPreferences({
   value = { num_adults: 1, num_children: 0 },
@@ -28,6 +30,7 @@ export function RideMetaDataPreferences({
   minChildren = 0,
   maxChildren = 4,
   helperText = "Tell us about your group and travel needs to help us match you with the most suitable ride",
+  tripType, // can be used to conditionally show/hide certain fields or change helper text based on trip type (e.g., airport transfer might show luggage fields by default)
 }) {
   const rootRef = useRef(null);
   const { focusOnElement } = useUIElement();

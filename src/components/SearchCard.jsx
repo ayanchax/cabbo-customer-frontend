@@ -175,8 +175,8 @@ const SearchCard = () => {
       showOverlay(config.overlayProps);
       // Hide overlay after 1.2s and navigate
       setTimeout(() => {
-      //  hideOverlay();
-      //  navigate(config.route, { state: response });
+       hideOverlay();
+       navigate(config.route, { state: response });
       }, 1200);
     } catch (e) {
       if (isDevMode) {

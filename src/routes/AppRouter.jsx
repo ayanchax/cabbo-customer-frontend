@@ -25,7 +25,7 @@ const AppRouter = () => {
           <Route path={ROUTES.HOME} element={<Home />} />
           <Route path={ROUTES.LOCAL} element={<LocalHourlyRentalPage />} />
           <Route
-            path={ROUTES.AIRPORT_TRANSFER}
+            path={ROUTES.AIRPORT}
             element={<AirportTransferPage />}
           />
           <Route path={ROUTES.BOOKING} element={<BookingPage />} />

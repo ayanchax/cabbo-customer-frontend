@@ -26,7 +26,7 @@ This document describes the end-to-end approach for handling timezones, datetime
 ### Display Flow
 - **Frontend:**
   - When listing trips, the API returns UTC datetime, timezone, and offset.
-  - The frontend converts the UTC datetime to the trip’s timezone for display, so the user sees the time as intended at the trip’s origin.
+  - The frontend converts the UTC datetime to the client's timezone.
   - The frontend also determines the user's current location/timezone using `useGeographyQuery` (client geography).
 
 ---

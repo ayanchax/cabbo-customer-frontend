@@ -14,9 +14,11 @@
     "num_children": 1,
     "num_large_suitcases": 2,
     "num_carryons": 1,
+    "num_backpacks": 1,
+    "num_other_bags": 0,
     "preferred_car_type": "Premium Sedan",
+    "toll_road_preferred": true,
     "preferred_fuel_type": "petrol",
     "flight_number": "6E789",
-    "terminal_number": "T1",
-    "toll_road_preferred": false
+    "terminal_number": "T1"
 }

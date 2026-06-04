@@ -14,6 +14,7 @@ import {
   RideTimings,
   PersonBoardingCabIllustration,
   PersonWaitingAtAirportForPickup,
+  CabLeavingFromAirportTerminal,
   RouteTimeline,
   PageHeader,
   TripDisclaimer,
@@ -119,6 +120,7 @@ function AirportTransfer() {
     }
   };
 
+ 
   const AmbientIllustration = () => {
     if (trip_type === TRIP_TYPES.AIRPORT_PICKUP) {
       return (
@@ -126,7 +128,7 @@ function AirportTransfer() {
       );
     } else if (trip_type === TRIP_TYPES.AIRPORT_DROPOFF) {
       return (
-        <PersonBoardingCabIllustration className="flex justify-center w-full max-w-xs sm:max-w-sm object-contain pointer-events-none select-none opacity-20 mt-8 mb-24 lg:hidden" />
+        <CabLeavingFromAirportTerminal className="flex justify-center w-full max-w-xs sm:max-w-sm object-contain pointer-events-none select-none opacity-20 mt-8 mb-24 lg:hidden" />
       );
     } else {
       return (
@@ -242,7 +244,7 @@ function AirportTransfer() {
           {/* Header: Back Button + Title */}
           <PageHeader
             onBack={() => setSearchResults(null)}
-            title="Available rides"
+            title={`Available rides ${trip_type === TRIP_TYPES.AIRPORT_DROPOFF ? 'to':'from'} the airport`}
             subtitle={getPageHeaderSubtitle()}
             className="px-0 mb-2"
           />
@@ -329,16 +331,15 @@ function AirportTransfer() {
             >
               <label
                 htmlFor="startDateTime"
-                className="block text-gray-500 text-[13px] md:text-base mb-2"
+                className="block text-gray-500 text-[13px] md:text-base mb-1"
               >
-                When do you want to leave?
-                {/* Suggestions:
-          Select start date & time
-          Pick your ride start time
-          Choose when your ride begins
-          When should your ride start?
-          */}
+                {trip_type === TRIP_TYPES.AIRPORT_DROPOFF ? 'When do you want to leave?' : 'When does your flight land?'}
               </label>
+              {trip_type === TRIP_TYPES.AIRPORT_PICKUP && (
+                <p className="text-sm md:text-sm text-gray-400 mb-2">
+                  Your driver will be at arrivals when you land
+                </p>
+              )}
               <InlineDateTimePicker
                 id="startDateTime"
                 earliestRentalStartDate={earliestAirportBookingStartDate}
@@ -358,6 +359,9 @@ function AirportTransfer() {
                 value={ridePreferences}
                 onChange={setRidePreferences}
                 id="ridePreferences"
+                tripType={trip_type}
+                showLuggage
+                helperText="Tell us about your group and travel needs to help us match you with the most suitable ride"
               />
             </div>
 
