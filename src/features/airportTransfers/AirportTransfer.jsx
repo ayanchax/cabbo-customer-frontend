@@ -38,15 +38,25 @@ function AirportTransfer() {
   const { showOverlay, hideOverlay } = useOverlay();
   const searchTrips = useLocalTripSearch();
   // Origin is passed in navigation state from previous step
+  
+  //Origin and drop off are required for airport transfers, but we will do validation and show error if they are not present in the navigation state, rather than blocking the entire flow by making them required in the type definition of the navigation state, because there is a possibility that these values might not be passed correctly from the previous step due to a bug or some unexpected issue, and we don't want to completely block the user from booking an airport transfer in that case. By allowing the flow to continue and showing a user-friendly error message about missing data, we can still allow the user to book an airport transfer by going back and re-selecting their pickup and drop-off locations, rather than forcing them to restart the entire booking process.
   const origin = location.state?.pickup;
+  
+  const dropOff = location.state?.dropoff; 
 
   if (!origin) {
     throw new Error(
-      "Origin (pickup location) is required to book a local hourly rental.",
+      "Origin (pickup location) is required to book an airport transfer.",
     );
     // Error Boundary can catch this and show user-friendly fallback UI with option to go back to previous step
   }
-  const dropOff = location.state?.dropoff; // Optional dropoff location for display purposes, but we will not require it for booking since some rentals may not have a fixed dropoff location
+  if(!dropOff){
+    throw new Error(
+      "Drop-off location is required to book an airport transfer.",
+    );
+    // Error Boundary can catch this and show user-friendly fallback UI with option to go back to previous step
+  }
+
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -161,9 +171,15 @@ function AirportTransfer() {
       setInProgress(true);
       if (!origin) {
         const msg =
-          "Pickup location is required to book a local hourly rental.";
+          "Pickup location is required to book an airport transfer.";
         showToast(msg, "error", { position: "top-center" });
 
+        return;
+      }
+      if(!dropOff){
+        const msg =
+          "Drop-off location is required to book an airport transfer.";
+        showToast(msg, "error", { position: "top-center" });
         return;
       }
       if (!startDate) {
@@ -187,6 +203,11 @@ function AirportTransfer() {
         ),
         subtext: "Searching available cabs and packages in your area",
       };
+      if(airportPickupPreferences.placard_required && !airportPickupPreferences.placard_name){
+        const msg = "Please enter the name to be displayed on the placard.";
+        showToast(msg, "error", { position: "top-center" });
+        return;
+      }
       showOverlay(overlayProps);
       const payload = {
         trip_type,
@@ -200,6 +221,8 @@ function AirportTransfer() {
         timezone: client_timezone.timezone,
         utc_offset: client_timezone.utc_offset_minutes,
       };
+      console.log("Search payload:", payload);
+      return
       const response = await searchTrips.mutateAsync(payload);
       if (isDevMode) {
         console.log("Search response:", response);
