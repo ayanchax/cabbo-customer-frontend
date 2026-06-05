@@ -15,3 +15,4 @@ export {PageHeader} from "./PageHeader";
 export {Loader} from "./Loader";
 export {CollapsibleSection} from "./CollapsibleSection";
 export {SuccessOverlay} from "./SuccessOverlay";
+export {TogglePreference} from "./TogglePreference";

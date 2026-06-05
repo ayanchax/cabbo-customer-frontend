@@ -99,7 +99,7 @@ The driver picks up the passenger at their current location (home, hotel, office
 
 ## Luggage Fields — Why They Matter for Both Sub-types
 
-`num_large_suitcases` and `num_carryons` are retained for both pickup and drop-off because they drive vehicle boot/trunk capacity matching on the backend. A family with 3 large suitcases cannot be matched to a compact sedan. This is more critical on drop-off where all luggage loads at origin, but equally relevant on pickup.
+`num_large_suitcases` , `num_carryons` `num_backpacks` and `num_other_bags` are retained for both pickup and drop-off because they drive vehicle boot/trunk capacity matching on the backend. A family with 3 large suitcases cannot be matched to a compact sedan. This is more critical on drop-off where all luggage loads at origin, but equally relevant on pickup.
 
 ---
 

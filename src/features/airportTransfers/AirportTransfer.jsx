@@ -6,6 +6,7 @@ import {
   useTimezone,
   useOverlay,
 } from "@/hooks";
+import { Route } from "lucide-react";
 import {
   InlineDateTimePicker,
   GettingRideOptionsIllustration,
@@ -18,15 +19,11 @@ import {
   RouteTimeline,
   PageHeader,
   TripDisclaimer,
+  TogglePreference,
 } from "@/components";
-import {
-  PackageCards,
-  SelectedPackage,
-} from "@/features/localHourlyRental/components";
+import { AirportPickupDetails } from "@/features/airportTransfers/components";
 import { useLocalTripSearch } from "@/features/localHourlyRental/hooks";
-import {} from "@/components";
 import { isDevMode } from "@/api";
-import { Info } from "lucide-react";
 import {
   ROUTES,
   enrichOptionsWithRates,
@@ -86,7 +83,21 @@ function AirportTransfer() {
   const [ridePreferences, setRidePreferences] = useState({
     num_adults: 1,
     num_children: 0,
+    num_large_suitcases: 0,
+    num_carryons: 0,
+    num_backpacks: 0,
+    num_other_bags: 0,
+    toll_road_preferred:
+      trip_type === TRIP_TYPES.AIRPORT_DROPOFF ? true : false, // Set default toll road preference based on trip type to return more relevant options based on their preference.
   }); // Example additional preferences
+  
+  // Preferences specific to airport pickup (optional, only applicable for airport pickup trip type)
+  const [airportPickupPreferences, setAirportPickupPreferences] = useState({
+    flight_number: null,
+    terminal_number: null,
+    placard_required: false,
+    placard_name: null,
+  });
   const [inProgress, setInProgress] = useState(false);
   const [searchResults, setSearchResults] = useState(null); // Store search results to pass to next page
 
@@ -120,7 +131,14 @@ function AirportTransfer() {
     }
   };
 
- 
+  const getTollRoadHelperText = () => {
+    if (trip_type === TRIP_TYPES.AIRPORT_DROPOFF) {
+      return "Helps your driver choose faster routes so you can reach the airport on time. Toll charges may apply.";
+    } else {
+      return "Helps your driver choose faster routes from the airport when available. Toll charges may apply.";
+    }
+  };
+
   const AmbientIllustration = () => {
     if (trip_type === TRIP_TYPES.AIRPORT_PICKUP) {
       return (
@@ -176,6 +194,9 @@ function AirportTransfer() {
         destination: dropOff || null, // Optional, some rentals may not have fixed destination
         start_date: startDate.isoString,
         ...ridePreferences,
+        ...(trip_type === TRIP_TYPES.AIRPORT_PICKUP
+          ? airportPickupPreferences
+          : {}),
         timezone: client_timezone.timezone,
         utc_offset: client_timezone.utc_offset_minutes,
       };
@@ -244,7 +265,7 @@ function AirportTransfer() {
           {/* Header: Back Button + Title */}
           <PageHeader
             onBack={() => setSearchResults(null)}
-            title={`Available rides ${trip_type === TRIP_TYPES.AIRPORT_DROPOFF ? 'to':'from'} the airport`}
+            title={`Available rides ${trip_type === TRIP_TYPES.AIRPORT_DROPOFF ? "to" : "from"} the airport`}
             subtitle={getPageHeaderSubtitle()}
             className="px-0 mb-2"
           />
@@ -333,7 +354,9 @@ function AirportTransfer() {
                 htmlFor="startDateTime"
                 className="block text-gray-500 text-[13px] md:text-base mb-1"
               >
-                {trip_type === TRIP_TYPES.AIRPORT_DROPOFF ? 'When do you want to leave?' : 'When does your flight land?'}
+                {trip_type === TRIP_TYPES.AIRPORT_DROPOFF
+                  ? "When do you want to leave?"
+                  : "When does your flight land?"}
               </label>
               {trip_type === TRIP_TYPES.AIRPORT_PICKUP && (
                 <p className="text-sm md:text-sm text-gray-400 mb-2">
@@ -344,6 +367,38 @@ function AirportTransfer() {
                 id="startDateTime"
                 earliestRentalStartDate={earliestAirportBookingStartDate}
                 onConfirm={setStartDate}
+              />
+            </div>
+
+            {trip_type === TRIP_TYPES.AIRPORT_PICKUP && (
+              <div className="mb-4">
+                <label
+                  htmlFor="airportPickupDetails"
+                  className="block text-gray-500 text-[13px] md:text-base mb-2"
+                >
+                  Arrival details
+                </label>
+                <AirportPickupDetails
+                  id="airportPickupDetails"
+                  value={airportPickupPreferences}
+                  onChange={setAirportPickupPreferences}
+                />
+              </div>
+            )}
+
+            <div className="mb-4">
+              <TogglePreference
+                id="tollRoadPreferred"
+                title="Prefer toll roads"
+                description={getTollRoadHelperText()}
+                icon={Route}
+                checked={ridePreferences.toll_road_preferred}
+                onChange={(checked) =>
+                  setRidePreferences((prev) => ({
+                    ...prev,
+                    toll_road_preferred: checked,
+                  }))
+                }
               />
             </div>
 
@@ -361,7 +416,7 @@ function AirportTransfer() {
                 id="ridePreferences"
                 tripType={trip_type}
                 showLuggage
-                helperText="Tell us about your group and travel needs to help us match you with the most suitable ride"
+                helperText="Add passengers and luggage so we can suggest a cab with the right seating and boot space."
               />
             </div>
 

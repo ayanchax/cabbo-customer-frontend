@@ -337,6 +337,7 @@ function LocalHourlyRental() {
                 value={ridePreferences}
                 onChange={setRidePreferences}
                 id="ridePreferences"
+                helperText="Add your group size so we can suggest a comfortable ride for everyone."
               />
             </div>
 
