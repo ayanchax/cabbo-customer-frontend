@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { IdCard, Plane, Signpost } from "lucide-react";
 import { TogglePreference } from "@/components";
+import { useUIElement } from "@/hooks";
 
 function AirportPickupDetails({
   id = "airportPickupDetails",
@@ -13,13 +14,31 @@ function AirportPickupDetails({
   onChange,
   showHeader = false,
 }) {
+  const rootRef = useRef(null);
   const placardNameInputRef = useRef(null);
-
+  const { focusOnElement } = useUIElement();
+  
   useEffect(() => {
     if (value.placard_required) {
       placardNameInputRef.current?.focus();
     }
   }, [value.placard_required]);
+
+   // Focus root element when label[for=id] is clicked from parent
+    useEffect(() => {
+      if (!id) return;
+      const label = document.querySelector(`label[for='${id}']`);
+  
+      if (!label) return;
+      const handler = () => {
+        focusOnElement(rootRef);
+      };
+      label.addEventListener("click", handler);
+      return () => {
+        label.removeEventListener("click", handler);
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id]);
 
   const updateField = (field, fieldValue) => {
     const nextValue = {
@@ -41,6 +60,7 @@ function AirportPickupDetails({
 
   return (
     <div
+     ref={rootRef}
       id={id}
       tabIndex={0}
       className="w-full rounded-lg border border-gray-200 bg-gray-50/80 p-3 text-sm shadow-sm transition-all focus:outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20 focus-within:border-primary focus-within:bg-white focus-within:ring-2 focus-within:ring-primary/20 sm:p-4"
@@ -88,6 +108,11 @@ function AirportPickupDetails({
             className={inputClass}
           />
         </label>
+
+      </div>
+      {/* Helper text for why a flight number and terminal are helpful */}
+      <div className="mt-1.5 text-[11px] leading-4 text-gray-500 sm:text-xs">
+        Providing your flight number and terminal helps your driver track your arrival to ensure a smooth and on-time pickup experience.
       </div>
 
       <div className="mt-3 border-t border-gray-200 pt-3">
@@ -122,8 +147,8 @@ function AirportPickupDetails({
               className={requiredInputClass}
             />
             <span className="mt-1.5 block text-[11px] leading-4 text-gray-500 sm:text-xs">
-              {value.placard_name || "This"} is the name your driver will
-              display at arrivals.
+              {value.placard_name && value.placard_name.trim() ? <strong>{value.placard_name}</strong> : "This"} is the name your driver will
+              display at arrivals to identify you or your guest.
             </span>
           </label>
         )}

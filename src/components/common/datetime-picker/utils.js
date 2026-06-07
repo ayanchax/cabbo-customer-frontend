@@ -30,6 +30,7 @@ export function generateTimeSlots({
   earliestStartDate,
   step = DEFAULT_MINUTE_STEP,
 }) {
+  
   if (!selectedDate) return [];
 
   const slots = [];

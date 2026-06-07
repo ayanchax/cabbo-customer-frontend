@@ -303,7 +303,7 @@ function LocalHourlyRental() {
               </label>
               <InlineDateTimePicker
                 id="startDateTime"
-                earliestRentalStartDate={earliestRentalStartDate}
+                earliestStartDate={earliestRentalStartDate}
                 onConfirm={setStartDate}
               />
             </div>

@@ -65,7 +65,7 @@ The driver picks up the passenger at their current location (home, hotel, office
 
 - **No `flight_number`** — the driver has no use for it; the passenger is at their own door
 - **No `terminal_number`** — the passenger knows their departure terminal; the driver just drops at the departure forecourt
-- **No placard info** — there is no arrivals meeting scenario
+- **No placard info** — there is no arrivals meeting scenario- driver drops the passenger from their home.
 - **`origin`** — where to pick the passenger up
 - **`start_date`** — when the driver should be at the passenger's door (passenger decides based on their own flight time + buffer)
 - **`toll_road_preferred`** — especially relevant here; passenger is time-constrained (catching a flight) and may prefer to pay a toll to avoid delays
@@ -117,10 +117,74 @@ A single `AirportTransfer.jsx` component handles both sub-types, parameterized v
 
 - Validates `trip_type` is one of `TRIP_TYPES.AIRPORT_PICKUP` or `TRIP_TYPES.AIRPORT_DROPOFF` on mount; throws on invalid/missing value
 - Conditionally renders airport-specific fields (`flight_number`, `terminal_number`, `placard_required`/`placard_name`) only for `airport_pickup`
-- Renders `toll_road_preferred` for both sub-types
+- Keeps pickup-only fields in a dedicated `airportPickupPreferences` state object and includes them in the search payload only for `airport_pickup`
+- Renders `toll_road_preferred` for both sub-types using a reusable common preference toggle
+- Keeps passenger/luggage metadata separate from route/service preferences:
+  - `RideMetaDataPreferences` handles capacity matching (`num_adults`, `num_children`, luggage counts)
+  - `TogglePreference` handles generic yes/no preferences such as toll roads
+  - `AirportPickupDetails` handles airport-pickup operational details
 - Uses different page header copy per sub-type:
   - Pickup: title `"Airport pickup"`, label `"Schedule a ride from the airport to anywhere"`
   - Drop-off: title `"Airport drop-off"`, label `"Schedule a ride to the airport from anywhere"`
+
+---
+
+## Cost-impacting Add-ons
+
+Some airport transfer preferences can affect the final fare:
+
+- **`toll_road_preferred`** - allows the backend to include applicable toll-road charges when toll routes are preferred.
+- **`placard_required`** - enables name-board pickup at arrivals. A nominal placard charge may apply because the driver/operator prepares the name board and waits at arrivals.
+
+The exact charge should not be fetched or displayed before the customer searches for rides. The actual toll and placard charges are calculated by the backend during search based on airport, route, region, and applicable pricing rules.
+
+Frontend disclosure should be staged:
+
+- On the search form, use lightweight helper copy such as "Toll charges may apply" or "A nominal placard charge may apply."
+- On the ride-options screen, show compact included-service pills only when relevant, for example `Includes tolls` and `Includes name board pickup`.
+- On the booking/payment confirmation step, show a stronger disclaimer that selected add-on services are included in the fare and cannot be removed after booking confirmation without repricing or support intervention.
+
+Once the booking is confirmed and the advance amount is paid, cost-impacting services should be treated as locked:
+
+- `toll_road_preferred` cannot be opted out from the confirmed booking.
+- `placard_required` cannot be removed from the confirmed booking.
+- `placard_name` may remain editable if placard service was already selected, because changing the displayed name does not change price.
+
+Non-cost-impacting operational fields may remain editable after booking confirmation where operationally safe:
+
+- `flight_number`
+- `terminal_number`
+- special requests
+
+---
+
+## Ride Options Display
+
+The ride-options screen should stay focused on comparing available rides rather than repeating every search preference. Passenger count, luggage count, flight number, terminal number, toll preference, and placard preference are search inputs used to tune matching, pricing, and ranking.
+
+Recommended display order after search:
+
+1. `PageHeader`
+2. `RouteTimeline`
+3. `RideTimings`
+4. Included-service pills, only if applicable
+5. `TripOptionsList`
+6. `TripDisclaimer`
+
+Included-service pills should be shown once near the search context, not repeated heavily on every option card, when the services apply to all returned options. Example pills:
+
+- `Includes tolls`
+- `Includes name board pickup`
+
+`TripOptionCard` should remain focused on the ride option itself:
+
+- cab type and cab details
+- fuel type or relevant vehicle metadata
+- rate summary
+- total fare
+- reserve button
+
+Airport operational details such as flight number, terminal number, and placard name should not be shown prominently on the ride-options screen unless they are needed for user correction or confirmation. They are more appropriate for the booking summary or post-booking operational details.
 
 ---
 
