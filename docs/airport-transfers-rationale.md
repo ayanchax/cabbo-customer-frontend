@@ -142,6 +142,7 @@ Frontend disclosure should be staged:
 
 - On the search form, use lightweight helper copy such as "Toll charges may apply" or "A nominal placard charge may apply."
 - On the ride-options screen, show compact included-service pills only when relevant, for example `Includes tolls` and `Includes name board pickup`.
+- On the booking/payment confirmation step, rely on the fare breakdown as the source of truth for actual charges. Do not repeat included-service pills if the fare breakdown already shows toll, parking, placard, or similar add-on charges.
 - On the booking/payment confirmation step, show a stronger disclaimer that selected add-on services are included in the fare and cannot be removed after booking confirmation without repricing or support intervention.
 
 Once the booking is confirmed and the advance amount is paid, cost-impacting services should be treated as locked:
@@ -185,6 +186,30 @@ Included-service pills should be shown once near the search context, not repeate
 - reserve button
 
 Airport operational details such as flight number, terminal number, and placard name should not be shown prominently on the ride-options screen unless they are needed for user correction or confirmation. They are more appropriate for the booking summary or post-booking operational details.
+
+---
+
+## Booking/Payment Display
+
+The booking/payment confirmation page has more pricing detail than the ride-options page. Once a customer selects a ride option, the fare breakdown should become the primary place where cost-impacting services are shown.
+
+For this reason, `IncludedServicePills` should generally not be shown on the payment confirmation page when the fare breakdown already lists the relevant charges, such as:
+
+- `Toll`
+- `Parking`
+- `Placard Charge`
+
+Repeating the same services as pills on the payment page creates decorative duplication and makes the page feel busier without adding clarity. The fare breakdown should remain the source of truth for actual charge names and amounts.
+
+If selected add-ons are locked after confirmation, use a concise disclaimer near the payment action or fare breakdown instead of repeating pills:
+
+> Selected add-on services are included in this fare. Once confirmed, toll-road preference and placard service cannot be removed from the booking.
+
+This keeps the product flow clean:
+
+- ride-options page: lightweight included-service pills for quick fare context
+- payment confirmation page: fare breakdown for exact charges, plus lock-in disclaimer if needed
+- post-booking details page: actual fare breakdown and operational details, not decorative service pills by default
 
 ---
 
