@@ -42,6 +42,14 @@ const AMENITIES = [
 ];
 
 function InCarAmenities(props) {
+
+  // Check if at least one amenity is available (not false or undefined)
+  const hasAmenities = AMENITIES.some(
+    ({ key }) => props[key] !== false && props[key] !== undefined,
+  );
+  if (!hasAmenities) {
+    return null; // Don't render the section if no amenities are available
+  }
   // By default, show all amenities as available unless specified otherwise
   return (
     <div className={`${props.className}`}>
@@ -52,7 +60,7 @@ function InCarAmenities(props) {
       )}
       <div className={`flex flex-wrap gap-4`}>
         {AMENITIES.map(({ key, label, icon }) =>
-          props[key] !== false ? (
+          props[key] !== false && props[key] !== undefined ? (
             <div
               key={key}
               className="flex flex-col items-center text-xs text-gray-700 min-w-14"

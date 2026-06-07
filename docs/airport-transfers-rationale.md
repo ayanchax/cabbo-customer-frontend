@@ -188,6 +188,45 @@ Airport operational details such as flight number, terminal number, and placard 
 
 ---
 
+## Included Airport Service Mapping
+
+Included airport service pills are a frontend display model derived from airport transfer preferences and backend pricing facts. They are not returned as React-ready UI from the backend because the backend should not know about frontend icons, component names, visual labels, or responsive layout decisions.
+
+The backend remains responsible for returning factual data such as:
+
+- `trip_type`
+- `toll_road_preferred`
+- `placard_required`
+- pricing breakdown values such as toll, parking, and placard charges
+- metadata inclusions/exclusions
+
+The frontend is responsible for translating those facts into display-ready service items such as:
+
+- `Tolls`
+- `Parking`
+- `Placard`
+
+This mapping should live in the airport transfer feature layer, for example in `src/features/airportTransfers/hooks/useAirportPickupServices.js`, because:
+
+- the service labels and icons are airport-transfer-specific UI concerns
+- the same service pills may be needed in multiple airport transfer surfaces:
+  - ride-options page
+  - booking review/confirmation page
+  - post-booking details page
+- centralizing the mapping prevents duplicate conditional logic across these screens
+- memoizing the mapping keeps derived UI service definitions stable across renders
+- the logic can evolve with airport-specific rules without polluting common components
+
+`IncludedServicePills` should stay a presentational component. It should render whatever display-ready services it receives, while `useAirportPickupServices` decides which airport services apply for a given preferences object.
+
+This keeps responsibilities clean:
+
+- backend: pricing facts and persisted preferences
+- airport feature hook: derive airport service display items
+- UI component: render compact pills
+
+---
+
 ## Overlay Copy (SearchCard Transition)
 
 When the user is navigated from `SearchCard` to the airport transfers screen, a 1.2s overlay is shown as transitional reassurance. Copy is differentiated by sub-type:

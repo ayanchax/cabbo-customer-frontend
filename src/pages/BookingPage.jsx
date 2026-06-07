@@ -33,7 +33,9 @@ function BookingPage() {
     ),
   );
   // Future: const OutstationBooking = lazy(() => import("@/features/outstation/OutstationBooking"));
-  // Future: const AirportBooking = lazy(() => import("@/features/airport/AirportBooking"));
+  const AirportTransferBooking = lazy(() => import("@/features/airportTransfers/AirportTransferBooking").then(
+    (m) => ({ default: m.AirportTransferBooking }),
+  ));
 
   useEffect(() => {
     if (!bookingPayload || hasBookedRef.current) return;
@@ -82,10 +84,10 @@ function BookingPage() {
     // case TRIP_TYPES.OUTSTATION:
     //   BookingComponent = <OutstationBooking {...bookingOrderData} />;
     //   break;
-    // case TRIP_TYPES.AIRPORT_PICKUP:
-    // case TRIP_TYPES.AIRPORT_DROPOFF:
-    //   BookingComponent = <AirportBooking {...bookingOrderData} />;
-    //   break;
+    case TRIP_TYPES.AIRPORT_PICKUP:
+    case TRIP_TYPES.AIRPORT_DROPOFF:
+      BookingComponent = <AirportTransferBooking orderData={bookingOrderData} bookingData={bookingPayload} />;
+      break;
     default:
       throw new Error("Unsupported trip type. Cannot render booking details.");
     // Error Boundary can catch this and show user-friendly fallback UI

@@ -1,0 +1,65 @@
+---
+
+# Trip Pricing and Configuration Changes (2026-02-02)
+
+## Scenario: Configuration Changes After Trip Booking
+
+### Context:
+- A trip's pricing is calculated based on the configuration (e.g., per km rate, included km, platform fee, etc.) active at the time of booking.
+- Once a trip is booked, its pricing is **locked** and does not change, even if the configuration is updated later or immediately.
+
+### Example:
+1. **Initial Configuration:**
+   - Per km rate: ₹13
+   - Included km per day: 300 km
+   - Platform fee: ₹539
+   - Driver allowance: ₹400/day
+
+2. **Trip Details:**
+   - Trip duration: 4 days
+   - Total km: 1200 km (300 km/day included)
+   - Base fare: ₹13 × 1200 = ₹15,600
+   - Driver allowance: ₹400 × 4 = ₹1,600
+   - Platform fee: ₹539
+   - Final price breakdown:
+     ```json
+     {
+       "base_fare": 15600.0,
+       "permit_fee": 0.0,
+       "platform_fee": 539.0,
+       "driver_allowance": 1600.0
+     }
+     ```
+
+3. **Configuration Change:**
+   - After the trip is booked, the per km rate is updated to ₹14 for the same state.
+   - This change does **not** affect the pricing of the already booked trip.
+
+4. **Outcome:**
+   - The trip retains the original pricing (based on ₹13 per km) because it was booked under the previous configuration.
+
+---
+
+### Key Principles:
+1. **Immutable Pricing:**
+   - Once a trip is booked, its pricing is finalized and stored in the trip record. It is not affected by future configuration changes.
+
+2. **No Configuration Tracking in Trip Records:**
+   - The trip record does not store configuration-specific details (e.g., per km rate, included km) to avoid unnecessary complexity.
+   - Instead, the **final price breakdown** is stored in the trip record for reference.
+
+3. **Configuration Changes Apply Only to New Trips:**
+   - Any updates to the configuration (e.g., per km rate, platform fee) apply only to trips booked after the change.
+
+---
+
+### Benefits of This Approach:
+- **Simplicity:** The system remains lightweight and easy to maintain.
+- **Consistency:** Pricing for a trip remains consistent and predictable for both customers and drivers.
+- **Transparency:** The stored price breakdown provides a clear audit trail for each trip.
+
+---
+
+### Notes:
+- This principle applies to all trip types (e.g., local, outstation, airport).
+- If there is ever a need to explain or audit a trip's pricing, the stored price breakdown in the trip record is the single source of truth.

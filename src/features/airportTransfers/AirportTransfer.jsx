@@ -21,8 +21,14 @@ import {
   TripDisclaimer,
   TogglePreference,
 } from "@/components";
-import { AirportPickupDetails } from "@/features/airportTransfers/components";
-import { useLocalTripSearch } from "@/features/localHourlyRental/hooks";
+import {
+  AirportPickupDetails,
+  IncludedServicePills,
+} from "@/features/airportTransfers/components";
+import {
+  useAirportPickupServices,
+  useAirportTripSearch,
+} from "@/features/airportTransfers/hooks";
 import { isDevMode } from "@/api";
 import {
   ROUTES,
@@ -36,7 +42,7 @@ function AirportTransfer() {
   const location = useLocation();
   const { timezone: client_timezone } = useTimezone();
   const { showOverlay, hideOverlay } = useOverlay();
-  const searchTrips = useLocalTripSearch();
+  const searchTrips = useAirportTripSearch();
   // Origin is passed in navigation state from previous step
 
   //Origin and drop off are required for airport transfers, but we will do validation and show error if they are not present in the navigation state, rather than blocking the entire flow by making them required in the type definition of the navigation state, because there is a possibility that these values might not be passed correctly from the previous step due to a bug or some unexpected issue, and we don't want to completely block the user from booking an airport transfer in that case. By allowing the flow to continue and showing a user-friendly error message about missing data, we can still allow the user to book an airport transfer by going back and re-selecting their pickup and drop-off locations, rather than forcing them to restart the entire booking process.
@@ -223,8 +229,7 @@ function AirportTransfer() {
         timezone: client_timezone.timezone,
         utc_offset: client_timezone.utc_offset_minutes,
       };
-      console.log("Search payload:", payload);
-      return;
+      
       const response = await searchTrips.mutateAsync(payload);
       if (isDevMode) {
         console.log("Search response:", response);
@@ -272,6 +277,8 @@ function AirportTransfer() {
     searchResults?.preferences?.timezone ||
     DEFAULT_USER_TIMEZONE;
 
+  const includedServices = useAirportPickupServices(searchResults?.preferences);
+
   if (searchResults) {
     return (
       <div
@@ -318,6 +325,12 @@ function AirportTransfer() {
               <div className="py-1">
                 <hr className="border-t border-gray-300" />
               </div>
+
+              {/* Ride add-on for service pills for cost-impacting selections like toll road preference and placard */}
+              <IncludedServicePills
+                services={includedServices}
+                className="mt-3 mb-1"
+              />
 
               {/* Trip options list  */}
               <TripOptionsList
@@ -441,7 +454,7 @@ function AirportTransfer() {
                 id="ridePreferences"
                 tripType={trip_type}
                 showLuggage
-                helperText="Add passengers and luggage so we can suggest a cab with enough seating and boot space."
+                helperText="Add passengers and luggage so we can suggest a cab with optimal seating and boot space."
               />
             </div>
 
