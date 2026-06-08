@@ -155,6 +155,16 @@ function AirportTransfer() {
     }
   };
 
+const getOverlaySubtext = () => {
+  if (trip_type === TRIP_TYPES.AIRPORT_DROPOFF) {
+    return "Finding reliable rides so you can reach the airport on time.";
+  } else if (trip_type === TRIP_TYPES.AIRPORT_PICKUP) {
+    return "Finding suitable pickup rides just around your landing time.";
+  } else {
+    return "Finding airport transfer rides matched to your preferences.";
+  }
+};
+
   const AmbientIllustration = () => {
     if (trip_type === TRIP_TYPES.AIRPORT_PICKUP) {
       return (
@@ -206,7 +216,7 @@ function AirportTransfer() {
         illustration: (
           <GettingRideOptionsIllustration className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />
         ),
-        subtext: "Searching available cabs and packages in your area",
+        subtext: getOverlaySubtext(),
       };
       if (
         airportPickupPreferences.placard_required &&
@@ -229,6 +239,7 @@ function AirportTransfer() {
         timezone: client_timezone.timezone,
         utc_offset: client_timezone.utc_offset_minutes,
       };
+      
       
       const response = await searchTrips.mutateAsync(payload);
       if (isDevMode) {

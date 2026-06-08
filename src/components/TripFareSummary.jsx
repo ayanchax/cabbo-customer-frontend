@@ -104,7 +104,7 @@ function TripFareSummary({ fareData, className = "" }) {
       {hasBreakdown && (
         <CollapsibleSection
           title="Fare Breakdown"
-          titleClassName="text-gray-500 text-sm font-normal"
+          titleClassName="text-gray-500 text-sm md:text-base lg:text-md font-normal"
         >
           <TripFareBreakdown
             priceBreakdown={price_breakdown}
