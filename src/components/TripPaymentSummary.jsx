@@ -31,6 +31,8 @@ function TripPaymentSummary({ orderData, fareData, onPay = () => {} }) {
     exclusions = [],
     disclaimers = [],
     refunds_and_cancellation_policies = [],
+    locked_add_on_keys = [],
+    add_on_disclaimer = undefined,
   } = fareData || {};
 
   const importantDisclaimers = overages?.disclaimer || disclaimers || [];
@@ -94,6 +96,8 @@ function TripPaymentSummary({ orderData, fareData, onPay = () => {} }) {
             <TripFareBreakdown
               priceBreakdown={price_breakdown}
               currencySymbol={currency_symbol}
+              lockedAddOnKeys={locked_add_on_keys}
+              addOnDisclaimer={add_on_disclaimer}
               className="mt-2 bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-5 mb-1"
             />
           </CollapsibleSection>

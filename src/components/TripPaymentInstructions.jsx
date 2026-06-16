@@ -16,7 +16,7 @@ function TripPaymentInstructions({
         {reason && whyAdvancePaymentLabel && (
           <button
             type="button"
-            className="ml-1.5 inline-flex items-center gap-0.5 align-baseline text-xs font-medium text-primary hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="cursor-pointer ml-1.5 inline-flex items-center gap-0.5 align-baseline text-xs font-medium text-primary hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/20"
             onClick={() => setShowReason((current) => !current)}
             aria-expanded={showReason}
           >

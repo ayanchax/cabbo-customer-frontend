@@ -193,7 +193,7 @@ Airport operational details such as flight number, terminal number, and placard 
 
 The booking/payment confirmation page has more pricing detail than the ride-options page. Once a customer selects a ride option, the fare breakdown should become the primary place where cost-impacting services are shown.
 
-For this reason, `IncludedServicePills` should generally not be shown on the payment confirmation page when the fare breakdown already lists the relevant charges, such as:
+For this reason, `IncludedServicePills` should not be shown on the payment confirmation page when the fare breakdown already lists the relevant charges, such as:
 
 - `Toll`
 - `Parking`
@@ -201,7 +201,7 @@ For this reason, `IncludedServicePills` should generally not be shown on the pay
 
 Repeating the same services as pills on the payment page creates decorative duplication and makes the page feel busier without adding clarity. The fare breakdown should remain the source of truth for actual charge names and amounts.
 
-If selected add-ons are locked after confirmation, use a concise disclaimer near the payment action or fare breakdown instead of repeating pills:
+Since selected add-ons are locked after confirmation, use a concise disclaimer near the payment action or fare breakdown instead of repeating pills:
 
 > Selected add-on services are included in this fare. Once confirmed, toll-road preference and placard service cannot be removed from the booking.
 
@@ -209,7 +209,7 @@ This keeps the product flow clean:
 
 - ride-options page: lightweight included-service pills for quick fare context
 - payment confirmation page: fare breakdown for exact charges, plus lock-in disclaimer if needed
-- post-booking details page: actual fare breakdown and operational details, not decorative service pills by default
+- post-booking details page:  fare breakdown and operational details, not decorative service pills by default
 
 ---
 

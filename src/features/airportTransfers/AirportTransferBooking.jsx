@@ -15,7 +15,9 @@ import { isDevMode } from "@/api";
 import { SuccessOverlay } from "@/components";
 import { DEFAULT_USER_TIMEZONE, TRIP_TYPES } from "@/utils";
 function AirportTransferBooking({ orderData, bookingData }) {
+  if (isDevMode) {
   console.log(bookingData);
+  }
   const navigate = useNavigate();
   const { timezone: client_timezone } = useTimezone();
 
@@ -55,15 +57,35 @@ function AirportTransferBooking({ orderData, bookingData }) {
     inventory_cab_names: selectedFleet?.inventory_cab_names || null,
   };
 
+  const priceBreakdown = bookingData?.option?.price_breakdown || null;
+  const lockedAddOnKeys = [];
+
+  if (
+    bookingData?.preferences?.toll_road_preferred &&
+    priceBreakdown?.toll
+  ) {
+    lockedAddOnKeys.push("toll");
+  }
+
+  if (
+    bookingData?.preferences?.placard_required &&
+    priceBreakdown?.placard_charge
+  ) {
+    lockedAddOnKeys.push("placard_charge");
+  }
+
   const fareData = {
     total_price: bookingData?.option?.total_price || null,
-    price_breakdown: bookingData?.option?.price_breakdown || null,
+    price_breakdown: priceBreakdown,
     overages: bookingData?.option?.overages || null,
     inclusions: bookingData?.metadata?.inclusions || null,
     exclusions: bookingData?.metadata?.exclusions || null,
     disclaimers: bookingData?.disclaimers || null,
     refunds_and_cancellation_policies:
       bookingData?.refunds_and_cancellation_policies || null,
+    locked_add_on_keys: lockedAddOnKeys,
+    add_on_disclaimer:
+      "Selected add-on services are included in this fare. Once confirmed, they cannot be removed from the booking.",
   };
 
   const server_timezone = bookingData?.preferences?.timezone || null;
