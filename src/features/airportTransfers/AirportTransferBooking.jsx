@@ -14,9 +14,10 @@ import { useTimezone, useRazorPay, useToast } from "@/hooks";
 import { isDevMode } from "@/api";
 import { SuccessOverlay } from "@/components";
 import { DEFAULT_USER_TIMEZONE, TRIP_TYPES } from "@/utils";
+import { useAirportTransferServices } from "./hooks/useAirportTransferServices";
 function AirportTransferBooking({ orderData, bookingData }) {
   if (isDevMode) {
-  console.log(bookingData);
+    console.log(bookingData);
   }
   const navigate = useNavigate();
   const { timezone: client_timezone } = useTimezone();
@@ -45,7 +46,7 @@ function AirportTransferBooking({ orderData, bookingData }) {
     );
     // Error Boundary can catch this and show user-friendly fallback UI with option to go back to previous step
   }
-  
+
   const selectedFleet = orderData?.fleet || null;
 
   const fleet = {
@@ -58,21 +59,10 @@ function AirportTransferBooking({ orderData, bookingData }) {
   };
 
   const priceBreakdown = bookingData?.option?.price_breakdown || null;
-  const lockedAddOnKeys = [];
-
-  if (
-    bookingData?.preferences?.toll_road_preferred &&
-    priceBreakdown?.toll
-  ) {
-    lockedAddOnKeys.push("toll");
-  }
-
-  if (
-    bookingData?.preferences?.placard_required &&
-    priceBreakdown?.placard_charge
-  ) {
-    lockedAddOnKeys.push("placard_charge");
-  }
+  const { lockedAddOnKeys, pageHeaderLabel } = useAirportTransferServices(
+    { ...bookingData?.preferences, trip_type: bookingData?.trip_type },
+    priceBreakdown,
+  );
 
   const fareData = {
     total_price: bookingData?.option?.total_price || null,
@@ -85,20 +75,13 @@ function AirportTransferBooking({ orderData, bookingData }) {
       bookingData?.refunds_and_cancellation_policies || null,
     locked_add_on_keys: lockedAddOnKeys,
     add_on_disclaimer:
-      "Selected add-on services are included in this fare. Once confirmed, they cannot be removed from the booking.",
+      "The add-ons you selected are included in your total fare and cannot be removed after you confirm the booking.",
   };
 
   const server_timezone = bookingData?.preferences?.timezone || null;
-
-  const getPageHeaderLabel = () => {
-    if (bookingData?.trip_type === TRIP_TYPES.AIRPORT_PICKUP) {
-      return "Airport pickup";
-    } else if (bookingData?.trip_type === TRIP_TYPES.AIRPORT_DROPOFF) {
-      return "Airport drop-off";
-    } else {
-      return "Airport transfer";
-    }
-  };
+  
+  
+   
   const handlePay = async () => {
     if (inProgressPayment) {
       // Prevent multiple clicks on Pay button
@@ -167,7 +150,7 @@ function AirportTransferBooking({ orderData, bookingData }) {
           onBack={() => navigate(-1)}
           title="Review and confirm your booking"
           className="px-0 mb-4"
-          label={getPageHeaderLabel()}
+          label={pageHeaderLabel}
         />
         <div className="px-4">
           <div className="py-2"></div>
@@ -181,7 +164,6 @@ function AirportTransferBooking({ orderData, bookingData }) {
             dropoffLocation={dropOff}
             className="mb-4"
           />
-          
 
           {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
           <RideTimings
@@ -204,8 +186,6 @@ function AirportTransferBooking({ orderData, bookingData }) {
               />
             </div>
           )}
-
-           
 
           {/* Payment summary and action */}
           {orderData && bookingData && (

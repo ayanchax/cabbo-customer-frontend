@@ -10,7 +10,8 @@ import {
 import { useTimezone } from "@/hooks";
 import { isDevMode } from "@/api";
 
-import { DEFAULT_USER_TIMEZONE } from "@/utils";
+import { DEFAULT_USER_TIMEZONE, TRIP_TYPES } from "@/utils";
+import { useAirportTransferServices } from "./hooks/useAirportTransferServices";
 function AirportTransferBookingDetail({ bookingDetail = {} }) {
   const { timezone: client_timezone } = useTimezone();
 
@@ -27,6 +28,12 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     destination,
     start_datetime,
     timezone: server_timezone,
+    trip_type={
+      description:'',
+      display_name:'',
+      trip_type:'',
+    },
+    price_breakdown
   } = bookingDetail;
   const dropOff = destination || null;
   
@@ -51,11 +58,14 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     ...fleet,
   };
 
+  const { lockedAddOnKeys, pageHeaderLabel } = useAirportTransferServices({...bookingDetail, trip_type: trip_type?.trip_type }, price_breakdown);
+
+
   const fareData = {
     advance_payment: bookingDetail?.advance_payment || null,
     balance_payment: bookingDetail?.balance_payment || null,
     total_price: bookingDetail?.final_price || null,
-    price_breakdown: bookingDetail?.price_breakdown || null,
+    price_breakdown: price_breakdown,
     overages: bookingDetail?.overages || null,
     inclusions: bookingDetail?.inclusions || null,
     exclusions: bookingDetail?.exclusions || null,
@@ -63,7 +73,13 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     refunds_and_cancellation_policies:
       bookingDetail?.refund_and_cancellation_policy || null,
     currency: bookingDetail?.currency || null,
+    locked_add_on_keys: lockedAddOnKeys,
+     
   };
+
+   
+
+    
   return (
     <div
       className={` relative
@@ -84,7 +100,7 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
         <PageHeader
           title={`Your booking - ${booking_id}`} // Display booking ID in the header, fallback to "N/A" if not available
           className="px-0 mb-4"
-          label="Hourly Rental"
+          label={pageHeaderLabel}
         />
         <div className="px-4">
           <div className="py-2"></div>

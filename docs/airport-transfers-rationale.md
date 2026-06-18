@@ -185,7 +185,9 @@ Included-service pills should be shown once near the search context, not repeate
 - total fare
 - reserve button
 
-Airport operational details such as flight number, terminal number, and placard name should not be shown prominently on the ride-options screen unless they are needed for user correction or confirmation. They are more appropriate for the booking summary or post-booking operational details.
+Airport operational details such as flight number, terminal number, and placard name should not be shown on the ride-options screen. They should also be omitted from the pre-confirmation booking/payment page so that the customer can stay focused on the selected cab, route, fare, terms, and payment action.
+
+These operational details become relevant after the booking is confirmed, when they help the customer, driver, and dispatch team manage the airport pickup.
 
 ---
 
@@ -203,13 +205,61 @@ Repeating the same services as pills on the payment page creates decorative dupl
 
 Since selected add-ons are locked after confirmation, use a concise disclaimer near the payment action or fare breakdown instead of repeating pills:
 
-> Selected add-on services are included in this fare. Once confirmed, toll-road preference and placard service cannot be removed from the booking.
+> The add-ons you selected are included in your total fare and cannot be removed after you confirm the booking.
+
+Within the fare breakdown, user-selected and cost-impacting items such as `toll` and `placard_charge` may receive a small `Add-on` tag. This connects the charge to the customer's earlier selection without repeating a separate included-services section.
+
+Airport parking should not receive an `Add-on` tag. Parking is a standard mandatory charge for airport pickup where the driver must enter or wait at arrivals; it is not an optional service selected by the customer. Its amount remains visible as a normal fare line, while the backend-generated important-information disclaimer explains its inclusion and other fare conditions.
+
+The backend-generated disclaimer and frontend add-on lock-in message serve different purposes:
+
+- the backend disclaimer explains fare scope, included charges, and situations where extra charges may apply
+- the frontend add-on message explains that customer-selected, cost-impacting services cannot be removed after confirmation
+
+Both may be shown without being redundant.
+
+The pre-confirmation page should not display airport pickup operational metadata such as:
+
+- `flight_number`
+- `terminal_number`
+- `placard_name`
+
+These fields do not help the customer review price or complete payment. Showing them here would add form-like detail to a screen whose main task is fare review and confirmation.
 
 This keeps the product flow clean:
 
 - ride-options page: lightweight included-service pills for quick fare context
-- payment confirmation page: fare breakdown for exact charges, plus lock-in disclaimer if needed
-- post-booking details page:  fare breakdown and operational details, not decorative service pills by default
+- payment confirmation page: fare breakdown for exact charges, add-on tags for selected locked services, and a lock-in disclaimer
+- post-booking details page: fare breakdown and airport operational details, not decorative service pills by default
+
+---
+
+## Post-booking Operational Details
+
+Airport pickup operational metadata should first be presented after successful booking confirmation. At that point it becomes actionable booking information rather than search-form input.
+
+The confirmed booking details page may show:
+
+- flight number
+- terminal number
+- placard name, when placard service was selected
+
+Where operationally safe, these non-cost-impacting values may be editable for a confirmed trip:
+
+- `flight_number`
+- `terminal_number`
+- `placard_name`, only when `placard_required` was already purchased
+
+Changing these values does not remove or reprice the selected service. Cost-impacting choices remain locked:
+
+- toll-road preference cannot be removed
+- placard service cannot be removed
+- parking remains part of the airport pickup fare where applicable
+
+This timing follows a focused booking flow:
+
+- before confirmation, show only information needed to review and pay
+- after confirmation, show operational information needed to manage and fulfil the trip
 
 ---
 
@@ -231,18 +281,18 @@ The frontend is responsible for translating those facts into display-ready servi
 - `Parking`
 - `Placard`
 
-This mapping should live in the airport transfer feature layer, for example in `src/features/airportTransfers/hooks/useAirportPickupServices.js`, because:
+This mapping should live in the airport transfer feature layer, for example in `src/features/airportTransfers/hooks/useAirportTransferServices.js`, because:
 
 - the service labels and icons are airport-transfer-specific UI concerns
 - the same service pills may be needed in multiple airport transfer surfaces:
   - ride-options page
-  - booking review/confirmation page
-  - post-booking details page
 - centralizing the mapping prevents duplicate conditional logic across these screens
 - memoizing the mapping keeps derived UI service definitions stable across renders
 - the logic can evolve with airport-specific rules without polluting common components
 
-`IncludedServicePills` should stay a presentational component. It should render whatever display-ready services it receives, while `useAirportPickupServices` decides which airport services apply for a given preferences object.
+`IncludedServicePills` should stay a presentational component for the ride-options page. It should render whatever display-ready services it receives, while `useAirportTransferServices` decides which airport services apply for a given preferences object.
+
+The same feature-level mapping may separately derive locked fare-breakdown keys for the payment page. This is UI classification based on authoritative backend preferences and calculated price-breakdown values; it does not replace backend pricing or business-rule enforcement.
 
 This keeps responsibilities clean:
 

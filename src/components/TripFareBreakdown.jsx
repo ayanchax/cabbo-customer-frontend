@@ -6,7 +6,7 @@ function TripFareBreakdown({
   priceBreakdown,
   currencySymbol,
   lockedAddOnKeys = [],
-  addOnDisclaimer = "Add-on charges are included in this fare and cannot be removed after booking is confirmed.",
+  addOnDisclaimer = null,
   className = "",
 }) {
   const lockedAddOnKeySet = new Set(lockedAddOnKeys);
@@ -24,7 +24,7 @@ function TripFareBreakdown({
             <li key={key} className="flex justify-between">
               <span className="flex items-center gap-2 capitalize">
                 {key.replace(/_/g, " ")}
-                {lockedAddOnKeySet.has(key) && (
+                { lockedAddOnKeySet && lockedAddOnKeySet.size > 0 && lockedAddOnKeySet.has(key) && (
                   <span className="rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
                     Add-on
                   </span>
@@ -34,14 +34,14 @@ function TripFareBreakdown({
             </li>
           ))}
       </ul>
-      {hasLockedAddOns && (
+      {addOnDisclaimer && hasLockedAddOns && (
         <div className="mt-3 flex items-start gap-2 rounded-md border border-blue-100 bg-blue-50/70 px-3 py-2 text-xs leading-5 text-gray-600">
           <Info
             size={14}
             className="mt-0.5 shrink-0 text-primary"
             aria-hidden="true"
           />
-          <span>{addOnDisclaimer}</span>
+          {addOnDisclaimer && <span>{addOnDisclaimer}</span>}
         </div>
       )}
     </div>

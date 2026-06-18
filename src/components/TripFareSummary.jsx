@@ -23,6 +23,7 @@ function TripFareSummary({ fareData, className = "" }) {
     disclaimers = [],
     refunds_and_cancellation_policies = [],
     currency = null,
+    locked_add_on_keys = [],
   } = fareData || {};
 
   const currencySymbol = currency?.symbol || DEFAULT_CURRENCY_SYMBOL;
@@ -109,6 +110,7 @@ function TripFareSummary({ fareData, className = "" }) {
           <TripFareBreakdown
             priceBreakdown={price_breakdown}
             currencySymbol={currencySymbol}
+            lockedAddOnKeys={locked_add_on_keys}
             className="mt-2 bg-gray-50 border border-gray-200 rounded-lg p-4"
           />
         </CollapsibleSection>

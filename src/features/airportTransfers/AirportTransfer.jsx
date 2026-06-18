@@ -26,7 +26,7 @@ import {
   IncludedServicePills,
 } from "@/features/airportTransfers/components";
 import {
-  useAirportPickupServices,
+  useAirportTransferServices,
   useAirportTripSearch,
 } from "@/features/airportTransfers/hooks";
 import { isDevMode } from "@/api";
@@ -288,7 +288,7 @@ const getOverlaySubtext = () => {
     searchResults?.preferences?.timezone ||
     DEFAULT_USER_TIMEZONE;
 
-  const includedServices = useAirportPickupServices(searchResults?.preferences);
+  const {includedServices} = useAirportTransferServices(searchResults?.preferences);
 
   if (searchResults) {
     return (
