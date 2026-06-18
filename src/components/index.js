@@ -23,3 +23,4 @@ export {RefundsAndCancellationPolicies} from "./RefundsAndCancellationPolicies";
 export {PayAndConfirmBooking} from "./PayAndConfirmBooking";
 export {TripFareSummary} from "./TripFareSummary";
 export {LuggageCounter} from "./LuggageCounter";
+export { BookingDetailPageHeader } from "./BookingDetailPageHeader";

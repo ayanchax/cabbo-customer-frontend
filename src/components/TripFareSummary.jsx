@@ -6,6 +6,7 @@ import {
   RefundsAndCancellationPolicies,
   TripDisclaimer,
   TripIncExc,
+  PayRestToDriver
 } from "@/components";
 import { formatCurrency, DEFAULT_CURRENCY_SYMBOL } from "@/utils";
 
@@ -75,6 +76,10 @@ function TripFareSummary({ fareData, className = "" }) {
             </div>
           )}
         </div>
+        {typeof balance_payment === "number" && balance_payment > 0 && (
+  <PayRestToDriver className="pt-1" />
+)}
+
 
         {/* Overage rates pill */}
         {hasOverages && (

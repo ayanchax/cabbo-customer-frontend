@@ -2,23 +2,25 @@ import React from "react";
 import {
   RideTimings,
   RouteTimeline,
-  PageHeader,
+  BookingDetailPageHeader,
   TripFareSummary,
   TripCabDetails,
   InCarAmenities,
 } from "@/components";
-import { useTimezone } from "@/hooks";
+import { useTimezone, useBookingDetailBackNavigation } from "@/hooks";
 import { SelectedPackage } from "@/features/localHourlyRental/components";
 import { Clock3 } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-import { DEFAULT_USER_TIMEZONE , ROUTES} from "@/utils";
+import { DEFAULT_USER_TIMEZONE, ROUTES } from "@/utils";
 function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
   const { timezone: client_timezone } = useTimezone();
   const location = useLocation();
-  const navigate = useNavigate();
-  const comingFromBookingPaymentPage = location?.state?.fromBookingConfirmation || false;
-  
+  const comingFromBookingPaymentPage =
+    location?.state?.fromBookingConfirmation || false;
+  const handleBack = useBookingDetailBackNavigation(
+    comingFromBookingPaymentPage,
+  );
 
   console.log(
     "Booking Detail in LocalHourlyRentalBookingDetail:",
@@ -72,7 +74,7 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
     refunds_and_cancellation_policies:
       bookingDetail?.refund_and_cancellation_policy || null,
     currency: bookingDetail?.currency || null,
-    };
+  };
   return (
     <div
       className={` relative
@@ -90,26 +92,13 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
     >
       <div className="relative z-10">
         {/* Page header */}
-        <PageHeader
-          onBack={() => {
-            if (comingFromBookingPaymentPage) {
-              navigate(ROUTES.HOME); // Go back home if the user came from the booking payment page
-            } else {
-              navigate(-1); // Otherwise, go back one step
-            }
-          }}
-          title={
-            <span className="flex items-center gap-2">
-              <Clock3 className="h-5 w-5 text-primary" aria-hidden="true" />
-     
-              Your hourly rental booking
-            </span>
-          }
-          subtitle={`Booking ID: ${booking_id || 'Unavailable'}`}
-          subtitleClassName="break-all font-mono text-xs"
-          className="px-0 mb-4"
-          
+        <BookingDetailPageHeader
+          icon={Clock3}
+          tripLabel="hourly rental"
+          bookingId={booking_id}
+          onBack={handleBack}
         />
+
         <div className="px-4">
           <div className="py-2"></div>
 
