@@ -9,10 +9,16 @@ import {
 } from "@/components";
 import { useTimezone } from "@/hooks";
 import { SelectedPackage } from "@/features/localHourlyRental/components";
+import { Clock3 } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { DEFAULT_USER_TIMEZONE } from "@/utils";
+import { DEFAULT_USER_TIMEZONE , ROUTES} from "@/utils";
 function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
   const { timezone: client_timezone } = useTimezone();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const comingFromBookingPaymentPage = location?.state?.fromBookingConfirmation || false;
+  
 
   console.log(
     "Booking Detail in LocalHourlyRentalBookingDetail:",
@@ -85,9 +91,24 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
       <div className="relative z-10">
         {/* Page header */}
         <PageHeader
-          title={`Your booking - ${booking_id}`} // Display booking ID in the header, fallback to "N/A" if not available
+          onBack={() => {
+            if (comingFromBookingPaymentPage) {
+              navigate(ROUTES.HOME); // Go back home if the user came from the booking payment page
+            } else {
+              navigate(-1); // Otherwise, go back one step
+            }
+          }}
+          title={
+            <span className="flex items-center gap-2">
+              <Clock3 className="h-5 w-5 text-primary" aria-hidden="true" />
+     
+              Your hourly rental booking
+            </span>
+          }
+          subtitle={`Booking ID: ${booking_id || 'Unavailable'}`}
+          subtitleClassName="break-all font-mono text-xs"
           className="px-0 mb-4"
-          label="Hourly Rental"
+          
         />
         <div className="px-4">
           <div className="py-2"></div>

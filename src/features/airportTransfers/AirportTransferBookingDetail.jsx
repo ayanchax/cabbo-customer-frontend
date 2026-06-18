@@ -9,11 +9,17 @@ import {
 } from "@/components";
 import { useTimezone } from "@/hooks";
 import { isDevMode } from "@/api";
+import { Plane } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { DEFAULT_USER_TIMEZONE, TRIP_TYPES } from "@/utils";
+import { DEFAULT_USER_TIMEZONE, TRIP_TYPES, ROUTES } from "@/utils";
 import { useAirportTransferServices } from "./hooks/useAirportTransferServices";
 function AirportTransferBookingDetail({ bookingDetail = {} }) {
   const { timezone: client_timezone } = useTimezone();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const comingFromBookingPaymentPage =
+    location?.state?.fromBookingConfirmation || false;
 
   if (isDevMode) {
     console.log(
@@ -28,15 +34,14 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     destination,
     start_datetime,
     timezone: server_timezone,
-    trip_type={
-      description:'',
-      display_name:'',
-      trip_type:'',
+    trip_type = {
+      description: "",
+      display_name: "",
+      trip_type: "",
     },
-    price_breakdown
+    price_breakdown,
   } = bookingDetail;
   const dropOff = destination || null;
-  
 
   const startDate = { isoString: start_datetime || null };
   if (!origin || !dropOff || !startDate.isoString) {
@@ -58,15 +63,16 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     ...fleet,
   };
 
-  const { lockedAddOnKeys, pageHeaderLabel } = useAirportTransferServices({...bookingDetail, trip_type: trip_type?.trip_type }, price_breakdown);
-
+  const { lockedAddOnKeys, pageHeaderLabel } = useAirportTransferServices(
+    { ...bookingDetail, trip_type: trip_type?.trip_type },
+    price_breakdown,
+  );
 
   const fareData = {
     advance_payment: bookingDetail?.advance_payment || null,
     balance_payment: bookingDetail?.balance_payment || null,
     total_price: bookingDetail?.final_price || null,
     price_breakdown: price_breakdown,
-    overages: bookingDetail?.overages || null,
     inclusions: bookingDetail?.inclusions || null,
     exclusions: bookingDetail?.exclusions || null,
     disclaimers: bookingDetail?.overages?.disclaimer || null,
@@ -74,12 +80,8 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
       bookingDetail?.refund_and_cancellation_policy || null,
     currency: bookingDetail?.currency || null,
     locked_add_on_keys: lockedAddOnKeys,
-     
   };
 
-   
-
-    
   return (
     <div
       className={` relative
@@ -98,9 +100,22 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
       <div className="relative z-10">
         {/* Page header */}
         <PageHeader
-          title={`Your booking - ${booking_id}`} // Display booking ID in the header, fallback to "N/A" if not available
+          onBack={() => {
+            if (comingFromBookingPaymentPage) {
+              navigate(ROUTES.HOME); // Go back home if the user came from the booking payment page
+            } else {
+              navigate(-1); // Otherwise, go back one step
+            }
+          }}
+          title={
+            <span className="flex items-center gap-2">
+              <Plane className="h-5 w-5 text-primary" aria-hidden="true" />
+              Your {pageHeaderLabel || "Airport transfer"} booking
+            </span>
+          }
+          subtitle={`Booking ID: ${booking_id || "Unavailable"}`}
+          subtitleClassName="break-all font-mono text-xs"
           className="px-0 mb-4"
-          label={pageHeaderLabel}
         />
         <div className="px-4">
           <div className="py-2"></div>

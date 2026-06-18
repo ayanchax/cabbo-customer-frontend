@@ -5,15 +5,16 @@ function PageHeader({
   onBack, // Optional callback for back button; if not provided, back button won't render
   title = "Unknown", // Default title if not provided
   subtitle = "", // Optional subtitle to show below the title
+  subtitleClassName = "",
   className = "", // Additional class names for styling
   label = "", // Optional label to display next to the title, e.g. for status or category
 }) {
   return (
     <div className={`flex flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-2 ${className}`}>
-      <div className="flex flex-row items-center">
+      <div className="flex min-w-0 flex-row items-center">
         {onBack && (
           <button
-            className="flex items-center text-primary hover:underline text-sm font-medium cursor-pointer"
+            className="flex shrink-0 items-center text-primary hover:underline text-sm font-medium cursor-pointer"
             onClick={onBack}
             type="button"
             aria-label="Go back"
@@ -21,9 +22,15 @@ function PageHeader({
             <ArrowLeft className="mr-1 w-4 h-4" />
           </button>
         )}
-        <div className="flex flex-col">
-          <h2 className="text-xl font-bold ml-2">{title}</h2>
-          {subtitle && <p className="text-sm text-gray-500 ml-2">{subtitle}</p>}
+        <div className="flex min-w-0 flex-col">
+          <h2 className="ml-2 text-xl font-bold">{title}</h2>
+          {subtitle && (
+            <p
+              className={`ml-2 min-w-0 text-sm text-gray-500 ${subtitleClassName}`}
+            >
+              {subtitle}
+            </p>
+          )}
         </div>
         {/* On large screens, label is inline */}
         {label && (
