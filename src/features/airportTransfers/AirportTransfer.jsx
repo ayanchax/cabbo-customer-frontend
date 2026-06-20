@@ -22,7 +22,7 @@ import {
   TogglePreference,
 } from "@/components";
 import {
-  AirportPickupDetails,
+  AirportPickupDetailsManager,
   IncludedServicePills,
 } from "@/features/airportTransfers/components";
 import {
@@ -427,14 +427,16 @@ const getOverlaySubtext = () => {
                 >
                   Arrival details
                 </label>
-                <AirportPickupDetails
-                  id="airportPickupDetails"
+
+                <AirportPickupDetailsManager write id="airportPickupDetails"
+                className = "text-sm shadow-sm transition-all focus:outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20 focus-within:border-primary focus-within:bg-white focus-within:ring-2 focus-within:ring-primary/20"
                   value={airportPickupPreferences}
-                  onChange={setAirportPickupPreferences}
-                />
+                  onChange={setAirportPickupPreferences}/>
+
+
               </div>
             )}
-
+            {/* Toll road preference */}
             <div className="mb-4">
               <TogglePreference
                 id="tollRoadPreferred"

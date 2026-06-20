@@ -1,4 +1,4 @@
-import React , {useState} from "react";
+import React, { useState } from "react";
 import {
   RideTimings,
   RouteTimeline,
@@ -6,24 +6,31 @@ import {
   TripFareSummary,
   TripCabDetails,
   InCarAmenities,
-
 } from "@/components";
-import { useTimezone, useBookingDetailBackNavigation } from "@/hooks";
+import {
+  useTimezone,
+  useBookingDetailBackNavigation,
+  useEditNonCostImpactingTripFields,
+  useToast,
+} from "@/hooks";
 import { isDevMode } from "@/api";
 import { Plane } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
 import { DEFAULT_USER_TIMEZONE, TRIP_TYPES, ROUTES } from "@/utils";
 import { useAirportTransferServices } from "./hooks/useAirportTransferServices";
-import {AirportPickupOperationalDetails} from "./components/AirportPickupOperationalDetails";
+import { AirportPickupDetailsManager } from "./components/AirportPickupDetailsManager";
 function AirportTransferBookingDetail({ bookingDetail = {} }) {
   const { timezone: client_timezone } = useTimezone();
+  const { showToast } = useToast();
+
   const location = useLocation();
   const comingFromBookingPaymentPage =
     location?.state?.fromBookingConfirmation || false;
   const handleBack = useBookingDetailBackNavigation(
     comingFromBookingPaymentPage,
   );
+  const editTripApi = useEditNonCostImpactingTripFields();
   if (isDevMode) {
     console.log(
       "Booking Detail in AirportTransferBookingDetail:",
@@ -86,40 +93,61 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
   };
 
   const initialOperationalDetails = {
-  flight_number: bookingDetail?.flight_number || null,
-  terminal_number: bookingDetail?.terminal_number || null,
-  placard_required: Boolean(bookingDetail?.placard_required),
-  placard_name: bookingDetail?.placard_name || null,
-};
+    flight_number: bookingDetail?.flight_number || null,
+    terminal_number: bookingDetail?.terminal_number || null,
+    placard_required: Boolean(bookingDetail?.placard_required),
+    placard_name: bookingDetail?.placard_name || null,
+  };
 
-const [operationalDetails, setOperationalDetails] = useState(
-  initialOperationalDetails,
-);
-const [isEditingOperationalDetails, setIsEditingOperationalDetails] =
-  useState(false);
-const [isSavingOperationalDetails, setIsSavingOperationalDetails] =
-  useState(false);
+  const [operationalDetails, setOperationalDetails] = useState(
+    initialOperationalDetails,
+  );
+  const [isEditingOperationalDetails, setIsEditingOperationalDetails] =
+    useState(false);
+  const [isSavingOperationalDetails, setIsSavingOperationalDetails] =
+    useState(false);
 
-const handleEditOperationalDetails = () => {
-  setIsEditingOperationalDetails(true);
-}
+  const handleEditOperationalDetails = () => {
+    setIsEditingOperationalDetails(true);
+  };
 
-const handleSaveOperationalDetails = async () => {
-  setIsSavingOperationalDetails(true);
-  try {
-    // Here you would typically make an API call to save the operational details
-    // For example:
-    // await api.saveOperationalDetails(booking_id, operationalDetails);
-  } finally {
-    setIsSavingOperationalDetails(false);
+  const handleSaveOperationalDetails = async (details) => {
+    setIsSavingOperationalDetails(true);
+    try {
+      if (isDevMode) {
+        console.log(
+          "Saving operational details for booking ID:",
+          booking_id,
+          details,
+        );
+      }
+      const response = await editTripApi.mutateAsync({
+        bookingId: booking_id,
+        payload: details,
+      });
+      if (response && response?.message) {
+        // The API returns the unwrapped response body after a successful update.
+        setOperationalDetails(details);
+        showToast("Arrival details updated.", "success");
+      }
+    } catch (error) {
+      if (isDevMode) {
+        console.error("Error saving operational details:", error);
+      }
+      showToast(
+        "We couldn't update your arrival details. Please try again.",
+        "error",
+      );
+    } finally {
+      setIsSavingOperationalDetails(false);
+      setIsEditingOperationalDetails(false);
+    }
+  };
+
+  const handleCancelOperationalDetails = () => {
     setIsEditingOperationalDetails(false);
-  }
-};
-
-const handleCancelOperationalDetails = () => {
-  setIsEditingOperationalDetails(false);
-  setOperationalDetails(initialOperationalDetails);
-};
+    setOperationalDetails(initialOperationalDetails);
+  };
 
   return (
     <div
@@ -139,12 +167,12 @@ const handleCancelOperationalDetails = () => {
       <div className="relative z-10">
         {/* Page header */}
         <BookingDetailPageHeader
-  icon={Plane}
-  tripLabel={pageHeaderLabel || "airport transfer"}
-  bookingId={booking_id}
-  onBack={handleBack}
-/>
-        
+          icon={Plane}
+          tripLabel={pageHeaderLabel || "airport transfer"}
+          bookingId={booking_id}
+          onBack={handleBack}
+        />
+
         <div className="px-4">
           <div className="py-2"></div>
 
@@ -170,17 +198,21 @@ const handleCancelOperationalDetails = () => {
           />
 
           {trip_type?.trip_type === TRIP_TYPES.AIRPORT_PICKUP && (
-  <AirportPickupOperationalDetails
-    value={operationalDetails}
-    isEditing={isEditingOperationalDetails}
-    isSaving={isSavingOperationalDetails}
-    onChange={setOperationalDetails}
-    onEdit={handleEditOperationalDetails}
-    onSave={handleSaveOperationalDetails}
-    onCancel={handleCancelOperationalDetails}
-    className="mt-4 mb-4"
-  />
-)}
+            <AirportPickupDetailsManager
+              read
+              write
+              id="airportPickupDetails"
+              className="text-sm shadow-sm transition-all focus:outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20 focus-within:border-primary focus-within:bg-white focus-within:ring-2 focus-within:ring-primary/20"
+              value={operationalDetails}
+              isEditing={isEditingOperationalDetails}
+              isSaving={isSavingOperationalDetails}
+              onChange={setOperationalDetails}
+              onEdit={handleEditOperationalDetails}
+              onSave={handleSaveOperationalDetails}
+              onCancel={handleCancelOperationalDetails}
+              className="mt-4 mb-4"
+            />
+          )}
 
           {/* In-car amenities */}
           {bookingDetail?.in_car_amenities && (

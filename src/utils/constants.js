@@ -44,6 +44,7 @@ export const ENDPOINTS = {
             VERIFY_PAYMENT_AND_CONFIRM_TRIP: `${API_VERSION}/trips/confirm-booking`,
             CLEANUP_STAGED_TRIP: `${API_VERSION}/trips/cleanup`,
             GET_BOOKING: `${API_VERSION}/trips/bookings`, // Append booking ID to get details for specific booking
+            UPDATE_NON_COST_IMPACTING_TRIP_DETAILS: `${API_VERSION}/trips/bookings`
         },
     FLEET:{
         GET_AVAILABLE_CABS: `${API_VERSION}/trips/fleet/`,

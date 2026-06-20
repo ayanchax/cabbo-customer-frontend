@@ -8,3 +8,4 @@ export {useClassifyTripTypeMutation} from "./useClassifyTripType";
 export {useInitiateTripBookingMutation} from "./useTripBooking";
 export {useVerifyPaymentForTrip} from "./useVerifyPayment";
 export {useCleanupStagedTrip} from "./useCleanupStagedTrip";
+export {useEditNonCostImpactingTripFields} from "./useEditNonCostImpactingTripFields";
