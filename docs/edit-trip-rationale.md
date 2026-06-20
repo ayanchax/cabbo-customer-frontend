@@ -38,7 +38,7 @@ If a requested change fails any of these conditions, it should be handled throug
 
 | Field | Airport Pickup | Airport Drop-off | Local Hourly Rental | Outstation |
 |---|---:|---:|---:|---:|
-| Special request | Yes | Yes | Yes | Yes |
+| Special request | Add once | Add once | Add once | Add once |
 | Flight number | Yes | Not applicable | Not applicable | Not applicable |
 | Terminal number | Yes | Not applicable | Not applicable | Not applicable |
 | Placard name | Yes, only if placard service was purchased | Not applicable | Not applicable | Not applicable |
@@ -164,11 +164,19 @@ On the post-booking page, add-on tags may remain visible beside relevant fare li
 
 ## Special Requests
 
-Special requests may be editable across trip types because they are generally informational and do not automatically change fare or booking scope.
+Special requests may be added once across trip types because they are generally informational and do not automatically change fare or booking scope.
 
-They should still be treated as requests, not guarantees. The UI and backend should avoid implying that every request can be fulfilled.
+For v1:
 
-If a special request would materially affect vehicle, route, price, or driver obligations, support or backend validation may reject it or require a new booking.
+- show the add action only when no special request exists
+- explain that requests are subject to availability and are not guaranteed
+- ask for confirmation before submission
+- make the request read-only after it is submitted
+- do not provide customer self-service editing or deletion
+
+The add-once rule avoids changing driver expectations repeatedly after dispatch planning has begun. The backend should enforce allowed booking statuses, length limits, sanitization, and the one-time submission rule.
+
+If a request would materially affect vehicle, route, price, availability, safety, or driver obligations, support or backend validation may reject it or require a new booking.
 
 ---
 
@@ -224,7 +232,6 @@ For airport pickup, the editable section may contain:
 - flight number
 - terminal number
 - placard name, if placard service was purchased
-- special request
+- a one-time Add special request action, only when no request exists
 
-For airport drop-off, local hourly rental, and outstation trips, the editable section should normally contain only special requests unless future non-cost-impacting operational fields are introduced.
-
+For airport drop-off, local hourly rental, and outstation trips, the operational section should normally contain only the one-time special-request action unless future non-cost-impacting fields are introduced.
