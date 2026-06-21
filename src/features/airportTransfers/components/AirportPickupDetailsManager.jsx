@@ -33,6 +33,7 @@ function AirportPickupDetailsManager({
   onSave = () => {},
   onCancel = () => {},
   className = "",
+  helperTextLabel = "",
 }) {
   const [isEditing, setIsEditing] = useState(write && !read);
   const [draft, setDraft] = useState({
@@ -143,7 +144,11 @@ function AirportPickupDetailsManager({
     setIsEditing(false);
   };
 
-  const helperText = (read && write) ?'Helps your driver coordinate your airport pickup' :'Providing your flight number and terminal helps your driver track your arrival to ensure a smooth and on-time pickup experience.'
+  const helperText =
+    helperTextLabel ||
+    (read && write
+      ? "Helps your driver coordinate your airport pickup."
+      : "Providing your flight number and terminal helps your driver track your arrival for a smooth pickup.");
 
   const inputClass =
     "w-full rounded-md border border-gray-200 bg-white px-3 py-2.5 text-sm font-medium text-gray-800 outline-none transition-all placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:bg-gray-100";

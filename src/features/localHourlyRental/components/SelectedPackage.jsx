@@ -1,6 +1,6 @@
 import React from 'react'
 
-function SelectedPackage({selectedPackage=null, className="", header="Selected Package"}) {
+function SelectedPackage({selectedPackage=null, showDescription=true, className="", header="Selected Package"}) {
   return (
     <div className={` ${className}`}>
       
@@ -16,7 +16,7 @@ function SelectedPackage({selectedPackage=null, className="", header="Selected P
         </span>
       </div>
       {/* Best intended for */}
-      {selectedPackage?.best_intended_for &&(
+      {showDescription && selectedPackage?.best_intended_for &&(
       <p className="text-xs sm:text-sm md:text-md text-gray-500 mt-1">
           {selectedPackage?.best_intended_for}
       </p>

@@ -7,6 +7,7 @@ import {
   TripCabDetails,
   InCarAmenities,
 } from "@/components";
+import {TRIP_STATUS, TRIP_OCCURENCE_LABELS} from "@/utils";
 import { useTimezone, useBookingDetailBackNavigation } from "@/hooks";
 import { SelectedPackage } from "@/features/localHourlyRental/components";
 import { Clock3 } from "lucide-react";
@@ -33,6 +34,8 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
     destination,
     start_datetime,
     timezone: server_timezone,
+    status,
+    label=undefined, // can be upcoming, completed, cancelled, past etc.
   } = bookingDetail;
   let dropOff = destination || null;
   if (origin?.place_id === dropOff?.place_id) {
@@ -74,7 +77,12 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
     refunds_and_cancellation_policies:
       bookingDetail?.refund_and_cancellation_policy || null,
     currency: bookingDetail?.currency || null,
+    trip_status: status || null,
+    occurrence_label: label || null,
   };
+  const amenitiesLabel= status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'You will get these amenities in your cab:' : 'Amenities that were provided for this trip:';
+  const pickupLabel = status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'Pickup' : 'Pickup details';
+  
   return (
     <div
       className={` relative
@@ -97,13 +105,14 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
           tripLabel="hourly rental"
           bookingId={booking_id}
           onBack={handleBack}
+          occurenceLabel={label}
         />
 
         <div className="px-4">
           <div className="py-2"></div>
 
           {/* Cab details */}
-          <TripCabDetails cabDetails={fleetData} className="mb-4  py-2 px-0" />
+          <TripCabDetails showDescription={false} showInventoryCabNames={false} cabDetails={fleetData} className="mb-4  py-2 px-0" />
 
           {/* Route timeline */}
           <RouteTimeline
@@ -121,6 +130,8 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
               server_timezone ??
               DEFAULT_USER_TIMEZONE
             }
+            pickupLabel={pickupLabel}
+
           />
 
           {/* Selected package */}
@@ -128,6 +139,7 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
             <SelectedPackage
               selectedPackage={selectedPackage}
               className=" mt-2 md:mb-4 mb-4"
+              showDescription={false}
             />
           )}
 
@@ -137,7 +149,7 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
               <InCarAmenities
                 {...bookingDetail?.in_car_amenities}
                 className=""
-                header="You will get these amenities in your cab:"
+                header={amenitiesLabel}
               />
             </div>
           )}

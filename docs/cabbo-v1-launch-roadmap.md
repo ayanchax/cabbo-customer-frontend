@@ -36,30 +36,27 @@ These items must be complete before accepting real bookings.
 
 ### Customer-safe Driver API
 
-The booking-detail API must not return the full internal driver record to the customer application.
+- [x] The backend booking-detail API uses a customer-safe driver DTO instead of returning the full internal driver record.
+- [x] Sensitive and internal attributes such as date of birth, address, religion, nationality, emergency contacts, bank details, payment details, amenities, and account state are excluded at the API boundary.
 
-The current sample includes data that customers do not need:
+Current customer-safe `driver` response contract:
 
-- date of birth
-- residential address
-- religion
-- nationality
-- emergency contacts
-- bank details
-- driver payment details
-- internal account fields
+```json
+{
+  "name": "Babu Driver",
+  "email": "babu@example.com",
+  "phone": "+91 9812345678",
+  "gender": "male",
+  "cab_type": "Sedan",
+  "fuel_type": "diesel",
+  "cab_model_and_make": "Maruti Swift Dzire",
+  "cab_registration_number": "KA01AB2316",
+  "avg_rating": 4,
+  "profile_picture_url": "https://example.com/driver-profile.png"
+}
+```
 
-The backend should return a customer-safe driver DTO containing only information required for the trip:
-
-- driver name
-- profile image
-- callable phone number or contact action
-- cab make/model
-- cab registration number
-- cab type and fuel type
-- rating
-
-Filtering only in React is insufficient because sensitive data would still be exposed through the network response.
+The customer frontend should consume only this DTO and must tolerate optional fields such as email, gender, rating, and profile picture being absent.
 
 ### Payment and Booking Integrity
 
@@ -258,9 +255,11 @@ Show:
 - profile photo
 - driver name
 - call action
+- email, if product design requires it
 - cab make/model
 - registration number
-- avg_rating
+- cab type and fuel type
+- average rating
 
 Do not show internal or sensitive driver attributes.
 
@@ -481,7 +480,8 @@ Test all trip types end to end:
 - outstation flow
 - My Trips page with Upcoming, Ongoing, and Past tabs
 - customer profile page with support/legal links and logout
-- safe driver DTO and driver display
+- [x] customer-safe driver DTO
+- customer-safe driver display
 - booking status display
 - call/WhatsApp support
 - add-once special request
@@ -513,7 +513,7 @@ Before outstation:
 
 1. Fix SearchCard loading/recent-selection behavior.
 2. Make `InlineDateTimePicker` controlled and restorable.
-3. Define and implement the customer-safe driver DTO contract.
+3. [x] Define and implement the customer-safe driver DTO contract.
 4. Add the shared trip-status model/component.
 
 Then:

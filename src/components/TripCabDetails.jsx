@@ -6,6 +6,8 @@ import { Cab } from "@/components";
 const MAX_CAB_MODELS_TO_SHOW = 3; // Maximum number of cab models to show in the details, if there are more we will show "+X more" text
 function TripCabDetails({
   cabDetails = null,
+  showDescription = true,
+  showInventoryCabNames = true,
   fallbackCurrencySymbol = DEFAULT_CURRENCY_SYMBOL,
   className = "",
    
@@ -45,12 +47,12 @@ function TripCabDetails({
               </span>
             )}
           </div>
-          {option?.description && (
+          {showDescription && option?.description && (
             <span className="text-xs sm:text-sm text-gray-500 font-normal mt-0.5">
               {option?.description}
             </span>
           )}
-          {option?.inventory_cab_names && Array.isArray(option.inventory_cab_names) && option?.inventory_cab_names.length > 0 && (
+          {showInventoryCabNames && option?.inventory_cab_names && Array.isArray(option.inventory_cab_names) && option?.inventory_cab_names.length > 0 && (
             <span className="text-xs sm:text-sm text-gray-500 font-normal mt-0.5">
               You may get: {option?.inventory_cab_names.slice(0, MAX_CAB_MODELS_TO_SHOW).join(", ")}
               {option?.inventory_cab_names.length > MAX_CAB_MODELS_TO_SHOW && ` +${option.inventory_cab_names.length - MAX_CAB_MODELS_TO_SHOW} more`}

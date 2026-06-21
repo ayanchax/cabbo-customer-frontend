@@ -8,6 +8,7 @@ function PageHeader({
   subtitleClassName = "",
   className = "", // Additional class names for styling
   label = "", // Optional label to display next to the title, e.g. for status or category
+  tag = null, // Optional JSX rendered beside the title
 }) {
   return (
     <div className={`flex flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-2 ${className}`}>
@@ -23,7 +24,10 @@ function PageHeader({
           </button>
         )}
         <div className="flex min-w-0 flex-col">
-          <h2 className="ml-2 text-xl font-bold">{title}</h2>
+          <div className="ml-2 flex min-w-0 flex-wrap items-center gap-2">
+            <h2 className="min-w-0 text-xl font-bold">{title}</h2>
+            {tag && <div className="shrink-0">{tag}</div>}
+          </div>
           {subtitle && (
             <p
               className={`ml-2 min-w-0 text-sm text-gray-500 ${subtitleClassName}`}

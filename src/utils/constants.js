@@ -106,3 +106,20 @@ export const DEFAULT_GEOGRAPHY = {
         utc_offset: "+05:30",
     };
 
+export const TRIP_STATUS = {
+    CONFIRMED: "confirmed",
+    ONGOING: "ongoing",
+    COMPLETED: "completed",
+    CANCELLED: "cancelled",
+    CLOSED: "closed",
+    DISPUTED: "dispute",
+}
+
+export const TRIP_OCCURENCE_LABELS={
+    UPCOMING: "upcoming",
+    ONGOING: "ongoing",
+    CANCELLED: "cancelled",
+    COMPLETED: "completed",
+    PAST: "past",
+}
+

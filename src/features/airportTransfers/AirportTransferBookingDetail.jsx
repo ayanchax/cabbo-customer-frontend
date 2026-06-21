@@ -17,7 +17,7 @@ import { isDevMode } from "@/api";
 import { Plane } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
-import { DEFAULT_USER_TIMEZONE, TRIP_TYPES, ROUTES } from "@/utils";
+import { DEFAULT_USER_TIMEZONE, TRIP_TYPES, ROUTES, TRIP_STATUS, TRIP_OCCURENCE_LABELS } from "@/utils";
 import { useAirportTransferServices } from "./hooks/useAirportTransferServices";
 import { AirportPickupDetailsManager } from "./components/AirportPickupDetailsManager";
 function AirportTransferBookingDetail({ bookingDetail = {} }) {
@@ -50,6 +50,8 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
       trip_type: "",
     },
     price_breakdown,
+    status,
+    label=undefined // can be upcoming, completed, cancelled, past etc.
   } = bookingDetail;
   const dropOff = destination || null;
 
@@ -90,6 +92,8 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
       bookingDetail?.refund_and_cancellation_policy || null,
     currency: bookingDetail?.currency || null,
     locked_add_on_keys: lockedAddOnKeys,
+    trip_status: status || null,
+    occurrence_label: label || null,
   };
 
   const initialOperationalDetails = {
@@ -149,6 +153,8 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     setOperationalDetails(initialOperationalDetails);
   };
 
+  const amenitiesLabel= status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'You will get these amenities in your cab:' : 'Amenities that were provided for this trip:';
+  const pickupLabel = status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'Pickup' : 'Pickup details';
   return (
     <div
       className={` relative
@@ -171,13 +177,14 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
           tripLabel={pageHeaderLabel || "airport transfer"}
           bookingId={booking_id}
           onBack={handleBack}
+          occurenceLabel={label}
         />
 
         <div className="px-4">
           <div className="py-2"></div>
 
           {/* Cab details */}
-          <TripCabDetails cabDetails={fleetData} className="mb-4  py-2 px-0" />
+          <TripCabDetails showDescription={false} showInventoryCabNames={false} cabDetails={fleetData} className="mb-4  py-2 px-0" />
 
           {/* Route timeline */}
           <RouteTimeline
@@ -195,14 +202,19 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
               server_timezone ??
               DEFAULT_USER_TIMEZONE
             }
+            pickupLabel={pickupLabel}
           />
 
           {trip_type?.trip_type === TRIP_TYPES.AIRPORT_PICKUP && (
             <AirportPickupDetailsManager
               read
-              write
+              write={status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING}
+              helperTextLabel={
+                status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING
+                  ? "Helps your driver coordinate your airport pickup."
+                  : "These arrival details were provided for this airport pickup."
+              }
               id="airportPickupDetails"
-              className="text-sm shadow-sm transition-all focus:outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20 focus-within:border-primary focus-within:bg-white focus-within:ring-2 focus-within:ring-primary/20"
               value={operationalDetails}
               isEditing={isEditingOperationalDetails}
               isSaving={isSavingOperationalDetails}
@@ -220,7 +232,7 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
               <InCarAmenities
                 {...bookingDetail?.in_car_amenities}
                 className=""
-                header="You will get these amenities in your cab:"
+                header={amenitiesLabel}
               />
             </div>
           )}
