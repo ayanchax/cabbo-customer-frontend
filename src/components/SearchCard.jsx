@@ -72,8 +72,7 @@ const SearchCard = () => {
 
   // When cleared: stay empty (no snap-back). When untouched: auto-fill with currentLocation.
   // For display: use raw pickup (instant feedback); enrichment happens in background.
-  const effectivePickup = pickupCleared ? null : (pickup ?? currentLocation);
-
+  const effectivePickup = pickup;
   // Hide "Use current location" only when the effective pickup already IS current location
   const isPickupCurrentLocation =
     !!effectivePickup &&

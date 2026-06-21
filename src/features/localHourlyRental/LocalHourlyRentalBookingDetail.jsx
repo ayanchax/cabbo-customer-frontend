@@ -82,6 +82,7 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
   };
   const amenitiesLabel= status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'You will get these amenities in your cab:' : 'Amenities that were provided for this trip:';
   const pickupLabel = status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'Pickup' : 'Pickup details';
+  const showCabAuxilliaryDetails =  [TRIP_STATUS.CONFIRMED].includes(status) && [TRIP_OCCURENCE_LABELS.UPCOMING].includes(label);
   
   return (
     <div
@@ -112,8 +113,8 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
           <div className="py-2"></div>
 
           {/* Cab details */}
-          <TripCabDetails showDescription={false} showInventoryCabNames={false} cabDetails={fleetData} className="mb-4  py-2 px-0" />
-
+                    <TripCabDetails showDescription={showCabAuxilliaryDetails} showInventoryCabNames={showCabAuxilliaryDetails} cabDetails={fleetData} className="mb-4  py-2 px-0" />
+          
           {/* Route timeline */}
           <RouteTimeline
             pickupLocation={origin}
