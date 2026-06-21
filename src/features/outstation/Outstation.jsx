@@ -5,6 +5,7 @@ import {
   useToast,
   useTimezone,
   useOverlay,
+  useTripTypeConstraintsQuery
 } from "@/hooks";
 import { Route } from "lucide-react";
 import {
@@ -64,6 +65,10 @@ function Outstation() {
   const { data: priorBookingWindow, isLoading: priorBookingWindowLoading } =
     useTripPriorBookingWindowQuery(trip_type, state_code);
 
+  // Fetch outstation constraints like min_allowed_days, max_allowed_days, max_allowed_hops etc.
+  const { data: outstationConstraints, isLoading: outstationConstraintsLoading } =
+    useTripTypeConstraintsQuery(trip_type, state_code);
+
   // Validation: startDate must be at least [priorBookingWindow] hours from now
   const earliestBookingStartDate = useMemo(() => {
     // Minimum start date is current time + prior booking window hours. If priorBookingWindow is not available, we won't enforce this constraint (we will set it to default 3 hours).
@@ -77,6 +82,8 @@ function Outstation() {
 
   // State for form fields
   const [startDate, setStartDate] = useState(null); // ISO string
+  // eslint-disable-next-line no-unused-vars
+  const [endDate, setEndDate] = useState(null); // ISO string, required for outstation trips
   const [ridePreferences, setRidePreferences] = useState({
     num_adults: 1,
     num_children: 0,
@@ -106,6 +113,12 @@ function Outstation() {
       }
       if (!startDate) {
         const msg = "Please select a start date and time.";
+        showToast(msg, "error", { position: "top-center" });
+        return;
+      }
+
+      if (!endDate) {
+        const msg = "Please select an end date and time.";
         showToast(msg, "error", { position: "top-center" });
         return;
       }
@@ -291,7 +304,7 @@ function Outstation() {
                 htmlFor="startDateTime"
                 className="block text-gray-500 text-[13px] md:text-base mb-1"
               >
-                When do you want to start your trip?
+                When do you want to start your journey?
               </label>
 
               <InlineDateTimePicker
