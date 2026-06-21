@@ -85,20 +85,31 @@ const SearchCard = () => {
     activeField === "pickup" ? pickupQuery : dropQuery
   ).trim();
 
-  const { data: apiSuggestions = [], isLoading } = useLocationSearchQuery(
-    activeQuery,
-    coordinates,
-    sessionToken,
-  );
+  const {
+    data: apiSuggestions = [],
+    isFetching: isFetchingSuggestions,
+    isError: isSuggestionsError,
+  } = useLocationSearchQuery(activeQuery, coordinates, sessionToken);
 
-  // Cached recent suggestions from online react query key 'locationSearch' used in useLocationSearchQuery and offline localStorage, used as fallback when API suggestions are not available (e.g. short query, offline)
+  // Recent suggestions are explicit user selections, stored newest-first.
   const { recentSuggestions, cacheSuggestionToLocalStorage } =
-    useRecentSuggestions(["locationSearch"]);
+    useRecentSuggestions();
 
-  const suggestionsToShow =
-    activeQuery.length >= 2 && apiSuggestions.length > 0
-      ? apiSuggestions
-      : recentSuggestions;
+  const hasActiveLocationSearch = activeQuery.length >= 2;
+  const hasApiSuggestions = apiSuggestions.length > 0;
+  const useRecentSuggestionFallback =
+    !hasActiveLocationSearch ||
+    isSuggestionsError ||
+    !hasApiSuggestions;
+  const suggestionsToShow = useRecentSuggestionFallback
+    ? recentSuggestions
+    : apiSuggestions;
+  const showSuggestionSkeleton =
+    isFetchingSuggestions && suggestionsToShow.length === 0;
+  const isRefreshingSuggestions =
+    hasActiveLocationSearch &&
+    isFetchingSuggestions &&
+    suggestionsToShow.length > 0;
 
   const handleSwap = () => {
     setPickup(drop);
@@ -324,11 +335,16 @@ const SearchCard = () => {
               isPickup={activeField === "pickup"}
               isPickupSet={isPickupCurrentLocation}
               suggestions={suggestionsToShow}
-              isLoading={isLoading}
+              isLoading={showSuggestionSkeleton}
+              isRefreshing={isRefreshingSuggestions}
               onSelect={(item, didSelectCurrentLocation) => {
                 if (didSelectCurrentLocation) {
                   // If user selected "Use current location", we want to set the pickup to currentLocation with lat/lng immediately, without waiting for enrichment (since we already have lat/lng), and skip enrichment step entirely for this selection (set enrichId to null so useLocationByPlaceIdQuery doesn't run)
                   cacheSuggestionToLocalStorage(currentLocation); // Cache current location selection as well for consistency in recent suggestions and offline access
+                } else {
+                  // Record explicit selections immediately. Enriched details replace
+                  // this entry later using the same place_id.
+                  cacheSuggestionToLocalStorage(item);
                 }
                 if (activeField === "pickup") {
                   setPickup((prev) => {

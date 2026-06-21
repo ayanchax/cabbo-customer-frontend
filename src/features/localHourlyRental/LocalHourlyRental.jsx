@@ -108,7 +108,7 @@ function LocalHourlyRental() {
       }
       if (
         earliestRentalStartDate &&
-        new Date(startDate) < earliestRentalStartDate
+        new Date(startDate.isoString) < earliestRentalStartDate
       ) {
         const msg = `Start time must be at least ${priorBookingWindow || DEFAULT_MINIMUM_BOOKING_HOURS} hours from now.`;
         showToast(msg, "error", { position: "top-center" });
@@ -170,9 +170,15 @@ function LocalHourlyRental() {
      setInProgress(false);
     }
   
-  const fetchedStartDate = { isoString: searchResults?.preferences?.start_date || startDate || null };
+  const fetchedStartDate = {
+    isoString:
+      searchResults?.preferences?.start_date || startDate?.isoString || null,
+  };
   
-  const fetchedTimezone = client_timezone?.timezone || searchResults?.preferences?.timezone || DEFAULT_USER_TIMEZONE;
+  const fetchedTimezone =
+    searchResults?.preferences?.timezone ||
+    client_timezone?.timezone ||
+    DEFAULT_USER_TIMEZONE;
 
   if (searchResults) {
     return (
@@ -303,8 +309,9 @@ function LocalHourlyRental() {
               </label>
               <InlineDateTimePicker
                 id="startDateTime"
+                value={startDate}
                 earliestStartDate={earliestRentalStartDate}
-                onConfirm={setStartDate}
+                onChange={setStartDate}
               />
             </div>
 

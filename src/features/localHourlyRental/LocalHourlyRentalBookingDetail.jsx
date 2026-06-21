@@ -126,8 +126,8 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
             startDatetime={startDate}
             className=" mt-4 mb-4"
             timezone={
-              client_timezone?.timezone ??
               server_timezone ??
+              client_timezone?.timezone ??
               DEFAULT_USER_TIMEZONE
             }
             pickupLabel={pickupLabel}

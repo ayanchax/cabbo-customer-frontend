@@ -1,54 +1,101 @@
-import React, { useState, useMemo, useEffect , useRef} from "react";
-import { format, addDays, isToday } from "date-fns";
-import { generateTimeSlots, findSlotIdxByTime, getIsoDateTime } from "@/components/common/datetime-picker/utils";
+import React, { useEffect, useMemo, useRef } from "react";
+import { addDays, format, isSameDay, isToday, startOfDay } from "date-fns";
+import {
+  findSlotIdxByTime,
+  generateTimeSlots,
+  getIsoDateTime,
+} from "@/components/common/datetime-picker/utils";
 import { useScrollCue } from "@/hooks";
 
 const GENERATE_DAYS_COUNT = 90;
-function InlineDateTimePicker({ id, earliestStartDate, onConfirm }) {
-  if(!earliestStartDate) {
+const PICKER_HEIGHT = 60;
+const ITEM_HEIGHT = 20;
+
+const getValueDate = (value) => {
+  if (value instanceof Date) return value;
+  if (value?.datetime instanceof Date) return value.datetime;
+
+  const dateValue = value?.isoString || value;
+  if (typeof dateValue !== "string") return null;
+
+  const parsedDate = new Date(dateValue);
+  return Number.isNaN(parsedDate.getTime()) ? null : parsedDate;
+};
+
+function InlineDateTimePicker({
+  id,
+  value = null,
+  earliestStartDate,
+  onChange,
+  onConfirm,
+}) {
+  if (!earliestStartDate) {
     throw new Error("Earliest start date is required to show date/time picker.");
-    // Error Boundary can catch this and show user-friendly fallback UI
   }
-  // Height for the picker (show 3 items, center is selected)
-  const pickerHeight = 60; // px
-  
-  // Each item has fixed height to simplify scroll calculations
-  const itemHeight = 20; // px
 
-  // Ref for the root element for focus
   const rootRef = useRef(null);
+  const selectedValueDate = getValueDate(value);
+  const emitChange = onChange || onConfirm;
 
-  // Generate next 90 days from earliestStartDate
-  const days = useMemo(() => {
-    const arr = [];
-    for (let i = 0; i < GENERATE_DAYS_COUNT; i++) {
-      arr.push(addDays(earliestStartDate || new Date(), i));
+  const days = useMemo(
+    () =>
+      Array.from({ length: GENERATE_DAYS_COUNT }, (_, index) =>
+        addDays(startOfDay(earliestStartDate), index),
+      ),
+    [earliestStartDate],
+  );
+
+  const slotsByDay = useMemo(
+    () =>
+      days.map((day) =>
+        generateTimeSlots({
+          selectedDate: day,
+          earliestStartDate,
+        }),
+      ),
+    [days, earliestStartDate],
+  );
+
+  const firstAvailableDateIdx = slotsByDay.findIndex(
+    (daySlots) => daySlots.length > 0,
+  );
+  const restoredDateIdx = selectedValueDate
+    ? days.findIndex((day) => isSameDay(day, selectedValueDate))
+    : -1;
+  const canRestoreSelectedDate =
+    restoredDateIdx >= 0 && slotsByDay[restoredDateIdx]?.length > 0;
+  const selectedDateIdx = canRestoreSelectedDate
+    ? restoredDateIdx
+    : Math.max(firstAvailableDateIdx, 0);
+  const slots = slotsByDay[selectedDateIdx] || [];
+  const selectedTimeIdx = selectedValueDate
+    ? findSlotIdxByTime(slots, selectedValueDate)
+    : 0;
+  const selectedDateTime = slots[selectedTimeIdx] || null;
+
+  const emitSelection = (datetime) => {
+    if (!datetime || typeof emitChange !== "function") return;
+
+    emitChange({
+      date: format(datetime, "EEE, dd MMM, yyyy"),
+      datetime,
+      isoString: getIsoDateTime(datetime),
+    });
+  };
+
+  // Initialize an empty value, or recover an invalid/restored value that no
+  // longer satisfies the current earliest-start constraint.
+  useEffect(() => {
+    if (!selectedDateTime || typeof emitChange !== "function") return;
+
+    const selectedValueTime = selectedValueDate?.getTime();
+    if (selectedValueTime !== selectedDateTime.getTime()) {
+      emitSelection(selectedDateTime);
     }
-    return arr;
-  }, [earliestStartDate]);
-  
+    // emitSelection intentionally uses the latest callback supplied by parent.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDateTime?.getTime(), selectedValueDate?.getTime(), emitChange]);
 
-  // State for selected date index and selected date
-  const [selectedDateIdx, setSelectedDateIdx] = useState(0);
-  const selectedDate = days[selectedDateIdx];
-
-  // Track last selected time (hour/minute) to preserve across date changes
-  const [lastSelectedTime, setLastSelectedTime] = useState(null);
-
-  // Generate slots for selected date
-  const slots = useMemo(() => {
-    return generateTimeSlots({ selectedDate, earliestStartDate });
-  }, [selectedDate, earliestStartDate]);
-   
-
-  
-  // State for selected time index
-  const [selectedTimeIdx, setSelectedTimeIdx] = useState(0);
-
-  // Scroll selected time into view after slot regeneration
-  const timeListRefObj = useRef();
-
-  // Use useScrollCue for vertical scroll cues
   const [atStartDate, atEndDate, dateListRef, handleDateScroll] = useScrollCue({
     direction: "vertical",
     deps: [selectedDateIdx],
@@ -58,169 +105,110 @@ function InlineDateTimePicker({ id, earliestStartDate, onConfirm }) {
     deps: [selectedTimeIdx, slots.length],
   });
 
-  // Keep timeListRef in sync for scrolling
   useEffect(() => {
-    if (typeof timeListRef === "function") {
-      timeListRefObj.current = { current: null };
-      // fallback if useScrollCue returns a callback ref
-    } else {
-      timeListRefObj.current = timeListRef;
-    }
-  }, [timeListRef]);
-
-  // If the selected day has no valid slots, move to the next day that does.
-  useEffect(() => {
-    if (slots.length > 0) return;
-
-    const nextAvailableDateIdx = days.findIndex((day, idx) => {
-      if (idx <= selectedDateIdx) return false;
-      const nextDateSlots = generateTimeSlots({ selectedDate: day, earliestStartDate });
-      return nextDateSlots.length > 0;
+    if (!timeListRef?.current) return;
+    const buttons = timeListRef.current.querySelectorAll("button");
+    buttons[selectedTimeIdx]?.scrollIntoView({
+      block: "center",
+      behavior: "smooth",
     });
+  }, [selectedTimeIdx, selectedDateIdx, slots.length, timeListRef]);
 
-    if (nextAvailableDateIdx !== -1) {
-      setSelectedDateIdx(nextAvailableDateIdx);
-      setSelectedTimeIdx(0);
-    }
-  }, [days, earliestStartDate, selectedDateIdx, slots.length]);
-
-  // When selectedDateIdx changes, try to preserve selected time
   useEffect(() => {
-    if (slots.length === 0) return;
-    // Only run on date change
-    // eslint-disable-next-line no-unused-vars
-    setSelectedTimeIdx((prevIdx) => {
-      const idx = findSlotIdxByTime(slots, lastSelectedTime);
-      return idx;
+    if (!dateListRef?.current) return;
+    const buttons = dateListRef.current.querySelectorAll("button");
+    buttons[selectedDateIdx]?.scrollIntoView({
+      block: "center",
+      behavior: "smooth",
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDateIdx, slots.length]);
+  }, [selectedDateIdx, days.length, dateListRef]);
 
-  // When selectedTimeIdx changes, update lastSelectedTime
-  useEffect(() => {
-    if (slots.length === 0) return;
-    setLastSelectedTime(slots[selectedTimeIdx]);
-  }, [selectedTimeIdx, slots]);
-
-  // Call onConfirm whenever date or time changes
-  useEffect(() => {
-    if (slots.length === 0) return;
-    if (typeof onConfirm === "function") {
-      // Only the date part (00:00:00) for 'date', full Date for 'datetime', and ISO string for API payload
-      const dateOnly = format(selectedDate, "EEE, dd MMM, yyyy");
-      const datetime = slots[selectedTimeIdx];
-      // Compose ISO string: combine dateOnly and time from datetime
-      let isoString = null;
-      if (datetime) {
-        isoString = getIsoDateTime(datetime);
-      }
-      onConfirm({ date: dateOnly, datetime, isoString });
-    }
-  }, [selectedDate, selectedTimeIdx, slots, onConfirm]);
-
-  // Scroll selected time into view after slot regeneration or time change
-  useEffect(() => {
-    const ref = timeListRefObj.current;
-    if (ref && ref.current) {
-      const btns = ref.current.querySelectorAll("button");
-      if (btns[selectedTimeIdx]) {
-        btns[selectedTimeIdx].scrollIntoView({ block: "center", behavior: "smooth" });
-      }
-    }
-  }, [selectedTimeIdx, selectedDateIdx, slots.length]);
-
-  // Scroll selected date into view when selectedDateIdx changes
-  useEffect(() => {
-    if (dateListRef && dateListRef.current) {
-      const btns = dateListRef.current.querySelectorAll("button");
-      if (btns[selectedDateIdx]) {
-        btns[selectedDateIdx].scrollIntoView({ block: "center", behavior: "smooth" });
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDateIdx, selectedTimeIdx, days.length]);
-
-  // Focus root element when label[for=id] is clicked from parent
   useEffect(() => {
     if (!id) return;
     const label = document.querySelector(`label[for='${id}']`);
-    
     if (!label) return;
-    // eslint-disable-next-line no-unused-vars
-    const handler = (e) => {
-      if (rootRef.current) {
-        rootRef.current.focus();
-      }
-    };
-    handler() // Focus on mount in case label was clicked before component rendered
-    label.addEventListener('click', handler);
-    return () => {
-      label.removeEventListener('click', handler);
-    };
+
+    const handler = () => rootRef.current?.focus();
+    label.addEventListener("click", handler);
+    return () => label.removeEventListener("click", handler);
   }, [id]);
+
+  const handleDateSelect = (dateIdx) => {
+    const targetSlots = slotsByDay[dateIdx];
+    if (!targetSlots?.length) return;
+
+    const preferredTime = selectedDateTime || selectedValueDate;
+    const targetTimeIdx = findSlotIdxByTime(targetSlots, preferredTime);
+    emitSelection(targetSlots[targetTimeIdx] || targetSlots[0]);
+  };
 
   return (
     <div
       id={id}
       ref={rootRef}
       tabIndex={0}
-      className="flex flex-row gap-6 items-center w-full justify-center border border-dashed border-gray-400 rounded-md p-3 transition-shadow focus:outline-none focus:border-solid focus:border-primary focus:ring-2 focus:ring-primary/40 text-xs xs:text-sm sm:text-base md:text-base lg:text-lg xl:text-xl"
+      className="flex w-full flex-row items-center justify-center gap-6 rounded-md border border-dashed border-gray-400 p-3 text-xs transition-shadow focus:border-solid focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40 xs:text-sm sm:text-base md:text-base lg:text-lg xl:text-xl"
     >
-      {/* Date Picker */}
-      <div className="relative w-32" >
-        {/* Gradients for scroll cue */}
+      <div className="relative w-32">
         {!atStartDate && (
-          <div className="pointer-events-none absolute top-0 left-0 w-full h-6 bg-linear-to-b from-white/90 to-transparent z-10" />
+          <div className="pointer-events-none absolute top-0 left-0 z-10 h-6 w-full bg-linear-to-b from-white/90 to-transparent" />
         )}
         {!atEndDate && (
-          <div className="pointer-events-none absolute bottom-0 left-0 w-full h-6 bg-linear-to-t from-white/90 to-transparent z-10" />
+          <div className="pointer-events-none absolute bottom-0 left-0 z-10 h-6 w-full bg-linear-to-t from-white/90 to-transparent" />
         )}
         <div
           ref={dateListRef}
           onScroll={handleDateScroll}
-          className="flex flex-col overflow-y-auto scrollbar-hide items-center w-full"
-          style={{ height: pickerHeight }}
+          className="scrollbar-hide flex w-full flex-col items-center overflow-y-auto"
+          style={{ height: PICKER_HEIGHT }}
         >
-          {days.map((date, idx) => (
-            <button
-              key={date.toISOString()}
-              className={`w-full h-10 flex items-center justify-center transition rounded-full border my-0.5 cursor-pointer
-                px-2 sm:px-3
-                text-sm sm:text-base
-                ${idx === selectedDateIdx ? "bg-primary text-white border-primary font-bold" : "bg-white border-neutral-200 text-gray-500 font-medium"}
-              `}
-              style={{ minHeight: itemHeight, maxHeight: itemHeight }}
-              onClick={() => setSelectedDateIdx(idx)}
-            >
-              {isToday(date) ? "Today" : format(date, "EEE, dd MMM")}
-            </button>
-          ))}
+          {days.map((date, idx) => {
+            const isAvailable = slotsByDay[idx]?.length > 0;
+
+            return (
+              <button
+                key={date.toISOString()}
+                type="button"
+                disabled={!isAvailable}
+                className={`my-0.5 flex h-10 w-full items-center justify-center rounded-full border px-2 text-sm transition sm:px-3 sm:text-base ${
+                  idx === selectedDateIdx
+                    ? "border-primary bg-primary font-bold text-white"
+                    : "border-neutral-200 bg-white font-medium text-gray-500"
+                } disabled:cursor-not-allowed disabled:opacity-35`}
+                style={{ minHeight: ITEM_HEIGHT, maxHeight: ITEM_HEIGHT }}
+                onClick={() => handleDateSelect(idx)}
+              >
+                {isToday(date) ? "Today" : format(date, "EEE, dd MMM")}
+              </button>
+            );
+          })}
         </div>
       </div>
-      {/* Time Picker */}
+
       <div className="relative w-32">
         {!atStartTime && (
-          <div className="pointer-events-none absolute top-0 left-0 w-full h-6 bg-linear-to-b from-white/90 to-transparent z-10" />
+          <div className="pointer-events-none absolute top-0 left-0 z-10 h-6 w-full bg-linear-to-b from-white/90 to-transparent" />
         )}
         {!atEndTime && (
-          <div className="pointer-events-none absolute bottom-0 left-0 w-full h-6 bg-linear-to-t from-white/90 to-transparent z-10" />
+          <div className="pointer-events-none absolute bottom-0 left-0 z-10 h-6 w-full bg-linear-to-t from-white/90 to-transparent" />
         )}
         <div
           ref={timeListRef}
           onScroll={handleTimeScroll}
-          className="flex flex-col overflow-y-auto scrollbar-hide items-center w-full"
-          style={{ height: pickerHeight }}
+          className="scrollbar-hide flex w-full flex-col items-center overflow-y-auto"
+          style={{ height: PICKER_HEIGHT }}
         >
           {slots.map((slot, idx) => (
             <button
               key={slot.toISOString()}
-              className={`w-full h-10 flex items-center justify-center transition rounded-full border font-mono my-0.5 cursor-pointer
-                px-2 sm:px-3
-                text-sm sm:text-base
-                ${idx === selectedTimeIdx ? "bg-primary text-white border-primary font-bold" : "bg-white border-neutral-200 text-gray-500 font-medium"}
-              `}
-              style={{ minHeight: itemHeight, maxHeight: itemHeight }}
-              onClick={() => setSelectedTimeIdx(idx)}
+              type="button"
+              className={`my-0.5 flex h-10 w-full cursor-pointer items-center justify-center rounded-full border px-2 font-mono text-sm transition sm:px-3 sm:text-base ${
+                idx === selectedTimeIdx
+                  ? "border-primary bg-primary font-bold text-white"
+                  : "border-neutral-200 bg-white font-medium text-gray-500"
+              }`}
+              style={{ minHeight: ITEM_HEIGHT, maxHeight: ITEM_HEIGHT }}
+              onClick={() => emitSelection(slot)}
             >
               {format(slot, "hh:mm a")}
             </button>

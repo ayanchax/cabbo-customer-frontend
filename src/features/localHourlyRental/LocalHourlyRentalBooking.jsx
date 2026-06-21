@@ -162,7 +162,11 @@ function LocalHourlyRentalBooking({ orderData, bookingData }) {
           <RideTimings
             startDatetime={startDate}
             className=" mt-4 mb-4"
-            timezone={client_timezone?.timezone || server_timezone || DEFAULT_USER_TIMEZONE}
+            timezone={
+              server_timezone ||
+              client_timezone?.timezone ||
+              DEFAULT_USER_TIMEZONE
+            }
           />
 
           {/* Selected package */}

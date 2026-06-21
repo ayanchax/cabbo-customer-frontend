@@ -205,7 +205,7 @@ const getOverlaySubtext = () => {
 
       if (
         earliestAirportBookingStartDate &&
-        new Date(startDate) < earliestAirportBookingStartDate
+        new Date(startDate.isoString) < earliestAirportBookingStartDate
       ) {
         const msg = `Start time must be at least ${priorBookingWindow || DEFAULT_MINIMUM_BOOKING_HOURS} hours from now.`;
         showToast(msg, "error", { position: "top-center" });
@@ -280,12 +280,13 @@ const getOverlaySubtext = () => {
   };
 
   const fetchedStartDate = {
-    isoString: searchResults?.preferences?.start_date || startDate || null,
+    isoString:
+      searchResults?.preferences?.start_date || startDate?.isoString || null,
   };
 
   const fetchedTimezone =
-    client_timezone?.timezone ||
     searchResults?.preferences?.timezone ||
+    client_timezone?.timezone ||
     DEFAULT_USER_TIMEZONE;
 
   const {includedServices} = useAirportTransferServices(searchResults?.preferences);
@@ -414,8 +415,9 @@ const getOverlaySubtext = () => {
               )}
               <InlineDateTimePicker
                 id="startDateTime"
+                value={startDate}
                 earliestStartDate={earliestAirportBookingStartDate}
-                onConfirm={setStartDate}
+                onChange={setStartDate}
               />
             </div>
 

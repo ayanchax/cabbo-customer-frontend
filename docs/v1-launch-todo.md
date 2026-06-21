@@ -14,14 +14,16 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 
 ### Shared search and date-time
 
-- [ ] Fix SearchCard loading behavior while previous suggestions are visible.
-- [ ] Prioritize user-selected recent places for an empty query.
-- [ ] Persist, reorder, and deduplicate recent places by `place_id`.
-- [ ] Add API failure/offline fallback to recent places.
-- [ ] Make `InlineDateTimePicker` controlled and restorable.
-- [ ] Prevent restored date/time values from being overwritten by defaults.
-- [ ] Verify earliest-start and empty-slot-day behavior.
-- [ ] Display trip dates in the booked trip timezone across UI and emails.
+- [x] Fix SearchCard loading behavior while previous suggestions are visible.
+- [x] Prioritize user-selected recent places for an empty query.
+- [x] Persist, reorder, and deduplicate recent places by `place_id`.
+- [x] Add API failure/offline fallback to recent places.
+- [x] Make `InlineDateTimePicker` controlled and restorable.
+- [x] Prevent restored date/time values from being overwritten by defaults.
+- [x] Verify earliest-start and empty-slot-day behavior.
+- [x] Display trip dates in the booked trip timezone across UI and emails.
+  - Frontend `RideTimings` now prefers the booking/search timezone over the viewer's current timezone.
+  - Backend email timezone rendering was verified separately.
 
 ### Outstation booking
 
