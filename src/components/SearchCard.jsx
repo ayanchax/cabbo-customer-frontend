@@ -6,6 +6,8 @@ import {
   NoRidesAvailable,
   PersonWaitingAtAirportForPickup,
   CabLeavingFromAirportTerminal, //used for airport dropoff scenario
+  OutstationRoutePlanningIllustration,
+  LocalHourlyRideCityscape
 } from "@/components";
 import { useNavigate } from "react-router-dom";
 import {
@@ -18,7 +20,6 @@ import {
 } from "@/hooks";
 import { isDevMode } from "@/api";
 import {TRIP_TYPES, ROUTES} from "@/utils"
-import { LocalHourlyRideCityscape } from "@/components";
 
 
 const SearchCard = () => {
@@ -203,9 +204,9 @@ const SearchCard = () => {
         [TRIP_TYPES.OUTSTATION]: {
           overlayProps: {
             message: "Taking you to Cabbo outstation...",
-            illustration: null, // Replace with outstation SVG if available
-            subtext: "Outstation trips, round trips, multi-day packages",
-            nextActionText: "Next: select dates and get going",
+            illustration: <OutstationRoutePlanningIllustration className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />, 
+            subtext: "Ride to another city and return when you're ready",
+            nextActionText: "Next: choose your travel dates and get going",
           },
           route: ROUTES.OUTSTATION,
         },

@@ -6,3 +6,4 @@ export { PersonBoardingCabIllustration } from './PersonBoardingCabIllustration';
 export { PaymentProcessingIllustration } from './PaymentProcessingIllustration';
 export { PersonWaitingAtAirportForPickup } from './PersonWaitingAtAirportForPickup';
 export { CabLeavingFromAirportTerminal } from './CabLeavingFromAirportTerminal';
+export { OutstationRoutePlanningIllustration } from './OutstationRoutePlanningIllustration';
