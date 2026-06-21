@@ -1,105 +1,226 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-import { useEffect, useState } from "react";
-import { useReverseGeocodingQuery, useLocalStorage, useRecentSuggestions } from "@/hooks";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useLocalStorage,
+  useRecentSuggestions,
+  useReverseGeocodingQuery,
+} from "@/hooks";
 import { LOCAL_STORAGE_KEYS } from "@/utils";
 
-export const useCurrentLocation = (enabled = true) => {
-  const { getItem, setItem } = useLocalStorage();
-  const cachedLocation = getItem(LOCAL_STORAGE_KEYS.currentLocation);
+const EARTH_RADIUS_METRES = 6371000;
+const MIN_MOVEMENT_THRESHOLD_METRES = 25;
+const MAX_MOVEMENT_THRESHOLD_METRES = 75;
 
-  // Set initial coords from cache if available, so bias is present on first paint, which downstream will be used to do the location search in SearchCard - e.g, if a user types 'Park' and we have their location biased coordinates, we will show park names in user's current location using the Google Autocomplete API, this is also called proximity biasing parameter in Google Places API. 
-  // This is particularly helpful for users in large cities with multiple locations with similar names, e.g, 'Park Street' in Kolkata vs 'Park Street' in Bangalore, with proximity biasing we will show the one in user's current city based on their coordinates. 
-  // If we don't have cached location, coords will be null and we won't do any biasing for location search until we get the user's current location for the first time.
-  const [location, setLocation] = useState(cachedLocation ?? null);
-  const [loading, setLoading] = useState(!cachedLocation);
-  const [error, setError] = useState(null);
-  const [coords, setCoords] = useState(
-    cachedLocation && cachedLocation.lat && cachedLocation.lng
-      ? { lat: cachedLocation.lat, lng: cachedLocation.lng }
-      : null
+const toRadians = (degrees) => (degrees * Math.PI) / 180;
+
+const getDistanceInMetres = (from, to) => {
+  const latitudeDelta = toRadians(to.lat - from.lat);
+  const longitudeDelta = toRadians(to.lng - from.lng);
+  const fromLatitude = toRadians(from.lat);
+  const toLatitude = toRadians(to.lat);
+
+  const haversine =
+    Math.sin(latitudeDelta / 2) ** 2 +
+    Math.cos(fromLatitude) *
+      Math.cos(toLatitude) *
+      Math.sin(longitudeDelta / 2) ** 2;
+  
+  // Return the distance in metres using the haversine formula, which calculates the great-circle distance between two points on a sphere given their longitudes and latitudes. This is useful for determining how far a user has moved since their last known location, which can help decide whether to perform reverse geocoding again or use cached data.
+  return (
+    2 *
+    EARTH_RADIUS_METRES *
+    Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine))
   );
-  const { cacheSuggestionToLocalStorage: cacheCurrentLocationAsRecentSuggestionItem } =
-    useRecentSuggestions();
+};
 
-  const { data } = useReverseGeocodingQuery(
+const getMovementThreshold = (previousAccuracy, currentAccuracy) => {
+  const combinedAccuracy =
+    (Number.isFinite(previousAccuracy) ? previousAccuracy : 0) +
+    (Number.isFinite(currentAccuracy) ? currentAccuracy : 0);
+
+  return Math.min(
+    MAX_MOVEMENT_THRESHOLD_METRES,
+    Math.max(MIN_MOVEMENT_THRESHOLD_METRES, combinedAccuracy),
+  );
+};
+
+export const useCurrentLocation = (enabled = false) => {
+  const { getItem, setItem } = useLocalStorage();
+  const [cachedLocation] = useState(() =>
+    getItem(LOCAL_STORAGE_KEYS.currentLocation),
+  );
+  const [cachedLocationFix] = useState(() =>
+    getItem(LOCAL_STORAGE_KEYS.currentLocationFix),
+  );
+  const [location, setLocation] = useState(cachedLocation ?? null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [requestCompleted, setRequestCompleted] = useState(false);
+  const [shouldReverseGeocode, setShouldReverseGeocode] = useState(false);
+  const [coords, setCoords] = useState(
+    cachedLocationFix?.lat != null && cachedLocationFix?.lng != null
+      ? { lat: cachedLocationFix.lat, lng: cachedLocationFix.lng }
+      : cachedLocation?.lat != null && cachedLocation?.lng != null
+        ? { lat: cachedLocation.lat, lng: cachedLocation.lng }
+        : null,
+  );
+  const locationRef = useRef(cachedLocation); // Ref to store the last known location to avoid unnecessary re-renders and API calls if the location hasn't changed significantly
+  const coordsRef = useRef(coords);
+  const locationFixRef = useRef(cachedLocationFix); // Ref to store the last known location fix (with accuracy and timestamp) to determine if the user has moved significantly since the last known location, to avoid unnecessary reverse geocoding API calls
+  const pendingLocationFixRef = useRef(null); // Ref to store the current location fix while waiting for reverse geocoding to complete, so we can update the location fix in local storage once we have the address details
+
+  const {
+    cacheSuggestionToLocalStorage: cacheCurrentLocationAsRecentSuggestion,
+  } = useRecentSuggestions();
+
+  const {
+    data,
+    isError: isReverseGeocodingError,
+  } = useReverseGeocodingQuery(
     coords?.lat,
-    coords?.lng
+    coords?.lng,
+    enabled && shouldReverseGeocode,
   );
 
   useEffect(() => {
-    if (!enabled) {
-      setLoading(false);
-      return;
-    }
+    if (!enabled) return;
+
+    setError(null);
+    setRequestCompleted(false);
+    setShouldReverseGeocode(false);
+    setLoading(true);
+
     if (!navigator.geolocation) {
-      setError("Geolocation not supported");
+      setError("Current location is not supported by this browser.");
+      setRequestCompleted(false);
       setLoading(false);
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setCoords((prev) => {
-          const baseline = prev ?? (cachedLocation
+      ({ coords: positionCoords, timestamp }) => {
+        const latitude = positionCoords.latitude;
+        const longitude = positionCoords.longitude;
+        const currentFix = { // Current location fix with accuracy and timestamp for movement threshold calculations
+          lat: latitude,
+          lng: longitude,
+          accuracy: positionCoords.accuracy,
+          capturedAt: timestamp,
+        };
+        const baseline =
+          locationFixRef.current ??
+          coordsRef.current ??
+          (cachedLocation
             ? { lat: cachedLocation.lat, lng: cachedLocation.lng }
             : null);
 
-          // first time — no previous coords and no cache
-          if (!baseline) {
-            setLocation({
-              display_name: "Current location",
-              lat: latitude,
-              lng: longitude,
-              address: "Fetching exact address...",
-            });
+        if (baseline) {
+          const distanceMoved = getDistanceInMetres(baseline, currentFix);
+          const movementThreshold = getMovementThreshold(
+            baseline.accuracy,
+            currentFix.accuracy,
+          );
 
-            return { lat: latitude, lng: longitude };
+          if (distanceMoved <= movementThreshold) {
+            // If the user hasn't moved significantly since the last known location, we can use the cached location instead of reverse geocoding again. This helps reduce unnecessary API calls and improves performance.
+            if (locationRef.current) {
+              setLocation(locationRef.current);
+            }
+            locationFixRef.current = currentFix;
+            setItem(LOCAL_STORAGE_KEYS.currentLocationFix, currentFix);
+            coordsRef.current = currentFix;
+            setCoords({ lat: latitude, lng: longitude });
+            setRequestCompleted(true);
+            setLoading(false);
+            return;
           }
+        }
 
-          const latDiff = Math.abs(baseline.lat - latitude);
-          const lngDiff = Math.abs(baseline.lng - longitude);
-
-          // 🔥 threshold check (~10–15 meters)
-          // if within threshold of cache, coords stays null → query stays disabled → no API call
-          if (latDiff < 0.0001 && lngDiff < 0.0001) {
-            return prev; // ignore tiny movement
-          }
-
-          // meaningful movement — trigger reverse geocoding
-          setLocation({
-            display_name: "Current location",
-            lat: latitude,
-            lng: longitude,
-            address: "Fetching exact address...",
-          });
-
-          return { lat: latitude, lng: longitude };
+        setLocation({
+          display_name: "Current location",
+          lat: latitude,
+          lng: longitude,
+          address: "Fetching exact address...",
         });
+        pendingLocationFixRef.current = currentFix;
+        coordsRef.current = { lat: latitude, lng: longitude };
+        setCoords({ lat: latitude, lng: longitude });
+        setShouldReverseGeocode(true);
       },
-      (err) => {
-        setError(err.message);
+      (geolocationError) => {
+        const errorMessages = {
+          [geolocationError.PERMISSION_DENIED]:
+            "Allow location access in your browser settings, then try again.",
+          [geolocationError.POSITION_UNAVAILABLE]:
+            "Your current location is unavailable right now. Please try again.",
+          [geolocationError.TIMEOUT]:
+            "Finding your location took too long. Please try again.",
+        };
+        const errorMessage =
+          errorMessages[geolocationError.code] ??
+          "We couldn't find your current location. Please try again.";
+
+        setError(errorMessage);
+        setRequestCompleted(false);
         setLoading(false);
       },
       {
         enableHighAccuracy: true,
         timeout: 8000,
-      }
+        maximumAge: 0, // maximum age of cached position to accept, in milliseconds. 0 means no caching, always get a fresh position.
+      },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled]);
+  }, [cachedLocation, enabled, setItem]);
 
   useEffect(() => {
-    if (!enabled) return;
-    if (data) {
-      setLocation(data);
-      setItem(LOCAL_STORAGE_KEYS.currentLocation, data);
-      // Cache the current location in recent suggestions as well, so it appears in the dropdown for easy access for first time, even if the user goes offline later. This also ensures consistency between the "current location" option and the recent suggestions list.
-      cacheCurrentLocationAsRecentSuggestionItem(data);
-      setLoading(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, enabled]);
+    if (!enabled || !shouldReverseGeocode || !data) return;
 
-  return { location, coords, loading, error };
+    setLocation(data);
+    locationRef.current = data;
+    setItem(LOCAL_STORAGE_KEYS.currentLocation, data);
+    if (pendingLocationFixRef.current) {
+      locationFixRef.current = pendingLocationFixRef.current;
+      setItem(
+        LOCAL_STORAGE_KEYS.currentLocationFix,
+        pendingLocationFixRef.current,
+      );
+      pendingLocationFixRef.current = null;
+    }
+    cacheCurrentLocationAsRecentSuggestion(data);
+    setShouldReverseGeocode(false);
+    setRequestCompleted(true);
+    setLoading(false);
+  }, [
+    cacheCurrentLocationAsRecentSuggestion,
+    data,
+    enabled,
+    setItem,
+    shouldReverseGeocode,
+  ]);
+
+  useEffect(() => {
+    if (!enabled || !shouldReverseGeocode || !isReverseGeocodingError) return;
+
+    setError(
+      "We found your location, but couldn't get the address. Please try again.",
+    );
+    pendingLocationFixRef.current = null;
+    setShouldReverseGeocode(false);
+    setRequestCompleted(false);
+    setLoading(false);
+  }, [enabled, isReverseGeocodingError, shouldReverseGeocode]);
+
+  const resetRequest = useCallback(() => {
+    setError(null);
+    setRequestCompleted(false);
+  }, []);
+
+  return {
+    location,
+    coords,
+    loading,
+    error,
+    requestCompleted,
+    resetRequest,
+  };
 };

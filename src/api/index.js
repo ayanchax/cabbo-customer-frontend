@@ -4,7 +4,7 @@ export {fetchServerGeography, fetchClientGeography} from "./geography";
 export {reverseGeocode, searchLocations, getLocationByPlaceId} from "./location";
 export {isLoggedIn, getProfile} from "./customer";
 export {classifyTripType} from "./trip_type";
-export {getTripPackages, getTripPriorBookingWindow} from "./trip_package";
+export {getTripPackages, getTripPriorBookingWindow, getTripTypeConstraints} from "./trip_package";
 export {searchTrips} from "./trip_search";
 export {initiateTripBooking, verifyPaymentForTrip, cleanupStagedTrip, getBookingDetails, updateNonCostImpactingTripDetails} from "./trip_booking";
 export {getFleet} from "./fleet";

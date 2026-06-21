@@ -7,6 +7,7 @@ import {
   AirportTransferPage,
   BookingPage,
   BookingDetailPage,
+  OutstationPage
 } from "@/pages";
 import { PublicRoute, ProtectedRoute } from "@/routes";
 
@@ -28,6 +29,7 @@ const AppRouter = () => {
             path={ROUTES.AIRPORT}
             element={<AirportTransferPage />}
           />
+          <Route path={ROUTES.OUTSTATION} element={<OutstationPage />} />
           <Route path={ROUTES.BOOKING} element={<BookingPage />} />
           <Route path={ROUTES.BOOKING_DETAIL} element={<BookingDetailPage />} />
         </Route>

@@ -49,7 +49,7 @@ const useRecentSuggestions = (
             suggestion,
             ...currentSuggestions.filter(
               (item) => getSuggestionKey(item) !== suggestionKey,
-            ), // remove any existing entry with the same key to avoid duplicates
+            ), // Deduplication: remove any existing entry with the same key to avoid duplicates
           ].slice(0, limit);
 
           setItem(cacheKey, nextSuggestions);

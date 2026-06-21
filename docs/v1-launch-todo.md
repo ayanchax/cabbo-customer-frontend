@@ -18,6 +18,9 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 - [x] Prioritize user-selected recent places for an empty query.
 - [x] Persist, reorder, and deduplicate recent places by `place_id`.
 - [x] Add API failure/offline fallback to recent places.
+- [x] Make current-location selection user-triggered, freshness-aware, and resilient to GPS accuracy jitter.
+  - Cache the canonical reverse-geocoded place separately from the raw browser position reading.
+  - Reuse the cached address only when Haversine distance remains within an accuracy-aware 25-75 metre threshold.
 - [x] Make `InlineDateTimePicker` controlled and restorable.
 - [x] Prevent restored date/time values from being overwritten by defaults.
 - [x] Verify earliest-start and empty-slot-day behavior.
@@ -27,7 +30,13 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 
 ### Outstation booking
 
-- [ ] Complete round-trip preference collection.
+- [ ] Load and enforce state-specific outstation constraints.
+- [ ] Implement V1 round-trip-only route behavior.
+- [ ] Add up to the configured maximum number of ordered hops.
+- [ ] Support adding, editing, removing, and reordering hops.
+- [ ] Collect departure and return date/time within configured limits.
+- [ ] Derive and display the trip duration from those dates.
+- [ ] Complete passenger and luggage preferences.
 - [ ] Complete origin, destination, date/time, passenger, and luggage flows.
 - [ ] Complete ride search, option comparison, and no-results handling.
 - [ ] Display fare breakdown, inclusions, exclusions, and overage rules.
@@ -196,7 +205,7 @@ Run the complete matrix for local hourly, airport pickup, airport drop-off, and 
 - [ ] Monitor errors, payment webhooks, bookings, and latency.
 - [ ] Record and triage launch issues.
 
-## Explicitly Deferred Until After V1
+## Explicitly Deferred Until After V1(On securing funds/investment)
 
 - Discount and coupon engine.
 - Campaign or marketing CMS.

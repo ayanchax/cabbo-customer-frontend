@@ -8,3 +8,4 @@ export {useTripPackagesQuery} from "./useTripPackage";
 export {useTripPriorBookingWindowQuery} from "./useTripPriorBookingWindow";
 export {useFleetQuery} from "./useFleet";
 export {useTripBookingDetail} from "./useTripBookingDetail";
+export {useTripTypeConstraintsQuery} from "./useTripConstraints";

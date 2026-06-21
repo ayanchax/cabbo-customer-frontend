@@ -26,7 +26,7 @@ const SearchCard = () => {
   const classifyTripType = useClassifyTripType();
   const { showOverlay, hideOverlay } = useOverlay();
 
-  // null = untouched (auto-fill from currentLocation)
+  // Pickup remains empty until the user makes an explicit selection.
   const [pickup, setPickup] = useState(null); // raw selection (display only)
   const [pickupCleared, setPickupCleared] = useState(false); //Field was cleared by user (empty string) vs never touched (null)
   const [drop, setDrop] = useState(null); // raw selection (display only)
@@ -66,12 +66,18 @@ const SearchCard = () => {
   const [dropQuery, setDropQuery] = useState("");
 
   const [activeField, setActiveField] = useState(null); // "pickup" | "drop"
+  const [shouldLocatePickup, setShouldLocatePickup] = useState(false);
 
-  const { location: currentLocation, coords: coordinates } =
-    useCurrentLocation(true);
+  const {
+    location: currentLocation,
+    coords: coordinates,
+    loading: isLocatingPickup,
+    error: currentLocationError,
+    requestCompleted: isCurrentLocationRequestCompleted,
+    resetRequest: resetCurrentLocationRequest,
+  } = useCurrentLocation(shouldLocatePickup);
 
-  // When cleared: stay empty (no snap-back). When untouched: auto-fill with currentLocation.
-  // For display: use raw pickup (instant feedback); enrichment happens in background.
+  // For display, use the raw pickup for instant feedback while enrichment runs.
   const effectivePickup = pickup;
   // Hide "Use current location" only when the effective pickup already IS current location
   const isPickupCurrentLocation =
@@ -110,6 +116,40 @@ const SearchCard = () => {
     isFetchingSuggestions &&
     suggestionsToShow.length > 0;
 
+  useEffect(() => {
+    if (
+      !shouldLocatePickup ||
+      !isCurrentLocationRequestCompleted ||
+      isLocatingPickup ||
+      currentLocationError ||
+      !currentLocation
+    ) {
+      return;
+    }
+
+    setPickup(currentLocation);
+    setPickupCleared(false);
+    setPickupEnrichId(null);
+    setPickupEnrichToken(null);
+    setPickupQuery("");
+    setActiveField(null);
+    cacheSuggestionToLocalStorage(currentLocation);
+    setShouldLocatePickup(false);
+  }, [
+    cacheSuggestionToLocalStorage,
+    currentLocation,
+    currentLocationError,
+    isCurrentLocationRequestCompleted,
+    isLocatingPickup,
+    shouldLocatePickup,
+  ]);
+
+  useEffect(() => {
+    if (shouldLocatePickup && currentLocationError) {
+      setShouldLocatePickup(false);
+    }
+  }, [currentLocationError, shouldLocatePickup]);
+
   const handleSwap = () => {
     setPickup(drop);
     setDrop(effectivePickup);
@@ -130,9 +170,7 @@ const SearchCard = () => {
       setInProgress(true);
       // Use fully enriched location for navigation; fall back to raw if enrichment is still loading
 
-      const pickupForNav = pickupCleared
-        ? null
-        : (finalPickup ?? currentLocation);
+      const pickupForNav = pickupCleared ? null : finalPickup;
       const dropForNav = finalDrop;
 
       if (!pickupForNav) return;
@@ -330,22 +368,23 @@ const SearchCard = () => {
         {activeField && (
           <div className="px-2 pb-2">
             <LocationSuggestions
-              currentLocation={currentLocation}
               isPickup={activeField === "pickup"}
               isPickupSet={isPickupCurrentLocation}
               suggestions={suggestionsToShow}
               isLoading={showSuggestionSkeleton}
               isRefreshing={isRefreshingSuggestions}
-              onSelect={(item, didSelectCurrentLocation) => {
-                if (didSelectCurrentLocation) {
-                  // If user selected "Use current location", we want to set the pickup to currentLocation with lat/lng immediately, without waiting for enrichment (since we already have lat/lng), and skip enrichment step entirely for this selection (set enrichId to null so useLocationByPlaceIdQuery doesn't run)
-                  cacheSuggestionToLocalStorage(currentLocation); // Cache current location selection as well for consistency in recent suggestions and offline access
-                } else {
-                  // Record explicit selections immediately. Enriched details replace
-                  // this entry later using the same place_id.
-                  cacheSuggestionToLocalStorage(item);
-                }
+              onUseCurrentLocation={() => {
+                resetCurrentLocationRequest();
+                setShouldLocatePickup(true);
+              }}
+              isLocating={isLocatingPickup}
+              currentLocationError={currentLocationError}
+              onSelect={(item) => {
+                // Record explicit selections immediately. Enriched details replace
+                // this entry later using the same place_id.
+                cacheSuggestionToLocalStorage(item);
                 if (activeField === "pickup") {
+                  setShouldLocatePickup(false);
                   setPickup((prev) => {
                     if (prev?.place_id === item.place_id) return prev;
                     return item;

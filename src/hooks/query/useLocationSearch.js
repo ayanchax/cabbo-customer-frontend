@@ -4,7 +4,7 @@ import { useDebounce } from "@/hooks";
 
 export const useLocationSearchQuery = (
   query,
-  coordinates = {},
+  coordinates = {}, // proximity coordinates for relevance sorting, optional, can be undefined if user did not provide location access or if we want to search globally
   sessionToken = null,
   delay = 300,
   min_length = 2,
