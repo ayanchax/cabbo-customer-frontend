@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from "react";
+import { addDays } from "date-fns";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   useTripPriorBookingWindowQuery,
   useToast,
   useTimezone,
   useOverlay,
-  useTripTypeConstraintsQuery
+  useTripTypeConstraintsQuery,
 } from "@/hooks";
-import { Route } from "lucide-react";
 import {
   InlineDateTimePicker,
   GettingRideOptionsIllustration,
@@ -17,17 +17,12 @@ import {
   RouteTimeline,
   PageHeader,
   TripDisclaimer,
-  OutstationRoutePlanningIllustration
+  OutstationRoutePlanningIllustration,
 } from "@/components";
 
 import { useOutstationTripSearch } from "@/features/outstation/hooks";
 import { isDevMode } from "@/api";
-import {
-  ROUTES,
-  enrichOptionsWithRates,
-  DEFAULT_USER_TIMEZONE,
-  TRIP_TYPES,
-} from "@/utils";
+import { ROUTES, enrichOptionsWithRates, DEFAULT_USER_TIMEZONE } from "@/utils";
 const DEFAULT_MINIMUM_BOOKING_HOURS = 48; // Default to 48 hours if API doesn't provide a value
 
 function Outstation() {
@@ -66,8 +61,19 @@ function Outstation() {
     useTripPriorBookingWindowQuery(trip_type, state_code);
 
   // Fetch outstation constraints like min_allowed_days, max_allowed_days, max_allowed_hops etc.
-  const { data: outstationConstraints, isLoading: outstationConstraintsLoading } =
-    useTripTypeConstraintsQuery(trip_type, state_code);
+  const {
+    data: outstationConstraints,
+    isLoading: outstationConstraintsLoading,
+    isError: outstationConstraintsError,
+  } = useTripTypeConstraintsQuery(trip_type, state_code);
+
+  const minTripDays = Number(outstationConstraints?.min_trip_days);
+  const maxTripDays = Number(outstationConstraints?.max_trip_days);
+  const hasValidTripDayConstraints =
+    Number.isFinite(minTripDays) &&
+    Number.isFinite(maxTripDays) &&
+    minTripDays > 0 &&
+    maxTripDays >= minTripDays;
 
   // Validation: startDate must be at least [priorBookingWindow] hours from now
   const earliestBookingStartDate = useMemo(() => {
@@ -82,7 +88,6 @@ function Outstation() {
 
   // State for form fields
   const [startDate, setStartDate] = useState(null); // ISO string
-  // eslint-disable-next-line no-unused-vars
   const [endDate, setEndDate] = useState(null); // ISO string, required for outstation trips
   const [ridePreferences, setRidePreferences] = useState({
     num_adults: 1,
@@ -95,6 +100,16 @@ function Outstation() {
 
   const [inProgress, setInProgress] = useState(false);
   const [searchResults, setSearchResults] = useState(null); // Store search results to pass to next page
+
+  const earliestReturnDate = useMemo(() => {
+    if (!startDate?.isoString || !hasValidTripDayConstraints) return null;
+    return addDays(new Date(startDate.isoString), minTripDays);
+  }, [hasValidTripDayConstraints, minTripDays, startDate]);
+
+  const latestReturnDate = useMemo(() => {
+    if (!startDate?.isoString || !hasValidTripDayConstraints) return null;
+    return addDays(new Date(startDate.isoString), maxTripDays);
+  }, [hasValidTripDayConstraints, maxTripDays, startDate]);
 
   const handleRideOptionSearch = async () => {
     if (inProgress) return; // Prevent multiple submissions
@@ -118,8 +133,17 @@ function Outstation() {
       }
 
       if (!endDate) {
-        const msg = "Please select an end date and time.";
+        const msg = "Please select when you want to return.";
         showToast(msg, "error", { position: "top-center" });
+        return;
+      }
+
+      if (!hasValidTripDayConstraints) {
+        showToast(
+          "Trip duration limits are unavailable right now. Please try again.",
+          "error",
+          { position: "top-center" },
+        );
         return;
       }
 
@@ -131,12 +155,32 @@ function Outstation() {
         showToast(msg, "error", { position: "top-center" });
         return;
       }
+
+      const selectedReturnDate = new Date(endDate.isoString);
+      if (selectedReturnDate < earliestReturnDate) {
+        showToast(
+          `Your outstation trip must be at least ${minTripDays} days.`,
+          "error",
+          { position: "top-center" },
+        );
+        return;
+      }
+
+      if (selectedReturnDate > latestReturnDate) {
+        showToast(
+          `Your outstation trip can be up to ${maxTripDays} days.`,
+          "error",
+          { position: "top-center" },
+        );
+        return;
+      }
+
       const overlayProps = {
         message: "Getting the best rides for you...",
         illustration: (
           <GettingRideOptionsIllustration className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />
         ),
-        subtext: "Finding the best rides for you. This may take a few seconds.",
+        subtext: "Checking round-trip options matched to your route and travel dates.",
       };
 
       showOverlay(overlayProps);
@@ -145,6 +189,7 @@ function Outstation() {
         origin,
         destination: dropOff || null, // Optional, some rentals may not have fixed destination
         start_date: startDate.isoString,
+        end_date: endDate.isoString,
         ...ridePreferences,
 
         timezone: client_timezone.timezone,
@@ -193,6 +238,10 @@ function Outstation() {
     isoString:
       searchResults?.preferences?.start_date || startDate?.isoString || null,
   };
+  const fetchedEndDate = {
+    isoString:
+      searchResults?.preferences?.end_date || endDate?.isoString || null,
+  };
 
   const fetchedTimezone =
     searchResults?.preferences?.timezone ||
@@ -231,11 +280,15 @@ function Outstation() {
               <RouteTimeline
                 pickupLocation={origin}
                 dropoffLocation={dropOff}
+                showReturn
                 className="mb-4"
               />
               {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
               <RideTimings
                 startDatetime={fetchedStartDate}
+                endDatetime={fetchedEndDate}
+                pickupLabel="Departure"
+                dropoffLabel="Return"
                 className=" mt-4 mb-4"
                 timezone={fetchedTimezone}
               />
@@ -294,7 +347,11 @@ function Outstation() {
 
           <div className="px-4">
             {/* Route timeline */}
-            <RouteTimeline pickupLocation={origin} dropoffLocation={dropOff} />
+            <RouteTimeline
+              pickupLocation={origin}
+              dropoffLocation={dropOff}
+              showReturn
+            />
 
             {/* Start date/time picker */}
             <div
@@ -313,6 +370,47 @@ function Outstation() {
                 earliestStartDate={earliestBookingStartDate}
                 onChange={setStartDate}
               />
+            </div>
+
+            {/* Return date/time picker */}
+            <div
+              className={`mb-4 ${
+                outstationConstraintsLoading
+                  ? "pointer-events-none opacity-50"
+                  : ""
+              }`}
+            >
+              <label
+                htmlFor="endDateTime"
+                className="mb-1 block text-[13px] text-gray-500 md:text-base"
+              >
+                When do you want to return back?
+              </label>
+
+              {!startDate ? (
+                <p className="rounded-md border border-dashed border-gray-300 px-3 py-4 text-sm text-gray-500">
+                  Select your departure date first.
+                </p>
+              ) : outstationConstraintsError || !hasValidTripDayConstraints ? (
+                <p className="rounded-md border border-red-200 bg-red-50 px-3 py-3 text-sm text-red-700">
+                  We could not load the allowed trip duration timeline. Please
+                  try again.
+                </p>
+              ) : (
+                <>
+                  <p className="mb-2 text-sm text-gray-400">
+                    You can choose a return time between {minTripDays} and{" "}
+                    {maxTripDays} days after departure.
+                  </p>
+                  <InlineDateTimePicker
+                    id="endDateTime"
+                    value={endDate}
+                    earliestStartDate={earliestReturnDate}
+                    latestStartDate={latestReturnDate}
+                    onChange={setEndDate}
+                  />
+                </>
+              )}
             </div>
 
             {/* Optional: Preferences like num_adults, children and luggage */}
@@ -334,13 +432,21 @@ function Outstation() {
             </div>
 
             {/* Ambient illustration - city background to enhance visual appeal */}
-            <OutstationRoutePlanningIllustration className="flex justify-center w-full max-w-xs sm:max-w-sm object-contain pointer-events-none select-none opacity-20 mt-8 mb-24 lg:hidden"  />
+            <OutstationRoutePlanningIllustration className="flex justify-center w-full max-w-xs sm:max-w-sm object-contain pointer-events-none select-none opacity-20 mt-8 mb-24 lg:hidden" />
             {/* Book button - sticky up to xl, inside main content */}
             <div className="xl:sticky fixed left-0 right-0 bottom-0 z-20 bg-gray-50 sm:bg-white xl:bg-transparent px-2 xs:px-3 xl:px-0 pb-2 pt-2 xl:pt-0 xl:pb-0 border-t border-gray-200 xl:border-0 shadow-[0_-2px_16px_0_rgba(16,30,54,0.04)] max-w-full mx-auto ">
               <button
                 className="w-full cursor-pointer bg-primary text-white py-3 rounded font-semibold disabled:opacity-50 text-base shadow-sm"
                 onClick={handleRideOptionSearch}
-                disabled={!origin || !startDate || inProgress}
+                disabled={
+                  !origin ||
+                  !startDate ||
+                  !endDate ||
+                  !hasValidTripDayConstraints ||
+                  outstationConstraintsLoading ||
+                  outstationConstraintsError ||
+                  inProgress
+                }
               >
                 Find rides
                 {/* Suggestions:

@@ -31,10 +31,10 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 ### Outstation booking
 
 - [ ] Load and enforce state-specific outstation constraints.
-- [ ] Implement V1 round-trip-only route behavior.
+- [x] Implement V1 round-trip-only route behavior.
 - [ ] Add up to the configured maximum number of ordered hops.
 - [ ] Support adding, editing, removing, and reordering hops.
-- [ ] Collect departure and return date/time within configured limits.
+- [x] Collect departure and return date/time within configured limits.
 - [ ] Derive and display the trip duration from those dates.
 - [ ] Complete passenger and luggage preferences.
 - [ ] Complete origin, destination, date/time, passenger, and luggage flows.

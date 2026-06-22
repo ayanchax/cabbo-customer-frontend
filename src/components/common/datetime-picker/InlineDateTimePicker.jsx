@@ -1,5 +1,12 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { addDays, format, isSameDay, isToday, startOfDay } from "date-fns";
+import {
+  addDays,
+  differenceInCalendarDays,
+  format,
+  isSameDay,
+  isToday,
+  startOfDay,
+} from "date-fns";
 import {
   findSlotIdxByTime,
   generateTimeSlots,
@@ -26,6 +33,7 @@ function InlineDateTimePicker({
   id,
   value = null,
   earliestStartDate,
+  latestStartDate = null,
   onChange,
   onConfirm,
 }) {
@@ -37,12 +45,25 @@ function InlineDateTimePicker({
   const selectedValueDate = getValueDate(value);
   const emitChange = onChange || onConfirm;
 
+  const generatedDaysCount = latestStartDate
+    ? Math.max(
+        1,
+        Math.min(
+          GENERATE_DAYS_COUNT,
+          differenceInCalendarDays(
+            startOfDay(latestStartDate),
+            startOfDay(earliestStartDate),
+          ) + 1,
+        ),
+      )
+    : GENERATE_DAYS_COUNT;
+
   const days = useMemo(
     () =>
-      Array.from({ length: GENERATE_DAYS_COUNT }, (_, index) =>
+      Array.from({ length: generatedDaysCount }, (_, index) =>
         addDays(startOfDay(earliestStartDate), index),
       ),
-    [earliestStartDate],
+    [earliestStartDate, generatedDaysCount],
   );
 
   const slotsByDay = useMemo(
@@ -51,9 +72,10 @@ function InlineDateTimePicker({
         generateTimeSlots({
           selectedDate: day,
           earliestStartDate,
+          latestStartDate,
         }),
       ),
-    [days, earliestStartDate],
+    [days, earliestStartDate, latestStartDate],
   );
 
   const firstAvailableDateIdx = slotsByDay.findIndex(

@@ -1,205 +1,229 @@
 import React from "react";
+import { MapPin, RotateCcw } from "lucide-react";
+
+const DEFAULT_LOCATION = {
+  lat: null,
+  lng: null,
+  display_name: null,
+  address: null,
+  country: null,
+  country_code: null,
+  region: null,
+  region_code: null,
+  state: null,
+  state_code: null,
+  postal_code: null,
+  place_id: null,
+};
+
+const getHopLocation = (hop) => hop?.location ?? hop;
+
+const getPointKey = (point, index) =>
+  point.location?.place_id ||
+  `${point.type}-${point.location?.lat ?? "unknown"}-${point.location?.lng ?? index}`;
+
+const getPointDotClassName = (type) => {
+  const colorByType = {
+    origin: "bg-emerald-400",
+    hop: "bg-primary",
+    destination: "bg-rose-400",
+    return: "bg-emerald-400",
+  };
+
+  return colorByType[type] || "bg-gray-400";
+};
+
+function LocationContent({
+  point,
+  pickupIcon,
+  dropoffIcon,
+  returnIcon,
+  showPickupLabel,
+  showDropoffLabel,
+  compact = false,
+}) {
+  const { type, location, label } = point;
+  const icon =
+    type === "origin"
+      ? pickupIcon
+      : type === "return"
+        ? returnIcon
+        : dropoffIcon;
+  const shouldShowLabel =
+    label &&
+    (type === "hop" ||
+      type === "return" ||
+      (type === "origin" && showPickupLabel) ||
+      (type === "destination" && showDropoffLabel));
+
+  return (
+    <div className="min-w-0">
+      {shouldShowLabel && (
+        <div className="mb-1 text-[13px] text-gray-500 md:text-base">
+          {label}
+        </div>
+      )}
+
+      <div className="flex min-w-0 items-center gap-1">
+        {icon}
+        <span
+          className={`truncate font-medium ${
+            compact
+              ? "text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px]"
+              : "text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px]"
+          } ${location?.display_name ? "text-gray-900" : "text-gray-400"}`}
+        >
+          {location?.display_name}
+        </span>
+      </div>
+
+      {location?.address && (
+        <span
+          className={`block truncate text-gray-500 ${
+            compact ? "" : "pl-5"
+          } text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px]`}
+        >
+          {location.address}
+        </span>
+      )}
+    </div>
+  );
+}
 
 /**
- * RouteTimeline
- *
- * A reusable readonly component for displaying a pickup and (optionally) dropoff location timeline, with support for hops and time metadata.
- *
- * **Purpose:**
- * - Centralizes the UI for showing route details (pickup, dropoff, hops) in booking flows and trip detail listings.
- * - Ensures consistent styling and logic across all flows (booking, trip details, etc.) so we don't have to rewrite or restyle the same code in multiple places.
- *
- * **Props:**
- * - `pickupLocation` (object, required): Location object for pickup (lat, lng, display_name, full_address, etc.)
- * - `dropoffLocation` (object, optional): Location object for dropoff (same shape as pickupLocation)
- * - `hops` (array, optional): Array of intermediate stops, each with a location and time
- * - `pickupTime` (optional): Scheduled or estimated pickup time
- * - `dropoffTime` (optional): Estimated dropoff time
- *
- * **Usage:**
- * - Use in any booking flow, ride summary, or trip details view to avoid duplicating timeline UI and logic.
- * - Designed for easy extension (add hops, show times, etc.) and consistent responsive styling.
- *
- * Example:
- *   <RouteTimeline pickupLocation={pickup} dropoffLocation={dropoff} hops={hops} />
+ * Read-only route display shared by search, booking, and booking-detail flows.
+ * Hops accept either location objects or `{ location }` wrappers.
  */
-import { MapPin } from "lucide-react";
-
 function RouteTimeline({
-  pickupLocation = {
-    lat: null,
-    lng: null,
-    display_name: null,
-    address: null,
-    country: null,
-    country_code: null,
-    region: null,
-    region_code: null,
-    state: null,
-    state_code: null,
-    postal_code: null,
-    place_id: null,
-  }, // Required
-  dropoffLocation = {
-    lat: null,
-    lng: null,
-    display_name: null,
-    address: null,
-    country: null,
-    country_code: null,
-    region: null,
-    region_code: null,
-    state: null,
-    state_code: null,
-    postal_code: null,
-    place_id: null,
-  }, // Optional
-  // eslint-disable-next-line no-unused-vars
-  hops = [], // Array of { location, time }
-  // eslint-disable-next-line no-unused-vars
-  pickupTime, // Optional, can be used to show scheduled pickup time or estimated time of arrival at pickup
-  // eslint-disable-next-line no-unused-vars
-  dropoffTime, // Optional, can be used to show estimated dropoff time
-
-  gap = "16px", // Customizable gap between pickup, hops, and dropoff for better visual separation
-
-  viewAsRouteTimeline = true, // If true, shows the vertical line connecting pickup and dropoff. If false, just shows the locations without the line, for a more compact display (e.g. in trip summary cards)
-
-  showPickupLabel = false, // Optionally show "Pickup" label above pickup location
-  showDropoffLabel = false, // Optionally show "Dropoff" label above dropoff location
-
+  pickupLocation = DEFAULT_LOCATION,
+  dropoffLocation = DEFAULT_LOCATION,
+  hops = [],
+  returnLocation = null,
+  showReturn = false,
+  gap = "16px",
+  viewAsRouteTimeline = true,
+  showPickupLabel = false,
+  showDropoffLabel = false,
+  pickupLabel = "Pickup",
+  dropoffLabel = "Dropoff",
+  returnLabel = "Return to origin",
   pickupIcon = (
     <MapPin
-      className="w-4 h-4 text-primary shrink-0 "
+      className="h-4 w-4 shrink-0 text-primary"
       aria-label="Pickup location"
     />
-  ), // Customizable pickup icon
+  ),
   dropoffIcon = (
     <MapPin
-      className="w-4 h-4 text-primary shrink-0 "
-      aria-label="Dropoff location"
+      className="h-4 w-4 shrink-0 text-primary"
+      aria-label="Route location"
     />
-  ), // Customizable dropoff icon
-  className = "", // Additional className for custom styling
+  ),
+  returnIcon = (
+    <RotateCcw
+      className="h-4 w-4 shrink-0 text-primary"
+      aria-label="Return location"
+    />
+  ),
+  className = "",
 }) {
+  const validHops = hops.map(getHopLocation).filter(
+    (location) => location?.display_name,
+  );
+  const routePoints = [
+    {
+      type: "origin",
+      location: pickupLocation,
+      label: pickupLabel,
+    },
+    ...validHops.map((location, index) => ({
+      type: "hop",
+      location,
+      label: `Stop ${index + 1}`,
+    })),
+    ...(dropoffLocation?.display_name
+      ? [
+          {
+            type: "destination",
+            location: dropoffLocation,
+            label: dropoffLabel,
+          },
+        ]
+      : []),
+    ...(showReturn && (returnLocation ?? pickupLocation)?.display_name
+      ? [
+          {
+            type: "return",
+            location: returnLocation ?? pickupLocation,
+            label: returnLabel,
+          },
+        ]
+      : []),
+  ].filter((point) => point.location?.display_name);
+
+  if (routePoints.length === 0) return null;
+
+  if (!viewAsRouteTimeline || routePoints.length === 1) {
+    return (
+      <div className={className}>
+        {routePoints.map((point, index) => (
+          <div
+            key={getPointKey(point, index)}
+            style={{
+              marginBottom:
+                index === routePoints.length - 1 ? undefined : gap,
+            }}
+          >
+            <LocationContent
+              point={point}
+              pickupIcon={pickupIcon}
+              dropoffIcon={dropoffIcon}
+              returnIcon={returnIcon}
+              showPickupLabel
+              showDropoffLabel
+              compact
+            />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className={className}>
-      {viewAsRouteTimeline &&
-      dropoffLocation &&
-      dropoffLocation.display_name ? (
-        <div className="flex gap-3 mb-4">
-          {/* Timeline */}
-          <div className="relative flex flex-col items-center pt-1">
-            {/* Top dot */}
-            <span className="w-3 h-3 md:w-4 md:h-4 rounded-full bg-emerald-400 border-2 border-white shadow-sm z-10" />
-
-            {/* Line */}
-            <div className="w-px flex-1 bg-gray-300 my-1 opacity-60" />
-
-            {/* Bottom dot */}
-            <span className="w-3 h-3 md:w-4 md:h-4 rounded-full bg-rose-400 border-2 border-white shadow-sm z-10" />
-          </div>
-
-          {/* Content */}
-          <div className="flex-1 min-w-0">
-            {/* Pickup */}
-            <div className="mb-5">
-                {showPickupLabel && <div className="text-gray-500 text-[13px] md:text-base mb-1">Pickup</div>}
-
-              <div className="flex items-center gap-1 min-w-0">
-                {pickupIcon}
-                <span
-                  className={`truncate text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] font-medium ${
-                    pickupLocation.display_name
-                      ? "text-gray-900"
-                      : "text-gray-400"
-                  }`}
-                >
-                  {pickupLocation.display_name}
-                </span>
-              </div>
-
-              {pickupLocation.address && (
-                <span className="block truncate text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 pl-5">
-                  {pickupLocation.address}
-                </span>
-              )}
-            </div>
-
-            {/* Later, we will add hops here in the future */}
-
-            {/* Dropoff */}
-            <div>
-                {showDropoffLabel && <div className="text-gray-500 text-[13px] md:text-base mb-1">Dropoff</div>}
-
-              <div className="flex items-center gap-1 min-w-0">
-                {dropoffIcon}
-
-                <span
-                  className={`truncate text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] font-medium ${
-                    dropoffLocation.display_name
-                      ? "text-gray-900"
-                      : "text-gray-400"
-                  }`}
-                >
-                  {dropoffLocation.display_name}
-                </span>
-              </div>
-
-              {dropoffLocation.address && (
-                <span className="block truncate text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 pl-5">
-                  {dropoffLocation.address}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-      ) : (
-        <>
-          {/* Pickup location */}
-          <div style={{ marginBottom: gap }}>
-            <div className="text-gray-500 text-[13px] md:text-base mb-1">
-              Pickup location
-            </div>
-            <div className="flex items-center gap-1">
-              {pickupIcon}
+      <div className="mb-4 flex gap-3">
+        <div className="flex shrink-0 flex-col items-center pt-1">
+          {routePoints.map((point, index) => (
+            <React.Fragment key={getPointKey(point, index)}>
               <span
-                className={`block text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] font-medium truncate ${pickupLocation.display_name ? "text-gray-900" : "text-gray-400"}`}
-              >
-                {pickupLocation.display_name}
-              </span>
-            </div>
-            {pickupLocation.address && (
-              <span className="block text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 truncate">
-                {pickupLocation.address}
-              </span>
-            )}
-          </div>
-          {/* We will add hops here in the future */}
-
-          {/* Dropoff location (if present) */}
-          {dropoffLocation && dropoffLocation.display_name && (
-            <div className="" style={{ marginBottom: gap }}>
-              <div className="text-gray-500 text-[13px] md:text-base mb-1">
-                Dropoff location
-              </div>
-              <div className="flex items-center gap-1">
-                {dropoffIcon}
-                <span
-                  className={`block text-[11px] xs:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] font-medium truncate ${dropoffLocation.display_name ? "text-gray-900" : "text-gray-400"}`}
-                >
-                  {dropoffLocation.display_name}
-                </span>
-              </div>
-              {dropoffLocation.address && (
-                <span className="block text-[10px] xs:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] text-gray-500 truncate">
-                  {dropoffLocation.address}
-                </span>
+                className={`z-10 h-3 w-3 rounded-full border-2 border-white shadow-sm md:h-4 md:w-4 ${getPointDotClassName(point.type)}`}
+                aria-hidden="true"
+              />
+              {index < routePoints.length - 1 && (
+                <div className="my-1 min-h-8 w-px flex-1 bg-gray-300 opacity-60" />
               )}
+            </React.Fragment>
+          ))}
+        </div>
+
+        <div className="min-w-0 flex-1">
+          {routePoints.map((point, index) => (
+            <div
+              key={getPointKey(point, index)}
+              className={index < routePoints.length - 1 ? "mb-5" : ""}
+            >
+              <LocationContent
+                point={point}
+                pickupIcon={pickupIcon}
+                dropoffIcon={dropoffIcon}
+                returnIcon={returnIcon}
+                showPickupLabel={showPickupLabel}
+                showDropoffLabel={showDropoffLabel}
+              />
             </div>
-          )}
-        </>
-      )}
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

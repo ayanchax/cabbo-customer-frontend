@@ -1,6 +1,7 @@
 import {
   addMinutes,
   format,
+  isAfter,
   isBefore,
   setHours,
   setMinutes,
@@ -28,6 +29,7 @@ export function formatDisplayDate(date) {
 export function generateTimeSlots({
   selectedDate,
   earliestStartDate,
+  latestStartDate,
   step = DEFAULT_MINUTE_STEP,
 }) {
   
@@ -46,6 +48,11 @@ export function generateTimeSlots({
 
       if (earliestStartDate && isBefore(slot, earliestStartDate)) {
         // If slot is before the minimum date time, skip it
+        continue;
+      }
+
+      if (latestStartDate && isAfter(slot, latestStartDate)) {
+        // Skip slots after the maximum date time
         continue;
       }
 
