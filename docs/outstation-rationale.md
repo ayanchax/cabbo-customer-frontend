@@ -69,6 +69,33 @@ The hop editor should support:
 - enforcing the server-provided `max_hops`;
 - retaining full enriched location objects for search.
 
+`OutstationHopManager` implements this as a controlled feature component.
+`Outstation.jsx` owns the final ordered hop array and passes it to the route
+timeline and trip-search payload.
+
+On the editable planning screen, the route timeline remains the live visual
+summary and includes committed hops. To avoid permanently repeating the same
+locations, the hop manager collapses its detailed rows behind a `Manage`
+control. Adding a stop remains immediately available, while edit, reorder, and
+remove controls appear only when the customer opens management mode.
+
+Stop ordering uses a dedicated drag handle for mouse, touch, and pen input.
+When the handle is keyboard-focused, the up and down arrow keys provide the
+same reordering behavior without adding visible caret buttons to every row.
+
+Inline stop editing is supported by the component but hidden in V1. Customers
+can remove an incorrect stop and add the correct one, which keeps the compact
+mobile controls focused on ordering and removal.
+
+The component reuses the shared location-search API, recent-place fallback, and
+Google session-token behavior. Autocomplete selections are enriched before
+being committed, so each hop uses the same complete location contract as the
+origin and destination.
+
+Origin, destination, and existing hops are excluded from selection. Row actions
+are temporarily locked while a stop is being edited to prevent index changes
+from replacing the wrong stop.
+
 The return leg goes from the destination back to the origin. Separate return
 hops and per-stop schedules are deferred beyond V1.
 
@@ -79,7 +106,7 @@ number of days.
 
 Exact datetimes avoid ambiguity around partial days and return time, match the
 backend `start_date` and `end_date` contract, and support driver planning and
-booking-detail display. Trip duration can still be derived for presentation.
+booking-detail display.
 
 For the current contract:
 

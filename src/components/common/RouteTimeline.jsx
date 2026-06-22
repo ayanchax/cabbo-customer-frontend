@@ -19,8 +19,9 @@ const DEFAULT_LOCATION = {
 const getHopLocation = (hop) => hop?.location ?? hop;
 
 const getPointKey = (point, index) =>
-  point.location?.place_id ||
-  `${point.type}-${point.location?.lat ?? "unknown"}-${point.location?.lng ?? index}`;
+  point.location?.place_id
+    ? `${point.type}:${point.location.place_id}`
+    : `${point.type}:${point.location?.lat ?? "unknown"}:${point.location?.lng ?? index}`;
 
 const getPointDotClassName = (type) => {
   const colorByType = {
@@ -59,7 +60,7 @@ function LocationContent({
   return (
     <div className="min-w-0">
       {shouldShowLabel && (
-        <div className="mb-1 text-[13px] text-gray-500 md:text-base">
+        <div className="mb-1 text-[13px] text-gray-500 md:text-[14px]">
           {label}
         </div>
       )}

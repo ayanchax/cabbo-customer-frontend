@@ -20,8 +20,13 @@ import {
   OutstationRoutePlanningIllustration,
 } from "@/components";
 
+import {
+  OutstationHopManager,
+  RoundTripOnlyDisclaimer,
+} from "@/features/outstation/components";
 import { useOutstationTripSearch } from "@/features/outstation/hooks";
 import { isDevMode } from "@/api";
+import { Info } from "lucide-react";
 import { ROUTES, enrichOptionsWithRates, DEFAULT_USER_TIMEZONE } from "@/utils";
 const DEFAULT_MINIMUM_BOOKING_HOURS = 48; // Default to 48 hours if API doesn't provide a value
 
@@ -69,11 +74,14 @@ function Outstation() {
 
   const minTripDays = Number(outstationConstraints?.min_trip_days);
   const maxTripDays = Number(outstationConstraints?.max_trip_days);
+  const maxHops = Number(outstationConstraints?.max_hops);
+  const isRoundTripOnly = Boolean(outstationConstraints?.round_trip_only);
   const hasValidTripDayConstraints =
     Number.isFinite(minTripDays) &&
     Number.isFinite(maxTripDays) &&
     minTripDays > 0 &&
     maxTripDays >= minTripDays;
+  const hasValidHopConstraints = Number.isInteger(maxHops) && maxHops >= 0;
 
   // Validation: startDate must be at least [priorBookingWindow] hours from now
   const earliestBookingStartDate = useMemo(() => {
@@ -89,6 +97,7 @@ function Outstation() {
   // State for form fields
   const [startDate, setStartDate] = useState(null); // ISO string
   const [endDate, setEndDate] = useState(null); // ISO string, required for outstation trips
+  const [hops, setHops] = useState([]);
   const [ridePreferences, setRidePreferences] = useState({
     num_adults: 1,
     num_children: 0,
@@ -147,6 +156,22 @@ function Outstation() {
         return;
       }
 
+      // We won't error out if hop constraints are not available, because we want to allow booking without this constraint rather than blocking the entire flow. Instead, we will just skip validating hops if hop constraints are not available.
+      if (!hasValidHopConstraints) {
+        if (isDevMode) {
+          console.warn(
+            "Hop constraints are unavailable right now. Skipping hop validation.",
+          );
+        }
+      }
+
+      if (hops.length > maxHops) {
+        showToast(`You can add up to ${maxHops} stops.`, "error", {
+          position: "top-center",
+        });
+        return;
+      }
+
       if (
         earliestBookingStartDate &&
         new Date(startDate.isoString) < earliestBookingStartDate
@@ -180,7 +205,8 @@ function Outstation() {
         illustration: (
           <GettingRideOptionsIllustration className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />
         ),
-        subtext: "Checking round-trip options matched to your route and travel dates.",
+        subtext:
+          "Checking round-trip options matched to your route and travel dates.",
       };
 
       showOverlay(overlayProps);
@@ -190,11 +216,14 @@ function Outstation() {
         destination: dropOff || null, // Optional, some rentals may not have fixed destination
         start_date: startDate.isoString,
         end_date: endDate.isoString,
+        ...(hops.length > 0 ? { hops } : {}),
         ...ridePreferences,
 
         timezone: client_timezone.timezone,
         utc_offset: client_timezone.utc_offset_minutes,
       };
+      console.log("Searching trips with payload:", payload);
+      return
 
       const response = await searchTrips.mutateAsync(payload);
       if (isDevMode) {
@@ -247,6 +276,7 @@ function Outstation() {
     searchResults?.preferences?.timezone ||
     client_timezone?.timezone ||
     DEFAULT_USER_TIMEZONE;
+  const fetchedHops = searchResults?.preferences?.hops || hops;
 
   if (searchResults) {
     return (
@@ -280,6 +310,7 @@ function Outstation() {
               <RouteTimeline
                 pickupLocation={origin}
                 dropoffLocation={dropOff}
+                hops={fetchedHops}
                 showReturn
                 className="mb-4"
               />
@@ -350,8 +381,27 @@ function Outstation() {
             <RouteTimeline
               pickupLocation={origin}
               dropoffLocation={dropOff}
+              hops={hops}
               showReturn
             />
+
+            {isRoundTripOnly && <RoundTripOnlyDisclaimer />}
+
+            {/* Hop manager */}
+            {/* Show only if constraints are loaded from server - otherwise - hop feature will not work and that is fine. We need not show any error message intermittently while constraints are loading to avoid bad UX*/}
+            {!outstationConstraintsError && hasValidHopConstraints && (
+              <OutstationHopManager
+                value={hops}
+                onChange={setHops}
+                maxHops={maxHops}
+                origin={origin}
+                destination={dropOff}
+                coordinates={{ lat: origin.lat, lng: origin.lng }}
+                disabled={outstationConstraintsLoading || inProgress}
+                collapseCommittedStops
+                className="mb-4"
+              />
+            )}
 
             {/* Start date/time picker */}
             <div
@@ -391,25 +441,23 @@ function Outstation() {
                 <p className="rounded-md border border-dashed border-gray-300 px-3 py-4 text-sm text-gray-500">
                   Select your departure date first.
                 </p>
-              ) : outstationConstraintsError || !hasValidTripDayConstraints ? (
-                <p className="rounded-md border border-red-200 bg-red-50 px-3 py-3 text-sm text-red-700">
-                  We could not load the allowed trip duration timeline. Please
-                  try again.
-                </p>
               ) : (
-                <>
-                  <p className="mb-2 text-sm text-gray-400">
-                    You can choose a return time between {minTripDays} and{" "}
-                    {maxTripDays} days after departure.
-                  </p>
-                  <InlineDateTimePicker
-                    id="endDateTime"
-                    value={endDate}
-                    earliestStartDate={earliestReturnDate}
-                    latestStartDate={latestReturnDate}
-                    onChange={setEndDate}
-                  />
-                </>
+                !outstationConstraintsError &&
+                hasValidTripDayConstraints && (
+                  <>
+                    <p className="mb-2 text-sm text-gray-400">
+                      You can choose a return time between {minTripDays} and{" "}
+                      {maxTripDays} days after departure.
+                    </p>
+                    <InlineDateTimePicker
+                      id="endDateTime"
+                      value={endDate}
+                      earliestStartDate={earliestReturnDate}
+                      latestStartDate={latestReturnDate}
+                      onChange={setEndDate}
+                    />
+                  </>
+                )
               )}
             </div>
 
@@ -443,6 +491,7 @@ function Outstation() {
                   !startDate ||
                   !endDate ||
                   !hasValidTripDayConstraints ||
+                  !hasValidHopConstraints ||
                   outstationConstraintsLoading ||
                   outstationConstraintsError ||
                   inProgress

@@ -12,7 +12,12 @@ export const useLocationSearchQuery = (
   const debouncedQuery = useDebounce(query, delay);
 
   return useQuery({
-    queryKey: ["locationSearch", debouncedQuery, coordinates],
+    queryKey: [
+      "locationSearch",
+      debouncedQuery,
+      coordinates,
+      sessionToken,
+    ],
     queryFn: ({ signal }) =>
       searchLocations(debouncedQuery, coordinates, signal, sessionToken),
     enabled: !!debouncedQuery && debouncedQuery.length >= min_length,
