@@ -204,13 +204,8 @@ Run the complete matrix for local hourly, airport pickup, airport drop-off, and 
 - [ ] Monitor errors, payment webhooks, bookings, and latency.
 - [ ] Record and triage launch issues.
 
-## Explicitly Deferred Until After V1(On securing funds/investment)
+## Deferred Beyond V1
 
-- Discount and coupon engine.
-- Campaign or marketing CMS.
-- Fully dynamic region-personalized homepage.
-- Real-time traffic-based pricing(only on getting investment)
-- Advanced live driver/customer tracking(only on getting investment)
-- Full support ticketing or chat system (only on getting investment)
-- Rich status timeline.
-- Promotional sections that could delay core booking readiness.
+Deferred product work, including **Book a ride for someone else**, is maintained
+centrally in [backlogs.md](./backlogs.md). These items are not launch blockers
+unless they are explicitly promoted back into the V1 checklist.

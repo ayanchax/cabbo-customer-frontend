@@ -18,15 +18,20 @@ import {
   PageHeader,
   TripDisclaimer,
   OutstationRoutePlanningIllustration,
+  IncludedServicePills,
 } from "@/components";
 
 import {
   OutstationHopManager,
   RoundTripOnlyDisclaimer,
+  TotalTripDays
 } from "@/features/outstation/components";
-import { useOutstationTripSearch } from "@/features/outstation/hooks";
+import {
+  useOutstationTripSearch,
+  useOutstationServices,
+} from "@/features/outstation/hooks";
 import { isDevMode } from "@/api";
-import { Info } from "lucide-react";
+import { Info , CalendarDays} from "lucide-react";
 import { ROUTES, enrichOptionsWithRates, DEFAULT_USER_TIMEZONE } from "@/utils";
 const DEFAULT_MINIMUM_BOOKING_HOURS = 48; // Default to 48 hours if API doesn't provide a value
 
@@ -109,6 +114,7 @@ function Outstation() {
 
   const [inProgress, setInProgress] = useState(false);
   const [searchResults, setSearchResults] = useState(null); // Store search results to pass to next page
+  const { includedServices } = useOutstationServices(searchResults?.metadata);
 
   const earliestReturnDate = useMemo(() => {
     if (!startDate?.isoString || !hasValidTripDayConstraints) return null;
@@ -125,31 +131,36 @@ function Outstation() {
     try {
       setInProgress(true);
       if (!origin) {
-        const msg = "Pickup location is required to book an outstation ride.";
-        showToast(msg, "error", { position: "top-center" });
+        showToast("Please choose where your trip starts.", "error", {
+          position: "top-center",
+        });
+        return;
+      }
 
-        return;
-      }
       if (!dropOff) {
-        const msg = "Drop-off location is required to book an outstation ride.";
-        showToast(msg, "error", { position: "top-center" });
+        showToast("Please choose your outstation destination.", "error", {
+          position: "top-center",
+        });
         return;
       }
+
       if (!startDate) {
-        const msg = "Please select a start date and time.";
-        showToast(msg, "error", { position: "top-center" });
+        showToast("Please choose when you want to leave.", "error", {
+          position: "top-center",
+        });
         return;
       }
 
       if (!endDate) {
-        const msg = "Please select when you want to return.";
-        showToast(msg, "error", { position: "top-center" });
+        showToast("Please choose when you want to return.", "error", {
+          position: "top-center",
+        });
         return;
       }
 
       if (!hasValidTripDayConstraints) {
         showToast(
-          "Trip duration limits are unavailable right now. Please try again.",
+          "We couldn't load the available trip durations. Please try again.",
           "error",
           { position: "top-center" },
         );
@@ -158,6 +169,7 @@ function Outstation() {
 
       // We won't error out if hop constraints are not available, because we want to allow booking without this constraint rather than blocking the entire flow. Instead, we will just skip validating hops if hop constraints are not available.
       if (!hasValidHopConstraints) {
+        // maxHops is not available or invalid
         if (isDevMode) {
           console.warn(
             "Hop constraints are unavailable right now. Skipping hop validation.",
@@ -165,10 +177,14 @@ function Outstation() {
         }
       }
 
-      if (hops.length > maxHops) {
-        showToast(`You can add up to ${maxHops} stops.`, "error", {
-          position: "top-center",
-        });
+      if (hasValidHopConstraints && hops.length > maxHops) {
+        showToast(
+          `You can add up to ${maxHops} stops for this trip.`,
+          "error",
+          {
+            position: "top-center",
+          },
+        );
         return;
       }
 
@@ -176,15 +192,20 @@ function Outstation() {
         earliestBookingStartDate &&
         new Date(startDate.isoString) < earliestBookingStartDate
       ) {
-        const msg = `Start time must be at least ${priorBookingWindow || DEFAULT_MINIMUM_BOOKING_HOURS} hours from now.`;
-        showToast(msg, "error", { position: "top-center" });
+        const minimumBookingHours =
+          priorBookingWindow || DEFAULT_MINIMUM_BOOKING_HOURS;
+        showToast(
+          `Please choose a departure time at least ${minimumBookingHours} hours from now.`,
+          "error",
+          { position: "top-center" },
+        );
         return;
       }
 
       const selectedReturnDate = new Date(endDate.isoString);
       if (selectedReturnDate < earliestReturnDate) {
         showToast(
-          `Your outstation trip must be at least ${minTripDays} days.`,
+          `Please choose a return time at least ${minTripDays} days after departure.`,
           "error",
           { position: "top-center" },
         );
@@ -193,7 +214,7 @@ function Outstation() {
 
       if (selectedReturnDate > latestReturnDate) {
         showToast(
-          `Your outstation trip can be up to ${maxTripDays} days.`,
+          `Please choose a return time within ${maxTripDays} days of departure.`,
           "error",
           { position: "top-center" },
         );
@@ -222,8 +243,9 @@ function Outstation() {
         timezone: client_timezone.timezone,
         utc_offset: client_timezone.utc_offset_minutes,
       };
-      console.log("Searching trips with payload:", payload);
-      return
+      if (isDevMode) {
+        console.log("Searching trips with payload:", payload);
+      }
 
       const response = await searchTrips.mutateAsync(payload);
       if (isDevMode) {
@@ -231,8 +253,8 @@ function Outstation() {
       }
       const data = response.data;
       // In each option, we will have calculated per minute and per km rates based on included hours/kms and total price, so we don't need to calculate it again in the TripOptionCard. We will just pass these values down to TripOptionCard to display to user.
-      const enrichedOptions = enrichOptionsWithRates(data?.options || []);
-      data.options = enrichedOptions;
+      // const enrichedOptions = enrichOptionsWithRates(data?.options || []);
+      // data.options = enrichedOptions;
 
       setSearchResults(data); // Store search results to pass to next page
       hideOverlay();
@@ -277,7 +299,7 @@ function Outstation() {
     client_timezone?.timezone ||
     DEFAULT_USER_TIMEZONE;
   const fetchedHops = searchResults?.preferences?.hops || hops;
-
+  const totalTripDays = searchResults?.metadata?.total_trip_days || null;
   if (searchResults) {
     return (
       <div
@@ -314,6 +336,8 @@ function Outstation() {
                 showReturn
                 className="mb-4"
               />
+              {isRoundTripOnly && <RoundTripOnlyDisclaimer />}
+
               {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
               <RideTimings
                 startDatetime={fetchedStartDate}
@@ -323,11 +347,21 @@ function Outstation() {
                 className=" mt-4 mb-4"
                 timezone={fetchedTimezone}
               />
+              {totalTripDays && totalTripDays > 0 && (
+                <TotalTripDays totalTripDays={totalTripDays} />
+              )}
+              
 
               {/* Horizontal divider */}
               <div className="py-1">
                 <hr className="border-t border-gray-300" />
               </div>
+
+              {/* Ride add-on for service pills for cost-impacting selections like toll road preference and placard */}
+              <IncludedServicePills
+                services={includedServices}
+                className="mt-3 mb-1"
+              />
 
               {/* Trip options list  */}
               <TripOptionsList

@@ -55,6 +55,34 @@ Cabbo's trip search flow is designed to balance user experience, trust, and oper
 
 ---
 
+## Passenger Selection
+
+### V1 Decision
+
+Cabbo V1 supports self-booking in the customer frontend. The frontend does not
+send the optional `passenger` field, and the backend defaults the request to
+`"self"`.
+
+Booking for another person is intentionally deferred because it adds passenger
+creation, saved-passenger selection, contact validation, ownership checks, and
+post-confirmation operational rules without being necessary for the core V1
+booking journey.
+
+Special requests do not replace this capability. Rider identity and contact
+details must be structured and validated rather than passed as free text.
+
+### Future Flow
+
+The future **Someone else** option belongs on the trip-specific details screen
+before ride search. The customer will select a saved passenger or add one using
+required name and phone fields. The resulting passenger ID will be attached to
+the search payload and validated by the backend.
+
+Passenger selection will be fixed after booking confirmation. Full scope and
+implementation notes are tracked in [backlogs.md](./backlogs.md).
+
+---
+
 ## Decision
 **Cabbo is committed to the two-button approach for trip search.**
 - This prioritizes trust, accuracy, and a transparent booking experience.
@@ -77,4 +105,4 @@ Cabbo's trip search flow is designed to balance user experience, trust, and oper
 
 ---
 
-_Last updated: May 2026_
+_Last updated: June 2026_
