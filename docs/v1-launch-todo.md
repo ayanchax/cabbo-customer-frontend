@@ -37,7 +37,8 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 - [x] Collect departure and return date/time within configured limits.
 - [ ] Complete passenger and luggage preferences.
 - [ ] Complete origin, destination, date/time, passenger, and luggage flows.
-- [ ] Complete ride search, option comparison, and no-results handling.
+- [x] Complete ride search, option comparison, and no-results handling.
+  - Includes no-suitable-rides recovery, backend-driven best-match labeling, and roof-carrier differentiation on option cards.
 - [ ] Display fare breakdown, inclusions, exclusions, and overage rules.
 - [ ] Integrate payment and booking confirmation.
 - [ ] Complete outstation booking-detail display.

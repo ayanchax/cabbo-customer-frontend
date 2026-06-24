@@ -32,10 +32,15 @@ function BookingPage() {
       (m) => ({ default: m.LocalHourlyRentalBooking }),
     ),
   );
-  // Future: const OutstationBooking = lazy(() => import("@/features/outstation/OutstationBooking"));
   const AirportTransferBooking = lazy(() => import("@/features/airportTransfers/AirportTransferBooking").then(
     (m) => ({ default: m.AirportTransferBooking }),
   ));
+
+  const OutstationBooking = lazy(() => import("@/features/outstation/OutstationBooking").then(
+    (m) => ({ default: m.OutstationBooking }),
+  ));
+
+
 
   useEffect(() => {
     if (!bookingPayload || hasBookedRef.current) return;
@@ -81,9 +86,9 @@ function BookingPage() {
     case TRIP_TYPES.LOCAL:
       BookingComponent = <LocalHourlyRentalBooking orderData={bookingOrderData} bookingData={bookingPayload} />;
       break;
-    // case TRIP_TYPES.OUTSTATION:
-    //   BookingComponent = <OutstationBooking {...bookingOrderData} />;
-    //   break;
+    case TRIP_TYPES.OUTSTATION:
+      BookingComponent = <OutstationBooking orderData={bookingOrderData} bookingData={bookingPayload} />;
+      break;
     case TRIP_TYPES.AIRPORT_PICKUP:
     case TRIP_TYPES.AIRPORT_DROPOFF:
       BookingComponent = <AirportTransferBooking orderData={bookingOrderData} bookingData={bookingPayload} />;

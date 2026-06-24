@@ -129,8 +129,21 @@ Ride-option results should display:
 - the complete round-trip route, including hops;
 - departure and return timings;
 - cab type and fare;
-- included kilometres and extra-kilometre rate where applicable;
+- package duration and included package kilometres;
+- extra-kilometre rate where applicable;
 - backend inclusions, exclusions, and disclaimers.
+
+The search-results summary shows included kilometres as a package allowance
+(`900 km package`) rather than pairing it with estimated route kilometres.
+Showing an estimated route distance beside the included allowance can imply
+usage-based billing when outstation pricing is actually package-based. The
+customer pays the full selected fare even when the completed route is shorter
+than the booked duration or included mileage.
+
+Estimated kilometres may still be used by the backend for pricing, package
+selection, and overage warnings, but the customer-facing result summary avoids
+displaying it as a headline metric. Full-fare and overage rules are shown in
+the backend-provided important information section below the ride options.
 
 The confirmed booking record preserves the same route order, timings, hops,
 pricing basis, and round-trip status.

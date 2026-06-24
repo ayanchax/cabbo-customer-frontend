@@ -14,7 +14,15 @@ const NoRidesSVG = (
   </svg>
 );
 
-const NoRidesAvailable = ({ onRetry, onDismiss, title="No rides available", message="We couldn't find any rides for your selected route. Please try a different pickup or drop location." , illustration=NoRidesSVG}) => (
+const NoRidesAvailable = ({
+  onRetry,
+  onDismiss,
+  title = "No rides available",
+  message = "We couldn't find any rides for your selected route. Please try a different pickup or drop location.",
+  illustration = NoRidesSVG,
+  retryLabel = "Try Again",
+  retryClassName = "mt-2 px-4 py-2 rounded-lg bg-primary text-white font-medium shadow hover:bg-primary/90 transition cursor-pointer",
+}) => (
   <EmptyState
     illustration={illustration}
     title={title}
@@ -26,9 +34,9 @@ const NoRidesAvailable = ({ onRetry, onDismiss, title="No rides available", mess
       onRetry && (
         <button
           onClick={onRetry}
-          className="mt-2 px-4 py-2 rounded-lg bg-primary text-white font-medium shadow hover:bg-primary/90 transition"
+          className={retryClassName}
         >
-          Try Again
+          {retryLabel}
         </button>
       )
     }

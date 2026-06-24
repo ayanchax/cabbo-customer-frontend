@@ -9,11 +9,20 @@ export const calculatePerMinRate = (option) => {
     return null;
 };
 
+export const calculatePerKmRate = (option) => {
+    if (option.rate_per_km) {
+        return option.rate_per_km.toFixed(2);
+    }
+
+    return null;
+};
+
 export const enrichOptionsWithRates = (options) => {
     return options.map((option) => {
         return {
             ...option,
             rate_per_min: calculatePerMinRate(option),
+            rate_per_km: calculatePerKmRate(option),
         };
     });
 };

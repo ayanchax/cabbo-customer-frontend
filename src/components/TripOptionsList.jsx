@@ -29,6 +29,8 @@ function TripOptionsList({
   onSelect,
   className = "",
   header = null,
+  showRatePerKm = false,
+  showRatePerMin = false,
 }) {
   const { getItem } = useLocalStorage();
   const fallbackCurrencySymbol =
@@ -71,6 +73,8 @@ function TripOptionsList({
               option={opt}
               onSelect={onSelect ? () => onSelect(opt) : undefined}
               fallbackCurrencySymbol={fallbackCurrencySymbol}
+              showRatePerKm={showRatePerKm}
+              showRatePerMin={showRatePerMin}
             />
           ))
         )}

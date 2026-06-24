@@ -19,20 +19,20 @@ import {
   TripDisclaimer,
   OutstationRoutePlanningIllustration,
   IncludedServicePills,
+  NoRidesAvailable
 } from "@/components";
 
 import {
   OutstationHopManager,
   RoundTripOnlyDisclaimer,
-  TotalTripDays
+  OutstationPackage
 } from "@/features/outstation/components";
 import {
   useOutstationTripSearch,
   useOutstationServices,
 } from "@/features/outstation/hooks";
 import { isDevMode } from "@/api";
-import { Info , CalendarDays} from "lucide-react";
-import { ROUTES, enrichOptionsWithRates, DEFAULT_USER_TIMEZONE } from "@/utils";
+import { ROUTES, DEFAULT_USER_TIMEZONE, enrichOptionsWithRates } from "@/utils";
 const DEFAULT_MINIMUM_BOOKING_HOURS = 48; // Default to 48 hours if API doesn't provide a value
 
 function Outstation() {
@@ -253,8 +253,8 @@ function Outstation() {
       }
       const data = response.data;
       // In each option, we will have calculated per minute and per km rates based on included hours/kms and total price, so we don't need to calculate it again in the TripOptionCard. We will just pass these values down to TripOptionCard to display to user.
-      // const enrichedOptions = enrichOptionsWithRates(data?.options || []);
-      // data.options = enrichedOptions;
+      const enrichedOptions = enrichOptionsWithRates(data?.options || []);
+      data.options = enrichedOptions;
 
       setSearchResults(data); // Store search results to pass to next page
       hideOverlay();
@@ -300,6 +300,7 @@ function Outstation() {
     DEFAULT_USER_TIMEZONE;
   const fetchedHops = searchResults?.preferences?.hops || hops;
   const totalTripDays = searchResults?.metadata?.total_trip_days || null;
+  const includedKms = searchResults?.metadata?.included_kms || null;
   if (searchResults) {
     return (
       <div
@@ -315,6 +316,22 @@ function Outstation() {
           shadow-[0_2px_16px_0_rgba(16,30,54,0.08)] max-w-full mb-4 ${inProgress ? "pointer-events-none opacity-70" : ""}`}
       >
         <div className="relative z-10 animate-slide-up duration-300 transition-all">
+          {searchResults?.options?.length === 0 && (
+            <div className="px-4 mt-4 max-w-2xl mx-auto">
+              <NoRidesAvailable
+                title="No suitable rides found"
+                message="We couldn't find a cab that fits your group and luggage for this trip. Please review your passenger and luggage details, or try a different route or date."
+                onRetry={() => setSearchResults(null)}
+                retryLabel="Edit search"
+                retryClassName="mt-2 px-4 py-2 rounded-lg border border-primary/20 bg-primary/5 text-primary text-sm font-medium hover:bg-primary/10 transition cursor-pointer"
+              />
+              
+            </div>
+          )}
+
+          
+          {searchResults?.options?.length > 0 && (
+          <>
           {/* Header: Back Button + Title */}
           <PageHeader
             onBack={() => setSearchResults(null)}
@@ -348,9 +365,11 @@ function Outstation() {
                 timezone={fetchedTimezone}
               />
               {totalTripDays && totalTripDays > 0 && (
-                <TotalTripDays totalTripDays={totalTripDays} />
+                <OutstationPackage
+                  totalTripDays={totalTripDays}
+                  includedKms={includedKms}
+                />
               )}
-              
 
               {/* Horizontal divider */}
               <div className="py-1">
@@ -368,6 +387,7 @@ function Outstation() {
                 options={searchResults?.options}
                 onSelect={handleBook}
                 className=" py-4 mb-4 w-full"
+                showRatePerKm
               />
 
               {/* Trip general disclaimer/terms and conditions */}
@@ -381,6 +401,8 @@ function Outstation() {
                   />
                 )}
             </div>
+          )}
+          </>
           )}
         </div>
       </div>

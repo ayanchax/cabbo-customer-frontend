@@ -17,6 +17,7 @@ import {
   RouteTimeline,
   PageHeader,
   TripDisclaimer,
+  NoRidesAvailable
 } from "@/components";
 import {
   PackageCards,
@@ -195,6 +196,22 @@ function LocalHourlyRental() {
         shadow-[0_2px_16px_0_rgba(16,30,54,0.08)] max-w-full mb-4 ${inProgress ? "pointer-events-none opacity-70" : ""}`}
       >
         <div className="relative z-10 animate-slide-up duration-300 transition-all">
+          
+          {searchResults?.options?.length === 0 && (
+                      <div className="px-4 mt-4 max-w-2xl mx-auto">
+                        <NoRidesAvailable
+                          title="No suitable rides found"
+                          message="We couldn't find a cab that fits your group for this trip. Please review your passenger and luggage details, or try a different route or date."
+                          onRetry={() => setSearchResults(null)}
+                          retryLabel="Edit search"
+                          retryClassName="mt-2 px-4 py-2 rounded-lg border border-primary/20 bg-primary/5 text-primary text-sm font-medium hover:bg-primary/10 transition cursor-pointer"
+                        />
+                        
+                      </div>
+                    )}
+
+          {searchResults?.options?.length > 0 && (
+          <>
           {/* Header: Back Button + Title */}
           <PageHeader
             onBack={() => setSearchResults(null)}
@@ -238,6 +255,7 @@ function LocalHourlyRental() {
                 options={searchResults?.options}
                 onSelect={handleBook}
                 className=" py-4 mb-4 w-full"
+                showRatePerMin
               />
 
                
@@ -253,6 +271,8 @@ function LocalHourlyRental() {
                   />
                 )}
             </div>
+          )}
+        </>
           )}
         </div>
       </div>

@@ -83,6 +83,49 @@ implementation notes are tracked in [backlogs.md](./backlogs.md).
 
 ---
 
+## Ride Option Recommendation Signal
+
+### Current Approach
+
+Cabbo may show a small **Best choice** tag on a ride option when the backend
+marks that option as recommended for the user's passenger and luggage details.
+
+The signal is shown only on the ride options screen because this is the point
+where the customer is comparing cabs and deciding what to reserve. It helps
+the customer understand which option best fits the search context without
+forcing them into a single choice.
+
+### Why It Is Not Shown Downstream
+
+After a ride is selected, confirmation and booking detail pages should focus on
+facts: selected cab, fare, inclusions, add-ons, payment, cancellation terms, and
+operational trip details. Repeating recommendation language after selection can
+feel redundant and may distract from the confirmed booking state.
+
+This matches common cab-app behavior: recommendation cues are useful during
+choice, while post-selection screens become transactional and informational.
+
+### Backend Responsibility
+
+The backend remains responsible for capacity-aware eligibility, ranking, and
+recommendation metadata. The frontend only renders the recommendation signal
+from trusted search-result data, such as `car_capacity.recommended`.
+
+### Capacity And Differentiator Display
+
+Cabbo does not show passenger and luggage capacity text on every ride option in
+V1. Search results are already backend-filtered and ranked against the user's
+passenger and luggage details, so repeating "fits up to X passengers / Y bags"
+on each card would add clutter without improving the core decision.
+
+Capacity data remains important backend metadata for eligibility, sorting, and
+recommendation. The frontend only surfaces compact differentiators when they
+help compare otherwise valid options. For example, `car_capacity.roof_carrier`
+is shown as a small roof-carrier signal because it is a visible service
+difference, especially for outstation luggage-heavy trips.
+
+---
+
 ## Decision
 **Cabbo is committed to the two-button approach for trip search.**
 - This prioritizes trust, accuracy, and a transparent booking experience.

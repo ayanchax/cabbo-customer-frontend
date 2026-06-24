@@ -128,7 +128,8 @@ function RouteTimeline({
   ),
   className = "",
 }) {
-  const validHops = hops.map(getHopLocation).filter(
+  const normalizedHops = Array.isArray(hops) ? hops : [];
+  const validHops = normalizedHops.map(getHopLocation).filter(
     (location) => location?.display_name,
   );
   const routePoints = [
@@ -167,7 +168,7 @@ function RouteTimeline({
   if (!viewAsRouteTimeline || routePoints.length === 1) {
     return (
       <div className={className}>
-        {routePoints.map((point, index) => (
+        {routePoints?.map((point, index) => (
           <div
             key={getPointKey(point, index)}
             style={{
@@ -194,7 +195,7 @@ function RouteTimeline({
     <div className={className}>
       <div className="mb-4 flex gap-3">
         <div className="flex shrink-0 flex-col items-center pt-1">
-          {routePoints.map((point, index) => (
+          {routePoints?.map((point, index) => (
             <React.Fragment key={getPointKey(point, index)}>
               <span
                 className={`z-10 h-3 w-3 rounded-full border-2 border-white shadow-sm md:h-4 md:w-4 ${getPointDotClassName(point.type)}`}
@@ -208,7 +209,7 @@ function RouteTimeline({
         </div>
 
         <div className="min-w-0 flex-1">
-          {routePoints.map((point, index) => (
+          {routePoints?.map((point, index) => (
             <div
               key={getPointKey(point, index)}
               className={index < routePoints.length - 1 ? "mb-5" : ""}

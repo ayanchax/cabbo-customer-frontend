@@ -1,26 +1,37 @@
 import React from "react";
-import { ArrowLeft, AlertCircle } from "lucide-react";
-import { CAB_TYPES, DEFAULT_CURRENCY_SYMBOL } from "@/utils";
+import { DEFAULT_CURRENCY_SYMBOL } from "@/utils";
 import {  TripCabDetails } from "@/components";
 function TripOptionCard({
   option = null,
   onSelect,
   fallbackCurrencySymbol = DEFAULT_CURRENCY_SYMBOL,
+  showRatePerKm = false,
+  showRatePerMin = false,
   // eslint-disable-next-line no-unused-vars
   className = "",
 }) {
   if (!option) return null;
 
-  
+  const isRecommended = Boolean(option?.car_capacity?.recommended);
 
   return (
     <button
       key={option.hash}
-      className={`w-full cursor-pointer text-left rounded-2xl border border-gray-100 bg-white shadow-sm px-4 py-4 flex items-center gap-4 sm:gap-7 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary transition group ${option.overages.indicative_overage_warning ? "border-rose-300" : ""}`}
+      className={`group relative flex w-full cursor-pointer items-center gap-4 overflow-hidden rounded-2xl border bg-white px-4 py-4 text-left shadow-sm transition hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary sm:gap-7 ${
+        isRecommended
+          ? "border-emerald-200 shadow-[0_10px_30px_rgba(16,185,129,0.10)] ring-1 ring-emerald-100"
+          : "border-gray-100"
+      }`}
       onClick={onSelect ? () => onSelect(option) : undefined}
       style={{ minHeight: 88 }}
     >
-      <TripCabDetails cabDetails={option}/>
+      {isRecommended && (
+        <span
+          className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-emerald-400 via-primary to-blue-500"
+          aria-hidden="true"
+        />
+      )}
+      <TripCabDetails cabDetails={option} showRecommendation showRatePerKm={showRatePerKm} showRatePerMin={showRatePerMin} />
       
       {/* Price */}
       <div className="flex flex-col items-end ml-6 min-w-18">
