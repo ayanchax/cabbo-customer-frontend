@@ -23,3 +23,8 @@ export const updateNonCostImpactingTripDetails = async (booking_id, payload) => 
     const { data } = await api.patch(`${ENDPOINTS.TRIP.UPDATE_NON_COST_IMPACTING_TRIP_DETAILS}/${booking_id}`, payload);
     return data;
 }
+
+export const getAllBookingsForCustomer = async () => {
+    const { data } = await api.get(ENDPOINTS.TRIP.MY_TRIPS);
+    return data;
+}

@@ -47,6 +47,7 @@ export const ENDPOINTS = {
             GET_BOOKING: `${API_VERSION}/trips/bookings`, // Append booking ID to get details for specific booking
             UPDATE_NON_COST_IMPACTING_TRIP_DETAILS: `${API_VERSION}/trips/bookings`,
             GET_TRIP_TYPE_CONSTRAINTS: `${API_VERSION}/trips/constraints`, 
+            MY_TRIPS: `${API_VERSION}/trips/bookings`,
 
 
         },
@@ -63,7 +64,7 @@ export const ROUTES = {
     VERIFY: "/verify",
     ONBOARD: "/onboard",
     HOME: "/",
-    TRIPS: "/trips",
+    MY_TRIPS: "/trips",
     PROFILE: "/profile",
     LOCAL: "/local-hourly-rental",
     OUTSTATION: "/outstation",

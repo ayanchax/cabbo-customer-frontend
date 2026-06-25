@@ -10,7 +10,22 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 - Do not add V2 work while a required V1 item remains incomplete.
 - Record a short blocker beneath any item that cannot progress.
 
-## 1. Immediate Product Work
+## Next Coding Priority
+
+The next customer-frontend coding task is **My Trips**. It gives customers a
+single place to find bookings after payment, supports the duplicate-booking
+recovery action, and becomes the entry point for booking-detail support,
+driver, refund, and special-request workflows.
+
+Recommended order:
+
+1. Build `/trips` with Upcoming, Ongoing, and Past tabs.
+2. Open the correct booking-detail page from each trip card.
+3. Add booking-detail operational sections: driver, support, special request,
+   and cancelled-trip refund summary.
+4. Build customer profile and logout.
+
+## 1. Customer Frontend Coding - Core Booking Flows
 
 ### Shared search and date-time
 
@@ -35,16 +50,15 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 - [x] Add up to the configured maximum number of ordered hops.
 - [x] Support adding, editing, removing, and reordering hops.
 - [x] Collect departure and return date/time within configured limits.
-- [ ] Complete passenger and luggage preferences.
-- [ ] Complete origin, destination, date/time, passenger, and luggage flows.
+- [x] Complete passenger and luggage preferences.
+- [x] Complete origin, destination, date/time, passenger, and luggage flows.
 - [x] Complete ride search, option comparison, and no-results handling.
   - Includes no-suitable-rides recovery, backend-driven best-match labeling, and roof-carrier differentiation on option cards.
-- [ ] Display fare breakdown, inclusions, exclusions, and overage rules.
-- [ ] Integrate payment and booking confirmation.
-- [ ] Complete outstation booking-detail display.
-- [ ] Verify cancellation/refund, support, special-request, and driver sections.
+- [x] Display fare breakdown, inclusions, exclusions, and overage rules.
+- [x] Integrate payment and booking confirmation.
+- [x] Complete outstation booking-detail display.
 
-## 2. Shared Customer Experience
+## 2. Customer Frontend Coding - Shared Customer Experience
 
 ### My Trips
 
@@ -78,6 +92,9 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
   - Handle pending, processed, failed, not-applicable, and missing-refund-detail states.
   - Keep the fare breakdown as the original booking record while making the refund summary the primary financial status for cancelled trips.
   - Provide the support action when a refund is delayed or failed.
+
+### Booking-detail operational sections
+
 - [x] Backend returns the customer-safe driver DTO.
 - [ ] Render the safe driver profile, contact action, cab details, and rating.
 - [ ] Gracefully handle missing optional driver fields and an unassigned driver.
@@ -86,6 +103,7 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 - [ ] Implement add-once, read-only special requests.
 - [ ] Enforce special-request status, length, sanitization, and add-once rules in the backend.
 - [ ] Update `edit-trip-rationale.md` after special-request behavior is implemented.
+- [ ] Verify these operational sections across airport, hourly rental, and outstation booking-detail pages.
 
 
 ### Customer account
@@ -97,7 +115,7 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 - [ ] Invalidate the backend session where supported.
 - [ ] Replace navigation history when returning to login.
 
-## 3. Payment and Booking Integrity
+## 3. Payment and Booking Integrity - Integration And Backend Verification
 
 - [x] Keep fare and payment calculations backend-authoritative.
 - [x] Verify payments on the backend.
@@ -107,9 +125,9 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 - [x] Clean temporary trips through the failure API and scheduled cleanup.
 - [ ] Re-test success, failure, retry, duplicate callback, refresh, and abandoned-payment scenarios in staging.
 - [ ] Verify production payment webhook configuration and signatures.
-- [ ] Confirm refund and cancellation behavior matches customer-facing policy text.
+- [x] Confirm refund and cancellation behavior matches customer-facing policy text.
 
-## 4. Minimum Admin and Operations
+## 4. Admin Frontend And Operations Coding
 
 - [ ] Provide authenticated admin access.
 - [ ] Build a filterable trip list and trip-detail view.
@@ -123,7 +141,7 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 - [ ] Define the support escalation process and owner.
 - [ ] Define the production incident-response owner.
 
-## 5. Legal, Privacy, and Support
+## 5. Legal, Privacy, And Support - Non-Coding Launch Work
 
 - [ ] Publish reviewed Terms of Service.
 - [ ] Publish a reviewed Privacy Notice.
@@ -139,7 +157,7 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 - [ ] Verify customer-care phone and WhatsApp channels are operational.
 - [ ] Define and test the data-retention and deletion workflow.
 
-## 6. Security and Privacy Gate
+## 6. Security And Privacy Gate - Engineering Review
 
 - [x] Use a customer-safe driver response model.
 - [ ] Audit all customer-facing API responses for internal or sensitive fields.
@@ -151,9 +169,9 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 - [ ] Redact personal, authentication, and payment data from logs.
 - [ ] Remove development logs containing personal or payment data.
 
-## 7. Release Testing
+## 7. Release Testing - QA Checklist
 
-Run the complete matrix for local hourly, airport pickup, airport drop-off, and outstation.
+Run the complete matrix for local hourly rental, airport pickup, airport drop-off, and outstation.
 
 - [ ] Search, classification, and preference persistence.
 - [ ] No-results and API-error behavior.
@@ -170,7 +188,7 @@ Run the complete matrix for local hourly, airport pickup, airport drop-off, and 
 - [ ] Loading, empty, offline, and degraded-network states.
 - [ ] Cross-browser smoke test on supported browsers.
 
-## 8. Production Readiness
+## 8. Production Readiness - DevOps And Operations
 
 - [ ] Configure the production domain and TLS.
 - [ ] Verify production frontend and backend environment configuration.
@@ -183,7 +201,7 @@ Run the complete matrix for local hourly, airport pickup, airport drop-off, and 
 - [ ] Prepare a rollback plan for frontend, backend, and database changes.
 - [ ] Prepare launch-day support coverage and escalation contacts.
 
-## 9. Launch Approval
+## 9. Launch Approval - Business Go/No-Go
 
 - [ ] All required V1 items above are complete or explicitly accepted as launch risks.
 - [ ] No open P0 defects.
@@ -193,12 +211,12 @@ Run the complete matrix for local hourly, airport pickup, airport drop-off, and 
 - [ ] Production smoke test checklist is ready.
 - [ ] Go/no-go decision is recorded.
 
-## 10. Launch Day
+## 10. Launch Day - Deployment And Monitoring
 
 - [ ] Deploy backend and run required migrations.
 - [ ] Deploy frontend.
 - [ ] Run production smoke tests for every trip type.
-- [ ] Complete one controlled end-to-end payment and booking test.
+- [ ] Complete one controlled end-to-end real payment and booking test.
 - [ ] Verify confirmation email content, dates, timezone, and links.
 - [ ] Verify admin visibility and driver assignment.
 - [ ] Verify support phone and WhatsApp actions.

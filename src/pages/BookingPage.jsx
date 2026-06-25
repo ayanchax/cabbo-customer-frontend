@@ -109,7 +109,7 @@ function BookingPage() {
           primaryAction={
             <button
               type="button"
-              onClick={() => navigate(ROUTES.TRIPS)}
+              onClick={() => navigate(ROUTES.MY_TRIPS)}
               className="cursor-pointer inline-flex h-11 items-center justify-center rounded-md bg-primary px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/30"
             >
               View my trips

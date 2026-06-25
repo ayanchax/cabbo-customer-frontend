@@ -10,7 +10,7 @@ const navItems = [
   },
   {
     label: "Trips",
-    path: ROUTES.TRIPS,
+    path: ROUTES.MY_TRIPS,
     icon: Clock,
   },
   {

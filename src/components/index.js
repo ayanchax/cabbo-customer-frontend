@@ -22,6 +22,7 @@ export {TripFareDetail} from "./TripFareDetail";
 export {RefundsAndCancellationPolicies} from "./RefundsAndCancellationPolicies";
 export {PayAndConfirmBooking} from "./PayAndConfirmBooking";
 export {TripFareSummary} from "./TripFareSummary";
+export {TripBookings} from "./TripBookings";
 export {LuggageCounter} from "./LuggageCounter";
 export { BookingDetailPageHeader } from "./BookingDetailPageHeader";
 export {IncludedServicePills} from "./IncludedServicePills";
