@@ -16,8 +16,8 @@ function TripCabDetails({
 }) {
   const option = cabDetails || {};
   const isRecommended =
-    showRecommendation && Boolean(option?.car_capacity?.recommended);
-  const hasRoofCarrier = Boolean(option?.car_capacity?.roof_carrier);
+    showRecommendation && Boolean(option?.car_capacity?.recommended ?? option?.recommended ?? false);
+  const hasRoofCarrier = Boolean(option?.car_capacity?.roof_carrier ?? option?.roof_carrier);
 
   const getCabTypeLabel = (carType) => {
     if (carType === CAB_TYPES.SEDAN_PLUS) {
@@ -26,7 +26,7 @@ function TripCabDetails({
     return carType;
   };
   return (
-    <div className={`flex items-center gap-3 sm:gap-6 w-full ${className}`}>
+    <div className={`flex items-center gap-4 sm:gap-6 w-full ${className}`}>
       <div className="flex shrink-0 flex-col items-center gap-1">
         <div className="relative flex h-16 w-16 items-center justify-center rounded-xl border border-blue-100 bg-linear-to-br from-blue-50 via-white to-blue-100 shadow">
           <Cab
@@ -82,7 +82,7 @@ function TripCabDetails({
               </span>
             )}
             {option?.capacity && (
-              <span className="ml-2 text-xs sm:text-sm text-gray-700 font-medium bg-gray-100 rounded-full px-2 py-0.5">
+              <span className="ml-0.5 md:ml-1.5 text-xs sm:text-sm text-gray-700 font-medium bg-gray-100 rounded-full px-2 py-0.5">
                 {option?.capacity}
               </span>
             )}

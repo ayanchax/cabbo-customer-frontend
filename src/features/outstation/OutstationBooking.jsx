@@ -57,10 +57,11 @@ function OutstationBooking({ orderData, bookingData }) {
     capacity: selectedFleet?.capacity || null,
     car_type: bookingData?.option?.car_type || null,
     fuel_type: bookingData?.option?.fuel_type || null,
-    rate_per_min: bookingData?.option?.rate_per_min || null,
+    rate_per_km: bookingData?.option?.rate_per_km || null,
     currency: bookingData?.option?.currency || null,
     description: selectedFleet?.description || null,
     inventory_cab_names: selectedFleet?.inventory_cab_names || null,
+    car_capacity:bookingData?.option?.car_capacity || null,
   };
 
   const fareData = {

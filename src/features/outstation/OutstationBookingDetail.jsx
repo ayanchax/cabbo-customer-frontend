@@ -1,0 +1,190 @@
+import React from "react";
+import {
+  RideTimings,
+  RouteTimeline,
+  BookingDetailPageHeader,
+  TripFareSummary,
+  TripCabDetails,
+  InCarAmenities,
+} from "@/components";
+import { TRIP_STATUS, TRIP_OCCURENCE_LABELS } from "@/utils";
+import { useTimezone, useBookingDetailBackNavigation } from "@/hooks";
+import {  MapPinned } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import { RoundTripOnlyDisclaimer, OutstationPackage } from "@/features/outstation/components";
+import { DEFAULT_USER_TIMEZONE, ROUTES } from "@/utils";
+
+function OutstationBookingDetail({ bookingDetail = {} }) {
+  const { timezone: client_timezone } = useTimezone();
+  const location = useLocation();
+  const comingFromBookingPaymentPage =
+    location?.state?.fromBookingConfirmation || false;
+  const handleBack = useBookingDetailBackNavigation(
+    comingFromBookingPaymentPage,
+  );
+
+  console.log(
+    "Booking Detail in OutstationBookingDetail:",
+    bookingDetail,
+  ); // Debug log to check the received booking detail data
+  const {
+    booking_id,
+    fleet,
+    origin,
+    destination,
+    start_datetime,
+    end_datetime,
+    timezone: server_timezone,
+    status,
+    label = undefined, // can be upcoming, completed, cancelled, past etc.
+  } = bookingDetail;
+  const dropOff = destination || null;
+  const fetchedHops = bookingDetail?.hops || null;
+
+   
+
+  const startDate = { isoString: start_datetime || null };
+  const endDate = { isoString: end_datetime || null };
+  if (!origin || !startDate.isoString || !endDate.isoString) {
+    throw new Error(
+      "Missing required booking data: origin, start date, and end date are required.",
+    );
+    // Error Boundary can catch this and show user-friendly fallback UI with option to go back to previous step
+  }
+
+  if (!bookingDetail) {
+    throw new Error(
+      "Missing required booking data: booking details are required to display this page.",
+    );
+    // Error Boundary can catch this and show user-friendly fallback UI with option to go back to previous step
+  }
+
+  const fleetData = {
+    rate_per_km: bookingDetail?.rate_per_km?.toFixed(2) || null,
+    currency: bookingDetail?.currency || null,
+    ...fleet,
+  };
+
+  const fareData = {
+    advance_payment: bookingDetail?.advance_payment || null,
+    balance_payment: bookingDetail?.balance_payment || null,
+    total_price: bookingDetail?.final_price || null,
+    price_breakdown: bookingDetail?.price_breakdown || null,
+    overages: bookingDetail?.overages || null,
+    inclusions: bookingDetail?.inclusions || null,
+    exclusions: bookingDetail?.exclusions || null,
+    disclaimers: bookingDetail?.overages?.disclaimer || null,
+    refunds_and_cancellation_policies:
+      bookingDetail?.refund_and_cancellation_policy || null,
+    currency: bookingDetail?.currency || null,
+    trip_status: status || null,
+    occurrence_label: label || null,
+  };
+  const amenitiesLabel =
+    status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING
+      ? "You will get these amenities in your cab:"
+      : "Amenities that were provided for this trip:";
+  const pickupLabel =
+    status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING
+      ? "Pickup"
+      : "Pickup details";
+  const showCabAuxilliaryDetails =
+    [TRIP_STATUS.CONFIRMED].includes(status) &&
+    [TRIP_OCCURENCE_LABELS.UPCOMING].includes(label);
+  const isRoundTripOnly = bookingDetail?.is_round_trip ?? false;
+  const totalTripDays = bookingDetail?.total_days || null;
+  const includedKms = bookingDetail?.included_kms || null;
+
+  return (
+    <div
+      className={` relative
+          xl:w-3/4 min-h-screen overflow-y-auto
+          bg-gray-50 sm:bg-white
+          px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10
+          py-2 xs:py-3 sm:py-6 md:py-8 lg:py-10
+          mx-auto
+          overflow-visible
+          sm:max-w-screen-sm md:max-w-3xl lg:max-w-5xl xl:max-w-7xl 2xl:max-w-screen-2xl
+          sm:rounded-xl sm:shadow-lg
+          shadow-[0_2px_16px_0_rgba(16,30,54,0.08)] max-w-full xl:mb-4
+          
+        `}
+    >
+      <div className="relative z-10">
+        {/* Page header */}
+        <BookingDetailPageHeader
+          icon={MapPinned}
+          tripLabel="outstation"
+          bookingId={booking_id}
+          onBack={handleBack}
+          occurenceLabel={label}
+        />
+
+        <div className="px-4">
+          <div className="py-2"></div>
+
+          {/* Cab details */}
+          <TripCabDetails
+            showDescription={showCabAuxilliaryDetails}
+            showInventoryCabNames={showCabAuxilliaryDetails}
+            cabDetails={fleetData}
+            className="mb-4  py-2 px-0"
+          />
+
+          {/* Route timeline */}
+          <RouteTimeline
+                      pickupLocation={origin}
+                      dropoffLocation={dropOff}
+                      hops={fetchedHops}
+                      showReturn
+                      className="mb-4"
+                    />
+
+          {isRoundTripOnly && <RoundTripOnlyDisclaimer />}
+          
+
+          {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
+          <RideTimings
+            startDatetime={startDate}
+            className=" mt-4 mb-4"
+            timezone={
+              server_timezone ??
+              client_timezone?.timezone ??
+              DEFAULT_USER_TIMEZONE
+            }
+            pickupLabel={pickupLabel}
+          />
+
+          {/* Selected package */}
+          {totalTripDays && totalTripDays > 0 && (
+                                    <OutstationPackage
+                                      totalTripDays={totalTripDays}
+                                      includedKms={includedKms}
+                                    />
+                                  )}
+           
+
+          {/* In-car amenities */}
+          {bookingDetail?.in_car_amenities && (
+            <div className="mb-2">
+              <InCarAmenities
+                {...bookingDetail?.in_car_amenities}
+                className=""
+                header={amenitiesLabel}
+              />
+            </div>
+          )}
+
+          {/* Fare summary */}
+          {fareData && (
+            <div className="mb-2">
+              <TripFareSummary fareData={fareData} />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export { OutstationBookingDetail };

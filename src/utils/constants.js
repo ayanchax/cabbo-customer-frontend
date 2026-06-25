@@ -88,6 +88,14 @@ export const CAB_TYPES={
     SUV_PLUS: "SUV+"
 }
 
+export const CAB_FUEL_TYPES={
+    PETROL: "petrol",
+    DIESEL: "diesel",
+    CNG: "cng",
+    ELECTRIC: "electric",
+    HYBRID: "hybrid"
+}
+
 export const DEFAULT_USER_LOCALE = "en-US";
 export const DEFAULT_USER_TIMEZONE = "UTC";
 export const DEFAULT_CURRENCY_SYMBOL = "₹";
@@ -125,5 +133,11 @@ export const TRIP_OCCURENCE_LABELS={
     CANCELLED: "cancelled",
     COMPLETED: "completed",
     PAST: "past",
+}
+
+export const SERVER_ERROR_CODES = {
+    ALREADY_BOOKED_ON_THIS_SLOT: "ALREADY_BOOKED_ON_THIS_SLOT",
+    INVALID_BOOKING_DATA: "INVALID_BOOKING_DATA",
+    UNKNOWN_ERROR: "UNKNOWN_ERROR",
 }
 

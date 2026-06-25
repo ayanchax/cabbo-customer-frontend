@@ -272,6 +272,7 @@ function Outstation() {
 
   const handleBook = (option) => {
     setInProgress(true);
+    
     const payload = {
       option,
       preferences: searchResults?.preferences || {},
@@ -281,6 +282,11 @@ function Outstation() {
         searchResults?.refund_and_cancellation_policy || [],
       trip_type,
     };
+
+    
+    
+    // 
+    
     navigate(ROUTES.BOOKING, { state: { bookingPayload: payload } });
     setInProgress(false);
   };

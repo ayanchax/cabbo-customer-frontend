@@ -69,7 +69,6 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     );
     // Error Boundary can catch this and show user-friendly fallback UI with option to go back to previous step
   }
-
   const fleetData = {
     currency: bookingDetail?.currency || null,
     ...fleet,

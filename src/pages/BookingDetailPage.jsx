@@ -40,10 +40,13 @@ function BookingDetailPage() {
       (m) => ({ default: m.LocalHourlyRentalBookingDetail }),
     ),
   );
-  // Future: const OutstationBookingDetail = lazy(() => import("@/features/outstation/OutstationBooking"));
-
+   
   const AirportTransferBookingDetail = lazy(() => import("@/features/airportTransfers/AirportTransferBookingDetail").then(
     (m) => ({ default: m.AirportTransferBookingDetail }),
+  ));
+
+  const OutstationBookingDetail = lazy(() => import("@/features/outstation/OutstationBookingDetail").then(
+    (m) => ({ default: m.OutstationBookingDetail }),
   ));
 
   let TripBookingDetailComponent;
@@ -53,9 +56,9 @@ function BookingDetailPage() {
         <LocalHourlyRentalBookingDetail bookingDetail={bookingDetailData} />
       );
       break;
-    // case TRIP_TYPES.OUTSTATION:
-    //   TripBookingDetailComponent = <OutstationBookingDetail bookingDetail={bookingDetailData} />;
-    //   break;
+    case TRIP_TYPES.OUTSTATION:
+      TripBookingDetailComponent = <OutstationBookingDetail bookingDetail={bookingDetailData} />;
+      break;
     case TRIP_TYPES.AIRPORT_PICKUP:
     case TRIP_TYPES.AIRPORT_DROPOFF:
       TripBookingDetailComponent = <AirportTransferBookingDetail bookingDetail={bookingDetailData} />;

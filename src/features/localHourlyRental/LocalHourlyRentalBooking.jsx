@@ -60,6 +60,8 @@ function LocalHourlyRentalBooking({ orderData, bookingData }) {
     currency: bookingData?.option?.currency || null,
     description: selectedFleet?.description || null,
     inventory_cab_names: selectedFleet?.inventory_cab_names || null,
+    car_capacity:bookingData?.option?.car_capacity || null,
+
   };
 
   const fareData = {
