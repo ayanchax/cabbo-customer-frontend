@@ -6,13 +6,11 @@ import {
   MapPin,
   RefreshCw,
 } from "lucide-react";
-import { DEFAULT_USER_LOCALE, DEFAULT_USER_TIMEZONE } from "@/utils";
+import { DEFAULT_USER_LOCALE, DEFAULT_USER_TIMEZONE, titleCase} from "@/utils";
+import {humanReadableDateTime} from "@/components/common/datetime-picker/utils";
+import { useLocale, useTimezone } from "@/hooks";
+
 import { NoRidesAvailable } from "@/components";
-const TABS = [
-  { id: "upcoming", label: "Upcoming" },
-  { id: "ongoing", label: "Ongoing" },
-  { id: "past", label: "Past" },
-];
 
 const STATUS_STYLES = {
   confirmed: "bg-emerald-50 text-emerald-700 ring-emerald-100",
@@ -24,32 +22,9 @@ const STATUS_STYLES = {
   created: "bg-blue-50 text-blue-700 ring-blue-100",
 };
 
-function formatDateTime(value, timezone = DEFAULT_USER_TIMEZONE) {
-  if (!value) return "Time unavailable";
 
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Time unavailable";
 
-  return new Intl.DateTimeFormat(DEFAULT_USER_LOCALE, {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-    timeZone: timezone || DEFAULT_USER_TIMEZONE,
-  }).format(date);
-}
 
-function titleCase(value) {
-  if (!value) return "";
-  return value
-    .replaceAll("_", " ")
-    .split(" ")
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
-}
 
 function getStatusClassName(status) {
   return STATUS_STYLES[status] || "bg-gray-100 text-gray-700 ring-gray-200";
@@ -68,13 +43,17 @@ function getFleetLabel(booking) {
   return `${carType}${fuelType}`;
 }
 
-function TripBookingCard({ booking, onSelect }) {
+function TripBookingCard({ booking, onSelect, locale = DEFAULT_USER_LOCALE, timezone = DEFAULT_USER_TIMEZONE }) {
   const tripLabel = booking?.trip_type?.display_name || "Trip";
   const status = booking?.status || "";
   const label = booking?.label || "";
   const currencySymbol = booking?.currency?.symbol || "";
   const price = booking?.final_price ?? null;
-
+  const datetime = booking?.start_datetime;
+  const normalizedDatetime = datetime && !/Z$|[+-]\d{2}:\d{2}$/.test(datetime)
+    ? { ...datetime, isoString: datetime + "Z" }
+    : datetime;
+  
   return (
     <button
       type="button"
@@ -114,7 +93,7 @@ function TripBookingCard({ booking, onSelect }) {
         <span className="inline-flex min-w-0 items-center gap-1.5">
           <CalendarClock className="h-4 w-4 shrink-0 text-gray-400" />
           <span className="truncate">
-            {formatDateTime(booking?.start_datetime, booking?.timezone)}
+            {humanReadableDateTime(normalizedDatetime, locale, timezone)}
           </span>
         </span>
 
@@ -144,58 +123,44 @@ function TripBookingCard({ booking, onSelect }) {
 }
 
 function TripBookings({
-  bookings = {},
-  activeTab = "upcoming",
-  onTabChange,
+  feedData = null,
   onSelectBooking,
   onRefresh,
+  onNextPage,
+  onPreviousPage,
   isRefreshing = false,
+  emptyTitle = "No trips found",
+  emptyMessage = "Your bookings will appear here once they are available.",
+  
 }) {
-  const normalizedBookings = bookings || {};
-  const activeBookings = Array.isArray(normalizedBookings?.[activeTab])
-    ? normalizedBookings[activeTab]
-    : [];
+  const { timezone: client_timezone } = useTimezone();
+  const { locale } = useLocale();
+  const trips = Array.isArray(feedData?.trips) ? feedData.trips : [];
+  const pagination = feedData?.pagination || {};
+  const hasPagination =
+    Number.isFinite(Number(pagination?.page)) &&
+    Number.isFinite(Number(pagination?.total_pages))
+    && Number(pagination?.total_pages)>1; // Show pagination controls only if there are multiple pages
 
   return (
     <div className="mx-auto w-full max-w-4xl">
-      <div className="sticky top-0 z-10 -mx-2 bg-gray-50/95 px-2 pb-3 pt-1 backdrop-blur sm:bg-white/95">
-        <div className="flex items-center gap-2 overflow-x-auto rounded-lg border border-gray-100 bg-white p-1 shadow-sm">
-          {TABS.map((tab) => {
-            const count = Array.isArray(normalizedBookings?.[tab.id])
-              ? normalizedBookings[tab.id].length
-              : 0;
-            const isActive = activeTab === tab.id;
-
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => onTabChange?.(tab.id)}
-                className={`flex min-w-fit flex-1 items-center justify-center gap-1 rounded-md px-3 py-2 text-sm font-semibold transition ${
-                  isActive
-                    ? "bg-primary text-white shadow-sm"
-                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
-                }`}
-              >
-                <span>{tab.label}</span>
-                <span
-                  className={`rounded-full px-1.5 text-[10px] ${
-                    isActive
-                      ? "bg-white/20 text-white"
-                      : "bg-gray-100 text-gray-500"
-                  }`}
-                >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
+      {(onRefresh || hasPagination) && (
+        <div className="mb-3 flex items-center justify-between gap-3">
+          {hasPagination ? (
+            <p className="text-xs text-gray-500">
+              Showing page {pagination.page} of {pagination.total_pages}
+              {Number.isFinite(Number(pagination.total)) &&
+                ` • ${pagination.total} trips`}
+            </p>
+          ) : (
+            <span />
+          )}
 
           {onRefresh && (
             <button
               type="button"
               onClick={onRefresh}
-              className="ml-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-gray-500 transition hover:bg-gray-50 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="inline-flex cursor-pointer h-9 w-9 shrink-0 items-center justify-center rounded-md text-gray-500 transition hover:bg-gray-50 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               aria-label="Refresh trips"
               disabled={isRefreshing}
             >
@@ -206,24 +171,50 @@ function TripBookings({
             </button>
           )}
         </div>
-      </div>
+      )}
 
-      {activeBookings.length === 0 ? (
+      {trips.length === 0 ? (
         <div className="rounded-xl border border-dashed border-gray-200 bg-white px-4 py-6 text-center">
           <NoRidesAvailable
-            title={`No ${TABS.find((tab) => tab.id === activeTab)?.label.toLowerCase()} trips`}
-            message="Your bookings will appear here once they are available."
+            title={emptyTitle}
+            message={emptyMessage}
           />
         </div>
       ) : (
-        <div className="space-y-3 pb-24">
-          {activeBookings.map((booking) => (
+        <div className="space-y-3 pb-4">
+          {trips.map((booking) => (
             <TripBookingCard
               key={booking?.booking_id}
               booking={booking}
               onSelect={onSelectBooking}
+              locale={locale}
+              timezone={
+                client_timezone?.timezone || booking?.timezone || DEFAULT_USER_TIMEZONE
+              }
+              
             />
           ))}
+
+          {hasPagination && (
+            <div className="flex items-center justify-between gap-3 pt-2">
+              <button
+                type="button"
+                onClick={onPreviousPage}
+                disabled={!pagination?.has_previous}
+                className="h-10 cursor-pointer rounded-md border border-gray-200 bg-white px-4 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Previous
+              </button>
+              <button
+                type="button"
+                onClick={onNextPage}
+                disabled={!pagination?.has_next}
+                className="h-10 cursor-pointer rounded-md bg-primary px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

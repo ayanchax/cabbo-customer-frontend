@@ -62,4 +62,12 @@ export const utcOffsetStringToMinutes = (offsetStr) => {
 export const formatCurrency = (val, currency_symbol) =>
   `${currency_symbol || DEFAULT_CURRENCY_SYMBOL}${val}`;
 
-
+export function titleCase(value) {
+  if (!value) return "";
+  return value
+    .replaceAll("_", " ")
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}

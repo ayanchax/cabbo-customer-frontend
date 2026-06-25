@@ -1,9 +1,9 @@
 import { api } from "@/api";
-import { ENDPOINTS } from "@/utils";
+import { ENDPOINTS, TRIP_OCCURENCE_LABELS } from "@/utils";
 
 
 export const initiateTripBooking = (payload) => {
-  return api.post(ENDPOINTS.TRIP.INITIATE_BOOKING, payload);
+    return api.post(ENDPOINTS.TRIP.INITIATE_BOOKING, payload);
 }
 
 export const verifyPaymentForTrip = (payload) => {
@@ -26,5 +26,14 @@ export const updateNonCostImpactingTripDetails = async (booking_id, payload) => 
 
 export const getAllBookingsForCustomer = async () => {
     const { data } = await api.get(ENDPOINTS.TRIP.MY_TRIPS);
+    return data;
+}
+
+export const getBookingsFeedForCustomer = async ({ feedConfig = {
+    bucket: TRIP_OCCURENCE_LABELS.UPCOMING,
+    page: 1,
+    limit: 10,
+} }) => {
+    const { data } = await api.get(ENDPOINTS.TRIP.MY_TRIPS_FEED, { params: feedConfig });
     return data;
 }

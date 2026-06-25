@@ -112,7 +112,11 @@ export const getIsoDateTime = (datetime) => {
 }
 
 export const humanReadableDateTime = (datetime, locale = undefined , timezone = undefined) => {
-  if (!datetime?.isoString) return "";
+  if(!datetime) return "";
+  if (!datetime?.isoString) {
+    console.warn("Invalid datetime object passed to humanReadableDateTime:", datetime);
+    datetime = { isoString: datetime }; // Attempt to treat it as a raw ISO string
+  };
   return new Date(datetime.isoString).toLocaleString(locale, {
     weekday: "long",
     year: "numeric",

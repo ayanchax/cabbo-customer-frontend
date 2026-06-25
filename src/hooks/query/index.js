@@ -10,3 +10,4 @@ export {useFleetQuery} from "./useFleet";
 export {useTripBookingDetail} from "./useTripBookingDetail";
 export {useTripTypeConstraintsQuery} from "./useTripConstraints";
 export {useTripBookings} from "./useTripBookings";
+export {useTripBookingsFeed} from "./useTripBookingsFeed";

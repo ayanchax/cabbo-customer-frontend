@@ -48,6 +48,7 @@ export const ENDPOINTS = {
             UPDATE_NON_COST_IMPACTING_TRIP_DETAILS: `${API_VERSION}/trips/bookings`,
             GET_TRIP_TYPE_CONSTRAINTS: `${API_VERSION}/trips/constraints`, 
             MY_TRIPS: `${API_VERSION}/trips/bookings`,
+            MY_TRIPS_FEED: `${API_VERSION}/trips/bookings/my/feed`,
 
 
         },
@@ -139,6 +140,7 @@ export const TRIP_OCCURENCE_LABELS={
 export const SERVER_ERROR_CODES = {
     ALREADY_BOOKED_ON_THIS_SLOT: "ALREADY_BOOKED_ON_THIS_SLOT",
     INVALID_BOOKING_DATA: "INVALID_BOOKING_DATA",
+    TRIP_NOT_FOUND: "TRIP_NOT_FOUND",
     UNKNOWN_ERROR: "UNKNOWN_ERROR",
 }
 
