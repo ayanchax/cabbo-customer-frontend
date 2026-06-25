@@ -105,7 +105,7 @@ function AirportTransfer() {
     num_carryons: 0,
     num_backpacks: 0,
     num_other_bags: 0,
-    toll_road_preferred:
+    toll_road_preferred: // by default on airport drop-off, we will set toll_road_preferred to true, because it is more relevant for airport drop-off trips where the customer wants to reach the airport on time and is willing to pay tolls if it saves time. For airport pickup trips, we will set it to false by default, because the customer may not be in a rush and may prefer to avoid tolls if possible, to save money.
       trip_type === TRIP_TYPES.AIRPORT_DROPOFF ? true : false, // Set default toll road preference based on trip type to return more relevant options based on their preference.
   }); // Example additional preferences
 
