@@ -62,11 +62,18 @@ Recommended order:
 
 ### My Trips
 
-- [ ] Build Upcoming, Ongoing, and Past tabs.
-- [ ] Show trip type, route summary, start time, status, fleet, and booking ID.
-- [ ] Add loading, empty, error, refresh, and pagination states.
-- [ ] Open the correct booking-detail page from each trip.
-- [ ] Preserve the selected tab during navigation where practical.
+- [x] Build Upcoming, Ongoing, and Past tabs.
+- [x] Show trip type, route summary, start time, status, fleet, and booking ID.
+- [x] Add loading, empty, error, refresh, and pagination states.
+- [x] Open the correct booking-detail page from each trip.
+- [x] Preserve the selected tab during navigation where practical.
+- [x] Route every trip card to the canonical booking-detail page regardless of status.
+  - Booking-detail pages own status-specific presentation for active, cancelled, disputed, and stale-past bookings.
+- [x] Use bucket-specific paginated trip feeds for Upcoming, Ongoing, and Past.
+- [x] Treat backend `TRIP_NOT_FOUND` responses as empty trip states instead of hard errors.
+- [x] Show subtle final fare context on trip cards without making My Trips feel like a payment page.
+- [x] Explain non-obvious trip statuses such as disputed trips and past trips whose operational status is still pending.
+- [x] Sort trip cards by start time so the latest relevant bookings appear first.
 
 ### Booking details
 
@@ -77,10 +84,12 @@ Recommended order:
   - Uses future-facing pickup and amenity copy for upcoming confirmed trips.
   - Uses neutral historical copy for past, completed, and cancelled trips.
 - [x] Add shared status-aware driver-payment display across booking details.
-  - Shows `Pay to driver` only for active trips with an outstanding balance.
-  - Shows `Paid to driver` only for completed/closed trips with a settled balance.
-  - Shows `Balance status pending` for stale or inconsistent past-trip records.
-  - Shows `Payment under review` for disputed trips and no driver-payment prompt for cancelled trips.
+    - Shows `Pay to driver` only for active trips with an outstanding balance.
+    - Shows `Paid to driver` only for completed/closed trips with a settled balance.
+    - Shows `Balance status pending` for stale or inconsistent past-trip records.
+    - Shows `Payment under review` for disputed trips and no driver-payment prompt for cancelled trips.
+- [x] Show a pending balance marker for past-active trips whose operational status was not closed correctly by Cabbo operations team.
+  - Keeps stale records transparent without changing the booking navigation flow.
 - [x] Add status-aware read-only fare-summary sections across booking details.
   - Always retains fare breakdown, inclusions/exclusions, and backend fare disclaimers as the booking record.
   - Hides overage rates for cancelled trips.
@@ -92,6 +101,10 @@ Recommended order:
   - Handle pending, processed, failed, not-applicable, and missing-refund-detail states.
   - Keep the fare breakdown as the original booking record while making the refund summary the primary financial status for cancelled trips.
   - Provide the support action when a refund is delayed or failed.
+- [ ] Add a disputed-trip blocked state to booking-detail pages.
+  - Show a clear feedback panel explaining that disputed trips are handled offline by Cabbo support.
+  - Hide customer self-service edit, refund, and payment actions while the dispute is active.
+  - Keep route, timing, booking ID, fare record, and support contact visible for reference.
 
 ### Booking-detail operational sections
 

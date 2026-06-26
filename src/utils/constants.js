@@ -127,6 +127,7 @@ export const TRIP_STATUS = {
     CANCELLED: "cancelled",
     CLOSED: "closed",
     DISPUTED: "dispute",
+    CREATED: "created",
 }
 
 export const TRIP_OCCURENCE_LABELS={

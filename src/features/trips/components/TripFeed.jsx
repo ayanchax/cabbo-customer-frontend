@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { generatePath, useNavigate } from "react-router-dom";
 import { FeedbackState, Loader, TripBookings } from "@/components";
 import { useTripBookingsFeed } from "@/hooks";
@@ -20,7 +20,10 @@ const EMPTY_COPY = {
 };
 
 function TripFeed({ bucket, limit = 10 }) {
+  
   const navigate = useNavigate();
+  const feedTopRef = useRef(null);
+  const shouldScrollAfterPageLoadRef = useRef(false);
   const [page, setPage] = useState(1);
   const feedConfig = { bucket, page, limit };
   const { data, isLoading, error, isFetching, refetch } =
@@ -56,8 +59,31 @@ function TripFeed({ bucket, limit = 10 }) {
     );
   };
 
+  const scrollToFeedTop = () => {
+    feedTopRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  const handleNextPage = () => {
+    shouldScrollAfterPageLoadRef.current = true;
+    setPage((currentPage) => currentPage + 1);
+  };
+
+  const handlePreviousPage = () => {
+    shouldScrollAfterPageLoadRef.current = true;
+    setPage((currentPage) => Math.max(1, currentPage - 1));
+  };
+
+  useEffect(() => {
+    if (isFetching || !shouldScrollAfterPageLoadRef.current || isEmptyTripsResponse) return;
+    shouldScrollAfterPageLoadRef.current = false;
+    window.requestAnimationFrame(scrollToFeedTop);
+  }, [data, isEmptyTripsResponse, isFetching]);
+
   if (isLoading) {
-    return <Loader message="Loading trips..." />;
+    return <Loader message={`Loading ${bucket.toLowerCase()} trips...`} />;
   }
 
   if (error && !isEmptyTripsResponse) {
@@ -80,18 +106,18 @@ function TripFeed({ bucket, limit = 10 }) {
   }
 
   return (
-    <TripBookings
-      feedData={feedData}
-      onSelectBooking={handleSelectBooking}
-      onRefresh={!isEmptyTripsResponse ? refetch : null}
-      onNextPage={() => setPage((currentPage) => currentPage + 1)}
-      onPreviousPage={() =>
-        setPage((currentPage) => Math.max(1, currentPage - 1))
-      }
-      isRefreshing={isFetching}
-      emptyTitle={emptyCopy.title}
-      emptyMessage={emptyCopy.message}
-    />
+    <div ref={feedTopRef} className="scroll-mt-24">
+      <TripBookings
+        feedData={feedData}
+        onSelectBooking={handleSelectBooking}
+        onRefresh={!isEmptyTripsResponse ? refetch : null}
+        onNextPage={handleNextPage}
+        onPreviousPage={handlePreviousPage}
+        isRefreshing={isFetching}
+        emptyTitle={emptyCopy.title}
+        emptyMessage={emptyCopy.message}
+      />
+    </div>
   );
 }
 

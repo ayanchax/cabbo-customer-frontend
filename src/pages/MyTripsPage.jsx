@@ -47,14 +47,16 @@ function MyTripsPage() {
       TripsComponent = <UpcomingTrips />;
   }
 
+
+
   return (
     <AppLayout>
-      <div className="relative mx-auto min-h-screen max-w-full overflow-y-auto bg-gray-50 px-2 py-2 shadow-[0_2px_16px_0_rgba(16,30,54,0.08)] sm:max-w-screen-sm sm:rounded-xl sm:bg-white sm:px-4 sm:py-6 sm:shadow-lg md:max-w-3xl md:px-6 md:py-8 lg:max-w-5xl lg:px-8 lg:py-10 xl:mb-4 xl:w-3/4 xl:px-10 2xl:max-w-screen-2xl">
+      <div className="relative mx-auto min-h-screen max-w-full bg-gray-50 px-2 py-2 shadow-[0_2px_16px_0_rgba(16,30,54,0.08)] sm:max-w-screen-sm sm:rounded-xl sm:bg-white sm:px-4 sm:py-6 sm:shadow-lg md:max-w-3xl md:px-6 md:py-8 lg:max-w-5xl lg:px-8 lg:py-10 xl:mb-4 xl:w-3/4 xl:px-10 2xl:max-w-screen-2xl">
         <div className="px-4">
           <PageHeader title="My trips" className="px-0 mb-3" />
 
           <div className="mx-auto w-full max-w-4xl">
-            <div className="sticky top-0 z-10 -mx-2 bg-gray-50/95 px-2 pb-3 pt-1 backdrop-blur sm:bg-white/95">
+            <div className={`sticky top-0 z-10 -mx-2 bg-gray-50/95 px-2 pb-3 pt-1 backdrop-blur sm:bg-white/95`}>
               <div className="flex items-center gap-2 overflow-x-auto rounded-lg border border-gray-100 bg-white p-1 shadow-sm">
                 {TABS.map((tab) => {
                   const isActive = activeTab === tab.id;
@@ -76,7 +78,11 @@ function MyTripsPage() {
                 })}
               </div>
             </div>
-            <Suspense fallback={<Loader message={`Loading ${activeTab.toLowerCase()} trips...`} />}>
+            <Suspense
+              fallback={
+                <Loader message={`Loading your trips...`} />
+              }
+            >
               {TripsComponent}
             </Suspense>
           </div>
