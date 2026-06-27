@@ -95,12 +95,12 @@ Recommended order:
   - Hides overage rates for cancelled trips.
   - Shows refund/cancellation policies for upcoming, ongoing, cancelled, and disputed trips.
   - Hides refund/cancellation policies for completed/closed and generic past trips.
-- [ ] Add a cancelled-trip refund summary to booking-detail pages.
+- [x] Add a cancelled-trip refund summary to booking-detail pages.
   - Render it only when the trip is cancelled and backend refund details are available.
   - Show refund amount, refund status, refund method/source, initiation date, and expected settlement timeline when provided.
   - Handle pending, processed, failed, not-applicable, and missing-refund-detail states.
   - Keep the fare breakdown as the original booking record while making the refund summary the primary financial status for cancelled trips.
-  - Provide the support action when a refund is delayed or failed.
+  - Support actions for delayed or failed refunds are tracked under booking-detail operational sections.
 - [x] Add a disputed-trip blocked state to booking-detail pages.
   - Show a clear feedback panel explaining that disputed trips are handled offline by Cabbo support.
   - Hide customer self-service edit, refund, and payment actions while the dispute is active.

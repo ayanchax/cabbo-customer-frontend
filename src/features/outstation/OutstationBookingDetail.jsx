@@ -7,6 +7,7 @@ import {
   TripCabDetails,
   InCarAmenities,
   DisputedBookingBlockedState,
+  TripRefundSummary,
 } from "@/components";
 import { TRIP_STATUS, TRIP_OCCURENCE_LABELS } from "@/utils";
 import { useTimezone, useBookingDetailBackNavigation } from "@/hooks";
@@ -92,6 +93,9 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
   const totalTripDays = bookingDetail?.total_days || null;
   const includedKms = bookingDetail?.included_kms || null;
   const isDisputedTrip = status === TRIP_STATUS.DISPUTED;
+  const isCancelledTrip =
+    status === TRIP_STATUS.CANCELLED ||
+    label === TRIP_OCCURENCE_LABELS.CANCELLED;
 
   return (
     <div
@@ -176,6 +180,19 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
                 header={amenitiesLabel}
               />
             </div>
+          )}
+
+          {isCancelledTrip && (
+            <TripRefundSummary
+              bookingId={booking_id}
+              currency={bookingDetail?.currency}
+              timezone={
+                server_timezone ??
+                client_timezone?.timezone ??
+                DEFAULT_USER_TIMEZONE
+              }
+              className="mb-4"
+            />
           )}
 
           {/* Fare summary */}

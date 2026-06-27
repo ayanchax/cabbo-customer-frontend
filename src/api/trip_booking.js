@@ -37,3 +37,8 @@ export const getBookingsFeedForCustomer = async ({ feedConfig = {
     const { data } = await api.get(ENDPOINTS.TRIP.MY_TRIPS_FEED, { params: feedConfig });
     return data;
 }
+
+export const getRefundDetailsForBooking = async (booking_id) => {
+    const { data } = await api.get(`${ENDPOINTS.TRIP.REFUND_DETAILS}/${booking_id}`);
+    return data;
+}

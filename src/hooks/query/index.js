@@ -11,3 +11,4 @@ export {useTripBookingDetail} from "./useTripBookingDetail";
 export {useTripTypeConstraintsQuery} from "./useTripConstraints";
 export {useTripBookings} from "./useTripBookings";
 export {useTripBookingsFeed} from "./useTripBookingsFeed";
+export {useTripRefundDetail} from "./useTripRefundDetail";

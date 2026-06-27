@@ -7,6 +7,7 @@ import {
   TripCabDetails,
   InCarAmenities,
   DisputedBookingBlockedState,
+  TripRefundSummary,
 } from "@/components";
 import {TRIP_STATUS, TRIP_OCCURENCE_LABELS} from "@/utils";
 import { useTimezone, useBookingDetailBackNavigation } from "@/hooks";
@@ -81,6 +82,9 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
   const pickupLabel = status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'Pickup' : 'Pickup details';
   const showCabAuxilliaryDetails =  [TRIP_STATUS.CONFIRMED].includes(status) && [TRIP_OCCURENCE_LABELS.UPCOMING].includes(label);
   const isDisputedTrip = status === TRIP_STATUS.DISPUTED;
+  const isCancelledTrip =
+    status === TRIP_STATUS.CANCELLED ||
+    label === TRIP_OCCURENCE_LABELS.CANCELLED;
   
   return (
     <div
@@ -156,6 +160,19 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
                 header={amenitiesLabel}
               />
             </div>
+          )}
+
+          {isCancelledTrip && (
+            <TripRefundSummary
+              bookingId={booking_id}
+              currency={bookingDetail?.currency}
+              timezone={
+                server_timezone ??
+                client_timezone?.timezone ??
+                DEFAULT_USER_TIMEZONE
+              }
+              className="mb-4"
+            />
           )}
 
           {/* Fare summary */}

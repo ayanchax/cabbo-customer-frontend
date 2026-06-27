@@ -29,7 +29,9 @@ function getDriverPaymentDisplay({
       ? Math.max(totalPrice - advancePayment, 0)
       : null;
   const normalizedStatus = status?.toLowerCase();
+  
   const normalizedOccurrenceLabel = occurrenceLabel?.toLowerCase();
+
   const isTerminalStatus = [
     TRIP_STATUS.COMPLETED,
     TRIP_STATUS.CLOSED,
@@ -103,7 +105,7 @@ function TripFareSummary({ fareData, className = "", showPayRestToDriver = true 
   } = fareData || {};
 
   const currencySymbol = currency?.symbol || DEFAULT_CURRENCY_SYMBOL;
-
+  
   const hasBreakdown =
      price_breakdown && Object.keys(price_breakdown).length > 0;
   const hasOverages =
@@ -124,7 +126,7 @@ function TripFareSummary({ fareData, className = "", showPayRestToDriver = true 
   const showRefundPolicies =
   refunds_and_cancellation_policies?.length > 0 &&
   (isCancelled || isDisputed || (!isCompleted && !isPast));
-  const showDisclaimers = disclaimers?.length > 0;
+  const showDisclaimers = disclaimers?.length > 0 && !isCancelled;
   const driverPaymentDisplay = getDriverPaymentDisplay({
     status: trip_status,
     occurrenceLabel: occurrence_label,

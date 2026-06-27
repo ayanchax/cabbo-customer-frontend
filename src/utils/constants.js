@@ -49,6 +49,7 @@ export const ENDPOINTS = {
             GET_TRIP_TYPE_CONSTRAINTS: `${API_VERSION}/trips/constraints`, 
             MY_TRIPS: `${API_VERSION}/trips/bookings`,
             MY_TRIPS_FEED: `${API_VERSION}/trips/bookings/my/feed`,
+            REFUND_DETAILS: `${API_VERSION}/trips/refunds/refund`,
 
 
         },
@@ -136,6 +137,18 @@ export const TRIP_OCCURENCE_LABELS={
     CANCELLED: "cancelled",
     COMPLETED: "completed",
     PAST: "past",
+}
+
+export const REFUND_STATUS={
+    COMPLETED: "completed",
+    PROCESSING: "processing",
+    INITIATED: "initiated",
+    FAILED: "failed",
+    NOT_APPLICABLE: "not_applicable",
+    UNKNOWN: "unknown",
+    PROCESSED: "processed",
+    PENDING: "pending",
+    SUCCESS: "success",
 }
 
 export const SERVER_ERROR_CODES = {

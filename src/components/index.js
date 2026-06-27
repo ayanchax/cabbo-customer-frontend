@@ -27,3 +27,4 @@ export {LuggageCounter} from "./LuggageCounter";
 export { BookingDetailPageHeader } from "./BookingDetailPageHeader";
 export {IncludedServicePills} from "./IncludedServicePills";
 export { DisputedBookingBlockedState } from "./DisputedBookingBlockedState";
+export { TripRefundSummary } from "./TripRefundSummary";
