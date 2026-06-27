@@ -19,7 +19,7 @@ const EMPTY_COPY = {
   },
 };
 
-function TripFeed({ bucket, limit = 10 }) {
+function TripFeed({ bucket, limit = 10, onTotalTripsChange }) {
   
   const navigate = useNavigate();
   const feedTopRef = useRef(null);
@@ -46,9 +46,16 @@ function TripFeed({ bucket, limit = 10 }) {
     trips: [],
   };
 
+
   const feedData = isEmptyTripsResponse ? emptyFeedData : (data ?? null);
   const emptyCopy =
     EMPTY_COPY[bucket] || EMPTY_COPY[TRIP_OCCURENCE_LABELS.UPCOMING];
+
+  useEffect(() => {
+    if (feedData?.pagination?.total !== undefined && onTotalTripsChange) {
+      onTotalTripsChange(feedData.pagination.total);
+    }
+  }, [feedData, onTotalTripsChange]);
 
   const handleSelectBooking = (booking) => {
     if (!booking?.booking_id) return;

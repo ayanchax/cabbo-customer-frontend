@@ -6,6 +6,7 @@ import {
   TripFareSummary,
   TripCabDetails,
   InCarAmenities,
+  DisputedBookingBlockedState,
 } from "@/components";
 import {TRIP_STATUS, TRIP_OCCURENCE_LABELS} from "@/utils";
 import { useTimezone, useBookingDetailBackNavigation } from "@/hooks";
@@ -23,10 +24,6 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
     comingFromBookingPaymentPage,
   );
 
-  console.log(
-    "Booking Detail in LocalHourlyRentalBookingDetail:",
-    bookingDetail,
-  ); // Debug log to check the received booking detail data
   const {
     booking_id,
     fleet,
@@ -83,6 +80,7 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
   const amenitiesLabel= status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'You will get these amenities in your cab:' : 'Amenities that were provided for this trip:';
   const pickupLabel = status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'Pickup' : 'Pickup details';
   const showCabAuxilliaryDetails =  [TRIP_STATUS.CONFIRMED].includes(status) && [TRIP_OCCURENCE_LABELS.UPCOMING].includes(label);
+  const isDisputedTrip = status === TRIP_STATUS.DISPUTED;
   
   return (
     <div
@@ -109,6 +107,11 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
           occurenceLabel={label}
         />
 
+        {isDisputedTrip ? (
+          <div className="px-4">
+            <DisputedBookingBlockedState className="mt-4" />
+          </div>
+        ) : (
         <div className="px-4">
           <div className="py-2"></div>
 
@@ -162,6 +165,7 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
             </div>
           )}
         </div>
+        )}
       </div>
     </div>
   );

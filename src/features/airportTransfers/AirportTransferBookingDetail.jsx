@@ -6,6 +6,7 @@ import {
   TripFareSummary,
   TripCabDetails,
   InCarAmenities,
+  DisputedBookingBlockedState,
 } from "@/components";
 import {
   useTimezone,
@@ -156,6 +157,7 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
   const amenitiesLabel= status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'You will get these amenities in your cab:' : 'Amenities that were provided for this trip:';
   const pickupLabel = status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'Pickup' : 'Pickup details';
   const showCabAuxilliaryDetails =  [TRIP_STATUS.CONFIRMED].includes(status) && [TRIP_OCCURENCE_LABELS.UPCOMING].includes(label);
+  const isDisputedTrip = status === TRIP_STATUS.DISPUTED;
   return (
     <div
       className={` relative
@@ -181,6 +183,11 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
           occurenceLabel={label}
         />
 
+        {isDisputedTrip ? (
+          <div className="px-4">
+            <DisputedBookingBlockedState className="mt-4" />
+          </div>
+        ) : (
         <div className="px-4">
           <div className="py-2"></div>
 
@@ -245,6 +252,7 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
             </div>
           )}
         </div>
+        )}
       </div>
     </div>
   );

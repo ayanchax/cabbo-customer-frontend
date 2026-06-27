@@ -6,6 +6,7 @@ import {
   TripFareSummary,
   TripCabDetails,
   InCarAmenities,
+  DisputedBookingBlockedState,
 } from "@/components";
 import { TRIP_STATUS, TRIP_OCCURENCE_LABELS } from "@/utils";
 import { useTimezone, useBookingDetailBackNavigation } from "@/hooks";
@@ -23,10 +24,6 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
     comingFromBookingPaymentPage,
   );
 
-  console.log(
-    "Booking Detail in OutstationBookingDetail:",
-    bookingDetail,
-  ); // Debug log to check the received booking detail data
   const {
     booking_id,
     fleet,
@@ -94,6 +91,7 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
   const isRoundTripOnly = bookingDetail?.is_round_trip ?? false;
   const totalTripDays = bookingDetail?.total_days || null;
   const includedKms = bookingDetail?.included_kms || null;
+  const isDisputedTrip = status === TRIP_STATUS.DISPUTED;
 
   return (
     <div
@@ -120,6 +118,11 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
           occurenceLabel={label}
         />
 
+        {isDisputedTrip ? (
+          <div className="px-4">
+            <DisputedBookingBlockedState className="mt-4" />
+          </div>
+        ) : (
         <div className="px-4">
           <div className="py-2"></div>
 
@@ -182,6 +185,7 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
             </div>
           )}
         </div>
+        )}
       </div>
     </div>
   );

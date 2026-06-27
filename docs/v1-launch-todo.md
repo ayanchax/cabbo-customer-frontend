@@ -101,10 +101,10 @@ Recommended order:
   - Handle pending, processed, failed, not-applicable, and missing-refund-detail states.
   - Keep the fare breakdown as the original booking record while making the refund summary the primary financial status for cancelled trips.
   - Provide the support action when a refund is delayed or failed.
-- [ ] Add a disputed-trip blocked state to booking-detail pages.
+- [x] Add a disputed-trip blocked state to booking-detail pages.
   - Show a clear feedback panel explaining that disputed trips are handled offline by Cabbo support.
   - Hide customer self-service edit, refund, and payment actions while the dispute is active.
-  - Keep route, timing, booking ID, fare record, and support contact visible for reference.
+  - Keep the booking-detail header and booking ID visible for reference while replacing normal detail sections with the blocked state.
 
 ### Booking-detail operational sections
 

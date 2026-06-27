@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense , useState} from "react";
 import { useSearchParams } from "react-router-dom";
 import { Loader, PageHeader } from "@/components";
 import { TRIP_OCCURENCE_LABELS } from "@/utils";
@@ -22,6 +22,7 @@ const TABS = [
   { id: TRIP_OCCURENCE_LABELS.PAST, label: "Past" },
 ];
 function MyTripsPage() {
+  const [tripCountsByBucket, setTripCountsByBucket] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedTab = searchParams.get("tab") || TRIP_OCCURENCE_LABELS.UPCOMING;
   const activeTab = TABS.some((tab) => tab.id === selectedTab)
@@ -30,21 +31,56 @@ function MyTripsPage() {
 
   const handleTabChange = (tab) => {
     setSearchParams({ tab });
+
   };
+
+  const handleTotalTripsChange = (bucket, total) => {
+    setTripCountsByBucket((currentCounts) => {
+      if (currentCounts[bucket] === total) return currentCounts;
+      return {
+        ...currentCounts,
+        [bucket]: total,
+      };
+    });
+  }
 
   let TripsComponent;
   switch (activeTab) {
     case TRIP_OCCURENCE_LABELS.UPCOMING:
-      TripsComponent = <UpcomingTrips />;
+      TripsComponent = (
+        <UpcomingTrips
+          onTotalTripsChange={(total) =>
+            handleTotalTripsChange(TRIP_OCCURENCE_LABELS.UPCOMING, total)
+          }
+        />
+      );
       break;
     case TRIP_OCCURENCE_LABELS.ONGOING:
-      TripsComponent = <OngoingTrips />;
+      TripsComponent = (
+        <OngoingTrips
+          onTotalTripsChange={(total) =>
+            handleTotalTripsChange(TRIP_OCCURENCE_LABELS.ONGOING, total)
+          }
+        />
+      );
       break;
     case TRIP_OCCURENCE_LABELS.PAST:
-      TripsComponent = <PastTrips />;
+      TripsComponent = (
+        <PastTrips
+          onTotalTripsChange={(total) =>
+            handleTotalTripsChange(TRIP_OCCURENCE_LABELS.PAST, total)
+          }
+        />
+      );
       break;
     default:
-      TripsComponent = <UpcomingTrips />;
+      TripsComponent = (
+        <UpcomingTrips
+          onTotalTripsChange={(total) =>
+            handleTotalTripsChange(TRIP_OCCURENCE_LABELS.UPCOMING, total)
+          }
+        />
+      );
   }
 
 
@@ -60,6 +96,7 @@ function MyTripsPage() {
               <div className="flex items-center gap-2 overflow-x-auto rounded-lg border border-gray-100 bg-white p-1 shadow-sm">
                 {TABS.map((tab) => {
                   const isActive = activeTab === tab.id;
+                  const tripCount = tripCountsByBucket[tab.id];
 
                   return (
                     <button
@@ -73,6 +110,11 @@ function MyTripsPage() {
                       }`}
                     >
                       <span>{tab.label}</span>
+                      {isActive && tripCount > 0 && (
+                        <span className="ml-1 inline-flex min-w-5 items-center justify-center rounded-full bg-white/20 px-1.5 py-0.5 text-[11px] font-bold leading-none text-white ring-1 ring-white/25">
+                          {tripCount}
+                        </span>
+                      )}
                     </button>
                   );
                 })}

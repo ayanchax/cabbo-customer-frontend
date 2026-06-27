@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { useParams } from "react-router-dom";
 import { useTripBookingDetail } from "@/hooks";
 import { Loader } from "@/components";
-import { TRIP_TYPES } from "@/utils";
+import { TRIP_TYPES , TRIP_STATUS} from "@/utils";
 
 function BookingDetailPage() {
   const { bookingId } = useParams();
@@ -23,9 +23,15 @@ function BookingDetailPage() {
     // Error Boundary can catch this and show user-friendly fallback UI with option to retry fetching the data
   }
 
+
+
   if (!bookingDetailData || isLoading) {
     return <Loader message="Loading your booking..." />;
   }
+
+
+
+  
 
   // Trip type is essential to determine which booking detail component to render, so we validate its presence and value before proceeding
   const tripType = bookingDetailData?.trip_type?.trip_type || null; // Fallback to generic term if trip type is not available
