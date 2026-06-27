@@ -191,7 +191,7 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
                 client_timezone?.timezone ??
                 DEFAULT_USER_TIMEZONE
               }
-              className="mb-4"
+              className="mb-4 mt-4"
             />
           )}
 

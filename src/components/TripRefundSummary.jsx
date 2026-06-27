@@ -4,6 +4,7 @@ import {
   CheckCircle2,
   Clock3,
   RotateCcw,
+  ShieldCheck,
 } from "lucide-react";
 import { useLocale, useTimezone, useTripRefundDetail } from "@/hooks";
 import { humanReadableDateTime } from "@/components/common/datetime-picker/utils";
@@ -12,7 +13,9 @@ import {
   DEFAULT_USER_TIMEZONE,
   formatCurrency,
   titleCase,
-  REFUND_STATUS
+  REFUND_STATUS,
+  APP,
+
 } from "@/utils";
 
 const REFUND_STATUS_CONFIG = {
@@ -97,8 +100,14 @@ function TripRefundSummary({
         className={`rounded-xl border border-gray-100 bg-white p-4 shadow-sm ${className}`}
         aria-label="Refund Summary"
       >
-        <div className="h-4 w-32 animate-pulse rounded bg-gray-100" />
-        <div className="mt-4 h-10 animate-pulse rounded-lg bg-gray-100" />
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <div className="h-3 w-24 animate-pulse rounded bg-gray-100" />
+            <div className="mt-2 h-5 w-44 animate-pulse rounded bg-gray-100" />
+          </div>
+          <div className="h-8 w-28 animate-pulse rounded-full bg-gray-100" />
+        </div>
+        <div className="mt-5 h-16 animate-pulse rounded-lg bg-gray-100" />
       </section>
     );
   }
@@ -118,8 +127,7 @@ function TripRefundSummary({
               Refund details are being updated
             </h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
-              This trip was cancelled. Refund information will appear here once
-              Cabbo has an update from the payment provider.
+              This trip was cancelled. Refund information will appear here once {APP.name} has an update from the payment provider.
             </p>
           </div>
         </div>
@@ -159,13 +167,18 @@ function TripRefundSummary({
       aria-label="Refund Summary"
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
+        <div className="flex items-start gap-3">
+          <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/5 text-primary ring-1 ring-primary/10">
+            <ShieldCheck className="h-5 w-5" aria-hidden="true" />
+          </div>
+          <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
             Refund Summary
           </p>
           <h2 className="mt-1 text-lg font-semibold text-gray-950">
             Cancelled trip refund
           </h2>
+          </div>
         </div>
         <span
           className={`inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${statusConfig.className}`}
@@ -175,35 +188,48 @@ function TripRefundSummary({
         </span>
       </div>
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-lg bg-gray-50 px-3 py-2">
-          <p className="text-xs text-gray-500">Refund amount</p>
-          <p className="mt-0.5 font-mono text-xl font-semibold text-gray-950">
+      <div className="mt-4 rounded-lg border border-gray-100 bg-gray-50 px-4 py-3">
+        <p className="text-xs font-medium text-gray-500">Refund amount</p>
+        <p className="mt-1 font-mono text-2xl font-semibold text-gray-950">
             {typeof refundData.refund_amount === "number"
               ? formatCurrency(refundData.refund_amount, currencySymbol)
               : "Not available"}
-          </p>
-        </div>
+        </p>
+      </div>
 
-        <div className="rounded-lg bg-gray-50 px-3 py-2">
-          <p className="text-xs text-gray-500">Refund type</p>
-          <p className="mt-0.5 text-sm font-semibold text-gray-800">
-            {titleCase(refundData.refund_type || "Not available")}
-          </p>
-        </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {refundData.refund_type && (
+          <span className="inline-flex rounded-full bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-200">
+            {titleCase(refundData.refund_type)} refund
+          </span>
+        )}
+        {showRefundTimeline && initiatedDatetime && (
+          <span className="inline-flex rounded-full bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-200">
+            Initiated {initiatedDatetime}
+          </span>
+        )}
+        {showRefundTimeline && retriedDatetime && (
+          <span className="inline-flex rounded-full bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-200">
+            Retried {retriedDatetime}
+          </span>
+        )}
       </div>
 
       <div className="mt-4 space-y-2 text-sm leading-6 text-gray-600">
         {showRefundDescription && refundData.refund_description && (
           <p>{refundData.refund_description}</p>
         )}
-        {showRefundTimeline && initiatedDatetime && <p>Initiated on {initiatedDatetime}</p>}
-        {showRefundTimeline && retriedDatetime && <p>Last retried on {retriedDatetime}</p>}
         {showAutomaticUpdateNote && (
-          <p>
-            We will keep checking for updates and notify you once the refund is
-            processed.
-          </p>
+          <div className="flex items-start gap-2 rounded-lg border border-blue-100 bg-blue-50/60 px-3 py-2 text-xs leading-5 text-gray-700">
+            <Clock3
+              className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary"
+              aria-hidden="true"
+            />
+            <span>
+              We will keep checking for updates and notify you once the refund
+              is processed.
+            </span>
+          </div>
         )}
       </div>
     </section>
