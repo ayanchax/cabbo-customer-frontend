@@ -42,3 +42,8 @@ export const getRefundDetailsForBooking = async (booking_id) => {
     const { data } = await api.get(`${ENDPOINTS.TRIP.REFUND_DETAILS}/${booking_id}`);
     return data;
 }
+
+export const getSupportContactsForBooking = async (payload) => {
+    const { data } = await api.post(`${ENDPOINTS.TRIP.GET_SUPPORT_CONTACTS}`, payload);
+    return data;
+}

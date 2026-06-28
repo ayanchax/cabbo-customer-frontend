@@ -50,6 +50,7 @@ export const ENDPOINTS = {
             MY_TRIPS: `${API_VERSION}/trips/bookings`,
             MY_TRIPS_FEED: `${API_VERSION}/trips/bookings/my/feed`,
             REFUND_DETAILS: `${API_VERSION}/trips/refunds/refund`,
+            GET_SUPPORT_CONTACTS: `${API_VERSION}/trips/support`,
 
 
         },
