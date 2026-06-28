@@ -11,6 +11,7 @@ import {
   TripSupportCard,
   TripDriverCard,
   TripSpecialRequest,
+  CancelTripAction,
 } from "@/components";
 import {TRIP_STATUS, TRIP_OCCURENCE_LABELS, TRIP_TYPES} from "@/utils";
 import { useTimezone, useBookingDetailBackNavigation } from "@/hooks";
@@ -103,6 +104,11 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
     !isCancelledTrip &&
     !isStaleTrip &&
     [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status);
+  const showCancellationAction =
+    !isCancelledTrip &&
+    !isStaleTrip &&
+    [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) &&
+    label === TRIP_OCCURENCE_LABELS.UPCOMING;
   
   return (
     <div
@@ -202,6 +208,10 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
               initialRequest={bookingDetail?.special_needs_requests}
               className="mb-4"
             />
+          )}
+
+          {showCancellationAction && (
+            <CancelTripAction bookingId={booking_id} className="mb-4" />
           )}
 
           {/* In-car amenities */}

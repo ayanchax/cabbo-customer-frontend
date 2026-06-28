@@ -11,6 +11,7 @@ import {
   TripSupportCard,
   TripDriverCard,
   TripSpecialRequest,
+  CancelTripAction,
 } from "@/components";
 import {
   useTimezone,
@@ -189,6 +190,11 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     !isCancelledTrip &&
     !isStaleTrip &&
     [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status);
+  const showCancellationAction =
+    !isCancelledTrip &&
+    !isStaleTrip &&
+    [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) &&
+    label === TRIP_OCCURENCE_LABELS.UPCOMING;
   return (
     <div
       className={` relative
@@ -307,6 +313,10 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
                 initialRequest={bookingDetail?.special_needs_requests}
                 className="mb-4"
               />
+            )}
+
+            {showCancellationAction && (
+              <CancelTripAction bookingId={booking_id} className="mb-4" />
             )}
 
             {/* In-car amenities */}

@@ -105,7 +105,7 @@ Recommended order:
   - Show a clear feedback panel explaining that disputed trips are handled offline by Cabbo support.
   - Hide customer self-service edit, refund, and payment actions while the dispute is active.
   - Keep the booking-detail header and booking ID visible for reference while replacing normal detail sections with the blocked state.
-- [ ] Add customer-initiated cancellation for eligible upcoming booking details.
+- [x] Add customer-initiated cancellation for eligible upcoming booking details.
   - Show cancellation only for customer-cancellable upcoming bookings.
   - Submit only customer-safe cancellation fields: reason and `customer_cancelled` cancellation sub-status.
   - Refresh or update the booking detail into cancelled state after success.
@@ -187,13 +187,13 @@ Recommended order:
 
 - [x] Use a customer-safe driver response model.
 - [ ] Audit all customer-facing API responses for internal or sensitive fields.
-- [ ] Verify authorization on every booking detail and mutation endpoint.
+- [x] Verify authorization on every booking detail and mutation endpoint.
 - [ ] Verify OTP, search, support, and mutation rate limits.
 - [ ] Verify backend input validation and frontend output encoding.
 - [x] Remove secrets from frontend environment variables and bundles.
 - [x] Verify authentication, session expiry, and logout behavior.
 - [ ] Redact personal, authentication, and payment data from logs.
-- [ ] Remove development logs containing personal or payment data.
+- [x] Remove development logs containing personal or payment data.
 
 ## 7. Release Testing - QA Checklist
 
