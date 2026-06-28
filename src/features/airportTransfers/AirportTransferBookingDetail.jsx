@@ -12,6 +12,7 @@ import {
   TripDriverCard,
   TripSpecialRequest,
   CancelTripAction,
+  TripReview,
 } from "@/components";
 import {
   useTimezone,
@@ -195,7 +196,18 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     !isStaleTrip &&
     [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) &&
     label === TRIP_OCCURENCE_LABELS.UPCOMING;
-  return (
+  const existingTripReview =
+    bookingDetail?.rating || null
+  const showTripReview =
+    // If trip is cancelled but driver is assigned - then also we allow 
+    (!isCancelledTrip || bookingDetail?.driver) &&
+    !isStaleTrip &&
+    [TRIP_STATUS.COMPLETED, TRIP_STATUS.CLOSED].includes(status) &&
+    Number(bookingDetail?.balance_payment ?? 0) === 0;
+  
+   
+  
+    return (
     <div
       className={` relative
           xl:w-3/4 min-h-screen overflow-y-auto
@@ -292,6 +304,14 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
               <TripDriverCard
                 driver={bookingDetail?.driver}
                 showContactAction={showDriverContactAction}
+                className="mb-4"
+              />
+            )}
+
+            {true && (
+              <TripReview
+                bookingId={booking_id}
+                initialReview={existingTripReview}
                 className="mb-4"
               />
             )}

@@ -107,14 +107,17 @@ Recommended order:
   - Keep the booking-detail header and booking ID visible for reference while replacing normal detail sections with the blocked state.
 - [x] Add customer-initiated cancellation for eligible upcoming booking details.
   - Show cancellation only for customer-cancellable upcoming bookings.
+  - Use customer-friendly cancellation reason options with an `Other` path.
   - Submit only customer-safe cancellation fields: reason and `customer_cancelled` cancellation sub-status.
+  - Link customers to the refund/cancellation policy section before confirmation.
   - Refresh or update the booking detail into cancelled state after success.
   - Let backend own policy evaluation, refund eligibility, and refund processing.
-- [ ] Add customer trip rating for successfully completed trips.
+- [x] Add customer trip rating for successfully completed trips.
   - Render only for completed/closed bookings that are eligible for review.
   - Submit rating through `/trips/reviews/{booking_id}/submit-review`.
   - Capture required 1-5 overall rating and optional feedback.
   - Keep detailed experience fields optional for V1 to avoid making review submission feel heavy.
+  - Place the review as a separate booking-detail section after driver/cab details instead of embedding it inside the driver card.
   - Consider a Google Business review link only after the internal trip rating is captured.
 
 ### Booking-detail operational sections

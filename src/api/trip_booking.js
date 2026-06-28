@@ -52,3 +52,8 @@ export const getSupportContactsForBooking = async (payload) => {
     const { data } = await api.post(`${ENDPOINTS.TRIP.GET_SUPPORT_CONTACTS}`, payload);
     return data;
 }
+
+export const submitTripReview = async ({ bookingId, payload }) => {
+    const { data } = await api.post(`${ENDPOINTS.TRIP.REVIEW_TRIP}/${bookingId}/submit-review`, payload);
+    return data;
+}   

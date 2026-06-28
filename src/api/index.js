@@ -6,5 +6,5 @@ export {isLoggedIn, getProfile} from "./customer";
 export {classifyTripType} from "./trip_type";
 export {getTripPackages, getTripPriorBookingWindow, getTripTypeConstraints} from "./trip_package";
 export {searchTrips} from "./trip_search";
-export {initiateTripBooking, verifyPaymentForTrip, cleanupStagedTrip, getBookingDetails, updateNonCostImpactingTripDetails, cancelTripBooking, getAllBookingsForCustomer, getBookingsFeedForCustomer, getRefundDetailsForBooking, getSupportContactsForBooking} from "./trip_booking";
+export {initiateTripBooking, verifyPaymentForTrip, cleanupStagedTrip, getBookingDetails, updateNonCostImpactingTripDetails, cancelTripBooking, getAllBookingsForCustomer, getBookingsFeedForCustomer, getRefundDetailsForBooking, getSupportContactsForBooking, submitTripReview} from "./trip_booking";
 export {getFleet} from "./fleet";

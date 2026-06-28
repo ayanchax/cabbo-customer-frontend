@@ -32,3 +32,4 @@ export { TripSupportCard } from "./TripSupportCard";
 export { TripDriverCard } from "./TripDriverCard";
 export { TripSpecialRequest } from "./TripSpecialRequest";
 export { CancelTripAction } from "./CancelTripAction";
+export { TripReview } from "./TripReview";

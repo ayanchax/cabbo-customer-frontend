@@ -52,7 +52,7 @@ export const ENDPOINTS = {
             MY_TRIPS_FEED: `${API_VERSION}/trips/bookings/my/feed`,
             REFUND_DETAILS: `${API_VERSION}/trips/refunds/refund`,
             GET_SUPPORT_CONTACTS: `${API_VERSION}/trips/support`,
-
+            REVIEW_TRIP: `${API_VERSION}/trips/reviews`, // append booking ID/submit-review to rate a trip
 
         },
     FLEET:{

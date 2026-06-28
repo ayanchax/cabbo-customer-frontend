@@ -81,6 +81,21 @@ Detailed `overall_experience` fields should be optional:
 These can be hidden behind a small `Tell us more` affordance or deferred if V1
 needs to stay fast.
 
+## Placement
+
+The trip rating component should be a separate booking-detail section, not part
+of the driver card.
+
+The driver card is for identity, contact, cab, and trust information. A trip
+review is broader: it can cover the driver, cab cleanliness, AC, punctuality,
+and the overall Cabbo experience. Keeping it separate avoids making the driver
+profile feel like an action form and keeps the booking detail page easier to
+scan.
+
+For V1, place `TripReview` after the driver/cab section on completed or closed
+booking details, before support, fare, and historical policy sections. This
+keeps the rating contextual without burying it under financial information.
+
 ## Backend Ownership
 
 The backend should validate:

@@ -11,3 +11,4 @@ export {useCleanupStagedTrip} from "./useCleanupStagedTrip";
 export {useEditNonCostImpactingTripFields} from "./useEditNonCostImpactingTripFields";
 export {useGetSupportContactsForBooking} from "./useCustomerSupport";
 export {useCancelTripBooking} from "./useCancelTripBooking";
+export {useSubmitTripReview} from "./useSubmitTripReview";

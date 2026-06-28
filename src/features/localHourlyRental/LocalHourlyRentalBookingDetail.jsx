@@ -12,6 +12,7 @@ import {
   TripDriverCard,
   TripSpecialRequest,
   CancelTripAction,
+  TripReview,
 } from "@/components";
 import {TRIP_STATUS, TRIP_OCCURENCE_LABELS, TRIP_TYPES} from "@/utils";
 import { useTimezone, useBookingDetailBackNavigation } from "@/hooks";
@@ -109,6 +110,17 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
     !isStaleTrip &&
     [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) &&
     label === TRIP_OCCURENCE_LABELS.UPCOMING;
+  const existingTripReview =
+    bookingDetail?.trip_rating ||
+    bookingDetail?.trip_review ||
+    bookingDetail?.customer_review ||
+    bookingDetail?.review ||
+    null;
+  const showTripReview =
+    !isCancelledTrip &&
+    !isStaleTrip &&
+    [TRIP_STATUS.COMPLETED, TRIP_STATUS.CLOSED].includes(status) &&
+    Number(bookingDetail?.balance_payment ?? 0) === 0;
   
   return (
     <div
@@ -187,6 +199,14 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
             <TripDriverCard
               driver={bookingDetail?.driver}
               showContactAction={showDriverContactAction}
+              className="mb-4"
+            />
+          )}
+
+          {showTripReview && (
+            <TripReview
+              bookingId={booking_id}
+              initialReview={existingTripReview}
               className="mb-4"
             />
           )}
