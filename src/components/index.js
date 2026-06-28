@@ -28,3 +28,5 @@ export { BookingDetailPageHeader } from "./BookingDetailPageHeader";
 export {IncludedServicePills} from "./IncludedServicePills";
 export { DisputedBookingBlockedState } from "./DisputedBookingBlockedState";
 export { TripRefundSummary } from "./TripRefundSummary";
+export { TripSupportCard } from "./TripSupportCard";
+export { TripDriverCard } from "./TripDriverCard";

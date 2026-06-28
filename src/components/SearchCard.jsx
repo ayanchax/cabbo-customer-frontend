@@ -20,6 +20,8 @@ import {
 } from "@/hooks";
 import { isDevMode } from "@/api";
 import {TRIP_TYPES, ROUTES} from "@/utils"
+import {APP} from "@/utils";
+
 
 
 const SearchCard = () => {
@@ -185,7 +187,7 @@ const SearchCard = () => {
       const tripTypeConfig = {
         [TRIP_TYPES.AIRPORT_PICKUP]: {
           overlayProps: {
-            message: "Taking you to Cabbo airport transfers...",
+            message: `Taking you to ${APP.name} airport transfers...`,
             illustration: <PersonWaitingAtAirportForPickup className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />, 
             subtext: "Schedule your pickup around your landing",
             nextActionText: "Next: add your pickup time and flight details", // customer picked from airport to destination
@@ -194,7 +196,7 @@ const SearchCard = () => {
         },
         [TRIP_TYPES.AIRPORT_DROPOFF]: {
           overlayProps: {
-            message: "Taking you to Cabbo airport transfers...",
+            message: `Taking you to ${APP.name} airport transfers...`,
             illustration: <CabLeavingFromAirportTerminal className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />, 
             subtext: "Leave home relaxed, reach the airport on time",
             nextActionText: "Next: add your pickup time and other preferences", // customer picked from source/origin to airport
@@ -203,7 +205,7 @@ const SearchCard = () => {
         },
         [TRIP_TYPES.OUTSTATION]: {
           overlayProps: {
-            message: "Taking you to Cabbo outstation...",
+            message: `Taking you to ${APP.name} outstation...`,
             illustration: <OutstationRoutePlanningIllustration className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />, 
             subtext: "Ride to another city and return when you're ready",
             nextActionText: "Next: choose your travel dates and get going",
@@ -212,7 +214,7 @@ const SearchCard = () => {
         },
         [TRIP_TYPES.LOCAL]: {
           overlayProps: {
-            message: "Taking you to Cabbo hourly rentals...",
+            message: `Taking you to ${APP.name} hourly rentals...`,
             illustration: <LocalHourlyRideCityscape className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64" />,
             subtext: "Flexible in-city rides, multiple stops, hourly packages",
             nextActionText: "Next: set your ride details",

@@ -105,7 +105,7 @@ function BookingPage() {
         <FeedbackState
           variant="warning"
           title="You already have a booking around this time"
-          message="Cabbo cannot create another booking that overlaps with an existing trip. Please check your trips, or go back and choose a different time."
+          message="We cannot create another booking that overlaps with an existing trip. Please check your trips, or go back and choose a different time."
           primaryAction={
             <button
               type="button"

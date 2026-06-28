@@ -8,8 +8,10 @@ import {
   InCarAmenities,
   DisputedBookingBlockedState,
   TripRefundSummary,
+  TripSupportCard,
+  TripDriverCard,
 } from "@/components";
-import { TRIP_STATUS, TRIP_OCCURENCE_LABELS } from "@/utils";
+import { TRIP_STATUS, TRIP_OCCURENCE_LABELS, TRIP_TYPES } from "@/utils";
 import { useTimezone, useBookingDetailBackNavigation } from "@/hooks";
 import {  MapPinned } from "lucide-react";
 import { useLocation } from "react-router-dom";
@@ -96,6 +98,17 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
   const isCancelledTrip =
     status === TRIP_STATUS.CANCELLED ||
     label === TRIP_OCCURENCE_LABELS.CANCELLED;
+  
+  // Stale trip is a trip that is confirmed or created but has already passed and never made it to ongoing and to completed. In such cases, we don't show the driver section.
+  const isStaleTrip = [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) && [TRIP_OCCURENCE_LABELS.PAST].includes(label);
+      
+  const showDriverSection = !isCancelledTrip && !isStaleTrip;
+    const showDriverContactAction =
+   [TRIP_STATUS.CONFIRMED,TRIP_STATUS.ONGOING].includes(status) &&
+      [
+        TRIP_OCCURENCE_LABELS.UPCOMING,
+        TRIP_OCCURENCE_LABELS.ONGOING,
+      ].includes(label);
 
   return (
     <div
@@ -123,8 +136,16 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
         />
 
         {isDisputedTrip ? (
-          <div className="px-4">
+          <div className="space-y-4 px-4">
             <DisputedBookingBlockedState className="mt-4" />
+            <TripSupportCard
+              bookingId={booking_id}
+              origin={origin}
+              tripType={TRIP_TYPES.OUTSTATION}
+              tripLabel="outstation"
+              reason="Disputed booking"
+              defaultOpen
+            />
           </div>
         ) : (
         <div className="px-4">
@@ -169,6 +190,25 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
                                       includedKms={includedKms}
                                     />
                                   )}
+
+          {showDriverSection && (
+            <TripDriverCard
+              driver={bookingDetail?.driver}
+              showContactAction={showDriverContactAction}
+              className="mb-4 mt-4"
+            />
+          )}
+
+          {!isCancelledTrip && (
+            <TripSupportCard
+              bookingId={booking_id}
+              origin={origin}
+              tripType={TRIP_TYPES.OUTSTATION}
+              tripLabel="outstation"
+              reason="Booking help"
+              className="mb-4 mt-4"
+            />
+          )}
            
 
           {/* In-car amenities */}
@@ -192,6 +232,17 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
                 DEFAULT_USER_TIMEZONE
               }
               className="mb-4 mt-4"
+            />
+          )}
+
+          {isCancelledTrip && (
+            <TripSupportCard
+              bookingId={booking_id}
+              origin={origin}
+              tripType={TRIP_TYPES.OUTSTATION}
+              tripLabel="outstation"
+              reason="Cancelled trip refund help"
+              className="mb-4"
             />
           )}
 

@@ -7,7 +7,7 @@ import { ROUTES, SERVER_ERROR_CODES, TRIP_OCCURENCE_LABELS } from "@/utils";
 const EMPTY_COPY = {
   [TRIP_OCCURENCE_LABELS.UPCOMING]: {
     title: "No upcoming trips",
-    message: "Your upcoming Cabbo bookings will appear here.",
+    message: "Your upcoming bookings will appear here.",
   },
   [TRIP_OCCURENCE_LABELS.ONGOING]: {
     title: "No ongoing trips",

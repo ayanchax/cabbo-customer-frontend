@@ -109,10 +109,12 @@ Recommended order:
 ### Booking-detail operational sections
 
 - [x] Backend returns the customer-safe driver DTO.
-- [ ] Render the safe driver profile, contact action, cab details, and rating.
-- [ ] Gracefully handle missing optional driver fields and an unassigned driver.
-- [ ] Add Call Cabbo and WhatsApp support actions.
-- [ ] Prefill support messages with only the booking ID and necessary context.
+- [x] Render the safe driver profile, contact action, cab details, and rating.
+- [x] Gracefully handle missing optional driver fields and an unassigned driver.
+- [x] Add Call Cabbo and WhatsApp support actions.
+- [x] Prefill support messages with only the booking ID and necessary context.
+- [x] Resolve customer support contacts from backend routing instead of hardcoding support numbers.
+- [x] Place Help consistently across booking details, with status-aware placement for normal, cancelled, and disputed trips.
 - [ ] Implement add-once, read-only special requests.
 - [ ] Enforce special-request status, length, sanitization, and add-once rules in the backend.
 - [ ] Update `edit-trip-rationale.md` after special-request behavior is implemented.

@@ -8,6 +8,8 @@ import {
   InCarAmenities,
   DisputedBookingBlockedState,
   TripRefundSummary,
+  TripSupportCard,
+  TripDriverCard,
 } from "@/components";
 import {
   useTimezone,
@@ -53,7 +55,7 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     },
     price_breakdown,
     status,
-    label=undefined // can be upcoming, completed, cancelled, past etc.
+    label = undefined, // can be upcoming, completed, cancelled, past etc.
   } = bookingDetail;
   const dropOff = destination || null;
 
@@ -155,13 +157,33 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     setOperationalDetails(initialOperationalDetails);
   };
 
-  const amenitiesLabel= status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'You will get these amenities in your cab:' : 'Amenities that were provided for this trip:';
-  const pickupLabel = status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'Pickup' : 'Pickup details';
-  const showCabAuxilliaryDetails =  [TRIP_STATUS.CONFIRMED].includes(status) && [TRIP_OCCURENCE_LABELS.UPCOMING].includes(label);
+  const amenitiesLabel =
+    status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING
+      ? "You will get these amenities in your cab:"
+      : "Amenities that were provided for this trip:";
+  const pickupLabel =
+    status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING
+      ? "Pickup"
+      : "Pickup details";
+  const showCabAuxilliaryDetails =
+    [TRIP_STATUS.CONFIRMED].includes(status) &&
+    [TRIP_OCCURENCE_LABELS.UPCOMING].includes(label);
   const isDisputedTrip = status === TRIP_STATUS.DISPUTED;
   const isCancelledTrip =
     status === TRIP_STATUS.CANCELLED ||
     label === TRIP_OCCURENCE_LABELS.CANCELLED;
+
+  // Stale trip is a trip that is confirmed or created but has already passed and never made it to ongoing and to completed. In such cases, we don't show the driver section.
+  const isStaleTrip =
+    [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) &&
+    [TRIP_OCCURENCE_LABELS.PAST].includes(label);
+
+  const showDriverSection = !isCancelledTrip && !isStaleTrip;
+  const showDriverContactAction =
+    [TRIP_STATUS.CONFIRMED, TRIP_STATUS.ONGOING].includes(status) &&
+    [TRIP_OCCURENCE_LABELS.UPCOMING, TRIP_OCCURENCE_LABELS.ONGOING].includes(
+      label,
+    );
   return (
     <div
       className={` relative
@@ -188,87 +210,134 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
         />
 
         {isDisputedTrip ? (
-          <div className="px-4">
+          <div className="space-y-4 px-4">
             <DisputedBookingBlockedState className="mt-4" />
+            <TripSupportCard
+              bookingId={booking_id}
+              origin={origin}
+              tripType={trip_type?.trip_type}
+              tripLabel={pageHeaderLabel || "airport transfer"}
+              reason="Disputed booking"
+              defaultOpen
+            />
           </div>
         ) : (
-        <div className="px-4">
-          <div className="py-2"></div>
+          <div className="px-4">
+            <div className="py-2"></div>
 
-          {/* Cab details */}
-          <TripCabDetails showDescription={showCabAuxilliaryDetails} showInventoryCabNames={showCabAuxilliaryDetails} cabDetails={fleetData} className="mb-4  py-2 px-0" />
-
-          {/* Route timeline */}
-          <RouteTimeline
-            pickupLocation={origin}
-            dropoffLocation={dropOff}
-            className="mb-4"
-          />
-
-          {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
-          <RideTimings
-            startDatetime={startDate}
-            className=" mt-4 mb-4"
-            timezone={
-              server_timezone ??
-              client_timezone?.timezone ??
-              DEFAULT_USER_TIMEZONE
-            }
-            pickupLabel={pickupLabel}
-          />
-
-          {trip_type?.trip_type === TRIP_TYPES.AIRPORT_PICKUP && (
-            <AirportPickupDetailsManager
-              read
-              write={status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING}
-              helperTextLabel={
-                status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING
-                  ? "Helps your driver coordinate your airport pickup."
-                  : "These arrival details were provided for this airport pickup."
-              }
-              id="airportPickupDetails"
-              value={operationalDetails}
-              isEditing={isEditingOperationalDetails}
-              isSaving={isSavingOperationalDetails}
-              onChange={setOperationalDetails}
-              onEdit={handleEditOperationalDetails}
-              onSave={handleSaveOperationalDetails}
-              onCancel={handleCancelOperationalDetails}
-              className="mt-4 mb-4"
+            {/* Cab details */}
+            <TripCabDetails
+              showDescription={showCabAuxilliaryDetails}
+              showInventoryCabNames={showCabAuxilliaryDetails}
+              cabDetails={fleetData}
+              className="mb-4  py-2 px-0"
             />
-          )}
 
-          {/* In-car amenities */}
-          {bookingDetail?.in_car_amenities && (
-            <div className="mb-2">
-              <InCarAmenities
-                {...bookingDetail?.in_car_amenities}
-                className=""
-                header={amenitiesLabel}
-              />
-            </div>
-          )}
+            {/* Route timeline */}
+            <RouteTimeline
+              pickupLocation={origin}
+              dropoffLocation={dropOff}
+              className="mb-4"
+            />
 
-          {isCancelledTrip && (
-            <TripRefundSummary
-              bookingId={booking_id}
-              currency={bookingDetail?.currency}
+            {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
+            <RideTimings
+              startDatetime={startDate}
+              className=" mt-4 mb-4"
               timezone={
                 server_timezone ??
                 client_timezone?.timezone ??
                 DEFAULT_USER_TIMEZONE
               }
-              className="mb-4 mt-4"
+              pickupLabel={pickupLabel}
             />
-          )}
 
-          {/* Fare summary */}
-          {fareData && (
-            <div className="mb-2">
-              <TripFareSummary fareData={fareData} />
-            </div>
-          )}
-        </div>
+            {trip_type?.trip_type === TRIP_TYPES.AIRPORT_PICKUP && (
+              <AirportPickupDetailsManager
+                read
+                write={
+                  status === TRIP_STATUS.CONFIRMED &&
+                  label === TRIP_OCCURENCE_LABELS.UPCOMING
+                }
+                helperTextLabel={
+                  status === TRIP_STATUS.CONFIRMED &&
+                  label === TRIP_OCCURENCE_LABELS.UPCOMING
+                    ? "Helps your driver coordinate your airport pickup."
+                    : "These arrival details were provided for this airport pickup."
+                }
+                id="airportPickupDetails"
+                value={operationalDetails}
+                isEditing={isEditingOperationalDetails}
+                isSaving={isSavingOperationalDetails}
+                onChange={setOperationalDetails}
+                onEdit={handleEditOperationalDetails}
+                onSave={handleSaveOperationalDetails}
+                onCancel={handleCancelOperationalDetails}
+                className="mt-4 mb-4"
+              />
+            )}
+
+            {showDriverSection && (
+              <TripDriverCard
+                driver={bookingDetail?.driver}
+                showContactAction={showDriverContactAction}
+                className="mb-4"
+              />
+            )}
+
+            {!isCancelledTrip && (
+              <TripSupportCard
+                bookingId={booking_id}
+                origin={origin}
+                tripType={trip_type?.trip_type}
+                tripLabel={pageHeaderLabel || "airport transfer"}
+                reason="Booking help"
+                className="mb-4"
+              />
+            )}
+
+            {/* In-car amenities */}
+            {bookingDetail?.in_car_amenities && (
+              <div className="mb-2">
+                <InCarAmenities
+                  {...bookingDetail?.in_car_amenities}
+                  className=""
+                  header={amenitiesLabel}
+                />
+              </div>
+            )}
+
+            {isCancelledTrip && (
+              <TripRefundSummary
+                bookingId={booking_id}
+                currency={bookingDetail?.currency}
+                timezone={
+                  server_timezone ??
+                  client_timezone?.timezone ??
+                  DEFAULT_USER_TIMEZONE
+                }
+                className="mb-4 mt-4"
+              />
+            )}
+
+            {isCancelledTrip && (
+              <TripSupportCard
+                bookingId={booking_id}
+                origin={origin}
+                tripType={trip_type?.trip_type}
+                tripLabel={pageHeaderLabel || "airport transfer"}
+                reason="Cancelled trip refund help"
+                className="mb-4"
+              />
+            )}
+
+            {/* Fare summary */}
+            {fareData && (
+              <div className="mb-2">
+                <TripFareSummary fareData={fareData} />
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>
