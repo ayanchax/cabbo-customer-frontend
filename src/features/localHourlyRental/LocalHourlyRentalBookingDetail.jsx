@@ -210,9 +210,7 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
             />
           )}
 
-          {showCancellationAction && (
-            <CancelTripAction bookingId={booking_id} className="mb-4" />
-          )}
+          
 
           {/* In-car amenities */}
           {bookingDetail?.in_car_amenities && (
@@ -254,6 +252,10 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
             <div className="mb-2">
               <TripFareSummary fareData={fareData} />
             </div>
+          )}
+
+          {showCancellationAction && (
+            <CancelTripAction bookingId={booking_id} className="mb-4" />
           )}
         </div>
         )}

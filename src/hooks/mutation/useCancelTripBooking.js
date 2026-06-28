@@ -9,10 +9,10 @@ export const useCancelTripBooking = (options = {}) => {
     onSuccess: (_data, variables) => {
       if (variables?.bookingId) {
         queryClient.invalidateQueries({
-          queryKey: ["tripBookingDetail", variables.bookingId],
+          queryKey: ["tripBookingDetail", variables.bookingId], // Invalidate tripBookingDetail query so that any key with tripBookingDetail is refetched.
         });
       }
-      queryClient.invalidateQueries({ queryKey: ["tripBookingsFeed"] });
+      queryClient.invalidateQueries({ queryKey: ["tripBookingsFeed"] }); // Invalidate tripBookingsFeed so that any key with tripBookingsFeed is refetched.
       options?.onSuccess?.(_data, variables);
     },
     ...options,

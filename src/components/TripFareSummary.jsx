@@ -256,6 +256,7 @@ function TripFareSummary({ fareData, className = "", showPayRestToDriver = true 
       {/* Refunds and Cancellations - Collapsible */}
       {showRefundPolicies && (
           <CollapsibleSection
+            id="refunds-and-cancellations"
             title="Refunds and Cancellations"
             titleClassName="text-gray-500 text-sm md:text-base lg:text-md mb-1 font-normal"
           >

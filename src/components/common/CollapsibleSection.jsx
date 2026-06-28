@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 /**
@@ -12,10 +12,38 @@ import { ChevronDown } from "lucide-react";
  * - titleClassName: string (optional) - Additional classes for the title text.
  * - showPrefix: boolean (optional) - If true, shows "Show"/"Hide" prefix before title.
  */
-function CollapsibleSection({ title, children, defaultOpen = false, className = "" ,titleClassName = "", showPrefix=false,}) {
+function CollapsibleSection({
+  title,
+  children,
+  defaultOpen = false,
+  className = "",
+  titleClassName = "",
+  showPrefix = false,
+  id,
+}) {
   const [open, setOpen] = useState(defaultOpen);
+  const [highlighted, setHighlighted] = useState(false);
+
+  useEffect(() => {
+    if (!id || typeof window === "undefined") return;
+
+    const openFromHash = () => {
+      if (window.location.hash === `#${id}`) {
+        setOpen(true);
+        setHighlighted(true);
+        setTimeout(() => setHighlighted(false), 2000); // Remove highlight after 2 seconds
+
+      }
+    };
+
+    openFromHash();
+    window.addEventListener("hashchange", openFromHash);
+
+    return () => window.removeEventListener("hashchange", openFromHash);
+  }, [id]);
+
   return (
-    <div className={`w-full mt-2 ${className}`}>
+    <div id={id || 'collapsible-section'} className={`w-full mt-2 scroll-mt-24  ${className}`}>
       <button
         type="button"
         className="flex cursor-pointer items-center gap-2 text-xs sm:text-sm text-gray-600 hover:text-primary-600 font-medium focus:outline-none mb-1"
@@ -33,7 +61,13 @@ function CollapsibleSection({ title, children, defaultOpen = false, className = 
         </span>
       </button>
       {open && (
-        <div className="mt-1">
+        <div
+          className={`mt-1  ${
+            highlighted
+              ? "bg-blue-50/40 ring-2 ring-primary/25 ring-offset-2 rounded-lg transition-all duration-300 ring-offset-white"
+              : ""
+          }`}
+        >
           {children}
         </div>
       )}

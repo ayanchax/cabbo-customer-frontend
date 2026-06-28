@@ -15,9 +15,12 @@ import {
 } from "@/components";
 import { TRIP_STATUS, TRIP_OCCURENCE_LABELS, TRIP_TYPES } from "@/utils";
 import { useTimezone, useBookingDetailBackNavigation } from "@/hooks";
-import {  MapPinned } from "lucide-react";
+import { MapPinned } from "lucide-react";
 import { useLocation } from "react-router-dom";
-import { RoundTripOnlyDisclaimer, OutstationPackage } from "@/features/outstation/components";
+import {
+  RoundTripOnlyDisclaimer,
+  OutstationPackage,
+} from "@/features/outstation/components";
 import { DEFAULT_USER_TIMEZONE, ROUTES } from "@/utils";
 
 function OutstationBookingDetail({ bookingDetail = {} }) {
@@ -42,8 +45,6 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
   } = bookingDetail;
   const dropOff = destination || null;
   const fetchedHops = bookingDetail?.hops || null;
-
-   
 
   const startDate = { isoString: start_datetime || null };
   const endDate = { isoString: end_datetime || null };
@@ -100,17 +101,18 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
   const isCancelledTrip =
     status === TRIP_STATUS.CANCELLED ||
     label === TRIP_OCCURENCE_LABELS.CANCELLED;
-  
+
   // Stale trip is a trip that is confirmed or created but has already passed and never made it to ongoing and to completed. In such cases, we don't show the driver section.
-  const isStaleTrip = [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) && [TRIP_OCCURENCE_LABELS.PAST].includes(label);
-      
+  const isStaleTrip =
+    [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) &&
+    [TRIP_OCCURENCE_LABELS.PAST].includes(label);
+
   const showDriverSection = !isCancelledTrip && !isStaleTrip;
   const showDriverContactAction =
-   [TRIP_STATUS.CONFIRMED,TRIP_STATUS.ONGOING].includes(status) &&
-      [
-        TRIP_OCCURENCE_LABELS.UPCOMING,
-        TRIP_OCCURENCE_LABELS.ONGOING,
-      ].includes(label);
+    [TRIP_STATUS.CONFIRMED, TRIP_STATUS.ONGOING].includes(status) &&
+    [TRIP_OCCURENCE_LABELS.UPCOMING, TRIP_OCCURENCE_LABELS.ONGOING].includes(
+      label,
+    );
   const showSpecialRequest =
     !isCancelledTrip &&
     !isStaleTrip &&
@@ -120,8 +122,9 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
     !isStaleTrip &&
     [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) &&
     label === TRIP_OCCURENCE_LABELS.UPCOMING;
-  
-  const showRoundTripDisclaimer = isRoundTripOnly && !isCancelledTrip && !isStaleTrip;
+
+  const showRoundTripDisclaimer =
+    isRoundTripOnly && !isCancelledTrip && !isStaleTrip;
   return (
     <div
       className={` relative
@@ -160,123 +163,120 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
             />
           </div>
         ) : (
-        <div className="px-4">
-          <div className="py-2"></div>
+          <div className="px-4">
+            <div className="py-2"></div>
 
-          {/* Cab details */}
-          <TripCabDetails
-            showDescription={showCabAuxilliaryDetails}
-            showInventoryCabNames={showCabAuxilliaryDetails}
-            cabDetails={fleetData}
-            className="mb-4  py-2 px-0"
-          />
-
-          {/* Route timeline */}
-          <RouteTimeline
-                      pickupLocation={origin}
-                      dropoffLocation={dropOff}
-                      hops={fetchedHops}
-                      showReturn
-                      className="mb-4"
-                    />
-
-          {showRoundTripDisclaimer && <RoundTripOnlyDisclaimer />}
-          
-
-          {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
-          <RideTimings
-            startDatetime={startDate}
-            className=" mt-4 mb-4"
-            timezone={
-              server_timezone ??
-              client_timezone?.timezone ??
-              DEFAULT_USER_TIMEZONE
-            }
-            pickupLabel={pickupLabel}
-          />
-
-          {/* Selected package */}
-          {totalTripDays && totalTripDays > 0 && (
-                                    <OutstationPackage
-                                      totalTripDays={totalTripDays}
-                                      includedKms={includedKms}
-                                    />
-                                  )}
-
-          {showDriverSection && (
-            <TripDriverCard
-              driver={bookingDetail?.driver}
-              showContactAction={showDriverContactAction}
-              className="mb-4 mt-4"
+            {/* Cab details */}
+            <TripCabDetails
+              showDescription={showCabAuxilliaryDetails}
+              showInventoryCabNames={showCabAuxilliaryDetails}
+              cabDetails={fleetData}
+              className="mb-4  py-2 px-0"
             />
-          )}
 
-          {!isCancelledTrip && (
-            <TripSupportCard
-              bookingId={booking_id}
-              origin={origin}
-              tripType={TRIP_TYPES.OUTSTATION}
-              tripLabel="outstation"
-              reason="Booking help"
-              className="mb-4 mt-4"
-            />
-          )}
-
-          {showSpecialRequest && (
-            <TripSpecialRequest
-              bookingId={booking_id}
-              initialRequest={bookingDetail?.special_needs_requests}
+            {/* Route timeline */}
+            <RouteTimeline
+              pickupLocation={origin}
+              dropoffLocation={dropOff}
+              hops={fetchedHops}
+              showReturn
               className="mb-4"
             />
-          )}
 
-          {showCancellationAction && (
-            <CancelTripAction bookingId={booking_id} className="mb-4" />
-          )}
-           
+            {showRoundTripDisclaimer && <RoundTripOnlyDisclaimer />}
 
-          {/* In-car amenities */}
-          {bookingDetail?.in_car_amenities && (
-            <div className="mb-2">
-              <InCarAmenities
-                {...bookingDetail?.in_car_amenities}
-                className=""
-                header={amenitiesLabel}
-              />
-            </div>
-          )}
-
-          {isCancelledTrip && (
-            <TripRefundSummary
-              bookingId={booking_id}
-              currency={bookingDetail?.currency}
+            {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
+            <RideTimings
+              startDatetime={startDate}
+              className=" mt-4 mb-4"
               timezone={
                 server_timezone ??
                 client_timezone?.timezone ??
                 DEFAULT_USER_TIMEZONE
               }
-              className="mb-4 mt-4"
+              pickupLabel={pickupLabel}
             />
-          )}
 
-          {isCancelledTrip && (
-            <TripSupportCard
-              bookingId={booking_id}
-              origin={origin}
-              tripType={TRIP_TYPES.OUTSTATION}
-              tripLabel="outstation"
-              reason="Cancelled trip refund help"
-              className="mb-4"
-            />
-          )}
+            {/* Selected package */}
+            {totalTripDays && totalTripDays > 0 && (
+              <OutstationPackage
+                totalTripDays={totalTripDays}
+                includedKms={includedKms}
+              />
+            )}
 
-          {/* Fare summary */}
-          {fareData && (
-            <div className="mb-2">
-              <TripFareSummary fareData={fareData} />
-            </div>
-          )}
-        </div>
+            {showDriverSection && (
+              <TripDriverCard
+                driver={bookingDetail?.driver}
+                showContactAction={showDriverContactAction}
+                className="mb-4 mt-4"
+              />
+            )}
+
+            {!isCancelledTrip && (
+              <TripSupportCard
+                bookingId={booking_id}
+                origin={origin}
+                tripType={TRIP_TYPES.OUTSTATION}
+                tripLabel="outstation"
+                reason="Booking help"
+                className="mb-4 mt-4"
+              />
+            )}
+
+            {showSpecialRequest && (
+              <TripSpecialRequest
+                bookingId={booking_id}
+                initialRequest={bookingDetail?.special_needs_requests}
+                className="mb-4"
+              />
+            )}
+
+            {/* In-car amenities */}
+            {bookingDetail?.in_car_amenities && (
+              <div className="mb-2">
+                <InCarAmenities
+                  {...bookingDetail?.in_car_amenities}
+                  className=""
+                  header={amenitiesLabel}
+                />
+              </div>
+            )}
+
+            {isCancelledTrip && (
+              <TripRefundSummary
+                bookingId={booking_id}
+                currency={bookingDetail?.currency}
+                timezone={
+                  server_timezone ??
+                  client_timezone?.timezone ??
+                  DEFAULT_USER_TIMEZONE
+                }
+                className="mb-4 mt-4"
+              />
+            )}
+
+            {isCancelledTrip && (
+              <TripSupportCard
+                bookingId={booking_id}
+                origin={origin}
+                tripType={TRIP_TYPES.OUTSTATION}
+                tripLabel="outstation"
+                reason="Cancelled trip refund help"
+                className="mb-4"
+              />
+            )}
+
+            {/* Fare summary */}
+            {fareData && (
+              <div className="mb-2">
+                <TripFareSummary fareData={fareData} />
+              </div>
+            )}
+            {showCancellationAction && (
+              <CancelTripAction bookingId={booking_id} className="mb-4" />
+            )}
+          </div>
         )}
       </div>
     </div>

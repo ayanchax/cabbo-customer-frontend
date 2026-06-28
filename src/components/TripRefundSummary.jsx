@@ -6,7 +6,7 @@ import {
   RotateCcw,
   ShieldCheck,
 } from "lucide-react";
-import { useLocale, useTimezone, useTripRefundDetail } from "@/hooks";
+import { useLocale, useTimezone, useTripRefundDetail, useFragmentScroll } from "@/hooks";
 import { humanReadableDateTime } from "@/components/common/datetime-picker/utils";
 import {
   DEFAULT_CURRENCY_SYMBOL,
@@ -17,6 +17,8 @@ import {
   APP,
 
 } from "@/utils";
+
+
 
 const REFUND_STATUS_CONFIG = {
   [REFUND_STATUS.COMPLETED]: {
@@ -81,6 +83,8 @@ function TripRefundSummary({
   showRefundDescription = false,
   showRefundTimeline = false,
 }) {
+  const { scrollToFragment } = useFragmentScroll();
+  
   const { locale } = useLocale();
   const { timezone: clientTimezone } = useTimezone();
   const {
@@ -180,6 +184,8 @@ function TripRefundSummary({
           </h2>
           </div>
         </div>
+
+        
         <span
           className={`inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${statusConfig.className}`}
         >
@@ -227,7 +233,15 @@ function TripRefundSummary({
             />
             <span>
               We will keep checking for updates and notify you once the refund
-              is processed.
+              is processed.{" "}
+              <a
+                href="#refunds-and-cancellations"
+                onClick={(event) => scrollToFragment(event, "refunds-and-cancellations")}
+
+                className="font-semibold text-primary underline underline-offset-2 hover:text-primary/80"
+              >
+                View refund timeline
+              </a>
             </span>
           </div>
         )}
