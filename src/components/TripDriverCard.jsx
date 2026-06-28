@@ -135,6 +135,11 @@ function TripDriverCard({
             Contact details are shown when the trip is active.
           </p>
         )}
+        {showContactAction && (
+          <p className="text-xs leading-5 text-gray-500">
+            Your driver may call before pickup to coordinate.
+          </p>
+        )}
       </div>
     </section>
   );

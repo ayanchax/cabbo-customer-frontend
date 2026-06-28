@@ -105,6 +105,17 @@ Recommended order:
   - Show a clear feedback panel explaining that disputed trips are handled offline by Cabbo support.
   - Hide customer self-service edit, refund, and payment actions while the dispute is active.
   - Keep the booking-detail header and booking ID visible for reference while replacing normal detail sections with the blocked state.
+- [ ] Add customer-initiated cancellation for eligible upcoming booking details.
+  - Show cancellation only for customer-cancellable upcoming bookings.
+  - Submit only customer-safe cancellation fields: reason and `customer_cancelled` cancellation sub-status.
+  - Refresh or update the booking detail into cancelled state after success.
+  - Let backend own policy evaluation, refund eligibility, and refund processing.
+- [ ] Add customer trip rating for successfully completed trips.
+  - Render only for completed/closed bookings that are eligible for review.
+  - Submit rating through `/trips/reviews/{booking_id}/submit-review`.
+  - Capture required 1-5 overall rating and optional feedback.
+  - Keep detailed experience fields optional for V1 to avoid making review submission feel heavy.
+  - Consider a Google Business review link only after the internal trip rating is captured.
 
 ### Booking-detail operational sections
 
@@ -115,10 +126,10 @@ Recommended order:
 - [x] Prefill support messages with only the booking ID and necessary context.
 - [x] Resolve customer support contacts from backend routing instead of hardcoding support numbers.
 - [x] Place Help consistently across booking details, with status-aware placement for normal, cancelled, and disputed trips.
-- [ ] Implement add-once, read-only special requests.
-- [ ] Enforce special-request status, length, sanitization, and add-once rules in the backend.
-- [ ] Update `edit-trip-rationale.md` after special-request behavior is implemented.
-- [ ] Verify these operational sections across airport, hourly rental, and outstation booking-detail pages.
+- [x] Implement add-once, read-only special requests.
+- [x] Enforce special-request status, length, sanitization, and add-once rules in the backend.
+- [x] Update `edit-trip-rationale.md` after special-request behavior is implemented.
+- [x] Verify these operational sections across airport, hourly rental, and outstation booking-detail pages.
 
 
 ### Customer account

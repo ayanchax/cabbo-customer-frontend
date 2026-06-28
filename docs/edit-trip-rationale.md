@@ -166,17 +166,23 @@ On the post-booking page, add-on tags may remain visible beside relevant fare li
 
 Special requests may be added once across trip types because they are generally informational and do not automatically change fare or booking scope.
 
-For v1:
+For V1, this behavior is implemented in the customer frontend as a shared booking-detail component:
 
 - show the add action only when no special request exists
 - explain that requests are subject to availability and are not guaranteed
-- ask for confirmation before submission
-- make the request read-only after it is submitted
+- submit through the existing non-cost-impacting trip update flow
+- send only the `special_needs_requests` string in the payload
+- make the request read-only immediately after it is submitted
 - do not provide customer self-service editing or deletion
 
 The add-once rule avoids changing driver expectations repeatedly after dispatch planning has begun. The backend should enforce allowed booking statuses, length limits, sanitization, and the one-time submission rule.
 
 If a request would materially affect vehicle, route, price, availability, safety, or driver obligations, support or backend validation may reject it or require a new booking.
+
+Frontend visibility is limited to bookings where a non-cost-impacting request
+can still be useful. The action is hidden for cancelled, disputed, stale past,
+completed, and closed trips. Existing requests remain displayed as read-only
+booking context where applicable.
 
 ---
 

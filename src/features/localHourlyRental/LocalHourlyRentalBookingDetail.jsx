@@ -10,6 +10,7 @@ import {
   TripRefundSummary,
   TripSupportCard,
   TripDriverCard,
+  TripSpecialRequest,
 } from "@/components";
 import {TRIP_STATUS, TRIP_OCCURENCE_LABELS, TRIP_TYPES} from "@/utils";
 import { useTimezone, useBookingDetailBackNavigation } from "@/hooks";
@@ -98,6 +99,10 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
        TRIP_OCCURENCE_LABELS.UPCOMING,
        TRIP_OCCURENCE_LABELS.ONGOING,
      ].includes(label);
+  const showSpecialRequest =
+    !isCancelledTrip &&
+    !isStaleTrip &&
+    [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status);
   
   return (
     <div
@@ -187,6 +192,14 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
               tripType={TRIP_TYPES.LOCAL}
               tripLabel="hourly rental"
               reason="Booking help"
+              className="mb-4"
+            />
+          )}
+
+          {showSpecialRequest && (
+            <TripSpecialRequest
+              bookingId={booking_id}
+              initialRequest={bookingDetail?.special_needs_requests}
               className="mb-4"
             />
           )}
