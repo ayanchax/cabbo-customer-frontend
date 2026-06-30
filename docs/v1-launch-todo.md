@@ -137,8 +137,14 @@ Recommended order:
 
 ### Customer account
 - [x] Customer-safe DTO used in backend to get customer profile.
-- [ ] Build the customer profile page.
-- [ ] Show verified account details and support/legal links.
+- [ ] Build the customer profile page using the V1 scope documented in `customer-profile-rationale.md`.
+- [ ] Show customer name, verified phone number, email state, and profile picture.
+- [ ] Support customer name update.
+- [ ] Support adding an email when missing and triggering the email verification flow.
+- [ ] Show email verification status without allowing casual email edits after email is added.
+- [ ] Support profile picture upload and removal.
+- [ ] Defer DOB, gender, and emergency contact editing from the V1 frontend.
+- [ ] Show support/legal links.
 - [ ] Add logout confirmation.
 - [ ] Clear customer authentication and customer-specific cached data on logout.
 - [ ] Invalidate the backend session where supported.

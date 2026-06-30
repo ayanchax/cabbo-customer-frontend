@@ -57,10 +57,11 @@ function ReadOnlyReview({ review, justSubmitted = false }) {
     >
       <div className="flex items-start gap-3">
         <div
-          className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-emerald-600 ring-1 ring-emerald-100  
-          `}
+          className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-emerald-600 ring-1 ring-emerald-100 ${
+            justSubmitted ? "animate-review-success" : ""
+          }`}
         >
-          <CircleCheck className={`h-5 w-5 ${justSubmitted ? 'animate-review-success':''}`} aria-hidden="true" />
+          <CircleCheck className="h-5 w-5" aria-hidden="true" />
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="text-sm font-semibold text-gray-950">

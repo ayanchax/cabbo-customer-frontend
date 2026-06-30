@@ -1,11 +1,8 @@
 import React from 'react'
 import {useCustomer} from "@/hooks"
-import { useCustomerUtility } from "@/features/customer/hooks";
 
 function ProfileInformation() {
-  const {customer} = useCustomer()
-  const {getFirstName} = useCustomerUtility()
-  const firstName = getFirstName(customer?.name);
+  const {firstName} = useCustomer()
   
   return (
     <div

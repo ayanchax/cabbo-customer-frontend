@@ -1,12 +1,9 @@
 import { useCustomer } from "@/hooks";
-import { useCustomerUtility } from "@/features/customer/hooks";
 
  
 
 const HomeHeader = () => {
-  const { customer } = useCustomer();
-  const {getFirstName} = useCustomerUtility()
-  const firstName = getFirstName(customer?.name);
+  const { firstName } = useCustomer();
 
   return (
   <div className="px-4 pt-8 pb-4 max-w-2xl mx-auto">
