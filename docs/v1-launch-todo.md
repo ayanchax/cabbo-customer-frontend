@@ -118,7 +118,7 @@ Recommended order:
   - Capture required 1-5 overall rating and optional feedback.
   - Keep detailed experience fields optional for V1 to avoid making review submission feel heavy.
   - Place the review as a separate booking-detail section after driver/cab details instead of embedding it inside the driver card.
-  - Consider a Google Business review link only after the internal trip rating is captured.
+  
 
 ### Booking-detail operational sections
 

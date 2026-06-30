@@ -181,7 +181,9 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) &&
     [TRIP_OCCURENCE_LABELS.PAST].includes(label);
 
-  const showDriverSection = !isCancelledTrip && !isStaleTrip;
+  const hasAssignedDriver = Boolean(bookingDetail?.driver);
+  const showDriverSection =
+    !isStaleTrip && (!isCancelledTrip || hasAssignedDriver);
   const showDriverContactAction =
     [TRIP_STATUS.CONFIRMED, TRIP_STATUS.ONGOING].includes(status) &&
     [TRIP_OCCURENCE_LABELS.UPCOMING, TRIP_OCCURENCE_LABELS.ONGOING].includes(
@@ -197,13 +199,16 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) &&
     label === TRIP_OCCURENCE_LABELS.UPCOMING;
   const existingTripReview =
-    bookingDetail?.rating || null
-  const showTripReview =
-    // If trip is cancelled but driver is assigned - then also we allow 
-    (!isCancelledTrip || bookingDetail?.driver) &&
-    !isStaleTrip &&
+    bookingDetail?.rating || null 
+  const isFulfilledReviewEligible =
+    !isCancelledTrip &&
     [TRIP_STATUS.COMPLETED, TRIP_STATUS.CLOSED].includes(status) &&
     Number(bookingDetail?.balance_payment ?? 0) === 0;
+  const isCancelledDriverReviewEligible =
+    isCancelledTrip && hasAssignedDriver;
+  const showTripReview =
+    !isStaleTrip &&
+    (isFulfilledReviewEligible || isCancelledDriverReviewEligible);
   
    
   
@@ -308,7 +313,7 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
               />
             )}
 
-            {true && (
+            {showTripReview && (
               <TripReview
                 bookingId={booking_id}
                 initialReview={existingTripReview}

@@ -3,6 +3,7 @@ import { CircleCheck, Send, Star } from "lucide-react";
 import { useSubmitTripReview, useToast } from "@/hooks";
 import {APP} from "@/utils"
 const MAX_FEEDBACK_LENGTH = 500;
+const RATING_OPTIONS = [1, 2, 3, 4, 5];
 
 function normalizeReview(review) {
   if (!review || typeof review !== "object") return null;
@@ -19,7 +20,7 @@ function normalizeReview(review) {
 function StarRating({ value, hoverValue, onChange, onHover, disabled = false }) {
   return (
     <div className="flex items-center gap-1.5" role="radiogroup" aria-label="Trip rating">
-      {[1, 2, 3, 4, 5].map((rating) => {
+      {RATING_OPTIONS.map((rating) => {
         const isActive = (hoverValue || value) >= rating;
 
         return (
@@ -48,22 +49,25 @@ function StarRating({ value, hoverValue, onChange, onHover, disabled = false }) 
   );
 }
 
-function ReadOnlyReview({ review }) {
+function ReadOnlyReview({ review, justSubmitted = false }) {
   return (
     <section
       className="rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 shadow-sm"
       aria-label="Submitted Trip Review"
     >
       <div className="flex items-start gap-3">
-        <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-emerald-600 ring-1 ring-emerald-100">
-          <CircleCheck className="h-5 w-5" aria-hidden="true" />
+        <div
+          className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-emerald-600 ring-1 ring-emerald-100  
+          `}
+        >
+          <CircleCheck className={`h-5 w-5 ${justSubmitted ? 'animate-review-success':''}`} aria-hidden="true" />
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="text-sm font-semibold text-gray-950">
             Thanks for rating your trip
           </h2>
           <div className="mt-2 flex items-center gap-1 text-amber-400">
-            {[1, 2, 3, 4, 5].map((rating) => (
+            {RATING_OPTIONS.map((rating) => (
               <Star
                 key={rating}
                 className={`h-4 w-4 ${
@@ -95,10 +99,12 @@ function TripReview({ bookingId, initialReview = null, className = "" }) {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [feedback, setFeedback] = useState("");
+  const [justSubmitted, setJustSubmitted] = useState(false);
 
   const submitReview = useSubmitTripReview();
   const isSubmitting = submitReview.isPending || submitReview.isLoading;
   const visibleReview = submittedReview || normalizeReview(initialReview);
+  const charsLeft = MAX_FEEDBACK_LENGTH - feedback.length;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -121,12 +127,13 @@ function TripReview({ bookingId, initialReview = null, className = "" }) {
 
     try {
       const response = await submitReview.mutateAsync({ bookingId, payload });
-      const responseReview =
-        normalizeReview(response?.review) ||
-        normalizeReview(response?.data) ||
-        normalizeReview(response);
-
-      setSubmittedReview(responseReview || payload);
+      if (!response) {
+        showToast("We couldn't submit your review. Please try again.", "error");
+        return;
+      }
+      // At this point, the review submission is a success.
+      setSubmittedReview(payload);
+      setJustSubmitted(true);
       setRating(0);
       setFeedback("");
       showToast("Thanks for your review.", "success");
@@ -142,7 +149,7 @@ function TripReview({ bookingId, initialReview = null, className = "" }) {
   if (visibleReview) {
     return (
       <div className={className}>
-        <ReadOnlyReview review={visibleReview} />
+        <ReadOnlyReview review={visibleReview} justSubmitted={justSubmitted} />
       </div>
     );
   }
@@ -190,16 +197,22 @@ function TripReview({ bookingId, initialReview = null, className = "" }) {
             placeholder="Tell us what went well or what we can improve."
             className="mt-2 w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm leading-6 text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-70"
           />
-          <p className="mt-1 text-right text-xs text-gray-400">
-            {feedback.length}/{MAX_FEEDBACK_LENGTH}
-          </p>
+          <div className="mt-1 text-left">
+                <span
+                  className={`text-xs ${
+                    charsLeft < 20 ? "text-amber-700" : "text-gray-400"
+                  }`}
+                >
+                  {charsLeft} characters left
+                </span>
+              </div>
         </div>
 
         <div className="flex justify-end">
           <button
             type="submit"
             disabled={!rating || isSubmitting}
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
+            className="cursor-pointer inline-flex h-10 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Send className="h-4 w-4" aria-hidden="true" />
             {isSubmitting ? "Submitting..." : "Submit review"}

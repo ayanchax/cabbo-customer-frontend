@@ -19,8 +19,8 @@ The minimum customer-facing input should be:
 - overall rating from 1 to 5
 - optional short feedback
 
-Detailed experience fields can be optional and progressively shown only when
-the user wants to provide more detail.
+Detailed experience fields are supported by the backend, but they should not be
+part of the V1 customer UI.
 
 ## Why In-App Rating Instead Of Only Google Reviews
 
@@ -45,13 +45,18 @@ ideally after a positive in-app rating has already been submitted.
 
 ## Eligibility
 
-Show the rating action only for trips that are successfully completed or closed with all dues cleared by the customer, meaning balance_payment == 0
+Show the rating action for:
+
+- trips that are successfully completed or closed with all dues cleared by the
+  customer, meaning `balance_payment == 0`
+- cancelled trips where a driver was already assigned, because the customer may
+  have had a real coordination or service interaction before cancellation
 
 Do not show rating for:
 
 - upcoming trips
 - ongoing trips
-- cancelled trips
+- cancelled trips where no driver was assigned
 - disputed trips
 - stale past-active trips whose operational status was not closed correctly
 
@@ -69,7 +74,7 @@ Recommended flow:
 4. Submit the review.
 5. After success, show the submitted rating in read-only form.
 
-Detailed `overall_experience` fields should be optional:
+Detailed `overall_experience` fields should be deferred from the V1 UI:
 
 - cab cleanliness
 - AC working
@@ -78,8 +83,12 @@ Detailed `overall_experience` fields should be optional:
 - overall cab condition
 - other comments
 
-These can be hidden behind a small `Tell us more` affordance or deferred if V1
-needs to stay fast.
+The backend can already accept these fields, but asking for them in V1 would
+make the review feel like a service audit. For launch, Cabbo should keep the
+review interaction to a required star rating and optional short feedback.
+
+These fields can return later as a progressive `Tell us more` step, especially
+after a low rating, when the extra detail is more useful and less intrusive.
 
 ## Placement
 

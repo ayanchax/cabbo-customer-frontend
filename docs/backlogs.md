@@ -65,6 +65,27 @@ second deferred-feature list.
   special-request field.
 - **Priority:** V2; not required for launch.
 
+## Detailed Trip Experience Review (v2)
+
+- **Feature:** Extend the post-trip review beyond the V1 star rating and
+  optional feedback.
+- **V1 behavior:** The customer sees a compact rating form with a required
+  1-5 star rating and optional short feedback only.
+- **Why deferred:** Detailed questions such as cab cleanliness, AC condition,
+  driving behavior, punctuality, and overall cab condition make the review feel
+  heavier. V1 should capture the main quality signal without slowing the
+  customer down after a trip.
+- **Future behavior:**
+  - Show detailed fields behind a small `Tell us more` action.
+  - Prefer showing the expanded questions after low ratings, where operational
+    diagnosis matters most.
+  - Submit the backend-supported `overall_experience` payload with:
+    cab cleanliness, AC working condition, driving behavior, punctuality,
+    overall cab condition, and optional extra comments.
+  - Use the structured data in admin dashboards for driver, fleet, and service
+    quality monitoring.
+- **Priority:** V2; not required for launch.
+
 ## Other Deferred Product Work
 
 - Discount and coupon engine.

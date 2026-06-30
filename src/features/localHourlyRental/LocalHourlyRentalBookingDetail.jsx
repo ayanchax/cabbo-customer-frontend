@@ -94,7 +94,9 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
   // Stale trip is a trip that is confirmed or created but has already passed and never made it to ongoing and to completed. In such cases, we don't show the driver section.
   const isStaleTrip = [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) && [TRIP_OCCURENCE_LABELS.PAST].includes(label);
   
-  const showDriverSection = !isCancelledTrip && !isStaleTrip;
+  const hasAssignedDriver = Boolean(bookingDetail?.driver);
+  const showDriverSection =
+    !isStaleTrip && (!isCancelledTrip || hasAssignedDriver);
    const showDriverContactAction =
   [TRIP_STATUS.CONFIRMED,TRIP_STATUS.ONGOING].includes(status) &&
      [
@@ -111,16 +113,17 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
     [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) &&
     label === TRIP_OCCURENCE_LABELS.UPCOMING;
   const existingTripReview =
-    bookingDetail?.trip_rating ||
-    bookingDetail?.trip_review ||
-    bookingDetail?.customer_review ||
-    bookingDetail?.review ||
-    null;
-  const showTripReview =
+    bookingDetail?.rating || null
+    
+  const isFulfilledReviewEligible =
     !isCancelledTrip &&
-    !isStaleTrip &&
     [TRIP_STATUS.COMPLETED, TRIP_STATUS.CLOSED].includes(status) &&
     Number(bookingDetail?.balance_payment ?? 0) === 0;
+  const isCancelledDriverReviewEligible =
+    isCancelledTrip && hasAssignedDriver;
+  const showTripReview =
+    !isStaleTrip &&
+    (isFulfilledReviewEligible || isCancelledDriverReviewEligible);
   
   return (
     <div
