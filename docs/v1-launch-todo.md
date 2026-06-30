@@ -136,7 +136,7 @@ Recommended order:
 
 
 ### Customer account
-
+- [x] Customer-safe DTO used in backend to get customer profile.
 - [ ] Build the customer profile page.
 - [ ] Show verified account details and support/legal links.
 - [ ] Add logout confirmation.
