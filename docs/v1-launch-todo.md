@@ -12,18 +12,22 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 
 ## Next Coding Priority
 
-The next customer-frontend coding task is **My Trips**. It gives customers a
-single place to find bookings after payment, supports the duplicate-booking
-recovery action, and becomes the entry point for booking-detail support,
-driver, refund, and special-request workflows.
+The next customer-frontend coding task is **finishing Customer Profile**.
+The profile shell, account details, account history, and logout flow are in
+place. The remaining customer-frontend coding work is the final profile edit
+surface and legal/support links.
 
 Recommended order:
 
-1. Build `/trips` with Upcoming, Ongoing, and Past tabs.
-2. Open the correct booking-detail page from each trip card.
-3. Add booking-detail operational sections: driver, support, special request,
-   and cancelled-trip refund summary.
-4. Build customer profile and logout.
+1. Add customer name update.
+2. Add email capture for customers without an email and trigger the backend
+   verification flow.
+3. Add profile picture upload and removal.
+4. Add support/legal links to the profile page.
+5. Wire the legal pages/routes for Terms, Privacy, Cancellation/Refund, Fare
+   Policy, Grievance/Contact, and Safety wording.
+6. Run the final customer-frontend QA pass before starting the Cabbo admin
+   frontend project.
 
 ## 1. Customer Frontend Coding - Core Booking Flows
 
@@ -137,18 +141,20 @@ Recommended order:
 
 ### Customer account
 - [x] Customer-safe DTO used in backend to get customer profile.
-- [ ] Build the customer profile page using the V1 scope documented in `customer-profile-rationale.md`.
-- [ ] Show customer name, verified phone number, email state, and profile picture.
-- [ ] Support customer name update.
-- [ ] Support adding an email when missing and triggering the email verification flow.
-- [ ] Show email verification status without allowing casual email edits after email is added.
+- [x] Build the customer profile page using the V1 scope documented in `customer-profile-rationale.md`.
+- [x] Show customer name, verified phone number, email state, and profile picture.
+- [x] Show account history signals such as joined date and number of Cabbo trips when provided by the backend.
+- [x] Support customer name update.
+- [x] Support adding an email when missing and triggering the email verification flow.
+- [x] Show email verification status without allowing casual email edits after email is added.
+- [x] Allow customers with unverified email to resend the verification email through `/customer/email-verification/initiate`.
 - [ ] Support profile picture upload and removal.
-- [ ] Defer DOB, gender, and emergency contact editing from the V1 frontend.
+- [x] Defer DOB, gender, and emergency contact editing from the V1 frontend.
 - [ ] Show support/legal links.
-- [ ] Add logout confirmation.
-- [ ] Clear customer authentication and customer-specific cached data on logout.
-- [ ] Invalidate the backend session where supported.
-- [ ] Replace navigation history when returning to login.
+- [x] Add logout confirmation.
+- [x] Clear customer authentication and customer-specific cached data on logout.
+- [x] Invalidate the backend session where supported.
+- [x] Replace navigation history when returning to login.
 
 ## 3. Payment and Booking Integrity - Integration And Backend Verification
 
@@ -178,6 +184,7 @@ Recommended order:
 
 ## 5. Legal, Privacy, And Support - Non-Coding Launch Work
 
+- [ ] Add customer-facing legal/support page routes and link them from Profile.
 - [ ] Publish reviewed Terms of Service.
 - [ ] Publish a reviewed Privacy Notice.
 - [ ] Publish Cancellation and Refund Policy.

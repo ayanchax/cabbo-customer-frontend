@@ -14,6 +14,18 @@ const getFirstName = (name) => {
   return nameParts[0];
 };
 
+function formatJoinedOn(joinedOn) {
+  if (!joinedOn) return null;
+
+  const joinedDate = new Date(joinedOn);
+  if (Number.isNaN(joinedDate.getTime())) return null;
+
+  return joinedDate.toLocaleDateString("en-IN", {
+    month: "short",
+    year: "numeric",
+  });
+}
+
 export const useCustomer = () => {
   const context = useContext(CustomerContext);
 
@@ -25,5 +37,6 @@ export const useCustomer = () => {
     ...context,
     firstName: getFirstName(context?.customer?.name),
     getFirstName,
+    joinedOn: formatJoinedOn(context?.customer?.joined_on),
   };
 };

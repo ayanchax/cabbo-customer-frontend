@@ -34,6 +34,10 @@ export const ENDPOINTS = {
     CUSTOMER: {
         IS_LOGGED_IN: `${API_VERSION}/customer/profile/is-logged-in`,
         PROFILE: `${API_VERSION}/customer/profile`,
+        LOGOUT: `${API_VERSION}/customer/profile/logout`,
+        UPDATE_NAME: `${API_VERSION}/customer/profile/update/name`,
+        UPDATE_EMAIL: `${API_VERSION}/customer/profile/update/email`,
+        REINITIATE_EMAIL_VERIFICATION: `${API_VERSION}/customer/email-verification/initiate`,
         
     },
     TRIP: {

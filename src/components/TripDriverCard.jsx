@@ -6,16 +6,9 @@ import {
   Star,
   UserRound,
 } from "lucide-react";
-import {APP} from "@/utils";
+import {APP, getInitials} from "@/utils";
 
-function getInitials(name = "") {
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part.charAt(0).toUpperCase())
-    .join("");
-}
+ 
 
 function TripDriverCard({
   driver = null,

@@ -26,6 +26,7 @@ Allow V1 customer actions:
 - update display name
 - add an email if no email exists yet
 - auto-trigger email verification after adding email
+- resend verification email when the existing email is still unverified
 - upload profile picture
 - remove profile picture
 - logout
@@ -62,6 +63,21 @@ the provided query params.
 
 If email is not provided during onboarding, the customer can add it later from
 the profile page. Adding an email should trigger the same verification flow.
+
+Verification links expire after a short window. If the customer loses the email
+or the link expires, the profile page should allow resending a fresh
+verification email for an existing unverified email by calling:
+
+```txt
+POST /api/v1/customer/email-verification/initiate
+```
+
+No payload is required. The backend sends the fresh verification email and
+returns a customer-friendly success message such as:
+
+```json
+{"message": "Verification email sent. Please check your inbox."}
+```
 
 Once an email is added, the V1 frontend should not expose a general email-edit
 flow. Email becomes a trusted secondary communication destination.  

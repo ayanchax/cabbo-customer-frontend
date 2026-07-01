@@ -12,3 +12,7 @@ export {useEditNonCostImpactingTripFields} from "./useEditNonCostImpactingTripFi
 export {useGetSupportContactsForBooking} from "./useCustomerSupport";
 export {useCancelTripBooking} from "./useCancelTripBooking";
 export {useSubmitTripReview} from "./useSubmitTripReview";
+export {useLogoutCustomer} from "./useLogoutCustomer";
+export {useUpdateCustomerName} from "./useCustomerNameUpdate";
+export {useUpdateCustomerEmail} from "./useCustomerEmailUpdate";
+export {useReinitiateCustomerEmailVerification} from "./useReinitiateCustomerEmailVerification";

@@ -2,7 +2,7 @@ export {api, isDevMode} from "./client";
 export {initiateLogin, loginWithOtp, initiateOnboarding, resendOtp, verifyOnboardingOtp, onboardAndLogin} from "./auth";
 export {fetchServerGeography, fetchClientGeography} from "./geography";
 export {reverseGeocode, searchLocations, getLocationByPlaceId} from "./location";
-export {isLoggedIn, getProfile} from "./customer";
+export {isLoggedIn, getProfile, logoutCustomer, updateCustomerName, updateCustomerEmail, reinitiateCustomerEmailVerification} from "./customer";
 export {classifyTripType} from "./trip_type";
 export {getTripPackages, getTripPriorBookingWindow, getTripTypeConstraints} from "./trip_package";
 export {searchTrips} from "./trip_search";
