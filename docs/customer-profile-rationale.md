@@ -27,8 +27,7 @@ Allow V1 customer actions:
 - add an email if no email exists yet
 - auto-trigger email verification after adding email
 - resend verification email when the existing email is still unverified
-- upload profile picture
-- remove profile picture
+- upload or replace profile picture
 - logout
 
 Do not allow the customer to freely change the verified phone number from the
@@ -124,10 +123,13 @@ The frontend can use:
 
 ```txt
 POST /api/v1/customer/profile/upload/profile-picture
-DELETE /api/v1/customer/profile/remove/profile-picture
 ```
 
-Profile picture upload should remain optional.
+Profile picture upload should remain optional. V1 does not expose a separate
+remove action in the customer frontend. The avatar always shows a subtle camera
+action, and selecting a new image uploads it as the current profile picture.
+This keeps the UI compact and avoids adding a destructive action that is not
+needed for the core booking experience.
 
 ## V1 UX Principle
 

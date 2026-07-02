@@ -22,7 +22,7 @@ Recommended order:
 1. Add customer name update.
 2. Add email capture for customers without an email and trigger the backend
    verification flow.
-3. Add profile picture upload and removal.
+3. Add profile picture upload/overwrite from the avatar.
 4. Add support/legal links to the profile page.
 5. Wire the legal pages/routes for Terms, Privacy, Cancellation/Refund, Fare
    Policy, Grievance/Contact, and Safety wording.
@@ -148,7 +148,7 @@ Recommended order:
 - [x] Support adding an email when missing and triggering the email verification flow.
 - [x] Show email verification status without allowing casual email edits after email is added.
 - [x] Allow customers with unverified email to resend the verification email through `/customer/email-verification/initiate`.
-- [ ] Support profile picture upload and removal.
+- [x] Support profile picture upload/overwrite from the avatar.
 - [x] Defer DOB, gender, and emergency contact editing from the V1 frontend.
 - [ ] Show support/legal links.
 - [x] Add logout confirmation.

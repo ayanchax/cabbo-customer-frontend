@@ -12,7 +12,7 @@ import { useAuth, useCustomer, useLogoutCustomer } from "@/hooks";
 import { APP, getInitials, ROUTES } from "@/utils";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { ProfileEmail, ProfileItemDetailRow, ProfileName, ProfileStat } from "./components";
+import { ProfileEmail, ProfileItemDetailRow, ProfileName, ProfilePicture, ProfileStat } from "./components";
 
 function ProfileInformation() {
   const { customer, firstName, joinedOn: joinedOnLabel } = useCustomer();
@@ -20,11 +20,9 @@ function ProfileInformation() {
   const logoutCustomer = useLogoutCustomer();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [imageError, setImageError] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const initials = getInitials(customer?.name || firstName);
-  const hasProfilePicture = customer?.profile_picture_url && !imageError;
   const numberOfTrips =
     typeof customer?.number_of_trips === "number"
       ? `${customer.number_of_trips} ${customer.number_of_trips === 1 ? "trip" : "trips"}`
@@ -57,20 +55,11 @@ function ProfileInformation() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             {/* Profile picture */}
             <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl bg-primary/5 text-primary ring-1 ring-blue-100">
-              {hasProfilePicture ? (
-                <img
-                  src={customer.profile_picture_url}
-                  alt={`${customer?.name || "Customer"} profile picture`}
-                  className="h-full w-full object-cover"
-                  onError={() => setImageError(true)}
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center text-xl font-bold">
-                  {initials || (
-                    <UserRound className="h-8 w-8" aria-hidden="true" />
-                  )}
-                </div>
-              )}
+              <ProfilePicture
+                pictureUrl={customer?.profile_picture_url}
+                alt={`${customer?.name || "Customer"} profile picture`}
+                initials={initials}
+              />
             </div>
 
             <div className="min-w-0 flex-1">

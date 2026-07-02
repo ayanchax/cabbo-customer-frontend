@@ -43,8 +43,7 @@ function ProfileEmail({ email, isVerified, canReinitiateVerification = false }) 
   const trimmedEmail = draftEmail.trim();
   const canSave = isValidEmail(trimmedEmail) && !isSaving;
   const inputRef = useRef(null);
-  const showResendVerification =true
-    //Boolean(email) && !isVerified && canReinitiateVerification;
+  const showResendVerification =Boolean(email) && !isVerified && canReinitiateVerification;
 
   const handleCancel = () => {
     setDraftEmail("");

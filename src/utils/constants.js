@@ -38,6 +38,8 @@ export const ENDPOINTS = {
         UPDATE_NAME: `${API_VERSION}/customer/profile/update/name`,
         UPDATE_EMAIL: `${API_VERSION}/customer/profile/update/email`,
         REINITIATE_EMAIL_VERIFICATION: `${API_VERSION}/customer/email-verification/initiate`,
+        UPLOAD_PROFILE_PICTURE: `${API_VERSION}/customer/profile/upload/profile-picture`,
+        REMOVE_PROFILE_PICTURE: `${API_VERSION}/customer/profile/remove/profile-picture`,       
         
     },
     TRIP: {

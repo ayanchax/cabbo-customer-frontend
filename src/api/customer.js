@@ -30,3 +30,20 @@ export const reinitiateCustomerEmailVerification = async () => {
     const { data } = await api.post(ENDPOINTS.CUSTOMER.REINITIATE_EMAIL_VERIFICATION);
     return data;
 }
+
+export const uploadProfilePicture = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const { data } = await api.post(ENDPOINTS.CUSTOMER.UPLOAD_PROFILE_PICTURE, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+    return data;
+}
+
+export const removeProfilePicture = async () => {
+    const { data } = await api.delete(ENDPOINTS.CUSTOMER.REMOVE_PROFILE_PICTURE);
+    return data;
+}
