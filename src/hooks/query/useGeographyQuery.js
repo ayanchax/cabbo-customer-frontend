@@ -1,7 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { LOCAL_STORAGE_KEYS, DEFAULT_GEOGRAPHY } from "@/utils";
-import {useLocalStorage} from "@/hooks";
+import { useLocalStorage } from "../useLocalStorage";
 import {fetchClientGeography, fetchServerGeography} from "@/api";
 // LocalStorage cache key and TTL for client geography
 const CLIENT_GEO_CACHE_KEY = LOCAL_STORAGE_KEYS.clientGeography;

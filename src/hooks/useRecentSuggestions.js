@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useLocalStorage } from "@/hooks";
+import { useLocalStorage } from "./useLocalStorage";
 import { LOCAL_STORAGE_KEYS } from "@/utils";
 import { isDevMode } from "@/api";
 

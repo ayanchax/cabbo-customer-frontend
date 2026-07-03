@@ -1,4 +1,4 @@
-import { useGeographyQuery } from "@/hooks";
+import { useGeographyQuery } from "./query";
 import { DEFAULT_USER_LOCALE } from "@/utils";
 export const useLocale = () => {
     const { clientGeographyData } = useGeographyQuery();

@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { searchLocations } from "@/api";
-import { useDebounce } from "@/hooks";
+import { useDebounce } from "../useDebounce";
 
 export const useLocationSearchQuery = (
   query,

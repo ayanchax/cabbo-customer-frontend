@@ -1,4 +1,4 @@
-import { useGeographyQuery } from "@/hooks";
+import { useGeographyQuery } from "./query";
 import {utcOffsetStringToMinutes, DEFAULT_USER_TIMEZONE} from "@/utils"
 export const useTimezone = () => {
     const { clientGeographyData } = useGeographyQuery();

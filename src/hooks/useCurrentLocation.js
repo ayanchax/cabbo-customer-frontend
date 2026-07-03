@@ -2,9 +2,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   useLocalStorage,
-  useRecentSuggestions,
-  useReverseGeocodingQuery,
-} from "@/hooks";
+} from "./useLocalStorage";
+import { useRecentSuggestions } from "./useRecentSuggestions";
+import { useReverseGeocodingQuery } from "./query";
 import { LOCAL_STORAGE_KEYS } from "@/utils";
 
 const EARTH_RADIUS_METRES = 6371000;

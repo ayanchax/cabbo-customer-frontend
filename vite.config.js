@@ -35,4 +35,14 @@ export default defineConfig({
       ignored: ['**/docs/**', '**/payloads/**'],
     },
   },
+  build: {
+    // CSS bundle is intentionally close to 500 kB due to global flag icons.
+    // Raise warning threshold to avoid noisy warnings while still catching regressions.
+    chunkSizeWarningLimit: 650,
+    rolldownOptions: {
+      checks: {
+        pluginTimings: false,
+      },
+    },
+  },
 })

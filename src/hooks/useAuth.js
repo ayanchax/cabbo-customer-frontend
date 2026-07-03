@@ -1,6 +1,13 @@
-import { useLocalStorage } from "@/hooks";
+import { useLocalStorage } from "./useLocalStorage";
 import { LOCAL_STORAGE_KEYS } from "@/utils";
-import { useInitiateLoginMutation, useInitiateOnboardingMutation,useResendOtpMutation, useVerifyLoginOtpMutation,useVerifyOnboardingOtpMutation,useOnboardingMutation } from "@/hooks";
+import {
+    useInitiateLoginMutation,
+    useInitiateOnboardingMutation,
+    useResendOtpMutation,
+    useVerifyLoginOtpMutation,
+    useVerifyOnboardingOtpMutation,
+    useOnboardingMutation,
+} from "./mutation";
 const useAuth = () => {
     const { getItem, setItem, removeItem } = useLocalStorage()
     const initiateLoginMutation = useInitiateLoginMutation();
