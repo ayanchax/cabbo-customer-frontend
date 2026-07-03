@@ -36,10 +36,44 @@ export default defineConfig({
     },
   },
   build: {
-    // CSS bundle is intentionally close to 500 kB due to global flag icons.
-    // Raise warning threshold to avoid noisy warnings while still catching regressions.
-    chunkSizeWarningLimit: 650,
     rolldownOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return
+
+          if (id.includes('react-router') || id.includes('@remix-run/router')) {
+            return 'vendor-router'
+          }
+
+          if (id.includes('@tanstack/')) {
+            return 'vendor-query'
+          }
+
+          if (id.includes('react-hot-toast') || id.includes('goober')) {
+            return 'vendor-toast'
+          }
+
+          if (id.includes('react-day-picker') || id.includes('date-fns')) {
+            return 'vendor-datetime'
+          }
+
+          if (id.includes('lucide-react')) {
+            return 'vendor-icons'
+          }
+
+          if (id.includes('axios')) {
+            return 'vendor-http'
+          }
+
+          if (
+            id.includes('/react/') ||
+            id.includes('/react-dom/') ||
+            id.includes('scheduler')
+          ) {
+            return 'vendor-react'
+          }
+        },
+      },
       checks: {
         pluginTimings: false,
       },

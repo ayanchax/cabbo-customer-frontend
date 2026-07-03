@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import "flag-icons/css/flag-icons.min.css";
 import { isPhoneNumberValid, sanitizePhoneNumber, APP } from "@/utils";
 import { useToast, useGeography, useAuth } from "@/hooks";
 import { Disclaimer, LegalAgreementStatement } from "@/components";
