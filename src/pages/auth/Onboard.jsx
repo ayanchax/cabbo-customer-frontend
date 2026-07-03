@@ -4,6 +4,7 @@ import { ROUTES } from "@/utils";
 import { useAuth, useToast, useLocalStorage } from "@/hooks";
 import { isValidEmail , LOCAL_STORAGE_KEYS} from "@/utils";
 import { isDevMode } from "@/api";
+import { LegalAgreementStatement } from "@/components";
 
 const Onboard = () => {
   const navigate = useNavigate();
@@ -204,6 +205,7 @@ const Onboard = () => {
             {onboardAndLogin.isPending ? "Creating account..." : "Continue"}
           </button>
         </form>
+        <LegalAgreementStatement />
       </div>
     </div>
   );

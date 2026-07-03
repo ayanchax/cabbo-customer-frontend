@@ -7,7 +7,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { useGetSupportContactsForBooking } from "@/hooks";
-import { APP } from "@/utils";
+import { APP, ROUTES } from "@/utils";
 function normalizePhoneForWhatsApp(phoneNumber) {
   if (!phoneNumber) return "";
   return phoneNumber.replace(/[^\d]/g, "");
@@ -146,7 +146,8 @@ function TripSupportCard({
             <div className="space-y-3">
               <div>
                 <p className="text-sm font-semibold text-gray-900">
-                  {supportContact.display_name || `${APP.name} Customer Support`}
+                  {supportContact.display_name ||
+                    `${APP.name} Customer Support`}
                 </p>
                 <p className="mt-0.5 text-xs leading-5 text-gray-500">
                   Mention your booking ID when you contact us.
@@ -175,8 +176,23 @@ function TripSupportCard({
                   </a>
                 )}
               </div>
+
+              <div className="mt-3 text-xs leading-5 text-gray-500">
+            To know more about how {APP.name} handles support requests, please
+            read our{" "}
+            <a
+              href={`${ROUTES.LEGAL}/help-support`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-primary underline underline-offset-2 hover:text-primary/90"
+            >
+              support policy
+            </a>
+            .
+          </div>
             </div>
           )}
+          
         </div>
       )}
     </section>

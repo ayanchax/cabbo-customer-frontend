@@ -2,10 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { isPhoneNumberValid, sanitizePhoneNumber, APP } from "@/utils";
 import { useToast, useGeography, useAuth } from "@/hooks";
-import { Disclaimer } from "@/components";
+import { Disclaimer, LegalAgreementStatement } from "@/components";
 import { ROUTES } from "@/utils";
 import { isDevMode } from "@/api";
-
 
 const Login = () => {
   const { initiateLogin, initiateOnboarding } = useAuth();
@@ -119,12 +118,14 @@ const Login = () => {
           return;
         }
         if (error_code === "ALREADY_LOGGED_IN") {
-        // In the future, we could enhance this flow by showing a modal with seeking consent from user to continue on this device with the new login which would invalidate the old session. For now, we will just show a toast message.
-        // We will not support login from multiple devices, as we are a ride-hailing app and it's safer to assume that a user should only be logged in from one device at a time to prevent misuse and ensure security.
-        // Refer backlogs.md for the future Consent-Based Device Switching flow todo
-        showToast("Looks like you are logged in on another device. Log out there to continue.", "error");
-        return;
-
+          // In the future, we could enhance this flow by showing a modal with seeking consent from user to continue on this device with the new login which would invalidate the old session. For now, we will just show a toast message.
+          // We will not support login from multiple devices, as we are a ride-hailing app and it's safer to assume that a user should only be logged in from one device at a time to prevent misuse and ensure security.
+          // Refer backlogs.md for the future Consent-Based Device Switching flow todo
+          showToast(
+            "Looks like you are logged in on another device. Log out there to continue.",
+            "error",
+          );
+          return;
         }
         showToast("Invalid phone number.", "error");
       } else {
@@ -226,6 +227,10 @@ const Login = () => {
             {initiateLogin.isPending ? "Please wait..." : "Continue"}
           </button>
         </form>
+
+        {/*  */}
+        <LegalAgreementStatement/>
+         
       </div>
     </div>
   );

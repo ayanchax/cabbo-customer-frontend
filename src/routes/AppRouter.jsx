@@ -18,11 +18,13 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
+
         <Route element={<PublicRoute />}>
           {/* Public auth routes, if user is not logged in, they can access these */}
           <Route path={ROUTES.LOGIN} element={<Login />} />
           <Route path={ROUTES.VERIFY} element={<Verify />} />
           <Route path={ROUTES.ONBOARD} element={<Onboard />} />
+         
         </Route>
         <Route element={<ProtectedRoute />}>
           {/* Protected app routes, only accessible if user is logged in */}
@@ -37,9 +39,11 @@ const AppRouter = () => {
           <Route path={ROUTES.BOOKING_DETAIL} element={<BookingDetailPage />} />
           <Route path={ROUTES.MY_TRIPS} element={<MyTripsPage />} />
           <Route path={ROUTES.PROFILE} element={<CustomerProfilePage />} />
-          <Route path={ROUTES.LEGAL_PAGE} element={<LegalPage />} />
         
         </Route>
+
+         <Route path={ROUTES.LEGAL_PAGE} element={<LegalPage />} />
+          
       </Routes>
     </BrowserRouter>
   );

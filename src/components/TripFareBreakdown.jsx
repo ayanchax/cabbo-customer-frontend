@@ -1,6 +1,6 @@
 import React from "react";
 import { Info } from "lucide-react";
-import { formatCurrency } from "@/utils";
+import { formatCurrency, ROUTES } from "@/utils";
 
 function TripFareBreakdown({
   priceBreakdown,
@@ -43,9 +43,9 @@ function TripFareBreakdown({
             <span className="flex items-center gap-2 capitalize">
               {key.replace(/_/g, " ")}
               {lockedAddOnKeySet.has(key) && (
-                  <span className="rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
-                    Add-on
-                  </span>
+                <span className="rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
+                  Add-on
+                </span>
               )}
             </span>
             <span>{formatCurrency(val, currencySymbol)}</span>
@@ -62,6 +62,19 @@ function TripFareBreakdown({
           {addOnDisclaimer && <span>{addOnDisclaimer}</span>}
         </div>
       )}
+
+      <div className="mt-3 text-xs text-gray-500">
+        To know more about how we calculate the fare, please refer to our{" "}
+        <a
+          href={`${ROUTES.LEGAL}/fare-charges-policy`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary underline"
+        >
+          fare charges policy
+        </a>
+        .
+      </div>
     </div>
   );
 }
