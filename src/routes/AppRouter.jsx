@@ -9,7 +9,8 @@ import {
   BookingDetailPage,
   OutstationPage,
   MyTripsPage,
-  CustomerProfilePage
+  CustomerProfilePage,
+  LegalPage
 } from "@/pages";
 import { PublicRoute, ProtectedRoute } from "@/routes";
 
@@ -36,6 +37,7 @@ const AppRouter = () => {
           <Route path={ROUTES.BOOKING_DETAIL} element={<BookingDetailPage />} />
           <Route path={ROUTES.MY_TRIPS} element={<MyTripsPage />} />
           <Route path={ROUTES.PROFILE} element={<CustomerProfilePage />} />
+          <Route path={ROUTES.LEGAL_PAGE} element={<LegalPage />} />
         
         </Route>
       </Routes>

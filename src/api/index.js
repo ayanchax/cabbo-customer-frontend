@@ -3,6 +3,7 @@ export {initiateLogin, loginWithOtp, initiateOnboarding, resendOtp, verifyOnboar
 export {fetchServerGeography, fetchClientGeography} from "./geography";
 export {reverseGeocode, searchLocations, getLocationByPlaceId} from "./location";
 export {isLoggedIn, getProfile, logoutCustomer, updateCustomerName, updateCustomerEmail, reinitiateCustomerEmailVerification, uploadProfilePicture, removeProfilePicture} from "./customer";
+export { getLegalPages, getLegalPageBySlug } from "./legal";
 export {classifyTripType} from "./trip_type";
 export {getTripPackages, getTripPriorBookingWindow, getTripTypeConstraints} from "./trip_package";
 export {searchTrips} from "./trip_search";

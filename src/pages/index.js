@@ -6,4 +6,5 @@ export { default as AirportTransferPage } from "@/pages/AirportTransferPage";
 export { default as OutstationPage } from "@/pages/OutstationPage";
 export { default as MyTripsPage } from "@/pages/MyTripsPage";
 export {default as CustomerProfilePage} from  "@/pages/CustomerProfilePage";
+export { default as LegalPage } from "@/pages/LegalPage";
 export * as Auth from "@/pages/auth";

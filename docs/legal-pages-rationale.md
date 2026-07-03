@@ -59,6 +59,17 @@ GET /api/v1/legal/pages/{slug}
 The list endpoint should return lightweight metadata for navigation. The detail
 endpoint should return the page content.
 
+For V1, Cabbo treats these backend-managed files as the published source of
+truth. Each page carries a slug, title, version, effective date, acceptance
+flag, and active content. This is enough for launch because the policy wording
+is reviewed, versioned in the backend repository, and aligned with Cabbo's
+actual booking, fare, cancellation, refund, and support behavior.
+
+Cabbo does not need a legal-content database table in V1. A database-backed
+legal CMS can be added later if legal operations require non-engineering
+editing, draft/approval workflow, or historical querying from the application
+itself.
+
 ## V1 Frontend Scope
 
 The customer frontend should:
@@ -78,6 +89,34 @@ The frontend should not:
 
 Backend policy logic remains the source of truth for actual fare, refund,
 cancellation, support, and payment outcomes.
+
+## V1 Inclusion And Deferral
+
+Included in V1:
+
+- backend-published Terms of Service
+- backend-published Privacy Policy
+- backend-published Cancellation and Refund Policy
+- backend-published Fare and Charges Policy
+- backend-published Help and Support page
+- backend-published Safety, Contact, and Grievance page
+- version and effective-date display
+- customer profile links to all active legal/support pages
+- phone and WhatsApp support channels resolved from backend support routing
+
+Deferred from V1:
+
+- recording accepted Terms/Privacy versions per customer
+- database-backed legal-content management
+- legal admin editor
+- in-app legal acceptance history
+
+Accepted-version tracking is useful, especially when terms or privacy wording
+changes materially. It is not required for Cabbo's V1 frontend launch because
+onboarding and customer account flows can rely on the currently published
+Terms/Privacy links while the backend keeps the active versions immutable and
+reviewable. This should be promoted before Cabbo introduces frequent legal
+version changes, multi-region legal variants, or explicit re-consent flows.
 
 ## Required V1 Pages
 

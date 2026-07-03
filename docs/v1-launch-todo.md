@@ -12,22 +12,19 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 
 ## Next Coding Priority
 
-The next customer-frontend coding task is **finishing Customer Profile**.
-The profile shell, account details, account history, and logout flow are in
-place. The remaining customer-frontend coding work is the final profile edit
-surface and legal/support links.
+The customer-frontend feature coding is nearly complete. The next priority is
+the final launch-readiness pass: legal copy review, staging verification,
+security/privacy checks, and full QA across all customer flows.
 
 Recommended order:
 
-1. Add customer name update.
-2. Add email capture for customers without an email and trigger the backend
-   verification flow.
-3. Add profile picture upload/overwrite from the avatar.
-4. Add support/legal links to the profile page.
-5. Wire the legal pages/routes for Terms, Privacy, Cancellation/Refund, Fare
-   Policy, Grievance/Contact, and Safety wording.
-6. Run the final customer-frontend QA pass before starting the Cabbo admin
-   frontend project.
+1. Review backend-provided legal/support content for Cabbo-specific wording.
+2. Re-test payment, booking, cancellation, refund, profile, and legal-page
+   flows in staging.
+3. Run the release QA matrix across local hourly rental, airport transfers, and
+   outstation.
+4. Resolve any P0/P1 issues found during QA.
+5. Start the Cabbo admin frontend project after customer frontend QA is clean.
 
 ## 1. Customer Frontend Coding - Core Booking Flows
 
@@ -150,11 +147,14 @@ Recommended order:
 - [x] Allow customers with unverified email to resend the verification email through `/customer/email-verification/initiate`.
 - [x] Support profile picture upload/overwrite from the avatar.
 - [x] Defer DOB, gender, and emergency contact editing from the V1 frontend.
-- [ ] Show support/legal links.
+- [x] Show support/legal links.
 - [x] Add logout confirmation.
 - [x] Clear customer authentication and customer-specific cached data on logout.
 - [x] Invalidate the backend session where supported.
 - [x] Replace navigation history when returning to login.
+- [x] Render backend-provided legal/support links from `/legal/pages`.
+- [x] Render backend-provided legal Markdown pages by slug with version and effective date.
+- [x] Auto-link URLs and email addresses inside legal Markdown content without rendering raw HTML.
 
 ## 3. Payment and Booking Integrity - Integration And Backend Verification
 
@@ -184,20 +184,20 @@ Recommended order:
 
 ## 5. Legal, Privacy, And Support - Non-Coding Launch Work
 
-- [ ] Add customer-facing legal/support page routes and link them from Profile.
-- [ ] Publish reviewed Terms of Service.
-- [ ] Publish a reviewed Privacy Notice.
-- [ ] Publish Cancellation and Refund Policy.
-- [ ] Publish Fare, Payment, Toll, Parking, and Additional-charge Policy.
-- [ ] Publish Grievance Redressal and Contact Information.
-- [ ] Publish Safety and Acceptable-use Guidelines.
-- [ ] Add a Cookie Notice only if non-essential tracking is used.
-- [ ] Include legal entity, contact, version, and effective-date information.
-- [ ] Store legal documents as immutable, versioned content.
-- [ ] Record accepted terms/privacy versions on the backend.
-- [ ] Confirm applicable aggregator and state requirements with counsel.
-- [ ] Verify customer-care phone and WhatsApp channels are operational.
-- [ ] Define and test the data-retention and deletion workflow.
+- [x] Add customer-facing legal/support page routes and link them from Profile.
+- [x] Publish reviewed Terms of Service.
+- [x] Publish a reviewed Privacy Notice.
+- [x] Publish Cancellation and Refund Policy.
+- [x] Publish Fare, Payment, Toll, Parking, and Additional-charge Policy.
+- [x] Publish Grievance Redressal and Contact Information.
+- [x] Publish Safety and Acceptable-use Guidelines.
+- [x] No Cookie Notice required for V1 because Cabbo does not use non-essential cookies; local-storage usage is covered in Privacy Policy.
+- [x] Include legal entity, contact, version, and effective-date information.
+- [x] Store legal documents as immutable, versioned content.
+- [x] Defer accepted terms/privacy version tracking from V1 and document the future path in `legal-pages-rationale.md` and `backlogs.md`.
+- [x] Defer counsel-led aggregator/state requirement review from V1; track as legal hardening in `backlogs.md`.
+- [x] Verify customer-care phone and WhatsApp channels are operational.
+- [x] Document V1 account deactivation, suspension, retention, and deletion-request handling in legal content.
 
 ## 6. Security And Privacy Gate - Engineering Review
 

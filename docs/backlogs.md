@@ -86,13 +86,79 @@ second deferred-feature list.
     quality monitoring.
 - **Priority:** V2; not required for launch.
 
+## Terms And Privacy Acceptance Version Tracking (v2)
+
+- **Feature:** Record the Terms of Service and Privacy Policy versions accepted
+  by each customer.
+- **V1 behavior:** The customer frontend links to backend-published,
+  versioned legal pages. The backend owns the active legal files and exposes
+  their version and effective date.
+- **Why deferred:** V1 does not yet need a full legal acceptance ledger because
+  legal pages are backend-versioned and Cabbo is not running frequent
+  re-consent workflows. Building acceptance history now would add backend data
+  model and UX surface area without blocking core booking validation.
+- **Future behavior:**
+  - Store customer ID, document slug, version, accepted timestamp, and source
+    surface.
+  - Require acceptance during onboarding and re-acceptance after material
+    Terms/Privacy changes.
+  - Preserve historical document versions for audit and support.
+  - Expose admin/internal views for acceptance status if needed.
+- **Priority:** V2 unless counsel requires it before launch.
+
+## Counsel-Led Aggregator And State Requirement Review (v2)
+
+- **Feature:** Have counsel review Cabbo's customer policies, state-specific
+  operating requirements, aggregator obligations, grievance wording, and
+  customer-facing legal flows.
+- **V1 behavior:** Cabbo publishes practical, generic cab-app policies that
+  match the current product behavior, backend fare/refund logic, and support
+  process.
+- **Why deferred:** V1 needs speed and operational validation. The current
+  legal pages are versioned and visible to customers, but a deeper
+  counsel-led jurisdictional review can happen after the core launch unless a
+  specific regulatory requirement is identified before go-live.
+- **Future behavior:**
+  - Review Terms, Privacy, Cancellation/Refund, Fare/Charges, Safety, Contact,
+    and Grievance pages.
+  - Add state-specific wording if Cabbo expands operations or regulatory
+    exposure.
+  - Review whether explicit acceptance-version tracking should become
+    mandatory.
+  - Maintain reviewed versions in backend legal content with effective dates.
+- **Priority:** V2/legal hardening; promote earlier if a launch jurisdiction
+  or partner requires it.
+
+## Self-Serve Account Deletion And Data Export (v2)
+
+- **Feature:** Let customers request account deletion, deactivation,
+  reactivation, and/or data export through a structured in-app or web flow.
+- **V1 behavior:** Account deactivation, suspension, and deletion requests are
+  handled through Cabbo support/admin operations. Cabbo can soft-delete or
+  deactivate an account, block login for inactive/suspended users, and retain
+  booking, payment, refund, dispute, safety, and legally/operationally required
+  records.
+- **Why deferred:** Cab bookings involve payments, refunds, driver safety,
+  disputes, fraud prevention, and operational records. A self-serve deletion
+  workflow needs careful identity verification, retention rules, audit trails,
+  and reactivation handling.
+- **Future behavior:**
+  - Add a customer-facing request flow for account deletion/deactivation.
+  - Verify identity before accepting the request.
+  - Separate removable profile data from records that must be retained.
+  - Anonymize optional fields where feasible.
+  - Preserve required booking/payment/refund/dispute records.
+  - Track request status and completion.
+  - Provide exportable customer data if required by policy or law.
+- **Priority:** V2/legal hardening; not required for V1 launch.
+
 ## Other Deferred Product Work
 
 - Discount and coupon engine.
 - Campaign or marketing CMS.
 - Fully dynamic, region-personalized homepage.
-- Real-time traffic-based pricing.
-- Advanced live driver/customer tracking.
+- Real-time traffic-based pricing (on investment and if we go instant booking mode)
+- Advanced live driver/customer tracking (on investment and if we go instant booking mode)
 - Full support ticketing or in-app chat.
 - Rich trip-status timeline.
 - Promotional homepage sections that could delay core booking readiness.

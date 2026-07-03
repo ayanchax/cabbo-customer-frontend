@@ -4,7 +4,6 @@ import {
   LogOut,
   Phone,
   ShieldCheck,
-  UserRound,
   CarFront,
 } from "lucide-react";
 import { PageHeader } from "@/components";
@@ -12,7 +11,7 @@ import { useAuth, useCustomer, useLogoutCustomer } from "@/hooks";
 import { APP, getInitials, ROUTES } from "@/utils";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { ProfileEmail, ProfileItemDetailRow, ProfileName, ProfilePicture, ProfileStat } from "./components";
+import { ProfileEmail, ProfileItemDetailRow, ProfileLegalLinks, ProfileName, ProfilePicture, ProfileStat } from "./components";
 
 function ProfileInformation() {
   const { customer, firstName, joinedOn: joinedOnLabel } = useCustomer();
@@ -108,6 +107,8 @@ function ProfileInformation() {
             }
           />
         </section>
+        {/* Legal links */}
+        <ProfileLegalLinks />
 
         {/* Logout section */}
         <section className="mt-4 rounded-xl border border-red-100 bg-white p-4 shadow-sm">

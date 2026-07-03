@@ -42,6 +42,9 @@ export const ENDPOINTS = {
         REMOVE_PROFILE_PICTURE: `${API_VERSION}/customer/profile/remove/profile-picture`,       
         
     },
+    LEGAL: {
+        PAGES: `${API_VERSION}/legal/pages`,
+    },
     TRIP: {
             CLASSIFY_TYPE: `${API_VERSION}/trips/trip-type-classification/classify`,
             GET_PACKAGES_BY_TRIP_TYPE_AND_REGION: `${API_VERSION}/trips/trip-packages`, 
@@ -81,6 +84,8 @@ export const ROUTES = {
     AIRPORT: "/airport-transfers",
     BOOKING: "/booking",
     BOOKING_DETAIL: "/booking/:bookingId",
+    LEGAL: "/legal",
+    LEGAL_PAGE: "/legal/:slug",
 };
 
 export const TRIP_TYPES =
