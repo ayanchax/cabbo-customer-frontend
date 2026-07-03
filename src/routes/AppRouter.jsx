@@ -1,18 +1,23 @@
+import {lazy} from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ROUTES } from "@/utils";
-import { Login, Verify, Onboard } from "@/pages/auth";
-import {
-  Home,
-  LocalHourlyRentalPage,
-  AirportTransferPage,
-  BookingPage,
-  BookingDetailPage,
-  OutstationPage,
-  MyTripsPage,
-  CustomerProfilePage,
-  LegalPage
-} from "@/pages";
 import { PublicRoute, ProtectedRoute } from "@/routes";
+
+// Lazy load all routes
+const LazyLoadedRoutes = {
+  Home: lazy(() => import("@/pages/Home")),
+  LocalHourlyRentalPage: lazy(() => import("@/pages/LocalHourlyRentalPage")),
+  AirportTransferPage: lazy(() => import("@/pages/AirportTransferPage")),
+  BookingPage: lazy(() => import("@/pages/BookingPage")),
+  BookingDetailPage: lazy(() => import("@/pages/BookingDetailPage")),
+  OutstationPage: lazy(() => import("@/pages/OutstationPage")),
+  MyTripsPage: lazy(() => import("@/pages/MyTripsPage")),
+  CustomerProfilePage: lazy(() => import("@/pages/CustomerProfilePage")),
+  LegalPage: lazy(() => import("@/pages/LegalPage")),
+  Login: lazy(() => import("@/pages/auth/Login")),
+  Verify: lazy(() => import("@/pages/auth/Verify")),
+  Onboard: lazy(() => import("@/pages/auth/Onboard"))
+};
 
 const AppRouter = () => {
   return (
@@ -21,28 +26,28 @@ const AppRouter = () => {
 
         <Route element={<PublicRoute />}>
           {/* Public auth routes, if user is not logged in, they can access these */}
-          <Route path={ROUTES.LOGIN} element={<Login />} />
-          <Route path={ROUTES.VERIFY} element={<Verify />} />
-          <Route path={ROUTES.ONBOARD} element={<Onboard />} />
+          <Route path={ROUTES.LOGIN} element={<LazyLoadedRoutes.Login />} />
+          <Route path={ROUTES.VERIFY} element={<LazyLoadedRoutes.Verify />} />
+          <Route path={ROUTES.ONBOARD} element={<LazyLoadedRoutes.Onboard />} />
          
         </Route>
         <Route element={<ProtectedRoute />}>
           {/* Protected app routes, only accessible if user is logged in */}
-          <Route path={ROUTES.HOME} element={<Home />} />
-          <Route path={ROUTES.LOCAL} element={<LocalHourlyRentalPage />} />
+          <Route path={ROUTES.HOME} element={<LazyLoadedRoutes.Home />} />
+          <Route path={ROUTES.LOCAL} element={<LazyLoadedRoutes.LocalHourlyRentalPage />} />
           <Route
             path={ROUTES.AIRPORT}
-            element={<AirportTransferPage />}
+            element={<LazyLoadedRoutes.AirportTransferPage />}
           />
-          <Route path={ROUTES.OUTSTATION} element={<OutstationPage />} />
-          <Route path={ROUTES.BOOKING} element={<BookingPage />} />
-          <Route path={ROUTES.BOOKING_DETAIL} element={<BookingDetailPage />} />
-          <Route path={ROUTES.MY_TRIPS} element={<MyTripsPage />} />
-          <Route path={ROUTES.PROFILE} element={<CustomerProfilePage />} />
+          <Route path={ROUTES.OUTSTATION} element={<LazyLoadedRoutes.OutstationPage />} />
+          <Route path={ROUTES.BOOKING} element={<LazyLoadedRoutes.BookingPage />} />
+          <Route path={ROUTES.BOOKING_DETAIL} element={<LazyLoadedRoutes.BookingDetailPage />} />
+          <Route path={ROUTES.MY_TRIPS} element={<LazyLoadedRoutes.MyTripsPage />} />
+          <Route path={ROUTES.PROFILE} element={<LazyLoadedRoutes.CustomerProfilePage />} />
         
         </Route>
 
-         <Route path={ROUTES.LEGAL_PAGE} element={<LegalPage />} />
+         <Route path={ROUTES.LEGAL_PAGE} element={<LazyLoadedRoutes.LegalPage />} />
           
       </Routes>
     </BrowserRouter>
