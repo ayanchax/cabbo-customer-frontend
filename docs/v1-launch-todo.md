@@ -155,6 +155,10 @@ Recommended order:
 - [x] Render backend-provided legal/support links from `/legal/pages`.
 - [x] Render backend-provided legal Markdown pages by slug with version and effective date.
 - [x] Auto-link URLs and email addresses inside legal Markdown content without rendering raw HTML.
+- [x] Show Terms and Privacy links during login/onboarding through a shared legal agreement statement.
+- [x] Link fare breakdowns to the Fare and Charges Policy.
+- [x] Link trip-specific refund/cancellation policy sections to the full Cancellation and Refund Policy.
+- [x] Link booking-detail support cards to the Help and Support page.
 
 ## 3. Payment and Booking Integrity - Integration And Backend Verification
 
@@ -164,9 +168,16 @@ Recommended order:
 - [x] Preserve confirmed booking state across refresh and navigation.
 - [x] Keep failed payments retryable from the pre-confirmation page.
 - [x] Clean temporary trips through the failure API and scheduled cleanup.
-- [ ] Re-test success, failure, retry, duplicate callback, refresh, and abandoned-payment scenarios in staging.
+- [x] Re-test success, failure, retry, duplicate callback, refresh, and abandoned-payment scenarios in local development.
+- [ ] Repeat payment smoke test on the dev deployment before production release.
 - [ ] Verify production payment webhook configuration and signatures.
 - [x] Confirm refund and cancellation behavior matches customer-facing policy text.
+- [x] Keep cancellation refund calculation and eligibility backend-authoritative.
+- [x] Persist one active refund record per trip and prevent duplicate refund initiation.
+- [x] Process pending, initiated, and failed refunds through a scheduled backend refund job.
+- [x] Retry refund initiation after payment settlement when the payment provider was not ready earlier.
+- [x] Notify customers immediately when the provider returns a processed refund, otherwise notify after the scheduler observes processed status.
+- [x] Keep processed refunds immutable and exclude them from future refund scheduler runs.
 
 ## 4. Admin Frontend And Operations Coding
 
@@ -205,10 +216,10 @@ Recommended order:
 - [ ] Audit all customer-facing API responses for internal or sensitive fields.
 - [x] Verify authorization on every booking detail and mutation endpoint.
 - [ ] Verify OTP, search, support, and mutation rate limits.
-- [ ] Verify backend input validation and frontend output encoding.
+- [x] Verify backend input validation and frontend output encoding.
 - [x] Remove secrets from frontend environment variables and bundles.
 - [x] Verify authentication, session expiry, and logout behavior.
-- [ ] Redact personal, authentication, and payment data from logs.
+- [x] Redact personal, authentication, and payment data from logs.
 - [x] Remove development logs containing personal or payment data.
 
 ## 7. Release Testing - QA Checklist
