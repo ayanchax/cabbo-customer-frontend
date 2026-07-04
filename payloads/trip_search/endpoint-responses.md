@@ -777,6 +777,24 @@ Response
     "mobility_hub": "airport"
 }
 
+http://localhost:8000/api/v1/locations/place-details/reverse-geocode
+Response
+{
+    "display_name": "Rashbehari Avenue Connector, East Kolkata Township",
+    "lat": 22.5152825,
+    "lng": 88.3896747,
+    "place_id": "ChIJ4a0XIU1xAjoR2Fr8tL1gRWM",
+    "address": "121, Rashbehari Ave Connector, Sarat Park, Gold Park, Rajdanga, East Kolkata Twp, Kolkata, West Bengal 700107, India",
+    "country": "India",
+    "country_code": "IN",
+    "state": "West Bengal",
+    "state_code": "WB",
+    "region": "Presidency Division",
+    "region_code": "Presidency Division",
+    "postal_code": "700107",
+    "mobility_hub": "transit_station"
+}
+
 http://localhost:8000/api/v1/trips/trip-type-classification/classify
 Response
 {
@@ -1417,7 +1435,6 @@ Response
     "currency_symbol": "₹",
     "description": "Trip booking for airport_pickup trip by Ayan Chakraborty",
     "customer": {
-        "id": "77f7ddf3-4af8-46ad-b3fa-e318311c244f",
         "name": "Ayan Chakraborty",
         "email": "ayanchax9088@gmail.com",
         "contact": "+91 9831305667"
@@ -1441,8 +1458,7 @@ Response
         ]
     },
     "fleet": {
-        "id": "6466efec-cdeb-49d7-8a4d-267946a145ac",
-        "name": "Premium Sedan",
+       "name": "Premium Sedan",
         "description": "Premium sedans for extra comfort and luxury.",
         "cab_names": [
             "Honda City",
@@ -1470,8 +1486,6 @@ Response
             "num_other_bags": 0
         },
         "roof_carrier": false,
-        "created_by": "system",
-        "is_active": true,
         "total_luggages": 4
     }
 }
@@ -1526,3 +1540,96 @@ Response:
 }
 
 
+http://localhost:8000/api/v1/trips/cleanup
+
+Response: {"message": "Trip data cleaned up successfully."}
+
+http://localhost:8000/api/v1/trips/reviews
+Response: Your trip review has been posted successfully.
+
+http://localhost:8000/api/v1/trips/constraints
+Response:
+{"max_hops": 3,
+                "min_trip_days": 2
+                "max_trip_days":7
+                "round_trip_only":True
+}
+
+http://localhost:8000/api/v1/trips/trip-packages/<trip_type>/<region_code>
+Response:
+[
+    {
+
+    "id": "346aca54-e872-4333-a472-12757e9fd152", Here ID is necessary because this ID goes into the search as we find ride.
+    "included_hours": 4,
+    "included_km": 40,
+    "description": null,
+    "best_intended_for": "Perfect for short city trips, errands, or quick meetings."
+}
+]
+
+http://localhost:8000/api/v1/customer/profile/upload/profile-picture
+
+Response:{
+    key: s3key,
+    url: s3url
+}
+
+http://localhost:8000/api/v1/customer/profile/update/name
+Response
+{"name": updated_name, "message": "Name updated successfully."}
+
+http://localhost:8000/api/v1/customer/profile/update/email
+Response
+{
+            "email": updated_email,
+            "message": "Email updated successfully. Please verify your new email address.",
+        }
+
+http://localhost:8000/api/v1/auth/onboard/initiate
+Response
+{
+            "message": "OTP sent to phone number.",
+            "phone_number": phone_number,
+            "last_sent_at": last_sent_at,
+            "resend_interval_seconds": OTP_RESEND_INTERVAL_SECONDS,
+        }
+
+http://localhost:8000/api/v1/auth/onboard/verify
+Response
+{"message": "OTP verified successfully. You can proceed with account setup."}
+
+
+http://localhost:8000/api/v1/auth/onboard
+Response:
+access_token=token,
+        token_type="bearer",
+        expires_in=JWT_EXPIRES_IN,  # n days in seconds
+        first_time_login=True, 
+
+
+http://localhost:8000/api/v1/auth/login/initiate
+Response:
+{
+            "message": "OTP sent to phone number.",
+            "phone_number": phone_number,
+            "last_sent_at": last_sent_at,
+            "resend_interval_seconds": OTP_RESEND_INTERVAL_SECONDS,
+        }
+
+http://localhost:8000/api/v1/auth/login
+Response:
+{access_token=token,
+        token_type="bearer",
+        expires_in=JWT_EXPIRES_IN,}
+
+
+
+http://localhost:8000/api/v1/auth/resend-otp
+Response:
+{
+            "message": "OTP resent to phone number.",
+            "phone_number": payload.phone_number,
+            "last_sent_at": last_sent_at,
+            "resend_interval_seconds": OTP_RESEND_INTERVAL_SECONDS,
+        }

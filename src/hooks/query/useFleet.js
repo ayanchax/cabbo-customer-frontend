@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getFleet } from "@/api";
 
+// Unused hooks for fleet data fetching, but we can keep them for future use if needed. For now, we can just use the getFleet function directly in the component where we need it.
 export const useFleetQuery = (enabled=false) => {
   return useQuery({
     queryKey: ["fleet"],

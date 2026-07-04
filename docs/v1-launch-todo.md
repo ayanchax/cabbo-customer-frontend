@@ -213,10 +213,10 @@ Recommended order:
 ## 6. Security And Privacy Gate - Engineering Review
 
 - [x] Use a customer-safe driver response model.
-- [ ] Audit all customer-facing API responses for internal or sensitive fields.
+- [x] Audit all customer-facing API responses for internal or sensitive fields.
 - [x] Verify authorization on every booking detail and mutation endpoint.
 - [ ] Verify OTP, search, support, and mutation rate limits.
-- [x] Verify backend input validation and frontend output encoding.
+- [x] Verify backend input validation and frontend output encoding so that no dangerously set html exist.
 - [x] Remove secrets from frontend environment variables and bundles.
 - [x] Verify authentication, session expiry, and logout behavior.
 - [x] Redact personal, authentication, and payment data from logs.
@@ -247,10 +247,10 @@ Run the complete matrix for local hourly rental, airport pickup, airport drop-of
 - [ ] Verify production frontend and backend environment configuration.
 - [ ] Verify database backups and perform a restore drill.
 - [ ] Enable production error monitoring and alerts.
-- [ ] Verify API error logging with sensitive-data redaction.
+- [x] Verify API error logging with sensitive-data redaction.
 - [ ] Verify route refresh and deep-link hosting configuration.
 - [ ] Run database migrations against a production-like environment.
-- [ ] Complete a staging launch rehearsal using production-like configuration.
+- [ ] Complete a development environment launch rehearsal using production-like configuration.
 - [ ] Prepare a rollback plan for frontend, backend, and database changes.
 - [ ] Prepare launch-day support coverage and escalation contacts.
 
