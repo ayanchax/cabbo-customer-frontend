@@ -387,6 +387,8 @@ Expected:
 - Update name.
 - Add email if missing.
 - Resend verification if allowed.
+- Open a valid `/verify-email?ep=...&id=...&token=...` link.
+- Open an expired/invalid email verification link.
 - Upload PNG profile picture under 2 MB.
 - Try non-PNG profile picture.
 - Try over-2-MB PNG.
@@ -396,6 +398,8 @@ Expected:
 
 - profile data updates without full-page confusion
 - email verification status is clear
+- valid email verification link confirms the email and shows a clear success state
+- invalid/expired email verification link shows a friendly recovery state
 - profile picture uploads/overwrites only
 - logout clears auth and customer-specific cache
 
