@@ -145,7 +145,8 @@ Recommended order:
 - [x] Support adding an email when missing and triggering the email verification flow.
 - [x] Show email verification status without allowing casual email edits after email is added.
 - [x] Allow customers with unverified email to resend the verification email through `/customer/email-verification/initiate`.
-- [ ] Add email verification landing route `/verify-email` that reads `ep`, `id`, and `token` query params and calls the backend verification endpoint.
+- [x] Add email verification landing route `/verify-email` that reads `ep`, `id`, and `token` query params and calls the backend verification endpoint.
+  - Handles success, already-verified, invalid/expired-link, and verification-failed states with customer-friendly copy.
 - [x] Support profile picture upload/overwrite from the avatar.
 - [x] Defer DOB, gender, and emergency contact editing from the V1 frontend.
 - [x] Show support/legal links.

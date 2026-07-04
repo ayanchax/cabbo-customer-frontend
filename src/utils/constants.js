@@ -13,6 +13,8 @@ export const LOCAL_STORAGE_KEYS = {
 }
 export const API_VERSION = import.meta.env.VITE_API_VERSION || "/api/v1";
 
+export const EXPECTED_EMAIL_VERIFICATION_ENDPOINT =
+  "/customer/email-verification/verify";
 export const ENDPOINTS = {
     AUTH: {
         INITIATE_ONBOARDING: `${API_VERSION}/auth/onboard/initiate`,
@@ -39,7 +41,8 @@ export const ENDPOINTS = {
         UPDATE_EMAIL: `${API_VERSION}/customer/profile/update/email`,
         REINITIATE_EMAIL_VERIFICATION: `${API_VERSION}/customer/email-verification/initiate`,
         UPLOAD_PROFILE_PICTURE: `${API_VERSION}/customer/profile/upload/profile-picture`,
-        REMOVE_PROFILE_PICTURE: `${API_VERSION}/customer/profile/remove/profile-picture`,       
+        REMOVE_PROFILE_PICTURE: `${API_VERSION}/customer/profile/remove/profile-picture`, 
+        VERIFY_EMAIL: `${API_VERSION}/customer/email-verification/verify`,      
         
     },
     LEGAL: {
@@ -86,6 +89,7 @@ export const ROUTES = {
     BOOKING_DETAIL: "/booking/:bookingId",
     LEGAL: "/legal",
     LEGAL_PAGE: "/legal/:slug",
+    VERIFY_EMAIL: "/verify-email",
 };
 
 export const TRIP_TYPES =

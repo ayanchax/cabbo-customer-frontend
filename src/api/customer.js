@@ -1,5 +1,5 @@
 import { api } from "@/api";
-import { ENDPOINTS } from "@/utils";
+import { ENDPOINTS, EXPECTED_EMAIL_VERIFICATION_ENDPOINT } from "@/utils";
 export const isLoggedIn = async () => {
 
     const { data } = await api.get(ENDPOINTS.CUSTOMER.IS_LOGGED_IN);
@@ -45,5 +45,26 @@ export const uploadProfilePicture = async (file) => {
 
 export const removeProfilePicture = async () => {
     const { data } = await api.delete(ENDPOINTS.CUSTOMER.REMOVE_PROFILE_PICTURE);
+    return data;
+}
+
+const getEmailVerificationEndpoint = (ep) => {
+    const trimmedEndpoint = typeof ep === "string" ? ep.trim() : "";
+    if (trimmedEndpoint === EXPECTED_EMAIL_VERIFICATION_ENDPOINT) {
+        return ENDPOINTS.CUSTOMER.VERIFY_EMAIL;
+    }
+    if (trimmedEndpoint === ENDPOINTS.CUSTOMER.VERIFY_EMAIL) {
+        return ENDPOINTS.CUSTOMER.VERIFY_EMAIL;
+    }
+    return ENDPOINTS.CUSTOMER.VERIFY_EMAIL;
+}
+
+export const verifyCustomerEmail = async ({ ep, id, token }) => {
+    const { data } = await api.get(getEmailVerificationEndpoint(ep), {
+        params: {
+            id,
+            token,
+        },
+    });
     return data;
 }

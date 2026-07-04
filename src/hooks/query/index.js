@@ -14,3 +14,4 @@ export {useTripBookingsFeed} from "./useTripBookingsFeed";
 export {useTripRefundDetail} from "./useTripRefundDetail";
 export { useLegalPages } from "./useLegalPages";
 export { useLegalPage } from "./useLegalPage";
+export { useVerifyCustomerEmail } from "./useVerifyEmail";

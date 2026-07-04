@@ -16,7 +16,8 @@ const LazyLoadedRoutes = {
   LegalPage: lazy(() => import("@/pages/LegalPage")),
   Login: lazy(() => import("@/pages/auth/Login")),
   Verify: lazy(() => import("@/pages/auth/Verify")),
-  Onboard: lazy(() => import("@/pages/auth/Onboard"))
+  Onboard: lazy(() => import("@/pages/auth/Onboard")),
+  VerifyEmail: lazy(() => import("@/pages/VerifyEmailPage"))
 };
 
 const AppRouter = () => {
@@ -29,7 +30,6 @@ const AppRouter = () => {
           <Route path={ROUTES.LOGIN} element={<LazyLoadedRoutes.Login />} />
           <Route path={ROUTES.VERIFY} element={<LazyLoadedRoutes.Verify />} />
           <Route path={ROUTES.ONBOARD} element={<LazyLoadedRoutes.Onboard />} />
-         
         </Route>
         <Route element={<ProtectedRoute />}>
           {/* Protected app routes, only accessible if user is logged in */}
@@ -48,6 +48,7 @@ const AppRouter = () => {
         </Route>
 
          <Route path={ROUTES.LEGAL_PAGE} element={<LazyLoadedRoutes.LegalPage />} />
+         <Route path={ROUTES.VERIFY_EMAIL} element={<LazyLoadedRoutes.VerifyEmail />} />
           
       </Routes>
     </BrowserRouter>
