@@ -261,11 +261,7 @@ function TripBookings({
   const { timezone: client_timezone } = useTimezone();
   const { locale } = useLocale();
   const trips = Array.isArray(feedData?.trips)
-    ? [...feedData.trips].sort((firstTrip, secondTrip) => {
-        const firstTime = new Date(firstTrip?.start_datetime || 0).getTime();
-        const secondTime = new Date(secondTrip?.start_datetime || 0).getTime();
-        return secondTime - firstTime;
-      })
+    ? feedData.trips
     : [];
   const pagination = feedData?.pagination || {};
   const hasPagination =

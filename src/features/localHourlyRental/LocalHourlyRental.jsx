@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useLayoutEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   useTripPackagesQuery,
@@ -83,6 +83,14 @@ function LocalHourlyRental() {
   const selectedPackage = useMemo(() => {
     return packages?.find((pkg) => pkg.id === selectedPackageId);
   }, [packages, selectedPackageId]);
+
+  useLayoutEffect(() => {
+    if (!searchResults) return;
+
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [searchResults]);
 
   
 

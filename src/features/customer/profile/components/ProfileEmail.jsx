@@ -69,6 +69,7 @@ function ProfileEmail({ email, isVerified, canReinitiateVerification = false }) 
               ...oldProfile,
               email: trimmedEmail,
               is_email_verified: false,
+              can_reinitiate_email_verification: false,
             }
           : oldProfile,
       );

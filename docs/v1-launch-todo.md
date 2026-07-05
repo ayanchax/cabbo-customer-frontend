@@ -12,19 +12,21 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 
 ## Next Coding Priority
 
-The customer-frontend feature coding is nearly complete. The next priority is
-the final launch-readiness pass: legal copy review, staging verification,
-security/privacy checks, and full QA across all customer flows.
+The customer-frontend feature coding and local QA P0/P1 cleanup are complete.
+The next priority is the final launch-readiness pass: dev/staging verification,
+security/privacy checks, production-readiness rehearsal, and remaining
+cross-environment smoke tests.
 
 Recommended order:
 
-1. Review backend-provided legal/support content for Cabbo-specific wording.
-2. Re-test payment, booking, cancellation, refund, profile, and legal-page
+1. Re-test payment, booking, cancellation, refund, profile, and legal-page
    flows in staging.
-3. Run the release QA matrix across local hourly rental, airport transfers, and
-   outstation.
-4. Resolve any P0/P1 issues found during QA.
-5. Start the Cabbo admin frontend project after customer frontend QA is clean.
+2. Repeat the release QA smoke across local hourly rental, airport transfers,
+   and outstation on the dev deployment.
+3. Verify remaining security/privacy and production-readiness gates.
+4. Prepare the production smoke checklist and launch-day support coverage.
+5. Start the Cabbo admin frontend project after customer frontend release gates
+   are accepted.
 
 ## 1. Customer Frontend Coding - Core Booking Flows
 
@@ -74,7 +76,8 @@ Recommended order:
 - [x] Treat backend `TRIP_NOT_FOUND` responses as empty trip states instead of hard errors.
 - [x] Show subtle final fare context on trip cards without making My Trips feel like a payment page.
 - [x] Explain non-obvious trip statuses such as disputed trips and past trips whose operational status is still pending.
-- [x] Sort trip cards by start time so the latest relevant bookings appear first.
+- [x] Sort trip cards by start time according to the backend feed order so
+  upcoming trips show nearest upcoming first.
 
 ### Booking details
 
@@ -228,20 +231,35 @@ Recommended order:
 
 Run the complete matrix for local hourly rental, airport pickup, airport drop-off, and outstation.
 
-- [ ] Search, classification, and preference persistence.
-- [ ] No-results and API-error behavior.
-- [ ] Ride selection and fare presentation.
-- [ ] Payment success, failure, and retry.
-- [ ] Booking confirmation, refresh, and deep links.
-- [ ] Upcoming, ongoing, completed, and cancelled trip presentation.
-- [ ] Driver assignment and unassigned-driver states.
-- [ ] Support actions and special-request submission.
-- [ ] Cancellation and refund presentation.
-- [ ] Mobile, tablet, and desktop layouts.
-- [ ] Keyboard navigation and visible focus.
-- [ ] Accessible names, readable errors, adequate contrast, and no text overflow.
-- [ ] Loading, empty, offline, and degraded-network states.
-- [ ] Cross-browser smoke test on supported browsers.
+Local customer-frontend QA completed on 2026-07-06. All P0 and P1 defects found
+in the local pass were resolved before moving to dev/staging smoke.
+
+- [x] Search, classification, and preference persistence.
+  - Fixed recent-suggestion promotion when selecting cached suggestions.
+- [x] No-results and API-error behavior.
+- [x] Ride selection and fare presentation.
+- [x] Payment success, failure, and retry.
+  - Invalidated My Trips feed after successful payment confirmation so newly
+    confirmed bookings appear immediately.
+- [x] Booking confirmation, refresh, and deep links.
+  - Booking detail now shows a specific trip-not-found state for backend
+    `TRIP_NOT_FOUND` responses.
+  - Booking detail pages reset scroll on route changes.
+- [x] Upcoming, ongoing, completed, and cancelled trip presentation.
+  - Preserved backend feed order for trip cards so upcoming trips render nearest
+    upcoming first.
+- [x] Driver assignment and unassigned-driver states.
+- [x] Support actions and special-request submission.
+  - Non-cost-impacting booking edits patch the booking-detail cache without
+    heavy refetch flicker.
+- [x] Cancellation and refund presentation.
+- [x] Mobile, tablet, and desktop layouts.
+  - Fixed logout-confirmation scroll on wide profile layouts.
+  - Fixed ride-results scroll reset after search-result rendering.
+- [x] Keyboard navigation and visible focus.
+- [x] Accessible names, readable errors, adequate contrast, and no text overflow.
+- [x] Loading, empty, offline, and degraded-network states.
+- [x] Cross-browser smoke test on supported browsers.
 
 ## 8. Production Readiness - DevOps And Operations
 

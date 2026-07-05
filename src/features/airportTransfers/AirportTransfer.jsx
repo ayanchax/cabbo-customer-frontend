@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useLayoutEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   useTripPriorBookingWindowQuery,
@@ -128,6 +128,14 @@ function AirportTransfer() {
       return "Airport transfer";
     }
   };
+
+  useLayoutEffect(() => {
+    if (!searchResults) return;
+
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [searchResults]);
 
   const getPageHeaderInitialSubtitle = () => {
     if (trip_type === TRIP_TYPES.AIRPORT_PICKUP) {

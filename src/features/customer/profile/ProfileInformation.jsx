@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   CalendarDays,
   LogOut,
@@ -20,6 +20,8 @@ function ProfileInformation() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const logoutConfirmRef = useRef(null);
+  const confirmLogoutButtonRef = useRef(null);
 
   const initials = getInitials(customer?.name || firstName);
   const numberOfTrips =
@@ -39,6 +41,18 @@ function ProfileInformation() {
       navigate(ROUTES.LOGIN, { replace: true }); // redirect to login page and remove the current page from history so that user cannot go back to it using browser back button
     }
   };
+
+  useEffect(() => {
+    if (!showLogoutConfirm) return;
+
+    window.requestAnimationFrame(() => {
+      logoutConfirmRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      confirmLogoutButtonRef.current?.focus({ preventScroll: true });
+    });
+  }, [showLogoutConfirm]);
 
   return (
     <div className="relative mx-auto min-h-screen max-w-full overflow-visible bg-gray-50 px-2 py-2 shadow-[0_2px_16px_0_rgba(16,30,54,0.08)] sm:max-w-screen-sm sm:rounded-xl sm:bg-white sm:px-4 sm:py-6 sm:shadow-lg md:max-w-3xl md:px-6 md:py-8 lg:max-w-5xl lg:px-8 lg:py-10 xl:mb-4 xl:w-1/2 xl:px-10 2xl:max-w-screen-2xl">
@@ -137,7 +151,10 @@ function ProfileInformation() {
           </div>
 
           {showLogoutConfirm && (
-            <div className="mt-4 rounded-lg border border-red-100 bg-red-50/60 p-3">
+            <div
+              ref={logoutConfirmRef}
+              className="mt-4 rounded-lg border border-red-100 bg-red-50/60 p-3"
+            >
               <p className="text-sm font-semibold text-gray-950">
                 Log out of {APP.name}?
               </p>
@@ -155,6 +172,7 @@ function ProfileInformation() {
                 </button>
                 <button
                   type="button"
+                  ref={confirmLogoutButtonRef}
                   disabled={isLoggingOut}
                   onClick={handleLogout}
                   className="inline-flex h-10 cursor-pointer items-center justify-center rounded-md bg-red-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"

@@ -43,18 +43,19 @@ const useRecentSuggestions = (
         }
 
         const suggestionKey = getSuggestionKey(suggestion);
+        const storedSuggestions = getItem(cacheKey);
+        const currentSuggestions = Array.isArray(storedSuggestions)
+          ? storedSuggestions
+          : [];
+        const nextSuggestions = [
+          suggestion,
+          ...currentSuggestions.filter(
+            (item) => getSuggestionKey(item) !== suggestionKey,
+          ),
+        ].slice(0, limit);
 
-        setRecentSuggestions((currentSuggestions) => {
-          const nextSuggestions = [
-            suggestion,
-            ...currentSuggestions.filter(
-              (item) => getSuggestionKey(item) !== suggestionKey,
-            ), // Deduplication: remove any existing entry with the same key to avoid duplicates
-          ].slice(0, limit);
-
-          setItem(cacheKey, nextSuggestions);
-          return nextSuggestions;
-        });
+        setItem(cacheKey, nextSuggestions);
+        setRecentSuggestions(nextSuggestions);
 
         return true;
       } catch (error) {
@@ -64,7 +65,7 @@ const useRecentSuggestions = (
         return false;
       }
     },
-    [cacheKey, limit, setItem],
+    [cacheKey, getItem, limit, setItem],
   );
 
   return { recentSuggestions, cacheSuggestionToLocalStorage };

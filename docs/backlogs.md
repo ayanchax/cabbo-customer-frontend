@@ -173,6 +173,27 @@ second deferred-feature list.
   - Ensure backend idempotency and security.
 - **Priority:** v2 or later (not required for launch).
 
+## Admin Backend Endpoints: 
+
+- [ ] Admin configuration management endpoints with `super_admin` or `finance_admin` access only.
+- [ ] Airport pricing endpoints by cab type, fuel type, and region.
+- [ ] Local pricing endpoints by cab type, fuel type, and region.
+- [ ] Outstation pricing endpoints by cab type, fuel type, and state.
+- [ ] Fixed platform fee endpoint by country.
+- [ ] Night pricing endpoint by region or state.
+- [ ] Permit fee endpoint by cab type, fuel type, and state.
+- [ ] Local trip package config endpoint by `region_id`; backend model/script exists in `local_trip_package.py`.
+- [ ] Trip common pricing endpoint by `trip_type_id` and region/state.
+- [ ] Cancellation policy endpoint by `region_id` and trip type ID.
+- [ ] Cancellation policy endpoint by `state_id` and trip type ID.
+- [ ] Admin CRUD for packages and fleet/category setup.
+- [ ] Admin CRUD for region/state availability.
+- [ ] Admin content management for legal/support pages.
+- [ ] Rich admin dashboards and analytics.
+- [ ] Advanced notification preference center.
+- [ ] Provider cost optimization after real usage data.
+
+
 ---
 
 *Add future deferred features here rather than duplicating them in the V1

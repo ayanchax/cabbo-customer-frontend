@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useLayoutEffect, useMemo, useState } from "react";
 import { addDays } from "date-fns";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
@@ -125,6 +125,14 @@ function Outstation() {
     if (!startDate?.isoString || !hasValidTripDayConstraints) return null;
     return addDays(new Date(startDate.isoString), maxTripDays);
   }, [hasValidTripDayConstraints, maxTripDays, startDate]);
+
+  useLayoutEffect(() => {
+    if (!searchResults) return;
+
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [searchResults]);
 
   const handleRideOptionSearch = async () => {
     if (inProgress) return; // Prevent multiple submissions
