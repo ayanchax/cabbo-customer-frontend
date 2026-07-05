@@ -4,43 +4,47 @@ Backend execution checklist for getting Cabbo safely onto dev first, then produc
 
 Customer frontend local QA is effectively clean now, so the next backend goal is:
 
-1. Add dev/prod observability.
-2. Re-enable real OTP/SMS and prepare WhatsApp notifications.
-3. Confirm email delivery setup.
-4. Deploy backend dev at `https://api.dev.cabbo.co.in`.
-5. Smoke with frontend dev at `https://app.dev.cabbo.co.in`.
-6. Start the admin ops MVP after backend dev is stable.
+1. Integrate MSG91 for real OTP/SMS and WhatsApp notifications.
+2. Confirm email delivery setup.
+3. Deploy backend dev at `https://api.dev.cabbo.co.in`.
+4. Smoke with frontend dev at `https://app.dev.cabbo.co.in`.
+5. Start the admin ops MVP after backend dev is stable.
 
 ## Launch Decisions
 
 - Keep local file logging only in local development.
 - Keep dev/prod container logging to stdout/stderr only.
 - Use Sentry in dev/prod for exception and error monitoring.
-- Keep messaging adapter-based, with `mock` restricted to local development.
+- Use MSG91 as the V1 provider for SMS/OTP and WhatsApp.
+- Keep messaging adapter-based, with `mock` restricted to local development only.
+- Do not keep Twilio as a V1 fallback path.
 - Admin V1 is operational only: trip listing, driver assignment/reassignment, and status transitions.
 - No pricing, region, state, package, fleet, or configuration CRUD in Admin V1. Seed data and migrations remain the source of truth until there is traction.
 - For dev/prod V1, configuration data is loaded by one-off migration/seed scripts after DB schema setup and before the app container is run.
 
 ## 1. Observability And Logging
 
-- [ ] Add backend settings for `SENTRY_DSN`, `SENTRY_ENVIRONMENT`, `SENTRY_RELEASE`, and optional sample rates.
-- [ ] Initialize Sentry only when `ENV` is `dev` or `prod` and `SENTRY_DSN` is present.
-- [ ] Keep `TimedRotatingFileHandler` log files local-only.
-- [ ] Keep dev/prod logs on stdout/stderr only; do not create container log directories.
-- [ ] Add Sentry logging integration for errors/exceptions, not noisy info logs.
-- [ ] Set `send_default_pii=False`.
-- [ ] Add a `before_send` scrubber for phone numbers, emails, OTPs, auth tokens, request bodies, Razorpay IDs/signatures, and other payment identifiers.
-- [ ] Start with conservative tracing sample rates; avoid profiling until real traffic justifies it.
-- [ ] Trigger and verify one test exception in Sentry dev.
-- [ ] Add alert rules for repeated `5xx`, payment verification failures, OTP delivery failures, and booking mutation failures.
-- [ ] Document the expected Sentry quota/retention for dev and prod.
+- [x] Add backend setting for `SENTRY_DSN`.
+- [x] Attach Sentry in non-local environments.
+- [x] Verify backend events/logs are transmitted to Sentry from dev/prod setup.
+- [x] Add `SENTRY_ENVIRONMENT`, `SENTRY_RELEASE`, and optional sample rate settings.
+- [x] Guard Sentry initialization so it only runs when `ENV` is `dev` or `prod` and `SENTRY_DSN` is present.
+- [x] Keep `TimedRotatingFileHandler` log files local-only.
+- [x] Keep dev/prod logs on stdout/stderr only; do not create container log directories.
+- [x] Enable Sentry log/event transmission in non-local environments.
+- [x] Set `send_default_pii=False`.
+- [x] Add a `before_send` scrubber for phone numbers, emails, OTPs, auth tokens, request bodies, Razorpay IDs/signatures, and other payment identifiers.
+- [x] Tune Sentry log levels so routine `INFO` logs do not create noisy events or burn quota.
+- [x] Start with conservative tracing sample rates; avoid profiling until real traffic justifies it.
+- [x] Trigger and verify Sentry delivery in dev/prod setup.
 
 ## 2. SMS And WhatsApp
 
-- [ ] Pick the India-first provider for V1 OTP and WhatsApp. Current recommendation: evaluate MSG91 first because it covers Indian SMS/OTP and WhatsApp in one provider.
-- [ ] Keep Twilio as a fallback adapter, but avoid making it primary for India OTP unless pricing/compliance is acceptable.
-- [ ] Add a provider adapter for the selected SMS/WhatsApp provider.
-- [ ] Restrict `mock` messaging to local development; fail fast if dev/prod tries to boot with `SMS_SERVICE_PROVIDER=mock`.
+- [x] Choose MSG91 as the V1 provider for OTP/SMS and WhatsApp.
+- [ ] Add an MSG91 provider adapter for OTP/SMS.
+- [ ] Add an MSG91 provider adapter for WhatsApp notifications.
+- [x] Restrict `mock` messaging to local development; fail fast if dev/prod tries to boot with `SMS_SERVICE_PROVIDER=mock`.
+- [ ] Add required MSG91 settings/env vars for dev and prod.
 - [ ] Verify sender ID, DLT registration/templates, OTP templates, and template approval flow.
 - [ ] Verify WhatsApp Business onboarding, templates, opt-in expectations, and landed per-message cost.
 - [ ] Add delivery/error logs using masked phone numbers only.
