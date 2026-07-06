@@ -54,13 +54,18 @@ const Login = () => {
       );
     } catch (error) {
       const error_code = error?.response?.data?.error_code || null;
+      if (isDevMode) {
+        console.error("Onboarding initiation failed:", error);
+      }
       if (error_code === "OTP_ALREADY_SENT") {
         handleOtpSuccess(full_phone_number, phone, "onboarding");
         return;
       }
-      if (isDevMode) {
-        console.error("Onboarding initiation failed:", error);
+      if(error_code ==="OTP_RATE_LIMITED"){
+        showToast("Too many attempts. Please try again later.", "error");
+        return;
       }
+      
       showToast("Something went wrong", "error");
     } finally {
       setShake(false);
@@ -107,7 +112,6 @@ const Login = () => {
     } catch (error) {
       const status = error?.response?.status;
       const error_code = error?.response?.data?.error_code || null;
-
       if (status === 404) {
         // 🔥 fallback to onboarding as customer does not exist.
         await handleOnboarding(fullPhone);

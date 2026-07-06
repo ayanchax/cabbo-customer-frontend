@@ -4,7 +4,7 @@ Backend execution checklist for getting Cabbo safely onto dev first, then produc
 
 Customer frontend local QA is effectively clean now, so the next backend goal is:
 
-1. Integrate MSG91 for real OTP/SMS and WhatsApp notifications.
+1. Re-enable real OTP delivery for dev/prod launch.
 2. Confirm email delivery setup.
 3. Deploy backend dev at `https://api.dev.cabbo.co.in`.
 4. Smoke with frontend dev at `https://app.dev.cabbo.co.in`.
@@ -15,9 +15,9 @@ Customer frontend local QA is effectively clean now, so the next backend goal is
 - Keep local file logging only in local development.
 - Keep dev/prod container logging to stdout/stderr only.
 - Use Sentry in dev/prod for exception and error monitoring.
-- Use MSG91 as the V1 provider for SMS/OTP and WhatsApp.
+- Use Twilio only as a temporary OTP bridge for V1 launch.
 - Keep messaging adapter-based, with `mock` restricted to local development only.
-- Do not keep Twilio as a V1 fallback path.
+- Defer MSG91 and WhatsApp automation until company, DLT, and Meta verification friction is cleared.
 - Admin V1 is operational only: trip listing, driver assignment/reassignment, and status transitions.
 - No pricing, region, state, package, fleet, or configuration CRUD in Admin V1. Seed data and migrations remain the source of truth until there is traction.
 - For dev/prod V1, configuration data is loaded by one-off migration/seed scripts after DB schema setup and before the app container is run.
@@ -40,21 +40,13 @@ Customer frontend local QA is effectively clean now, so the next backend goal is
 
 ## 2. SMS And WhatsApp
 
-- [x] Choose MSG91 as the V1 provider for OTP/SMS and WhatsApp.
-- [ ] Add an MSG91 provider adapter for OTP/SMS.
-- [ ] Add an MSG91 provider adapter for WhatsApp notifications.
-- [x] Restrict `mock` messaging to local development; fail fast if dev/prod tries to boot with `SMS_SERVICE_PROVIDER=mock`.
-- [ ] Add required MSG91 settings/env vars for dev and prod.
-- [ ] Verify sender ID, DLT registration/templates, OTP templates, and template approval flow.
-- [ ] Verify WhatsApp Business onboarding, templates, opt-in expectations, and landed per-message cost.
+- [ ] Use Twilio as the temporary V1 OTP provider.
+- [ ] Add/verify Twilio credentials in dev and prod environments.
+- [ ] Restrict `mock` messaging to local development; fail fast if dev/prod tries to boot with `SMS_SERVICE_PROVIDER=mock`.
 - [ ] Add delivery/error logs using masked phone numbers only.
-- [ ] Rate-limit OTP send and resend paths.
+- [ ] Add strict OTP send/resend rate limits by phone number and IP.
+- [ ] Add OTP spend/volume monitoring or Sentry alerts for unexpected spikes.
 - [ ] Confirm frontend/backend UX for OTP provider failure.
-- [ ] Add WhatsApp V1 templates only where they matter most:
-  - booking confirmation
-  - booking cancellation/refund update
-  - driver assignment/reassignment
-  - trip status update, if useful for ops
 
 ## 3. Email
 

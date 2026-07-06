@@ -163,6 +163,31 @@ second deferred-feature list.
 - Rich trip-status timeline.
 - Promotional homepage sections that could delay core booking readiness.
 
+## MSG91 SMS And WhatsApp Automation (post-launch)
+
+- **Feature:** Move Cabbo messaging from the temporary Twilio OTP bridge to a
+  lower-cost India-first messaging setup with MSG91 for SMS/OTP and WhatsApp.
+- **V1 behavior:** Use Twilio only for OTP delivery with strict rate limits and
+  spend monitoring. Do not block launch on WhatsApp automation. Driver
+  assignment remains visible in app and can be supported by email/manual ops
+  during early launch.
+- **Why deferred:** MSG91 SMS and WhatsApp setup currently requires DLT,
+  template, company incorporation, and Meta/Facebook verification work. Company
+  incorporation is still in progress, so this should not block dev or V1
+  launch.
+- **Future behavior:**
+  - Complete DLT registration and sender/template approvals.
+  - Complete WhatsApp Business onboarding and Meta verification.
+  - Add MSG91 OTP/SMS provider adapter.
+  - Add MSG91 WhatsApp provider adapter.
+  - Use WhatsApp first for high-trust operational notifications such as driver
+    assignment/reassignment.
+  - Keep OTP delivery rate-limited and monitored.
+  - Log masked phone numbers only.
+  - Track provider delivery failures for ops visibility.
+- **Priority:** Post-launch cost/trust improvement; not required for V1
+  launch.
+
 ## Consent-Based Device Switching (v2+)
 - **Feature:** Allow users to switch their active session to a new device with explicit consent, logging out the previous device.
 - **Context:** Currently, only one device can be logged in at a time for security. In v2, prompt the user: "You are logged in elsewhere. Continue here and log out other devices?"
