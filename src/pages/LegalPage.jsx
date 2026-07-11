@@ -11,10 +11,16 @@ import { useLegalPage } from "@/hooks";
 import { useIsLoggedInQuery } from "@/hooks";
 
 function LegalPage() {
-  const { data: isLoggedIn } = useIsLoggedInQuery();
+  const {
+    data: isLoggedIn,
+    isLoading: isCheckingLogin,
+    isError: isLoggedInError,
+  } = useIsLoggedInQuery();
   const { slug } = useParams();
   const navigate = useNavigate();
   const { data: page, isLoading, isError } = useLegalPage(slug);
+  const canGoBack =
+    typeof window !== "undefined" && window.history.state?.idx > 0;
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -30,7 +36,7 @@ function LegalPage() {
               ? `Version ${page.version} - Effective ${page.effective_date}`
               : ""
           }
-          onBack={() => navigate(-1)}
+          onBack={canGoBack ? () => navigate(-1) : undefined}
           className="px-0 mb-4"
         />
 
@@ -56,8 +62,9 @@ function LegalPage() {
     </div>
   );
 
-  if (!isLoggedIn) {
-    return { LegalPageContent };
+  if (!isCheckingLogin && (!isLoggedIn || isLoggedInError)) {
+    // If the user is not logged in, we don't wrap the content in AppLayout
+    return LegalPageContent;
   }
 
   return <AppLayout>{LegalPageContent}</AppLayout>;
