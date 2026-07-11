@@ -5,7 +5,21 @@ import { useToast, useGeography, useAuth } from "@/hooks";
 import { Disclaimer, LegalAgreementStatement, CountryFlag } from "@/components";
 import { ROUTES } from "@/utils";
 import { isDevMode } from "@/api";
- 
+
+const LOGIN_MESSAGES = {
+  countryUnavailable:
+    "We couldn't confirm your country right now. Please try again in a moment.",
+  invalidPhone:
+    "Please enter a valid 10-digit mobile number.",
+  rateLimited:
+    "You've requested OTPs a few times. Please wait a little before trying again.",
+  otpSendFailed:
+    "We couldn't send the OTP right now. Please try again in a moment.",
+  alreadyLoggedIn:
+    "You're already signed in on another device. Please log out there, then try again.",
+  generic:
+    "Something didn't go through. Please try again in a moment.",
+};
 
 const Login = () => {
   const { initiateLogin, initiateOnboarding } = useAuth();
@@ -62,11 +76,15 @@ const Login = () => {
         return;
       }
       if(error_code ==="OTP_RATE_LIMITED"){
-        showToast("Too many attempts. Please try again later.", "error");
+        showToast(LOGIN_MESSAGES.rateLimited, "error");
+        return;
+      }
+      if (error_code ==="OTP_SEND_FAILED"){
+        showToast(LOGIN_MESSAGES.otpSendFailed, "error");
         return;
       }
       
-      showToast("Something went wrong", "error");
+      showToast(LOGIN_MESSAGES.generic, "error");
     } finally {
       setShake(false);
     }
@@ -75,7 +93,7 @@ const Login = () => {
   const handleSendOtp = async () => {
     if (!selectedCountry?.phone_code) {
       showToast(
-        "Unable to determine your country. Please try again later.",
+        LOGIN_MESSAGES.countryUnavailable,
         "error",
       );
       return;
@@ -116,7 +134,7 @@ const Login = () => {
         // 🔥 fallback to onboarding as customer does not exist.
         await handleOnboarding(fullPhone);
       } else if (status === 429) {
-        showToast("Too many attempts. Please try again later.", "error");
+        showToast(LOGIN_MESSAGES.rateLimited, "error");
       } else if (status === 400) {
         if (error_code === "OTP_ALREADY_SENT") {
           handleOtpSuccess(fullPhone, phone, "login");
@@ -127,14 +145,23 @@ const Login = () => {
           // We will not support login from multiple devices, as we are a ride-hailing app and it's safer to assume that a user should only be logged in from one device at a time to prevent misuse and ensure security.
           // Refer backlogs.md for the future Consent-Based Device Switching flow todo
           showToast(
-            "Looks like you are logged in on another device. Log out there to continue.",
+            LOGIN_MESSAGES.alreadyLoggedIn,
             "error",
           );
           return;
         }
-        showToast("Invalid phone number.", "error");
-      } else {
-        showToast("Something went wrong", "error");
+        showToast(LOGIN_MESSAGES.invalidPhone, "error");
+      } 
+      else if(status===500){
+        if (error_code ==="OTP_SEND_FAILED"){
+        showToast(LOGIN_MESSAGES.otpSendFailed, "error");
+        }
+      else {
+        showToast(LOGIN_MESSAGES.generic, "error");
+      }
+      }
+      else {
+        showToast(LOGIN_MESSAGES.generic, "error");
       }
     } finally {
       setShake(false);
@@ -209,7 +236,7 @@ const Login = () => {
 
           <button
             type="submit"
-            disabled={initiateLogin.isPending}
+            disabled={initiateLogin.isPending || initiateOnboarding.isPending}
             className="
   w-full 
   bg-primary 

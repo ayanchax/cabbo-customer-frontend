@@ -7,12 +7,12 @@ import { CustomerProvider } from "@/context";
 
 const ProtectedRoute = () => {
   const { getItem } = useLocalStorage();
+  const token = getItem(LOCAL_STORAGE_KEYS.token);
   const { 
     data:isCustomerLoggedIn, 
     isLoading:isCustomerLoggedInStatusLoading, 
     error:isCustomerLoggedInStatusError 
-  } = useIsLoggedInQuery();
-  const token = getItem(LOCAL_STORAGE_KEYS.token);
+  } = useIsLoggedInQuery(Boolean(token));
 
   // checking session
   if (isCustomerLoggedInStatusLoading) {
