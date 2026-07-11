@@ -10,21 +10,19 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
 | --- | --- | --- |
 | Customer frontend dev | Cloudflare Pages | `https://app.dev.cabbo.co.in` |
 | Backend dev | Railway | `https://api.dev.cabbo.co.in` |
-| MySQL dev | DigitalOcean Managed MySQL | dev database/cluster |
+| MySQL dev | Aiven Managed MySQL | dev database/cluster |
 | Profile pictures | AWS S3 | existing bucket/integration |
 | DNS/TLS | Cloudflare | `cabbo.co.in` zone |
 
-## 1. DigitalOcean Dev Database
+## 1. Aiven Dev Database - Free Tier
 
-- [ ] Create dev Managed MySQL database/cluster.
-- [ ] Create app database user with only required permissions.
-- [ ] Decide dev database name.
-- [ ] Save dev `DATABASE_URL` securely for Railway.
+- [x] Create dev Managed MySQL database/cluster.
+- [x] Create app database user with only required permissions.
 - [ ] Restrict database access to required sources as much as the dev setup allows.
-- [ ] Run backend migrations against dev database.
-- [ ] Run Cabbo seed/config script after schema setup.
-- [ ] Verify seeded pricing, region/state, package, platform fee, permit fee, night pricing, and cancellation policy data.
-- [ ] Take one manual backup/export after seed data is verified.
+- [x] Run backend migrations against dev database.
+- [x] Run Cabbo seed/config script after schema setup.
+- [x] Verify seeded pricing, region/state, package, platform fee, permit fee, night pricing, and cancellation policy data.
+- [x] Take one manual backup/export after seed data is verified.
 
 ## 2. Railway Backend Dev
 
@@ -39,9 +37,9 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
   - clear frontend/backend error response when the limit is hit
 - [x] Document that OTP rate limits can be loosened later after moving to DLT-backed SMS.
 - [x] Increase customer bearer/session token lifetime from 5 days to 30 days to reduce repeat OTP requests, while preserving logout/session invalidation behavior.
-- [ ] Create Railway dev project/service for the backend.
-- [ ] Configure backend build/start command or Dockerfile deployment.
-- [ ] Add dev environment variables:
+- [x] Create Railway dev project/service for the backend.
+- [x] Configure backend build/start command or Dockerfile deployment.
+- [x] Add proper dev environment variables:
   - `ENV=dev`
   - `DATABASE_URL`
   - auth/session secrets
@@ -52,13 +50,13 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
   - Sentry DSN/environment/release settings
   - allowed CORS origin: `https://app.dev.cabbo.co.in`
   - app/frontend base URL: `https://app.dev.cabbo.co.in`
-- [ ] Ensure `SMS_SERVICE_PROVIDER` is not `mock` in dev.
-- [ ] Ensure dev/prod logging uses stdout/stderr only; no container log files.
-- [ ] Deploy backend dev.
-- [ ] Attach custom domain `api.dev.cabbo.co.in`.
-- [ ] Verify backend health endpoint over HTTPS.
-- [ ] Verify Sentry receives one dev backend event with redacted context.
-- [ ] Verify backend can connect to DigitalOcean MySQL.
+- [x] Ensure `SMS_SERVICE_PROVIDER` is not `mock` in dev.
+- [x] Ensure dev/prod logging uses stdout/stderr only; no container log files.
+- [x] Deploy backend dev.
+- [x] Attach custom domain `api.dev.cabbo.co.in`.
+- [x] Verify backend health endpoint over HTTPS. https://api.dev.cabbo.co.in/health
+- [x] Verify Sentry receives one dev backend event with redacted context.
+- [x] Verify backend can connect to Aiven MySQL.
 
 ## 3. Cloudflare Pages Frontend Dev
 
@@ -95,12 +93,12 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
 ## 5. Dev Launch Exit Criteria
 
 - [ ] Frontend dev is live at `https://app.dev.cabbo.co.in`.
-- [ ] Backend dev is live at `https://api.dev.cabbo.co.in`.
+- [x] Backend dev is live at `https://api.dev.cabbo.co.in`.
 - [ ] Frontend dev talks only to backend dev.
-- [ ] Backend dev talks to DigitalOcean dev MySQL.
+- [x] Backend dev talks to Aiven dev MySQL.
 - [ ] OTP login works with the temporary Twilio bridge.
 - [ ] Razorpay test payment flow works end-to-end.
-- [ ] Sentry dev receives sanitized backend errors/events.
-- [ ] No local-only mock provider is enabled in dev.
-- [ ] No local container log files are created in dev.
+- [x] Sentry dev receives sanitized backend errors/events.
+- [x] No local-only mock provider is enabled in dev.
+- [x] No local container log files are created in dev.
 - [ ] Core customer flow is smoke-tested: login, search, booking, payment, My Trips, booking detail, cancellation.

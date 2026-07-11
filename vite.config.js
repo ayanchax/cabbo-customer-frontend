@@ -21,6 +21,7 @@ export default defineConfig({
         await Promise.all([
           fs.rm(path.join(outDir, 'docs'), { recursive: true, force: true }),
           fs.rm(path.join(outDir, 'payloads'), { recursive: true, force: true }),
+          fs.rm(path.join(outDir, 'favicon.svg'), { force: true }),
         ])
       },
     },

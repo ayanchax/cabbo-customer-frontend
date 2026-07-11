@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "flag-icons/css/flag-icons.min.css";
 import { isPhoneNumberValid, sanitizePhoneNumber, APP } from "@/utils";
 import { useToast, useGeography, useAuth } from "@/hooks";
-import { Disclaimer, LegalAgreementStatement } from "@/components";
+import { Disclaimer, LegalAgreementStatement, CountryFlag } from "@/components";
 import { ROUTES } from "@/utils";
 import { isDevMode } from "@/api";
+ 
 
 const Login = () => {
   const { initiateLogin, initiateOnboarding } = useAuth();
@@ -182,9 +182,7 @@ const Login = () => {
             >
               {/* Country prefix */}
               <div className="flex items-center gap-2 px-3 bg-gray-50 text-sm text-gray-700 border-r">
-                <span
-                  className={`fi fi-${selectedCountry?.country_code?.toLowerCase()} w-5 h-4 rounded-sm`}
-                />
+                <CountryFlag countryCode={selectedCountry?.country_code} />
                 <span className="font-medium">
                   {selectedCountry?.phone_code}
                 </span>
