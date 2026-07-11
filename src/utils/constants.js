@@ -25,7 +25,7 @@ export const ENDPOINTS = {
         RESEND_OTP: `${API_VERSION}/auth/resend-otp`,
     },
     GEOGRAPHY: {
-        SERVER: `${API_VERSION}/geography`,
+        SERVER: `${API_VERSION}/geography/`,
         CLIENT: `${import.meta.env.VITE_CLIENT_GEOLOCATION_API_URL || "https://ipapi.co/json/"}`
     },
     LOCATION: {
