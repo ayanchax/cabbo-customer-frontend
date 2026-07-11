@@ -1,8 +1,8 @@
-import {lazy} from "react";
+import {lazy, Suspense} from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ROUTES } from "@/utils";
 import { PublicRoute, ProtectedRoute } from "@/routes";
-
+import { Splash } from "@/components";
 // Lazy load all routes
 const LazyLoadedRoutes = {
   Home: lazy(() => import("@/pages/Home")),
@@ -23,6 +23,7 @@ const LazyLoadedRoutes = {
 const AppRouter = () => {
   return (
     <BrowserRouter>
+      <Suspense fallback={<Splash message="Loading Cabbo..." />}>
       <Routes>
 
         <Route element={<PublicRoute />}>
@@ -51,6 +52,7 @@ const AppRouter = () => {
          <Route path={ROUTES.VERIFY_EMAIL} element={<LazyLoadedRoutes.VerifyEmail />} />
           
       </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 };
