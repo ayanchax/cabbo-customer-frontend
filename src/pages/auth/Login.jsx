@@ -199,7 +199,7 @@ const Login = () => {
             </label>
 
             <div
-              className={`mt-1 flex items-center border rounded-xl overflow-hidden
+              className={`mt-1 flex min-h-12 items-center border rounded-xl overflow-hidden
       transition-[box-shadow,border-color] duration-200 ease-in-out
       focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-1
       hover:border-gray-400
@@ -208,7 +208,7 @@ const Login = () => {
     `}
             >
               {/* Country prefix */}
-              <div className="flex items-center gap-2 px-3 bg-gray-50 text-sm text-gray-700 border-r">
+              <div className="flex shrink-0 self-stretch items-center gap-2 border-r border-gray-200 bg-gray-50 pl-3 pr-4 text-sm text-gray-700 whitespace-nowrap">
                 <CountryFlag countryCode={selectedCountry?.country_code} />
                 <span className="font-medium">
                   {selectedCountry?.phone_code}
@@ -227,7 +227,7 @@ const Login = () => {
                   setPhone(e.target.value);
                   if (error) setError("");
                 }}
-                className="flex-1 p-3 text-[15px] outline-none bg-transparent"
+                className="min-w-0 flex-1 px-4 py-3 text-[15px] outline-none bg-transparent"
               />
             </div>
 

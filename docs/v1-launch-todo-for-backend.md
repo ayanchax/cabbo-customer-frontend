@@ -2,12 +2,14 @@
 
 Backend execution checklist for getting Cabbo safely onto dev first, then production.
 
-Customer frontend local QA is effectively clean now, so the next backend goal is:
+Customer frontend local QA is effectively clean now, and the dev stack is live:
+backend on Railway at `https://api.dev.cabbo.co.in`, customer frontend on Render
+at `https://app.dev.cabbo.co.in`, and MySQL on Aiven. The next backend goal is:
 
 1. Re-enable real OTP delivery for dev/prod launch.
 2. Confirm email delivery setup.
-3. Deploy backend dev at `https://api.dev.cabbo.co.in`.
-4. Smoke with frontend dev at `https://app.dev.cabbo.co.in`.
+3. Finish dev smoke testing with frontend dev at `https://app.dev.cabbo.co.in`.
+4. Verify remaining security/privacy gates.
 5. Start the admin ops MVP after backend dev is stable.
 
 ## Launch Decisions
@@ -42,27 +44,27 @@ Customer frontend local QA is effectively clean now, so the next backend goal is
 
 - [ ] Use Twilio as the temporary V1 OTP provider.
 - [ ] Add/verify Twilio credentials in dev and prod environments.
-- [ ] Restrict `mock` messaging to local development; fail fast if dev/prod tries to boot with `SMS_SERVICE_PROVIDER=mock`.
-- [ ] Add delivery/error logs using masked phone numbers only.
-- [ ] Add strict OTP send/resend rate limits by phone number and IP.
-- [ ] Add OTP spend/volume monitoring or Sentry alerts for unexpected spikes.
-- [ ] Confirm frontend/backend UX for OTP provider failure.
+- [x] Restrict `mock` messaging to local development; fail fast if dev/prod tries to boot with `SMS_SERVICE_PROVIDER=mock`.
+- [x] Add delivery/error logs using masked phone numbers only.
+- [x] Add strict OTP send/resend rate limits by phone number and IP.
+- [x] Add OTP spend/volume monitoring or Sentry alerts for unexpected spikes.
+- [x] Confirm frontend/backend UX for OTP provider failure.
 
 ## 3. Email
 
-- [ ] Keep Brevo for dev and early prod if it remains reliable.
+- [x] Keep Brevo for dev and early prod if it remains reliable.
 - [ ] Verify SPF, DKIM, and DMARC for the sending domain.
 - [ ] Verify sender identity, reply-to, and no-reply addresses.
 - [ ] Verify email verification links use the correct frontend domain:
   - dev: `https://app.dev.cabbo.co.in`
   - prod: `https://app.cabbo.co.in`
-- [ ] Keep Resend as a candidate adapter if Brevo deliverability, DX, or limits become painful.
-- [ ] Log masked emails only.
+
+- [x] Log masked emails only.
 - [ ] Test email verification, resend verification, and expired verification flows in dev.
 
 ## 4. Dev Deployment
 
-- [ ] Provision dev backend environment variables:
+- [x] Provision dev backend environment variables:
   - database
   - auth/session secrets
   - Razorpay test credentials
@@ -71,15 +73,19 @@ Customer frontend local QA is effectively clean now, so the next backend goal is
   - email provider credentials
   - Sentry DSN
   - allowed CORS origin: `https://app.dev.cabbo.co.in`
-- [ ] Run database migrations on dev.
-- [ ] Run Cabbo seed/config data on dev after schema setup and before starting the backend container.
-- [ ] Verify seeded pricing, policy, package, region, state, and common trip configuration before opening the dev app for QA.
-- [ ] Verify API base path and versioning.
-- [ ] Verify health endpoint.
-- [ ] Verify stdout/stderr log streaming.
-- [ ] Verify no local log directory is created in the dev container.
-- [ ] Deploy backend at `https://api.dev.cabbo.co.in`.
-- [ ] Deploy customer frontend at `https://app.dev.cabbo.co.in` with `VITE_API_BASE_URL=https://api.dev.cabbo.co.in`.
+- [x] Run database migrations on dev.
+- [x] Run Cabbo seed/config data on dev after schema setup and before starting the backend container.
+- [x] Verify seeded pricing, policy, package, region, state, and common trip configuration before opening the dev app for QA.
+- [x] Verify API base path and versioning.
+- [x] Verify health endpoint.
+- [x] Verify stdout/stderr log streaming.
+- [x] Verify no local log directory is created in the dev container.
+- [x] Deploy backend at `https://api.dev.cabbo.co.in`.
+- [x] Deploy customer frontend at `https://app.dev.cabbo.co.in` with `VITE_API_BASE_URL=https://api.dev.cabbo.co.in`.
+- [x] Verify Render static-site rewrite for frontend deep links:
+  - source: `/*`
+  - destination: `/index.html`
+  - action: `Rewrite`
 - [ ] Smoke test auth OTP login.
 - [ ] Smoke test trip search for airport transfer, local hourly rental, and outstation.
 - [ ] Smoke test booking creation and Razorpay test payment verification.
@@ -88,7 +94,7 @@ Customer frontend local QA is effectively clean now, so the next backend goal is
 
 ## 5. Security And Privacy Gate
 
-- [ ] Verify CORS allows only intended dev/prod frontend origins.
+- [x] Verify CORS allows only intended dev/prod frontend origins.
 - [ ] Verify auth/session expiry and logout behavior.
 - [ ] Verify booking detail authorization; customers must not access other customers' bookings.
 - [ ] Verify mutation authorization for cancellation, special request update, and profile/email changes.
@@ -138,14 +144,17 @@ Admin V1 should be boring and operational. No configuration management yet.
 
 ## 7. Production Readiness
 
-- [ ] Prepare prod environment variables separately from dev.
+- [x] Prepare prod environment variables separately from dev.
 - [ ] Verify production domains and TLS.
-- [ ] Verify database backup schedule.
+- [x] Verify database backup schedule.
 - [ ] Run one restore drill before launch.
-- [ ] Rehearse migrations against a prod-like database.
-- [ ] Rehearse the one-off seed/config script against a prod-like database.
-- [ ] Verify prod seed/config data before starting the production backend container.
-- [ ] Confirm rollback plan for backend deployment.
+- [ ] Restrict production database inbound access to backend outbound IPs only, if the backend host provides stable/static outbound IPs.
+  - For Railway, enable Static Outbound IPs before production if needed and add those `/32` IPs to the Aiven allowlist.
+  - Keep dev database allowlisting flexible until static backend egress is available; rely on strong credentials, TLS, and least-privilege app users during dev.
+- [x] Rehearse migrations against a prod-like database.
+- [x] Rehearse the one-off seed/config script against a prod-like database.
+- [x] Verify prod seed/config data before starting the production backend container.
+- [x] Confirm rollback plan for backend deployment.
 - [ ] Configure production Sentry alerts.
 - [ ] Configure uptime/health monitoring.
 - [ ] Run production smoke checklist.

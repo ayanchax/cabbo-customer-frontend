@@ -13,14 +13,16 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 ## Next Coding Priority
 
 The customer-frontend feature coding and local QA P0/P1 cleanup are complete.
-The next priority is the final launch-readiness pass: dev/staging verification,
-security/privacy checks, production-readiness rehearsal, and remaining
-cross-environment smoke tests.
+The dev stack is now online with the customer frontend on Render at
+`https://app.dev.cabbo.co.in` and the backend on Railway at
+`https://api.dev.cabbo.co.in`. The next priority is the final launch-readiness
+pass: dev smoke testing, security/privacy checks, production-readiness
+rehearsal, and remaining cross-environment verification.
 
 Recommended order:
 
-1. Re-test payment, booking, cancellation, refund, profile, and legal-page
-   flows in staging.
+1. Finish dev smoke testing for OTP, payment, booking, cancellation, refund,
+   profile, and legal-page flows.
 2. Repeat the release QA smoke across local hourly rental, airport transfers,
    and outstation on the dev deployment.
 3. Verify remaining security/privacy and production-readiness gates.
@@ -266,11 +268,20 @@ in the local pass were resolved before moving to dev/staging smoke.
 - [ ] Configure the production domain and TLS.
 - [ ] Verify production frontend and backend environment configuration.
 - [ ] Verify database backups and perform a restore drill.
+- [ ] Restrict production database inbound access to backend outbound IPs only, if the backend host provides stable/static outbound IPs.
+  - For Railway, enable Static Outbound IPs before production if needed and add those `/32` IPs to the Aiven allowlist.
+  - Do not treat the open dev database allowlist as a launch blocker while credentials, TLS, and least-privilege users are in place.
 - [ ] Enable production error monitoring and alerts.
 - [x] Verify API error logging with sensitive-data redaction.
-- [ ] Verify route refresh and deep-link hosting configuration.
+- [x] Verify dev route refresh and deep-link hosting configuration on Render using `/* -> /index.html`.
+- [ ] Verify production route refresh and deep-link hosting configuration.
 - [ ] Run database migrations against a production-like environment.
-- [ ] Complete a development environment launch rehearsal using production-like configuration.
+- [x] Complete initial development environment deployment rehearsal:
+  - customer frontend dev on Render
+  - backend dev on Railway
+  - Aiven dev MySQL
+  - dev custom domains and TLS
+- [ ] Complete end-to-end development smoke test using production-like configuration.
 - [ ] Prepare a rollback plan for frontend, backend, and database changes.
 - [ ] Prepare launch-day support coverage and escalation contacts.
 

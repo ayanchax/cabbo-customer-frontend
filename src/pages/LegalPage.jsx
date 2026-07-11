@@ -7,15 +7,18 @@ import {
   Loader,
   PageHeader,
 } from "@/components";
-import { useLegalPage } from "@/hooks";
+import { LOCAL_STORAGE_KEYS } from "@/utils";
+import { useLegalPage, useLocalStorage } from "@/hooks";
 import { useIsLoggedInQuery } from "@/hooks";
 
 function LegalPage() {
+  const { getItem } = useLocalStorage();
+  const token = getItem(LOCAL_STORAGE_KEYS.token);
   const {
     data: isLoggedIn,
     isLoading: isCheckingLogin,
     isError: isLoggedInError,
-  } = useIsLoggedInQuery();
+  } = useIsLoggedInQuery(Boolean(token));
   const { slug } = useParams();
   const navigate = useNavigate();
   const { data: page, isLoading, isError } = useLegalPage(slug);
@@ -62,7 +65,7 @@ function LegalPage() {
     </div>
   );
 
-  if (!isCheckingLogin && (!isLoggedIn || isLoggedInError)) {
+  if (!token || (!isCheckingLogin && (!isLoggedIn || isLoggedInError))) {
     // If the user is not logged in, we don't wrap the content in AppLayout
     return LegalPageContent;
   }

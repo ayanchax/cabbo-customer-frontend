@@ -8,7 +8,7 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
 
 | Component | Provider | Target |
 | --- | --- | --- |
-| Customer frontend dev | Cloudflare Pages | `https://app.dev.cabbo.co.in` |
+| Customer frontend dev | Render Static Site | `https://app.dev.cabbo.co.in` |
 | Backend dev | Railway | `https://api.dev.cabbo.co.in` |
 | MySQL dev | Aiven Managed MySQL | dev database/cluster |
 | Profile pictures | AWS S3 | existing bucket/integration |
@@ -18,7 +18,6 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
 
 - [x] Create dev Managed MySQL database/cluster.
 - [x] Create app database user with only required permissions.
-- [ ] Restrict database access to required sources as much as the dev setup allows.
 - [x] Run backend migrations against dev database.
 - [x] Run Cabbo seed/config script after schema setup.
 - [x] Verify seeded pricing, region/state, package, platform fee, permit fee, night pricing, and cancellation policy data.
@@ -58,17 +57,22 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
 - [x] Verify Sentry receives one dev backend event with redacted context.
 - [x] Verify backend can connect to Aiven MySQL.
 
-## 3. Cloudflare Pages Frontend Dev
+## 3. Frontend Dev in Render
 
-- [ ] Create Cloudflare Pages project for customer frontend dev.
-- [ ] Configure dev build command.
-- [ ] Configure dev output directory.
-- [ ] Set `VITE_API_BASE_URL=https://api.dev.cabbo.co.in`.
-- [ ] Add custom domain `app.dev.cabbo.co.in`.
-- [ ] Verify Cloudflare DNS/TLS is active.
-- [ ] Deploy customer frontend dev.
-- [ ] Verify frontend loads over HTTPS.
-- [ ] Verify frontend calls backend dev, not local or prod API.
+- [x] Create Render project for customer frontend dev.
+- [x] Configure dev build command.
+- [x] Configure dev output directory.
+- [x] Set `VITE_API_BASE_URL=https://api.dev.cabbo.co.in`.
+- [x] Add custom domain `app.dev.cabbo.co.in`.
+- [x] Verify Render DNS/TLS is active.
+- [x] Deploy customer frontend dev.
+- [x] Verify frontend loads over HTTPS.
+- [x] Verify frontend calls backend dev, not local or prod API.
+- [x] Configure SPA deep-link refresh rewrite:
+  - source: `/*`
+  - destination: `/index.html`
+  - action: `Rewrite`
+- [x] Verify `/login` and booking-detail style direct URLs refresh without a blank page.
 
 ## 4. Dev Smoke Test
 
@@ -92,10 +96,11 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
 
 ## 5. Dev Launch Exit Criteria
 
-- [ ] Frontend dev is live at `https://app.dev.cabbo.co.in`.
+- [x] Frontend dev is live at `https://app.dev.cabbo.co.in`.
 - [x] Backend dev is live at `https://api.dev.cabbo.co.in`.
-- [ ] Frontend dev talks only to backend dev.
+- [x] Frontend dev talks only to backend dev.
 - [x] Backend dev talks to Aiven dev MySQL.
+- [x] Render static-site SPA rewrite is configured with destination `/index.html`.
 - [ ] OTP login works with the temporary Twilio bridge.
 - [ ] Razorpay test payment flow works end-to-end.
 - [x] Sentry dev receives sanitized backend errors/events.

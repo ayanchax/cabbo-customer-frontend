@@ -1,8 +1,17 @@
 import React, { useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { FeedbackState, Loader, SuccessOverlay } from "@/components";
-import { useIsLoggedInQuery, useVerifyCustomerEmail } from "@/hooks";
-import { APP, ROUTES, EXPECTED_EMAIL_VERIFICATION_ENDPOINT } from "@/utils";
+import {
+  useIsLoggedInQuery,
+  useLocalStorage,
+  useVerifyCustomerEmail,
+} from "@/hooks";
+import {
+  APP,
+  ROUTES,
+  EXPECTED_EMAIL_VERIFICATION_ENDPOINT,
+  LOCAL_STORAGE_KEYS,
+} from "@/utils";
 
 const EMAIL_VERIFICATION_ERROR_CODES = {
   EMAIL_ALREADY_VERIFIED: "EMAIL_ALREADY_VERIFIED",
@@ -12,7 +21,9 @@ const EMAIL_VERIFICATION_ERROR_CODES = {
 
 function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
-  const { data: isLoggedIn } = useIsLoggedInQuery();
+  const { getItem } = useLocalStorage();
+  const token = getItem(LOCAL_STORAGE_KEYS.token);
+  const { data: isLoggedIn } = useIsLoggedInQuery(Boolean(token));
   const fallbackRoute = isLoggedIn ? ROUTES.PROFILE : ROUTES.LOGIN;
   const fallbackLabel = isLoggedIn ? "Go to profile" : "Go to login";
 
