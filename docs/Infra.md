@@ -8,12 +8,12 @@ The goal is to launch safely without letting baseline infra cost eat the project
 
 | Component | Provider | Domain |
 | --- | --- | --- |
-| Customer frontend dev | Cloudflare Pages | `https://app.dev.cabbo.co.in` |
-| Customer frontend prod | Cloudflare Pages | `https://app.cabbo.co.in` |
-| Admin frontend prod | Cloudflare Pages | `https://admin.cabbo.co.in` |
+| Customer frontend dev | Render Static Site | `https://app.dev.cabbo.co.in` |
+| Customer frontend prod | Render Static Site | `https://app.cabbo.co.in` |
+| Admin frontend prod | Render Static Site or equivalent static host | `https://admin.cabbo.co.in` |
 | Backend dev | Railway | `https://api.dev.cabbo.co.in` |
 | Backend prod | Railway | `https://api.cabbo.co.in` |
-| MySQL dev | DigitalOcean Managed MySQL | private/dev connection details |
+| MySQL dev | Aiven Managed MySQL | private/dev connection details |
 | MySQL prod | DigitalOcean Managed MySQL | private/prod connection details |
 | Profile pictures | AWS S3 | existing bucket/integration |
 | DNS/TLS | Cloudflare | `cabbo.co.in` zone |
@@ -22,37 +22,39 @@ The goal is to launch safely without letting baseline infra cost eat the project
 
 Use:
 
-- Cloudflare Pages for all static frontends.
+- Render Static Site for the customer frontend.
 - Railway for dev and prod backend containers.
-- DigitalOcean Managed MySQL for dev and prod databases.
+- Aiven Managed MySQL for the dev database.
+- DigitalOcean Managed MySQL for the prod database.
 - AWS S3 only for user-uploaded profile pictures.
 - Cloudflare DNS for domain routing and TLS.
 
 Do not use Railway for the database in V1.
 
-This split is a good V1 balance: Cloudflare keeps frontend hosting close to free, Railway keeps backend deployment easy, and DigitalOcean gives the database a more traditional managed home.
+This split is a good V1 balance: Render keeps frontend hosting simple, Railway keeps backend deployment easy, Aiven gives the dev database a low-friction managed home, and DigitalOcean gives production MySQL a more traditional managed database setup.
 
 ## Why This Setup
 
-### Cloudflare Pages For Frontends
+### Render Static Sites For Frontends
 
-The customer and admin apps are Vite/static frontend builds, so Cloudflare Pages is the simplest fit.
+The customer app is a Vite/static frontend build, so Render Static Site hosting is enough for V1.
 
 Benefits:
 
-- Free static hosting is enough for V1.
+- Static hosting is enough for V1.
 - Custom domains are supported.
-- Preview deployments are useful for frontend QA.
-- TLS and global edge delivery are handled.
-- No server cost for admin frontend.
+- TLS is handled by the platform.
+- Build/deploy flow is simple.
+- SPA rewrites can route deep links back to `index.html`.
 
-Cabbo needs three frontend deploy targets:
+Customer frontend deploy targets:
 
 - customer dev
 - customer prod
-- admin prod
 
-Cloudflare Pages can handle all three cleanly.
+The dev customer frontend is already deployed on Render at `https://app.dev.cabbo.co.in`.
+
+Admin frontend hosting can use Render Static Site or an equivalent static host when the admin MVP is created.
 
 ### Railway For Backend
 
@@ -69,11 +71,16 @@ Benefits:
 
 Railway should run only the app containers for V1, not MySQL.
 
-### DigitalOcean Managed MySQL For Database
+### Managed MySQL For Database
 
 The database is Cabbo's most important infra component. Bookings, payments, users, trip data, cancellations, and admin actions all live there.
 
-DigitalOcean Managed MySQL is the chosen V1 database home because it gives a clearer managed database model than an app-hosting platform database while staying far cheaper than a fuller AWS RDS-style setup.
+Cabbo uses managed MySQL instead of an app-hosting platform database:
+
+- Dev: Aiven Managed MySQL.
+- Prod: DigitalOcean Managed MySQL.
+
+DigitalOcean Managed MySQL is the chosen production database home because it gives a clearer managed database model than an app-hosting platform database while staying far cheaper than a fuller AWS RDS-style setup. Aiven is used for dev because it provides a convenient managed MySQL environment for the current dev deployment.
 
 Benefits:
 
@@ -89,7 +96,7 @@ Benefits:
 
 - Customer frontend: `https://app.dev.cabbo.co.in`
 - Backend: `https://api.dev.cabbo.co.in`
-- Database: DigitalOcean Managed MySQL dev database/cluster
+- Database: Aiven Managed MySQL dev database/cluster
 - Sentry environment: `dev`
 - Razorpay: test mode
 - SMS/WhatsApp: provider test/dev setup if available
@@ -114,7 +121,7 @@ Prod must never share database credentials, secrets, or mutable state with dev.
 
 Preferred:
 
-- One DigitalOcean Managed MySQL instance/cluster for dev.
+- One Aiven Managed MySQL instance/cluster for dev.
 - One separate DigitalOcean Managed MySQL instance/cluster for prod.
 
 If the monthly budget is too tight at the very beginning:
@@ -131,6 +138,8 @@ Before public launch:
 - Keep dev and prod credentials separate.
 - Keep database access restricted to the backend and required admin/deployment IPs.
 - Do not expose MySQL publicly without tight allowlisting.
+- If Railway static outbound IPs are available before production, add only those backend outbound IPs to the production database allowlist.
+- Dev database allowlisting can remain flexible while dev uses strong credentials, TLS, and least-privilege users.
 
 ## Backend Deployment Rules
 
@@ -151,24 +160,26 @@ Backend logs in dev/prod should stream to stdout/stderr. Do not create local log
 
 ## Frontend Deployment Rules
 
-Cloudflare Pages should build each frontend from the correct branch/environment.
+Render Static Site should build the customer frontend from the correct branch/environment.
 
 Customer dev:
 
 - domain: `app.dev.cabbo.co.in`
 - API base URL: `https://api.dev.cabbo.co.in`
+- SPA rewrite: `/* -> /index.html`
 
 Customer prod:
 
 - domain: `app.cabbo.co.in`
 - API base URL: `https://api.cabbo.co.in`
+- SPA rewrite: `/* -> /index.html`
 
 Admin prod:
 
 - domain: `admin.cabbo.co.in`
 - API base URL: `https://api.cabbo.co.in`
 
-No admin dev frontend is planned for V1.
+No admin dev frontend is planned for V1. Admin hosting can use Render Static Site or an equivalent static frontend host when the admin MVP is created.
 
 ## Configuration Seed Rule
 
@@ -197,18 +208,19 @@ The following admin configuration endpoints are deferred until traction:
 ## Security And Networking Checklist
 
 - [ ] Cloudflare DNS owns `cabbo.co.in`.
-- [ ] `app.dev.cabbo.co.in` points to Cloudflare Pages customer dev.
-- [ ] `app.cabbo.co.in` points to Cloudflare Pages customer prod.
-- [ ] `admin.cabbo.co.in` points to Cloudflare Pages admin prod.
+- [x] `app.dev.cabbo.co.in` points to Render Static Site customer dev.
+- [ ] `app.cabbo.co.in` points to Render Static Site customer prod.
+- [ ] `admin.cabbo.co.in` points to Render Static Site or the selected admin static host.
 - [ ] `api.dev.cabbo.co.in` points to Railway backend dev.
 - [ ] `api.cabbo.co.in` points to Railway backend prod.
-- [ ] Railway dev CORS allows only dev frontend origin.
+- [x] Railway dev CORS allows only dev frontend origin.
 - [ ] Railway prod CORS allows only prod customer/admin origins.
-- [ ] DigitalOcean MySQL accepts connections only from required backend/deployment sources.
-- [ ] Dev and prod secrets are different.
+- [x] Aiven dev MySQL uses strong credentials, TLS, least-privilege users, and restrictive allowlisting where the dev setup allows.
+- [ ] DigitalOcean prod MySQL accepts connections only from required backend/deployment sources.
+- [x] Dev and prod secrets are different.
 - [ ] Sentry redaction is enabled before prod.
-- [ ] Database backups are enabled before prod.
-- [ ] Restore test is completed before prod.
+- [x] Database backups are enabled before prod.
+- [x] Restore test is completed before prod.
 
 ## Expected Cost Shape
 
@@ -216,16 +228,18 @@ This setup will likely sit above the absolute cheapest possible setup, but below
 
 Cost drivers:
 
-- Cloudflare Pages should be free for the V1 frontend use case.
+- Render Static Site hosting should remain low-cost for the V1 frontend use case.
 - Railway backend cost depends on runtime resource usage.
-- DigitalOcean Managed MySQL is the main fixed monthly infra cost.
+- DigitalOcean Managed MySQL prod is the main fixed monthly infra cost.
+- Aiven Managed MySQL dev depends on the selected dev tier/trial/plan.
 - AWS S3 profile picture cost should remain tiny at early scale.
 
 The expected V1 starting cost is roughly:
 
-- Cloudflare Pages: USD 0
+- Render Static Site: low-cost/free-tier depending on plan limits
 - Railway backend dev/prod: usage-based, with low baseline if services stay small
-- DigitalOcean MySQL dev/prod: the biggest predictable line item
+- Aiven MySQL dev: dev-tier/trial/plan dependent
+- DigitalOcean MySQL prod: the biggest predictable line item
 - AWS S3: very low at early profile-picture volume
 
 If cost pressure appears, reduce dev database spend first. Do not weaken prod database safety first.
@@ -237,6 +251,12 @@ If cost pressure appears, reduce dev database spend first. Do not weaken prod da
 Not chosen because ECS/App Runner plus RDS plus load balancing/logging can push baseline monthly cost beyond the desired early-stage budget.
 
 AWS remains a later migration option once usage justifies it.
+
+### Cloudflare Pages For Current Customer Frontend
+
+Not currently used for the customer frontend because the dev deployment is already working on Render Static Site with custom domain, TLS, and SPA rewrite support.
+
+Cloudflare Pages remains a viable future static hosting option if there is a specific reason to move.
 
 ### Railway Database
 
@@ -252,14 +272,15 @@ Not chosen because Cabbo is a booking/payment product. A single VPS with app and
 
 When Cabbo has traction:
 
-1. Upgrade DigitalOcean MySQL tier if CPU, memory, storage, or connections require it.
+1. Upgrade DigitalOcean MySQL prod tier if CPU, memory, storage, or connections require it.
 2. Add read replicas only when real metrics justify it.
 3. Move backend from Railway to AWS App Runner/ECS/Fargate or DigitalOcean App Platform/Kubernetes only if operational needs justify it.
-4. Keep Cloudflare Pages for frontends unless there is a specific reason to move.
+4. Keep Render Static Site for frontends unless there is a specific reason to move.
 5. Add admin configuration management endpoints after operational usage proves the need.
 
 ## Pricing References Checked
 
-- Cloudflare Pages: free plan lists USD 0, 100 custom domains per project, unlimited sites, unlimited static requests, and unlimited bandwidth. See `https://pages.cloudflare.com/`.
+- Render Static Sites: static hosting supports custom domains and redirect/rewrite rules for SPA deep links. See `https://render.com/docs/static-sites`.
 - Railway: Hobby lists USD 5 minimum usage, included monthly usage credits, custom domains, global regions, and per-resource usage pricing. See `https://railway.com/pricing`.
+- Aiven MySQL: managed MySQL used for dev. See `https://aiven.io/mysql`.
 - DigitalOcean Managed Databases: Managed MySQL starts at the low managed tier around USD 15/month for 1 GiB memory, 1 vCPU, and 10-30 GiB storage range. See `https://www.digitalocean.com/pricing/managed-databases`.

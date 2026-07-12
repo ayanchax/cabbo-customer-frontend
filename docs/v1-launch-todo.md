@@ -15,20 +15,20 @@ This is the working checklist for shipping Cabbo V1. Keep detailed reasoning and
 The customer-frontend feature coding and local QA P0/P1 cleanup are complete.
 The dev stack is now online with the customer frontend on Render at
 `https://app.dev.cabbo.co.in` and the backend on Railway at
-`https://api.dev.cabbo.co.in`. The next priority is the final launch-readiness
-pass: dev smoke testing, security/privacy checks, production-readiness
-rehearsal, and remaining cross-environment verification.
+`https://api.dev.cabbo.co.in`. End-to-end dev smoke testing is currently
+blocked on Twilio compliance review and SMS-capable sending number activation.
+While that external dependency is pending, the next useful coding priority is
+the Admin/Ops MVP needed for launch support.
 
 Recommended order:
 
-1. Finish dev smoke testing for OTP, payment, booking, cancellation, refund,
-   profile, and legal-page flows.
-2. Repeat the release QA smoke across local hourly rental, airport transfers,
+1. Start the Cabbo Admin/Ops MVP frontend while Twilio compliance is blocked.
+2. Finish dev smoke testing for OTP, payment, booking, cancellation, refund,
+   profile, and legal-page flows after SMS sending is available.
+3. Repeat the release QA smoke across local hourly rental, airport transfers,
    and outstation on the dev deployment.
-3. Verify remaining security/privacy and production-readiness gates.
-4. Prepare the production smoke checklist and launch-day support coverage.
-5. Start the Cabbo admin frontend project after customer frontend release gates
-   are accepted.
+4. Verify remaining security/privacy and production-readiness gates.
+5. Prepare the production smoke checklist and launch-day support coverage.
 
 ## 1. Customer Frontend Coding - Core Booking Flows
 
@@ -158,6 +158,10 @@ Recommended order:
 - [x] Add logout confirmation.
 - [x] Clear customer authentication and customer-specific cached data on logout.
 - [x] Invalidate the backend session where supported.
+- [x] Allow OTP login recovery when the browser has lost its local token but the backend still has a stale active bearer token.
+  - Backend clears the stale stored token only when the client cannot present the matching active token.
+  - Matching active client/server tokens still return `ALREADY_LOGGED_IN` to preserve the single-session rule.
+  - Full consent-based device switching remains deferred in [backlogs.md](./backlogs.md).
 - [x] Replace navigation history when returning to login.
 - [x] Render backend-provided legal/support links from `/legal/pages`.
 - [x] Render backend-provided legal Markdown pages by slug with version and effective date.
@@ -177,6 +181,7 @@ Recommended order:
 - [x] Clean temporary trips through the failure API and scheduled cleanup.
 - [x] Re-test success, failure, retry, duplicate callback, refresh, and abandoned-payment scenarios in local development.
 - [ ] Repeat payment smoke test on the dev deployment before production release.
+  - Blocked until dev OTP login can be smoke-tested with an approved SMS sender.
 - [ ] Verify production payment webhook configuration and signatures.
 - [x] Confirm refund and cancellation behavior matches customer-facing policy text.
 - [x] Keep cancellation refund calculation and eligibility backend-authoritative.
@@ -222,10 +227,11 @@ Recommended order:
 - [x] Use a customer-safe driver response model.
 - [x] Audit all customer-facing API responses for internal or sensitive fields.
 - [x] Verify authorization on every booking detail and mutation endpoint.
-- [ ] Verify OTP, search, support, and mutation rate limits.
+- [x] Verify OTP, search, support, and mutation rate limits.
 - [x] Verify backend input validation and frontend output encoding so that no dangerously set html exist.
 - [x] Remove secrets from frontend environment variables and bundles.
 - [x] Verify authentication, session expiry, and logout behavior.
+- [x] Verify stale-session login recovery for missing/mismatched client bearer tokens without weakening valid active-session blocking.
 - [x] Redact personal, authentication, and payment data from logs.
 - [x] Remove development logs containing personal or payment data.
 
@@ -267,7 +273,7 @@ in the local pass were resolved before moving to dev/staging smoke.
 
 - [ ] Configure the production domain and TLS.
 - [ ] Verify production frontend and backend environment configuration.
-- [ ] Verify database backups and perform a restore drill.
+- [x] Verify database backups and perform a restore drill.
 - [ ] Restrict production database inbound access to backend outbound IPs only, if the backend host provides stable/static outbound IPs.
   - For Railway, enable Static Outbound IPs before production if needed and add those `/32` IPs to the Aiven allowlist.
   - Do not treat the open dev database allowlist as a launch blocker while credentials, TLS, and least-privilege users are in place.

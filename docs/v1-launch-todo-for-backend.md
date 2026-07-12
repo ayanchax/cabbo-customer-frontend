@@ -4,13 +4,15 @@ Backend execution checklist for getting Cabbo safely onto dev first, then produc
 
 Customer frontend local QA is effectively clean now, and the dev stack is live:
 backend on Railway at `https://api.dev.cabbo.co.in`, customer frontend on Render
-at `https://app.dev.cabbo.co.in`, and MySQL on Aiven. The next backend goal is:
+at `https://app.dev.cabbo.co.in`, and MySQL on Aiven. Dev OTP smoke testing is
+blocked on Twilio compliance review and SMS-capable sending number activation.
+The next useful engineering goal while that external dependency is pending is:
 
-1. Re-enable real OTP delivery for dev/prod launch.
-2. Confirm email delivery setup.
-3. Finish dev smoke testing with frontend dev at `https://app.dev.cabbo.co.in`.
-4. Verify remaining security/privacy gates.
-5. Start the admin ops MVP after backend dev is stable.
+1. Start the admin ops MVP/frontend workstream.
+2. Keep admin V1 operational only: trip list/detail, driver assignment, status transitions, and operational context.
+3. Resume dev OTP smoke testing with frontend dev at `https://app.dev.cabbo.co.in` after Twilio compliance clears.
+4. Confirm email delivery setup.
+5. Verify remaining security/privacy gates.
 
 ## Launch Decisions
 
@@ -42,13 +44,17 @@ at `https://app.dev.cabbo.co.in`, and MySQL on Aiven. The next backend goal is:
 
 ## 2. SMS And WhatsApp
 
-- [ ] Use Twilio as the temporary V1 OTP provider.
-- [ ] Add/verify Twilio credentials in dev and prod environments.
+- [x] Use Twilio as the temporary V1 OTP provider.
+- [x] Add/verify Twilio credentials in dev and prod environments.
+- [ ] Confirm Twilio compliance profile/registration approval and SMS-capable sending number activation.
 - [x] Restrict `mock` messaging to local development; fail fast if dev/prod tries to boot with `SMS_SERVICE_PROVIDER=mock`.
 - [x] Add delivery/error logs using masked phone numbers only.
 - [x] Add strict OTP send/resend rate limits by phone number and IP.
 - [x] Add OTP spend/volume monitoring or Sentry alerts for unexpected spikes.
 - [x] Confirm frontend/backend UX for OTP provider failure.
+- [x] Recover login when a stale backend bearer token exists but the client no longer has the matching token.
+  - Clear the backend token and continue OTP login for missing/mismatched client tokens.
+  - Preserve `ALREADY_LOGGED_IN` for matching active client/server tokens.
 
 ## 3. Email
 
@@ -87,6 +93,7 @@ at `https://app.dev.cabbo.co.in`, and MySQL on Aiven. The next backend goal is:
   - destination: `/index.html`
   - action: `Rewrite`
 - [ ] Smoke test auth OTP login.
+  - Blocked: waiting for Twilio compliance review and SMS-capable sending number activation.
 - [ ] Smoke test trip search for airport transfer, local hourly rental, and outstation.
 - [ ] Smoke test booking creation and Razorpay test payment verification.
 - [ ] Smoke test customer profile, email verification, My Trips feed, booking detail, cancellation, and special request update.
@@ -95,14 +102,14 @@ at `https://app.dev.cabbo.co.in`, and MySQL on Aiven. The next backend goal is:
 ## 5. Security And Privacy Gate
 
 - [x] Verify CORS allows only intended dev/prod frontend origins.
-- [ ] Verify auth/session expiry and logout behavior.
-- [ ] Verify booking detail authorization; customers must not access other customers' bookings.
-- [ ] Verify mutation authorization for cancellation, special request update, and profile/email changes.
-- [ ] Verify OTP send/resend rate limits.
-- [ ] Verify search and booking mutation rate limits.
-- [ ] Verify no secrets are exposed in frontend env or bundles.
+- [x] Verify auth/session expiry, stale-session recovery, and logout behavior.
+- [x] Verify booking detail authorization; customers must not access other customers' bookings.
+- [x] Verify mutation authorization for cancellation, special request update, and profile/email changes.
+- [x] Verify OTP send/resend rate limits.
+- [x] Verify search and booking mutation rate limits.
+- [x] Verify no secrets are exposed in frontend env or bundles.
 - [ ] Verify Razorpay payment verification and webhook signature validation.
-- [ ] Verify Sentry/log redaction for PII, auth data, OTPs, and payment identifiers.
+- [x] Verify Sentry/log redaction for PII, auth data, OTPs, and payment identifiers.
 
 ## 6. Admin V1 Backend/API Readiness
 

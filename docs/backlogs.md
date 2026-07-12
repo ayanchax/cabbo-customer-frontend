@@ -190,7 +190,8 @@ second deferred-feature list.
 
 ## Consent-Based Device Switching (v2+)
 - **Feature:** Allow users to switch their active session to a new device with explicit consent, logging out the previous device.
-- **Context:** Currently, only one device can be logged in at a time for security. In v2, prompt the user: "You are logged in elsewhere. Continue here and log out other devices?"
+- **V1 behavior:** The backend recovers from stale sessions when the browser has lost its local token by clearing the old stored bearer token and allowing OTP login. If the client still presents the matching and valid active token, the backend continues to return `ALREADY_LOGGED_IN`.
+- **Context:** Only one device can be logged in at a time for security. In v2, make replacement explicit with a prompt such as: "You are logged in elsewhere. Continue here and log out other devices?"
 - **Rationale:** This is an industry standard for transactional apps (ride-hailing, OTT, banking, etc.) to balance security and user convenience.
 - **Implementation:**
   - Show a modal/dialog when backend returns ALREADY_LOGGED_IN.

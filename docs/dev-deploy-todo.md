@@ -25,8 +25,9 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
 
 ## 2. Railway Backend Dev
 
-- [ ] Upgrade/fund Twilio account with the smallest practical balance for OTP testing.
+- [x] Upgrade/fund Twilio account with the smallest practical balance for OTP testing.
 - [ ] Confirm Twilio SMS sending works after upgrade.
+  - Blocked: Twilio number SMS capability requires compliance profile/registration approval before a sending number can be used.
 - [ ] Set Twilio usage/spend alerts if available.
 - [x] Add OTP send/resend rate limiting while Twilio is the temporary provider:
   - per phone number send limit
@@ -36,6 +37,10 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
   - clear frontend/backend error response when the limit is hit
 - [x] Document that OTP rate limits can be loosened later after moving to DLT-backed SMS.
 - [x] Increase customer bearer/session token lifetime from 5 days to 30 days to reduce repeat OTP requests, while preserving logout/session invalidation behavior.
+- [x] Add stale-session recovery for login initiation:
+  - if the backend has an active stored bearer token but the client has no matching token, clear the stale backend token and allow OTP login
+  - if the client token matches the active backend token, continue returning `ALREADY_LOGGED_IN`
+  - keep explicit consent-based device switching deferred beyond V1
 - [x] Create Railway dev project/service for the backend.
 - [x] Configure backend build/start command or Dockerfile deployment.
 - [x] Add proper dev environment variables:
@@ -78,7 +83,9 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
 
 - [ ] Open `https://app.dev.cabbo.co.in`.
 - [ ] Verify OTP login with Twilio.
+  - Blocked: waiting for Twilio compliance review and SMS-capable sending number activation.
 - [ ] Verify OTP resend cooldown/rate-limit behavior.
+  - Blocked: waiting for Twilio compliance review and SMS-capable sending number activation.
 - [ ] Verify profile load and update.
 - [ ] Verify email add/verification flow.
 - [ ] Verify airport transfer search.
@@ -102,8 +109,16 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
 - [x] Backend dev talks to Aiven dev MySQL.
 - [x] Render static-site SPA rewrite is configured with destination `/index.html`.
 - [ ] OTP login works with the temporary Twilio bridge.
+  - Blocked: waiting for Twilio compliance review and SMS-capable sending number activation.
 - [ ] Razorpay test payment flow works end-to-end.
 - [x] Sentry dev receives sanitized backend errors/events.
 - [x] No local-only mock provider is enabled in dev.
 - [x] No local container log files are created in dev.
 - [ ] Core customer flow is smoke-tested: login, search, booking, payment, My Trips, booking detail, cancellation.
+
+## 6. Parallel Work While Twilio Is Blocked
+
+- [ ] Start the Admin/Ops MVP frontend project while Twilio compliance review is pending.
+  - Keep scope limited to authenticated ops workflows needed for launch support.
+  - Prioritize trip listing, trip detail, driver assignment/reassignment, operational status updates, customer/special-request context, and payment/refund summary display.
+  - Defer dashboards, analytics, pricing/config CRUD, legal CMS, and broader support-ticketing workflows.
