@@ -178,9 +178,9 @@ const Login = () => {
           <img
             src={import.meta.env.VITE_APP_LOGO_URL}
             alt={APP.name}
-            className="w-28 h-auto mb-4"
+            className="mb-4 h-auto w-36 max-w-[70vw] sm:w-40 md:w-44"
           />
-          <p className="text-base text-gray-500">{APP.tagline}</p>
+          <p className="text-base -ml-2 text-gray-500">{APP.tagline}</p>
         </div>
 
         {isMismatch && (
