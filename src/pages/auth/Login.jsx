@@ -180,7 +180,9 @@ const Login = () => {
             alt={APP.name}
             className="mb-4 h-auto w-36 max-w-[70vw] sm:w-40 md:w-44"
           />
-          <p className="text-base -ml-2 text-gray-500">{APP.tagline}</p>
+          <p className="-translate-x-2 text-base text-gray-500 sm:-translate-x-3 md:-translate-x-3">
+            {APP.tagline}
+          </p>
         </div>
 
         {isMismatch && (
