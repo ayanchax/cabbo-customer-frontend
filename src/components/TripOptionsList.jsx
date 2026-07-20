@@ -5,7 +5,7 @@ import { useLocalStorage } from "@/hooks";
 import {
   LOCAL_STORAGE_KEYS,
   CAB_TYPES,
-  DEFAULT_CURRENCY_SYMBOL,
+  DEFAULT_CURRENCY_CODE,
 } from "@/utils";
 
 /**
@@ -33,9 +33,9 @@ function TripOptionsList({
   showRatePerMin = false,
 }) {
   const { getItem } = useLocalStorage();
-  const fallbackCurrencySymbol =
-    getItem(LOCAL_STORAGE_KEYS.serverGeography)?.data?.currency_symbol ||
-    DEFAULT_CURRENCY_SYMBOL; // Default to INR symbol if geography or currency symbol is not available per backend response structure in the options.
+  const fallbackCurrencyCode =
+    getItem(LOCAL_STORAGE_KEYS.serverGeography)?.data?.currency_code ||
+    DEFAULT_CURRENCY_CODE; // Default to INR symbol if geography or currency symbol is not available per backend response structure in the options.
 
   return (
     <div className={` ${className}`}>
@@ -72,7 +72,7 @@ function TripOptionsList({
               key={opt.hash}
               option={opt}
               onSelect={onSelect ? () => onSelect(opt) : undefined}
-              fallbackCurrencySymbol={fallbackCurrencySymbol}
+              fallbackCurrencySymbol={fallbackCurrencyCode}
               showRatePerKm={showRatePerKm}
               showRatePerMin={showRatePerMin}
             />

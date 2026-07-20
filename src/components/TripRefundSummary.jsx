@@ -9,9 +9,9 @@ import {
 import { useLocale, useTimezone, useTripRefundDetail, useFragmentScroll } from "@/hooks";
 import { humanReadableDateTime } from "@/components/common/datetime-picker/utils";
 import {
-  DEFAULT_CURRENCY_SYMBOL,
+  DEFAULT_CURRENCY_CODE,
   DEFAULT_USER_TIMEZONE,
-  formatCurrency,
+  formatMoney,
   titleCase,
   REFUND_STATUS,
   APP,
@@ -94,7 +94,7 @@ function TripRefundSummary({
   } = useTripRefundDetail(bookingId);
 
   const refundData = refundResponse || null;
-  const currencySymbol = currency?.symbol || DEFAULT_CURRENCY_SYMBOL;
+  const currencyCode = currency?.code || DEFAULT_CURRENCY_CODE;
   const displayTimezone =
     timezone || clientTimezone?.timezone || DEFAULT_USER_TIMEZONE;
 
@@ -196,9 +196,9 @@ function TripRefundSummary({
 
       <div className="mt-4 rounded-lg border border-gray-100 bg-gray-50 px-4 py-3">
         <p className="text-xs font-medium text-gray-500">Refund amount</p>
-        <p className="mt-1 font-mono text-2xl font-semibold text-gray-950">
+        <p className="mt-1 text-2xl font-semibold text-gray-950">
             {typeof refundData.refund_amount === "number"
-              ? formatCurrency(refundData.refund_amount, currencySymbol)
+              ? formatMoney(refundData.refund_amount, currencyCode)
               : "Not available"}
         </p>
       </div>

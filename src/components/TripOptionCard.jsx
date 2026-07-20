@@ -1,17 +1,16 @@
 import React from "react";
-import { DEFAULT_CURRENCY_SYMBOL } from "@/utils";
+import { DEFAULT_CURRENCY_CODE, formatMoney } from "@/utils";
 import {  TripCabDetails } from "@/components";
 function TripOptionCard({
   option = null,
   onSelect,
-  fallbackCurrencySymbol = DEFAULT_CURRENCY_SYMBOL,
+  fallbackCurrencySymbol = DEFAULT_CURRENCY_CODE,
   showRatePerKm = false,
   showRatePerMin = false,
   // eslint-disable-next-line no-unused-vars
   className = "",
 }) {
   if (!option) return null;
-
   const isRecommended = Boolean(option?.car_capacity?.recommended);
 
   return (
@@ -36,8 +35,7 @@ function TripOptionCard({
       {/* Price */}
       <div className="flex flex-col items-end ml-6 min-w-18">
         <span className="font-bold text-xl sm:text-2xl text-blue-600">
-          {option?.currency?.symbol || fallbackCurrencySymbol}
-          {option.total_price}
+          {formatMoney(option.total_price, option?.currency?.code || fallbackCurrencySymbol)}
         </span>
         
         {/* Book button */}

@@ -1,6 +1,6 @@
 import React from "react";
 import { Info } from "lucide-react";
-import { formatCurrency, ROUTES } from "@/utils";
+import { formatMoney, ROUTES } from "@/utils";
 
 function TripFareBreakdown({
   priceBreakdown,
@@ -48,7 +48,7 @@ function TripFareBreakdown({
                 </span>
               )}
             </span>
-            <span>{formatCurrency(val, currencySymbol)}</span>
+            <span>{formatMoney(val, currencySymbol)}</span>
           </li>
         ))}
       </ul>

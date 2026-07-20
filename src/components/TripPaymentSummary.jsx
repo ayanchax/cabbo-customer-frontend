@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { DEFAULT_CURRENCY_SYMBOL } from "@/utils";
+import { DEFAULT_CURRENCY_SYMBOL, formatMoney } from "@/utils";
 import {
   CollapsibleSection,
   TripDisclaimer,
@@ -22,7 +22,7 @@ function TripPaymentSummary({ orderData, fareData, onPay = () => {} }) {
   if (!orderData || !fareData) return null;
 
   // eslint-disable-next-line no-unused-vars
-  const { amount, currency_symbol, messages, status } = orderData;
+  const { amount, currency:currency_code, messages, status } = orderData;
   const {
     overages = {},
     total_price = null,
@@ -65,7 +65,7 @@ function TripPaymentSummary({ orderData, fareData, onPay = () => {} }) {
           totalFare={total_price}
           payInAdvance={amount}
           payToDriver={payToDriver}
-          currencySymbol={currency_symbol}
+          currencySymbol={currency_code}
         />
 
         {/* Payment instructions */}
@@ -95,7 +95,7 @@ function TripPaymentSummary({ orderData, fareData, onPay = () => {} }) {
           >
             <TripFareBreakdown
               priceBreakdown={price_breakdown}
-              currencySymbol={currency_symbol}
+              currencySymbol={currency_code}
               lockedAddOnKeys={locked_add_on_keys}
               addOnDisclaimer={add_on_disclaimer}
               className="mt-2 bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-5 mb-1"
@@ -141,7 +141,7 @@ function TripPaymentSummary({ orderData, fareData, onPay = () => {} }) {
       </section>
       {isSticky && (
         <div className="fixed bottom-0 left-0 w-full z-30 flex justify-center bg-white/90 backdrop-blur-sm md:py-2 md:px-4 border-t border-gray-200 ">
-          <PayAndConfirmBooking orderData={orderData} onPay={onPay} className="w-full max-w-xl" payAndConfirmBookingLabel={`Pay (${currency_symbol}${amount}) & Confirm Booking`} />
+          <PayAndConfirmBooking orderData={orderData} onPay={onPay} className="w-full max-w-xl" payAndConfirmBookingLabel={`Pay (${formatMoney(amount, currency_code)}) & Confirm Booking`} />
         </div>
       )}
     </div>

@@ -9,8 +9,8 @@ import {
   PayRestToDriver,
 } from "@/components";
 import {
-  formatCurrency,
-  DEFAULT_CURRENCY_SYMBOL,
+  formatMoney,
+  DEFAULT_CURRENCY_CODE,
   TRIP_OCCURENCE_LABELS,
   TRIP_STATUS,
 } from "@/utils";
@@ -104,7 +104,7 @@ function TripFareSummary({ fareData, className = "", showPayRestToDriver = true 
     occurrence_label = null,
   } = fareData || {};
 
-  const currencySymbol = currency?.symbol || DEFAULT_CURRENCY_SYMBOL;
+  const currencyCode = currency?.code || DEFAULT_CURRENCY_CODE;
   
   const hasBreakdown =
      price_breakdown && Object.keys(price_breakdown).length > 0;
@@ -147,9 +147,9 @@ function TripFareSummary({ fareData, className = "", showPayRestToDriver = true 
           <span className="text-xs uppercase tracking-widest text-gray-400 mb-1">
             Total Fare
           </span>
-          <span className="text-3xl font-bold text-gray-900 font-mono">
+          <span className="text-3xl font-bold text-gray-900">
             {typeof total_price === "number"
-              ? formatCurrency(total_price, currencySymbol)
+              ? formatMoney(total_price, currencyCode)
               : "—"}
           </span>
         </div>
@@ -161,8 +161,8 @@ function TripFareSummary({ fareData, className = "", showPayRestToDriver = true 
               <span className="text-xs text-gray-500 mb-0.5">
                 Paid in advance
               </span>
-              <span className="text-base font-semibold text-green-700 font-mono">
-                {formatCurrency(advance_payment, currencySymbol)}
+              <span className="text-base font-semibold text-green-700">
+                {formatMoney(advance_payment, currencyCode)}
               </span>
             </div>
           )}
@@ -175,8 +175,8 @@ function TripFareSummary({ fareData, className = "", showPayRestToDriver = true 
               <span className="text-xs text-gray-500 mb-0.5">
                 {driverPaymentDisplay.label}
               </span>
-              <span className="text-base font-semibold font-mono">
-                {formatCurrency(driverPaymentDisplay.amount, currencySymbol)}
+              <span className="text-base font-semibold">
+                {formatMoney(driverPaymentDisplay.amount, currencyCode)}
               </span>
             </div>
           )}
@@ -202,9 +202,9 @@ function TripFareSummary({ fareData, className = "", showPayRestToDriver = true 
             {overages.overage_amount_per_hour && (
               <span className="inline-flex items-center gap-1 text-xs bg-amber-50 text-amber-700 border border-amber-200 rounded-full px-2.5 py-0.5">
                 <Plus className="w-3 h-3 shrink-0" />
-                {formatCurrency(
+                {formatMoney(
                   Math.ceil(overages.overage_amount_per_hour / 60),
-                  currencySymbol,
+                  currencyCode,
                 )}
                 /extra min
               </span>
@@ -212,7 +212,7 @@ function TripFareSummary({ fareData, className = "", showPayRestToDriver = true 
             {overages.overage_amount_per_km && (
               <span className="inline-flex items-center gap-1 text-xs bg-amber-50 text-amber-700 border border-amber-200 rounded-full px-2.5 py-0.5">
                 <Plus className="w-3 h-3 shrink-0" />
-                {formatCurrency(overages.overage_amount_per_km, currencySymbol)}
+                {formatMoney(overages.overage_amount_per_km, currencyCode)}
                 /extra km
               </span>
             )}
@@ -229,7 +229,7 @@ function TripFareSummary({ fareData, className = "", showPayRestToDriver = true 
         >
           <TripFareBreakdown
             priceBreakdown={price_breakdown}
-            currencySymbol={currencySymbol}
+            currencySymbol={currencyCode}
             lockedAddOnKeys={locked_add_on_keys}
             className="mt-2 bg-gray-50 border border-gray-200 rounded-lg p-4"
           />

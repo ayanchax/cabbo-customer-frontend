@@ -1,5 +1,5 @@
 import React from "react";
-import { formatCurrency } from "@/utils";
+import { formatMoney } from "@/utils";
 
 function TripFareDetail({
   totalFare,
@@ -18,7 +18,7 @@ function TripFareDetail({
       </div>
       <div className="text-2xl sm:text-3xl font-bold text-primary-700 flex items-baseline gap-1">
         {typeof totalFare === "number"
-          ? formatCurrency(totalFare, currencySymbol)
+          ? formatMoney(totalFare, currencySymbol)
           : "-"}
       </div>
       <div className="flex flex-row gap-4 mt-2 w-full justify-center">
@@ -28,7 +28,7 @@ function TripFareDetail({
           </span>
           <span className="text-lg font-semibold text-primary-600">
             {payInAdvance && typeof payInAdvance === "number"
-              ? formatCurrency(payInAdvance, currencySymbol)
+              ? formatMoney(payInAdvance, currencySymbol)
               : "-"}
           </span>
         </div>
@@ -38,7 +38,7 @@ function TripFareDetail({
           </span>
           <span className="text-lg font-semibold text-gray-700">
             {payToDriver && typeof payToDriver === "number"
-              ? formatCurrency(payToDriver, currencySymbol)
+              ? formatMoney(payToDriver, currencySymbol)
               : "-"}
           </span>
         </div>
