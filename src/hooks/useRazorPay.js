@@ -21,6 +21,7 @@ export const useRazorPay = () => {
     }
     const handlePay = async (orderData, overlayProps, pendingConfirmationContext = {}) => {
         showOverlay(overlayProps);
+        
         // Dynamically load Razorpay script if not already loaded
         if (!window.Razorpay) {
             const script = document.createElement("script");
@@ -50,6 +51,7 @@ export const useRazorPay = () => {
                     if (!response.razorpay_payment_id || !response.razorpay_order_id || !response.razorpay_signature) {
                         hideOverlay();
                         // We do not clean up temp trip even if payment failed, since we do not call verify payment endpoint at all - and give user a chance to retry payment as long as they are in the same context.
+                        // In the long run, we have a scheduled job in backend that responsibly cleans abandoned trips.
                         reject(new Error("Payment failed: Missing payment details in response."));
                         return;
                     }
@@ -93,7 +95,8 @@ export const useRazorPay = () => {
                 modal: {
                     ondismiss: async function () {
                         hideOverlay();
-                        // We do not clean on user cancellation because user might retry even after cancelling.
+                        // We do not clean on user cancellation because user might retry even after cancelling as long as they are in same context.
+                        // In the long run, we have a scheduled job in backend that responsibly cleans abandoned trips.
                         reject(new Error("Payment cancelled by user."));
                     },
                 },
