@@ -92,7 +92,14 @@ function LocalHourlyRentalBooking({ orderData, bookingData }) {
             subtext:
               "Hang tight! We're confirming your booking and processing your payment.",
           }
-      const result = await onPay(orderData, overlayProps);
+      const result = await onPay(orderData, overlayProps, {
+        origin,
+        tripType: bookingData?.preferences?.trip_type,
+        tripLabel: "Hourly rental",
+      });
+      if (result?.paymentPendingConfirmation) {
+        return;
+      }
       if (result && result?.data) {
         setPaymentSuccessData({
           showPaymentSuccessOverlay: true,

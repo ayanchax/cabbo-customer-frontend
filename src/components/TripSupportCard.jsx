@@ -32,6 +32,7 @@ function TripSupportCard({
   reason = "Booking help",
   defaultOpen = false,
   title = "Need help with this trip?",
+  onToggle=()=>{},
   description = `Call or message ${APP.name} support for this booking.`,
   className = "",
 }) {
@@ -70,6 +71,7 @@ function TripSupportCard({
 
   const handleToggle = () => {
     setIsOpen((current) => !current);
+    onToggle(!isOpen)
   };
 
   useEffect(() => {

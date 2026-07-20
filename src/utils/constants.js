@@ -86,6 +86,7 @@ export const ROUTES = {
     OUTSTATION: "/outstation",
     AIRPORT: "/airport-transfers",
     BOOKING: "/booking",
+    PAYMENT_PENDING_CONFIRMATION: "/booking/payment-pending-confirmation",
     BOOKING_DETAIL: "/booking/:bookingId",
     LEGAL: "/legal",
     LEGAL_PAGE: "/legal/:slug",
@@ -173,5 +174,6 @@ export const SERVER_ERROR_CODES = {
     INVALID_BOOKING_DATA: "INVALID_BOOKING_DATA",
     TRIP_NOT_FOUND: "TRIP_NOT_FOUND",
     UNKNOWN_ERROR: "UNKNOWN_ERROR",
+    PAYMENT_VERIFIED_WITH_PENDING_CONFIRMATION:"PAYMENT_VERIFIED_WITH_PENDING_CONFIRMATION"
 }
 

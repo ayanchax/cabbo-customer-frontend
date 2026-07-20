@@ -9,7 +9,13 @@ const VARIANT_STYLES = {
   success: "bg-green-50 border-green-200 text-green-800 [&_button]:text-green-500 [&_button]:hover:text-green-700",
 };
 
-const Disclaimer = ({ message, dismissible = false, variant = "default", className = "" }) => {
+const Disclaimer = ({
+  message,
+  icon = null,
+  dismissible = false,
+  variant = "default",
+  className = "",
+}) => {
   const [dismissed, setDismissed] = useState(false);
 
   if (dismissed) return null;
@@ -18,7 +24,10 @@ const Disclaimer = ({ message, dismissible = false, variant = "default", classNa
     <div
       className={`p-3 rounded-lg border text-sm flex items-start justify-between gap-2 ${VARIANT_STYLES[variant] ?? VARIANT_STYLES.default} ${className}`}
     >
-      <span>{message}</span>
+      <span className="flex min-w-0 items-start gap-2">
+        {icon && <span className="mt-0.5 shrink-0">{icon}</span>}
+        <span>{message}</span>
+      </span>
       {dismissible && (
         <button
           onClick={() => setDismissed(true)}

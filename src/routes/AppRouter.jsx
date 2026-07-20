@@ -10,6 +10,7 @@ const LazyLoadedRoutes = {
   AirportTransferPage: lazy(() => import("@/pages/AirportTransferPage")),
   BookingPage: lazy(() => import("@/pages/BookingPage")),
   BookingDetailPage: lazy(() => import("@/pages/BookingDetailPage")),
+  PaymentPendingConfirmationPage: lazy(() => import("@/pages/PaymentPendingConfirmationPage")),
   OutstationPage: lazy(() => import("@/pages/OutstationPage")),
   MyTripsPage: lazy(() => import("@/pages/MyTripsPage")),
   CustomerProfilePage: lazy(() => import("@/pages/CustomerProfilePage")),
@@ -42,6 +43,7 @@ const AppRouter = () => {
           />
           <Route path={ROUTES.OUTSTATION} element={<LazyLoadedRoutes.OutstationPage />} />
           <Route path={ROUTES.BOOKING} element={<LazyLoadedRoutes.BookingPage />} />
+          <Route path={ROUTES.PAYMENT_PENDING_CONFIRMATION} element={<LazyLoadedRoutes.PaymentPendingConfirmationPage />} />
           <Route path={ROUTES.BOOKING_DETAIL} element={<LazyLoadedRoutes.BookingDetailPage />} />
           <Route path={ROUTES.MY_TRIPS} element={<LazyLoadedRoutes.MyTripsPage />} />
           <Route path={ROUTES.PROFILE} element={<LazyLoadedRoutes.CustomerProfilePage />} />
