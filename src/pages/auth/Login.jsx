@@ -185,11 +185,13 @@ const Login = () => {
           </p>
         </div>
 
+        
         {isMismatch && (
           <Disclaimer
             message={`Looks like you're outside ${selectedCountry?.country_name}. ${APP.name} currently operates in
             ${selectedCountry?.country_name} — please use a ${selectedCountry?.country_name} mobile number.`}
             dismissible
+            className="mb-4"
           />
         )}
         <form
@@ -259,7 +261,7 @@ const Login = () => {
   cursor-pointer
 "
           >
-            {initiateLogin.isPending ? "Please wait..." : "Continue"}
+            {(initiateLogin.isPending || initiateOnboarding.isPending) ? "Please wait..." : "Continue"}
           </button>
         </form>
 
