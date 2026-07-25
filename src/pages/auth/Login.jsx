@@ -28,6 +28,7 @@ const Login = () => {
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
+  const [isMdViewport, setIsMdViewport] = useState(false);
   const { getItem } = useLocalStorage();
   const {
     serverGeo: selectedCountry, // Server geography is the source of truth for country selection to ensure correct phone code and validation rules. So, if there is a mismatch between client and server geographies, we will show a disclaimer message to user but we will still rely on server geography for phone number validation and formatting in the backend.
@@ -40,6 +41,16 @@ const Login = () => {
       return () => clearTimeout(timer);
     }
   }, [shake]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const updateViewport = () => setIsMdViewport(mediaQuery.matches);
+
+    updateViewport();
+    mediaQuery.addEventListener("change", updateViewport);
+
+    return () => mediaQuery.removeEventListener("change", updateViewport);
+  }, []);
   const navigate = useNavigate();
   const handleOtpSuccess = (fullPhone, displayPhone, flow, resendTimerData) => {
     navigate(ROUTES.VERIFY, {
@@ -228,13 +239,15 @@ const Login = () => {
                 id="phone"
                 maxLength={10}
                 ref={inputRef}
-                placeholder="Enter your phone number"
+                placeholder={
+                  isMdViewport ? "Enter your phone number" : "Enter phone number"
+                }
                 value={phone}
                 onChange={(e) => {
                   setPhone(e.target.value);
                   if (error) setError("");
                 }}
-                className="min-w-0 flex-1 px-4 py-3 text-[15px] outline-none bg-transparent"
+                className="min-w-0 flex-1 bg-transparent px-3 py-3 text-[15px] outline-none placeholder:text-gray-400 sm:px-4"
               />
             </div>
 

@@ -166,7 +166,11 @@ const SearchCard = () => {
     setActiveField(null);
   };
   const [inProgress, setInProgress] = useState(false);
-
+  
+  useEffect(()=>{
+    return ()=> hideOverlay()
+  },[hideOverlay])
+  
   const handleSearch = async () => {
     if (inProgress) return; // prevent multiple rapid clicks
     try {
@@ -226,7 +230,6 @@ const SearchCard = () => {
       showOverlay(config.overlayProps);
       // Hide overlay after 1.2s and navigate
       setTimeout(() => {
-       hideOverlay();
        navigate(config.route, { state: response });
       }, 1200);
     } catch (e) {

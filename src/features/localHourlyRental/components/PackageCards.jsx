@@ -10,6 +10,7 @@ function PackageCards({
   layout = "horizontal",
 }) {
   const rootRef = useRef(null);
+  const packageButtonRefs = useRef({});
   const { focusOnElement } = useUIElement();
 
   // Use useScrollCue for horizontal scroll cues
@@ -35,6 +36,21 @@ function PackageCards({
       };
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
+
+  useEffect(() => {
+    if (layout !== "horizontal" || !selectedPackageId) return;
+    if (typeof window === "undefined") return;
+
+    const isMobile = !window.matchMedia("(min-width: 768px)").matches;
+    if (!isMobile) return;
+
+    packageButtonRefs.current[selectedPackageId]?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
+    });
+  }, [layout, selectedPackageId]);
+
   if (loading) {
     return <GridLoaderSkeleton rows={2} cols={2} />;
   }
@@ -72,6 +88,13 @@ function PackageCards({
           return (
             <button
               key={pkg.id}
+              ref={(element) => {
+                if (element) {
+                  packageButtonRefs.current[pkg.id] = element;
+                } else {
+                  delete packageButtonRefs.current[pkg.id];
+                }
+              }}
               type="button"
               className={`max-h-40 md:max-h-48 lg:max-h-40 flex flex-col  justify-start items-start p-4 rounded-lg border transition shadow-sm text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/80  ${
                 selected

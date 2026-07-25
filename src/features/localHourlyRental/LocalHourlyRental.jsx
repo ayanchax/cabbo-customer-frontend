@@ -85,6 +85,12 @@ function LocalHourlyRental() {
   }, [packages, selectedPackageId]);
 
   useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [location.key]);
+
+  useLayoutEffect(() => {
     if (!searchResults) return;
 
     window.scrollTo(0, 0);
@@ -318,7 +324,8 @@ function LocalHourlyRental() {
           <div className="px-4">
             {/* Route timeline */}
             <RouteTimeline pickupLocation={origin} dropoffLocation={dropOff} />
-
+            
+            <div className="mb-2"></div>
             {/* Start date/time picker */}
             <div
               className={`mb-4 ${priorBookingWindowLoading ? "opacity-50 pointer-events-none" : ""}`}

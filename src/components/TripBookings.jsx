@@ -272,7 +272,7 @@ function TripBookings({
   return (
     <div className="mx-auto w-full max-w-4xl">
       {(onRefresh || hasPagination) && (
-        <div className="mb-3 flex items-center sm:justify-between justify-end gap-3">
+        <div className="mb-2 flex items-center justify-end gap-3 sm:justify-between">
           {hasPagination && showPaginationInfo ? (
             <p className="hidden text-xs text-gray-500 sm:block">
               Showing page {pagination.page} of {pagination.total_pages}
@@ -287,7 +287,7 @@ function TripBookings({
             <button
               type="button"
               onClick={onRefresh}
-              className="inline-flex cursor-pointer h-9 w-9 shrink-0 items-center justify-center rounded-md text-gray-500 transition hover:bg-gray-50 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="inline-flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full border border-gray-100 bg-white text-gray-500 shadow-sm transition hover:border-primary/20 hover:bg-blue-50 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60"
               aria-label="Refresh trips"
               disabled={isRefreshing}
             >

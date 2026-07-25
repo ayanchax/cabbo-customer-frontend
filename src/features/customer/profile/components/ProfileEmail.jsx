@@ -7,7 +7,6 @@ import {
   useUpdateCustomerEmail,
 } from "@/hooks";
 import { isValidEmail } from "@/utils";
-import { ProfileItemDetailRow } from "./ProfileItemDetailRow";
 
 function EmailStatusBadge({ isVerified }) {
   return (
@@ -141,34 +140,41 @@ function ProfileEmail({ email, isVerified, canReinitiateVerification = false }) 
 
   if (email) {
     return (
-      <div className="rounded-lg border border-gray-100 bg-white px-3 py-3">
-        <ProfileItemDetailRow
-          icon={Mail}
-          label="Email"
-          value={email}
-          helper={
-            isVerified
+      <div className="flex items-start gap-3 rounded-lg border border-gray-100 bg-white px-3 py-3">
+        <div className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-primary ring-1 ring-blue-100">
+          <Mail className="h-4 w-4" aria-hidden="true" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-xs font-semibold uppercase text-gray-400">
+              Email
+            </p>
+            <EmailStatusBadge isVerified={Boolean(isVerified)} />
+          </div>
+          <p className="mt-1 wrap-break-word text-sm font-semibold text-gray-950 sm:text-base">
+            {email}
+          </p>
+          <p className="mt-1 text-xs leading-5 text-gray-500">
+            {isVerified
               ? "Used as a secondary channel for trip and account communication."
               : showResendVerification
                 ? "Check your inbox or resend the verification email."
-                : "Check your inbox and verify this email to receive trip and account updates."
-          }
-          badge={<EmailStatusBadge isVerified={Boolean(isVerified)} />}
-          className="border-0 px-0 py-0 shadow-none"
-        />
-        {showResendVerification && (
-          <div className="mt-3 flex justify-start pl-12">
-            <button
-              type="button"
-              onClick={handleResendVerification}
-              disabled={isResending}
-              className="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 text-xs font-semibold text-amber-800 transition hover:bg-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-100 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              <Send className="h-3.5 w-3.5" aria-hidden="true" />
-              {isResending ? "Sending..." : "Resend verification email"}
-            </button>
-          </div>
-        )}
+                : "Check your inbox and verify this email to receive trip and account updates."}
+          </p>
+          {showResendVerification && (
+            <div className="mt-3 flex justify-start">
+              <button
+                type="button"
+                onClick={handleResendVerification}
+                disabled={isResending}
+                className="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 text-xs font-semibold text-amber-800 transition hover:bg-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-100 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <Send className="h-3.5 w-3.5" aria-hidden="true" />
+                {isResending ? "Sending..." : "Resend verification email"}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     );
   }

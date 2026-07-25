@@ -29,6 +29,19 @@ const getValueDate = (value) => {
   return Number.isNaN(parsedDate.getTime()) ? null : parsedDate;
 };
 
+const scrollListItemIntoView = (listElement, itemElement) => {
+  if (!listElement || !itemElement) return;
+
+  const targetTop =
+    itemElement.offsetTop -
+    (listElement.clientHeight - itemElement.offsetHeight) / 2;
+
+  listElement.scrollTo({
+    top: Math.max(0, targetTop),
+    behavior: "smooth",
+  });
+};
+
 function InlineDateTimePicker({
   id,
   value = null,
@@ -130,19 +143,13 @@ function InlineDateTimePicker({
   useEffect(() => {
     if (!timeListRef?.current) return;
     const buttons = timeListRef.current.querySelectorAll("button");
-    buttons[selectedTimeIdx]?.scrollIntoView({
-      block: "center",
-      behavior: "smooth",
-    });
+    scrollListItemIntoView(timeListRef.current, buttons[selectedTimeIdx]);
   }, [selectedTimeIdx, selectedDateIdx, slots.length, timeListRef]);
 
   useEffect(() => {
     if (!dateListRef?.current) return;
     const buttons = dateListRef.current.querySelectorAll("button");
-    buttons[selectedDateIdx]?.scrollIntoView({
-      block: "center",
-      behavior: "smooth",
-    });
+    scrollListItemIntoView(dateListRef.current, buttons[selectedDateIdx]);
   }, [selectedDateIdx, days.length, dateListRef]);
 
   useEffect(() => {

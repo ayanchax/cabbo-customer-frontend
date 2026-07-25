@@ -25,11 +25,7 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
 
 ## 2. Railway Backend Dev
 
-- [x] Upgrade/fund Twilio account with the smallest practical balance for OTP testing.
-- [ ] Confirm Twilio SMS sending works after upgrade.
-  - Blocked: Twilio number SMS capability requires compliance profile/registration approval before a sending number can be used.
-- [ ] Set Twilio usage/spend alerts if available.
-- [x] Add OTP send/resend rate limiting while Twilio is the temporary provider:
+- [x] Add OTP send/resend rate limiting
   - per phone number send limit
   - per IP send limit
   - resend cooldown
@@ -48,7 +44,7 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
   - `DATABASE_URL`
   - auth/session secrets
   - Razorpay test credentials
-  - Twilio OTP credentials
+  - MSG91 OTP credentials
   - Brevo/email credentials
   - AWS S3 credentials/bucket settings
   - Sentry DSN/environment/release settings
@@ -81,25 +77,25 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
 
 ## 4. Dev Smoke Test
 
-- [ ] Open `https://app.dev.cabbo.co.in`.
-- [ ] Verify OTP login with Twilio.
-  - Blocked: waiting for Twilio compliance review and SMS-capable sending number activation.
-- [ ] Verify OTP resend cooldown/rate-limit behavior.
-  - Blocked: waiting for Twilio compliance review and SMS-capable sending number activation.
-- [ ] Verify profile load and update.
-- [ ] Verify email add/verification flow.
-- [ ] Verify airport transfer search.
-- [ ] Verify local hourly rental search.
-- [ ] Verify outstation search.
-- [ ] Verify ride options load correctly.
-- [ ] Verify booking creation in Razorpay test mode.
-- [ ] Verify payment verification redirects to booking detail.
-- [ ] Verify newly confirmed booking appears in My Trips.
+- [x] Open `https://app.dev.cabbo.co.in`.
+- [x] Verify OTP login with MSG91.
+   
+- [x] Verify OTP resend cooldown/rate-limit behavior.
+ 
+- [x] Verify profile load and update.
+- [x] Verify email add/verification flow.
+- [x] Verify airport transfer search.
+- [x] Verify local hourly rental search.
+- [x] Verify outstation search.
+- [x] Verify ride options load correctly.
+- [x] Verify booking creation in Razorpay test mode.
+- [x] Verify payment verification redirects to booking detail.
+- [x] Verify newly confirmed booking appears in My Trips.
 - [ ] Verify booking detail page loads from direct URL.
 - [ ] Verify special request update persists after navigating away/back.
 - [ ] Verify cancellation flow in dev.
-- [ ] Verify legal/static backend pages load if used by frontend.
-- [ ] Verify expected backend errors show in Sentry dev with sanitized data.
+- [x] Verify legal/static backend pages load if used by frontend.
+- [x] Verify expected backend errors show in Sentry dev with sanitized data.
 
 ## 5. Dev Launch Exit Criteria
 
@@ -108,17 +104,17 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
 - [x] Frontend dev talks only to backend dev.
 - [x] Backend dev talks to Aiven dev MySQL.
 - [x] Render static-site SPA rewrite is configured with destination `/index.html`.
-- [ ] OTP login works with the temporary Twilio bridge.
-  - Blocked: waiting for Twilio compliance review and SMS-capable sending number activation.
+- [ ] OTP login works  
+   
 - [ ] Razorpay test payment flow works end-to-end.
 - [x] Sentry dev receives sanitized backend errors/events.
 - [x] No local-only mock provider is enabled in dev.
 - [x] No local container log files are created in dev.
 - [ ] Core customer flow is smoke-tested: login, search, booking, payment, My Trips, booking detail, cancellation.
 
-## 6. Parallel Work While Twilio Is Blocked
+## 6. Parallel Work
 
-- [ ] Start the Admin/Ops MVP frontend project while Twilio compliance review is pending.
+- [x] Start the Admin/Ops MVP frontend project
   - Keep scope limited to authenticated ops workflows needed for launch support.
   - Prioritize trip listing, trip detail, driver assignment/reassignment, operational status updates, customer/special-request context, and payment/refund summary display.
   - Defer dashboards, analytics, pricing/config CRUD, legal CMS, and broader support-ticketing workflows.
