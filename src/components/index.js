@@ -35,3 +35,4 @@ export { CancelTripAction } from "./CancelTripAction";
 export { TripReview } from "./TripReview";
 export { LegalMarkdownContent } from "./LegalMarkdownContent";
 export { LegalAgreementStatement } from "./LegalAgreementStatement";
+export {BrandFeatureHighlights} from "./BrandFeatureHighlights"
