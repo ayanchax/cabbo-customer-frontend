@@ -6,7 +6,7 @@ import {
   ShieldCheck,
   CarFront,
 } from "lucide-react";
-import { PageHeader } from "@/components";
+import { CompanyInfo, PageHeader } from "@/components";
 import { useAuth, useCustomer, useLogoutCustomer } from "@/hooks";
 import { APP, getInitials, ROUTES } from "@/utils";
 import { useNavigate } from "react-router-dom";
@@ -123,6 +123,7 @@ function ProfileInformation() {
         </section>
         {/* Legal links */}
         <ProfileLegalLinks />
+        <CompanyInfo />
 
         {/* Logout section */}
         <section className="mt-4 rounded-xl border border-red-100 bg-white p-4 shadow-sm">

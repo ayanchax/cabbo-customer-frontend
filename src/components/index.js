@@ -37,3 +37,4 @@ export { LegalMarkdownContent } from "./LegalMarkdownContent";
 export { LegalAgreementStatement } from "./LegalAgreementStatement";
 export {BrandFeatureHighlights} from "./BrandFeatureHighlights"
 export { MobileBrandSignature } from "./MobileBrandSignature";
+export { CompanyInfo } from "./CompanyInfo";

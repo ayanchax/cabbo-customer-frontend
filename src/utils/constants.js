@@ -47,6 +47,7 @@ export const ENDPOINTS = {
     },
     LEGAL: {
         PAGES: `${API_VERSION}/legal/pages`,
+        COMPANY:`${API_VERSION}/company`,
     },
     TRIP: {
             CLASSIFY_TYPE: `${API_VERSION}/trips/trip-type-classification/classify`,

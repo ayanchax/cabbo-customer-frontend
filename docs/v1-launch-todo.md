@@ -65,6 +65,15 @@ Recommended order:
 
 ## 2. Customer Frontend Coding - Shared Customer Experience
 
+### Home
+
+- [x] Add brand feature highlights on the Home page using curated Cabbo illustrations.
+  - Keep the booking search card as the primary home action.
+  - Use a horizontal mobile rail and responsive grid on larger devices.
+  - Lazy-load feature images and show a per-card loading spinner.
+- [x] Add a mobile-only Cabbo brand signature at the end of Home content.
+  - Uses `#RideWithCabbo`, the Cabbo cab mark, and the V1 trust words: Reliable, Simple, Safe.
+
 ### My Trips
 
 - [x] Build Upcoming, Ongoing, and Past tabs.
@@ -170,6 +179,10 @@ Recommended order:
 - [x] Link fare breakdowns to the Fare and Charges Policy.
 - [x] Link trip-specific refund/cancellation policy sections to the full Cancellation and Refund Policy.
 - [x] Link booking-detail support cards to the Help and Support page.
+- [x] Render backend-provided public company identity in customer-facing places.
+  - Show a compact operated-by line on Login and Onboard.
+  - Show a subtle expandable Company details section in Profile.
+  - Fetch registration details only when the Profile company section is opened.
 
 ## 3. Payment and Booking Integrity - Integration And Backend Verification
 

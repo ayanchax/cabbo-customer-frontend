@@ -9,3 +9,4 @@ export {getTripPackages, getTripPriorBookingWindow, getTripTypeConstraints} from
 export {searchTrips} from "./trip_search";
 export {initiateTripBooking, verifyPaymentForTrip, cleanupStagedTrip, getBookingDetails, updateNonCostImpactingTripDetails, cancelTripBooking, getAllBookingsForCustomer, getBookingsFeedForCustomer, getRefundDetailsForBooking, getSupportContactsForBooking, submitTripReview} from "./trip_booking";
 export {getFleet} from "./fleet";
+export {getCompany} from "./company"
