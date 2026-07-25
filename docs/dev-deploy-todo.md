@@ -104,9 +104,9 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
 - [x] Frontend dev talks only to backend dev.
 - [x] Backend dev talks to Aiven dev MySQL.
 - [x] Render static-site SPA rewrite is configured with destination `/index.html`.
-- [ ] OTP login works  
+- [x] OTP login works  
    
-- [ ] Razorpay test payment flow works end-to-end.
+- [x] Razorpay test payment flow works end-to-end.
 - [x] Sentry dev receives sanitized backend errors/events.
 - [x] No local-only mock provider is enabled in dev.
 - [x] No local container log files are created in dev.

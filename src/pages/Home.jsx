@@ -1,11 +1,17 @@
 import {AppLayout} from "@/layouts";
-import {HomeHeader,SearchCard, BrandFeatureHighlights} from "@/components";
+import {
+  HomeHeader,
+  SearchCard,
+  BrandFeatureHighlights,
+  MobileBrandSignature,
+} from "@/components";
 const Home = () => {
   return (
     <AppLayout>
       <HomeHeader />
       <SearchCard/>
       <BrandFeatureHighlights/>
+      <MobileBrandSignature />
     </AppLayout>
   );
 };

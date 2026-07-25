@@ -507,28 +507,7 @@ Test all trip types end to end:
 
 ---
 
-## Recommended Immediate Sprint
-
-Before outstation:
-
-1. Fix SearchCard loading/recent-selection behavior.
-2. Make `InlineDateTimePicker` controlled and restorable.
-3. [x] Define and implement the customer-safe driver DTO contract.
-4. Add the shared trip-status model/component.
-
-Then:
-
-5. Build outstation end to end.
-6. Build My Trips with Upcoming, Ongoing, and Past tabs.
-7. Complete customer profile, support/legal links, and logout.
-8. Add shared booking-detail support, driver, and special-request sections.
-9. Build the minimum admin fulfilment frontend.
-10. Publish reviewed legal pages and record accepted document versions.
-11. Run full release testing.
-12. Add lightweight homepage route cards only if they do not delay launch.
-
----
-
+ 
 ## Definition of Done for Cabbo V1
 
 Cabbo V1 is ready when a customer can:
