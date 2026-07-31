@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AlertTriangle, ChevronDown, X } from "lucide-react";
 import { useCancelTripBooking, useToast, useFragmentScroll } from "@/hooks";
 import { APP } from "@/utils";
@@ -20,6 +20,8 @@ function CancelTripAction({ bookingId, className = "" }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedReason, setSelectedReason] = useState("");
   const [customReason, setCustomReason] = useState("");
+  const cancellationPanelRef = useRef(null);
+  const confirmCancellationButtonRef = useRef(null);
   const trimmedCustomReason = customReason.trim();
   const charsLeft = MAX_CANCELLATION_REASON_LENGTH - customReason.length;
   const finalReason =
@@ -33,7 +35,17 @@ function CancelTripAction({ bookingId, className = "" }) {
     setCustomReason("");
   };
 
-   
+  useEffect(() => {
+    if (!isOpen) return;
+
+    window.requestAnimationFrame(() => {
+      cancellationPanelRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      confirmCancellationButtonRef.current?.focus({ preventScroll: true });
+    });
+  }, [isOpen]);
 
   const handleCancelTrip = async () => {
     if (!canCancel) return;
@@ -82,7 +94,7 @@ function CancelTripAction({ bookingId, className = "" }) {
               Cancel this trip
             </span>
             <span className="mt-0.5 block text-xs leading-5 text-gray-500">
-             Review cancellation and refund details before confirming.
+             Review cancellation and refund details before confirming the cancellation.
             </span>
           </span>
         </span>
@@ -95,7 +107,10 @@ function CancelTripAction({ bookingId, className = "" }) {
       </button>
 
       {isOpen && (
-        <div className="mt-3 border-t border-red-50 pt-3 sm:mt-4 sm:pt-4">
+        <div
+          ref={cancellationPanelRef}
+          className="mt-3 border-t border-red-50 pt-3 sm:mt-4 sm:pt-4"
+        >
           <div className="flex items-start gap-2 rounded-lg border border-amber-100 bg-amber-50/60 px-3 py-2 text-[11px] leading-5 text-amber-800 sm:text-xs">
             <AlertTriangle
               className="mt-0.5 h-3.5 w-3.5 shrink-0"
@@ -173,7 +188,7 @@ function CancelTripAction({ bookingId, className = "" }) {
                   ? "Select a reason to continue."
                   : "Please provide a reason to cancel."}
             </span>
-            <div className="grid grid-cols-2 gap-2 sm:flex sm:justify-end">
+            <div className="grid gap-2 sm:flex sm:justify-end">
               <button
                 type="button"
                 onClick={handleDiscardChanges}
@@ -183,6 +198,7 @@ function CancelTripAction({ bookingId, className = "" }) {
               </button>
               <button
                 type="button"
+                ref={confirmCancellationButtonRef}
                 onClick={handleCancelTrip}
                 disabled={!canCancel}
                 className="inline-flex h-10 cursor-pointer items-center justify-center rounded-md bg-red-600 px-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4"

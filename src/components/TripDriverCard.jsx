@@ -26,6 +26,7 @@ function TripDriverCard({
   const fuelLabel = driver?.fuel_type ? `(${driver.fuel_type})` : "";
 
   if (!hasDriver) {
+    // This will show only for trips which are upcoming/confirmed/created for whom driver is not assigned.
     return (
       <section
         className={`rounded-xl border border-gray-100 bg-white p-4 shadow-sm ${className}`}
@@ -41,6 +42,9 @@ function TripDriverCard({
             </h2>
             <p className="mt-1 text-sm leading-6 text-gray-500">
               Driver and cab details will appear here once your driver is assigned.
+            </p>
+            <p className="mt-1 text-xs leading-5 text-gray-500">
+              We will share your driver details closer to pickup, usually about 30 minutes before your trip.
             </p>
           </div>
         </div>
