@@ -139,6 +139,8 @@ Recommended order:
 
 - [x] Backend returns the customer-safe driver DTO.
 - [x] Render the safe driver profile, contact action, cab details, and rating.
+- [x] Show actual assigned vehicle signals on the driver card.
+  - Includes registration number, color, capacity, roof-carrier availability, and a free-upgrade trust message when Cabbo upgrades the booked preference at no extra charge.
 - [x] Gracefully handle missing optional driver fields and an unassigned driver.
 - [x] Add Call Cabbo and WhatsApp support actions.
 - [x] Prefill support messages with only the booking ID and necessary context.

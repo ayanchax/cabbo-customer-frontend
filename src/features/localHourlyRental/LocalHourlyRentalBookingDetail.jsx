@@ -203,6 +203,9 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
           {showDriverSection && (
             <TripDriverCard
               driver={bookingDetail?.driver}
+              upgradationInformation={bookingDetail?.upgradation_information}
+              status={status}
+              label={label}
               showContactAction={showDriverContactAction}
               className="mb-4"
             />

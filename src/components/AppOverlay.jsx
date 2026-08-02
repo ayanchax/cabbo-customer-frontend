@@ -1,7 +1,6 @@
 import React from "react";
 import { X } from "lucide-react";
 
-// eslint-disable-next-line no-unused-vars
 const AppOverlay = ({ visible, message, illustration, subtext,  onClose, ...rest }) => {
   if (!visible) return null;
   return (

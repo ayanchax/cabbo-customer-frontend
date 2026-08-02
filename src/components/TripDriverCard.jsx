@@ -4,10 +4,18 @@ import {
   CarFront,
   Phone,
   ShieldCheck,
+  Sparkles,
   Star,
   UserRound,
 } from "lucide-react";
-import {APP, getInitials} from "@/utils";
+import {
+  APP,
+  FUEL_TYPES,
+  getInitials,
+  titleCase,
+  TRIP_OCCURENCE_LABELS,
+  TRIP_STATUS,
+} from "@/utils";
 
   
 
@@ -23,8 +31,47 @@ function getDriverRatingClassName(rating) {
   return "bg-rose-50 text-rose-700 ring-rose-100";
 }
 
+function formatVehicleUpgradeLabel(fuelType, cabType) {
+  const fuelLabel =
+    fuelType === FUEL_TYPES.CNG ? fuelType.toUpperCase() : titleCase(fuelType);
+
+  return [fuelLabel, cabType].filter(Boolean).join(" ");
+}
+
+function getUpgradeMessage(upgradationInformation, status, label) {
+  if (!upgradationInformation?.upgraded) return null;
+  if (upgradationInformation.is_free_upgradation === false) return null;
+
+  const isActiveTrip =
+    [TRIP_STATUS.CONFIRMED, TRIP_STATUS.ONGOING].includes(status) &&
+    [TRIP_OCCURENCE_LABELS.UPCOMING, TRIP_OCCURENCE_LABELS.ONGOING].includes(
+      label,
+    );
+  const fromVehicle = formatVehicleUpgradeLabel(
+    upgradationInformation.from_fuel_type,
+    upgradationInformation.from_cab_type,
+  );
+  const toVehicle = formatVehicleUpgradeLabel(
+    upgradationInformation.to_fuel_type,
+    upgradationInformation.to_cab_type,
+  );
+
+  if (fromVehicle && toVehicle) {
+    return isActiveTrip
+      ? `We've upgraded your ride from ${fromVehicle} to ${toVehicle} at no extra charge.`
+      : `This ride was upgraded from ${fromVehicle} to ${toVehicle} at no extra charge.`;
+  }
+
+  return isActiveTrip
+    ? "You got a free cab upgrade at no extra charge."
+    : "This ride included a free cab upgrade at no extra charge.";
+}
+
 function TripDriverCard({
   driver = null,
+  upgradationInformation = null,
+  status = null,
+  label = null,
   showContactAction = false,
   className = "",
   showGender = false,
@@ -44,6 +91,7 @@ function TripDriverCard({
   const vehicleDetailsText = [driver?.color, driver?.capacity]
     .filter(Boolean)
     .join(" · ");
+
 
   if (!hasDriver) {
     // This will show only for trips which are upcoming/confirmed/created for whom driver is not assigned.
@@ -71,7 +119,7 @@ function TripDriverCard({
       </section>
     );
   }
-
+  const upgradeMessage = getUpgradeMessage(upgradationInformation, status, label);
   return (
     <section
       className={`rounded-xl border border-gray-100 bg-white p-4 shadow-sm ${className}`}
@@ -166,6 +214,16 @@ function TripDriverCard({
                 </div>
               )}
             </div>
+          </div>
+        )}
+
+        {upgradeMessage && (
+          <div className="flex items-start gap-2 rounded-lg border border-emerald-100 bg-emerald-50/70 px-3 py-2 text-xs leading-5 text-emerald-800">
+            <Sparkles
+              className="mt-0.5 h-3.5 w-3.5 shrink-0"
+              aria-hidden="true"
+            />
+            <p>{upgradeMessage}</p>
           </div>
         )}
 
