@@ -23,7 +23,7 @@ import { NoRidesAvailable } from "@/components";
 const STATUS_STYLES = {
   confirmed: "bg-emerald-50 text-emerald-700 ring-emerald-100",
   ongoing: "bg-blue-50 text-blue-700 ring-blue-100",
-  completed: "bg-gray-100 text-gray-700 ring-gray-200",
+  completed: "bg-teal-50 text-teal-700 ring-teal-100",
   cancelled: "bg-red-50 text-red-700 ring-red-100",
   closed: "bg-gray-100 text-gray-700 ring-gray-200",
   dispute: "bg-amber-50 text-amber-700 ring-amber-100",

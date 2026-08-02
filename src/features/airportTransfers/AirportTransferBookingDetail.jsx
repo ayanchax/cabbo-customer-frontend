@@ -168,9 +168,15 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING
       ? "Pickup"
       : "Pickup details";
+  const hasAssignedDriver = Boolean(bookingDetail?.driver);
+  
   const showCabAuxilliaryDetails =
     [TRIP_STATUS.CONFIRMED].includes(status) &&
-    [TRIP_OCCURENCE_LABELS.UPCOMING].includes(label);
+    [TRIP_OCCURENCE_LABELS.UPCOMING].includes(label)
+  
+  const showInventory = showCabAuxilliaryDetails && !hasAssignedDriver;
+  
+  
   const isDisputedTrip = status === TRIP_STATUS.DISPUTED;
   const isCancelledTrip =
     status === TRIP_STATUS.CANCELLED ||
@@ -181,7 +187,6 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) &&
     [TRIP_OCCURENCE_LABELS.PAST].includes(label);
 
-  const hasAssignedDriver = Boolean(bookingDetail?.driver);
   const showDriverSection =
     !isStaleTrip && (!isCancelledTrip || hasAssignedDriver);
   const showDriverContactAction =
@@ -256,7 +261,7 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
             {/* Cab details */}
             <TripCabDetails
               showDescription={showCabAuxilliaryDetails}
-              showInventoryCabNames={showCabAuxilliaryDetails}
+              showInventoryCabNames={showInventory}
               cabDetails={fleetData}
               className="mb-4  py-2 px-0"
             />

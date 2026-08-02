@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import {
+  BaggageClaim,
   CarFront,
   Phone,
   ShieldCheck,
@@ -8,7 +9,19 @@ import {
 } from "lucide-react";
 import {APP, getInitials} from "@/utils";
 
- 
+  
+
+function getDriverRatingClassName(rating) {
+  if (rating >= 4.5) {
+    return "bg-emerald-50 text-emerald-700 ring-emerald-100";
+  }
+
+  if (rating >= 3) {
+    return "bg-amber-50 text-amber-700 ring-amber-100";
+  }
+
+  return "bg-rose-50 text-rose-700 ring-rose-100";
+}
 
 function TripDriverCard({
   driver = null,
@@ -24,6 +37,13 @@ function TripDriverCard({
     .filter(Boolean)
     .join(" · ");
   const fuelLabel = driver?.fuel_type ? `(${driver.fuel_type})` : "";
+  const driverTrustLabel =
+    typeof driver.avg_rating === "number" && driver.avg_rating >= 4.5
+      ? `Top rated ${APP.name} driver`
+      : `${APP.name} driver`;
+  const vehicleDetailsText = [driver?.color, driver?.capacity]
+    .filter(Boolean)
+    .join(" · ");
 
   if (!hasDriver) {
     // This will show only for trips which are upcoming/confirmed/created for whom driver is not assigned.
@@ -83,15 +103,17 @@ function TripDriverCard({
                 {driver.name}
               </h2>
               {typeof driver.avg_rating === "number" && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-700 ring-1 ring-amber-100">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ${getDriverRatingClassName(driver.avg_rating)}`}
+                >
                   <Star className="h-3 w-3 fill-current" aria-hidden="true" />
                   {driver.avg_rating.toFixed(1)}
                 </span>
               )}
             </div>
-            <p className="mt-1 flex items-center gap-1.5 text-xs text-gray-500">
+            <p className="mt-1 flex items-center gap-1 text-xs text-gray-500">
               <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-              {APP.name} driver
+              {driverTrustLabel}
               {showGender && driver.gender ? ` · ${driver.gender}` : ""}
             </p>
           </div>
@@ -108,7 +130,7 @@ function TripDriverCard({
         )}
       </div>
 
-      <div className="mt-4 grid gap-2 border-t border-gray-100 pt-3 text-sm text-gray-600 sm:grid-cols-2">
+      <div className="mt-4 grid gap-2 border-t border-gray-100 pt-3 text-sm text-gray-600 sm:grid-cols-1">
         {(cabLabel || driver?.cab_registration_number) && (
           <div className="flex min-w-0 items-start gap-2">
             <CarFront className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
@@ -118,10 +140,30 @@ function TripDriverCard({
                   {cabLabel} {fuelLabel}
                 </p>
               )}
-              {driver?.cab_registration_number && (
-                <p className="mt-0.5 font-mono text-xs text-gray-500">
-                  {driver.cab_registration_number}
-                </p>
+              {(driver?.cab_registration_number ||
+                vehicleDetailsText ||
+                driver?.roof_carrier_available) && (
+                <div className="mt-1 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500">
+                  {driver?.cab_registration_number && (
+                    <span className="rounded bg-gray-50 px-1.5 py-0.5 font-mono text-[11px] font-medium text-gray-600 ring-1 ring-gray-100">
+                      {driver.cab_registration_number}
+                    </span>
+                  )}
+                  {vehicleDetailsText && (
+                    <span className="min-w-0 truncate">
+                      {vehicleDetailsText}
+                    </span>
+                  )}
+                  {driver?.roof_carrier_available && (
+                    <span
+                      className="inline-flex shrink-0 items-center gap-1 rounded-full border border-sky-200 bg-sky-50 px-1.5 py-0.5 text-[10px] font-semibold text-sky-700"
+                      title="This cab comes with a roof carrier for additional luggage space"
+                    >
+                      <BaggageClaim className="h-3 w-3" aria-hidden="true" />
+                      <span>Roof carrier</span>
+                    </span>
+                  )}
+                </div>
               )}
             </div>
           </div>

@@ -85,7 +85,10 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
   };
   const amenitiesLabel= status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'You will get these amenities in your cab:' : 'Amenities that were provided for this trip:';
   const pickupLabel = status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'Pickup' : 'Pickup details';
-  const showCabAuxilliaryDetails =  [TRIP_STATUS.CONFIRMED].includes(status) && [TRIP_OCCURENCE_LABELS.UPCOMING].includes(label);
+  const hasAssignedDriver = Boolean(bookingDetail?.driver);
+  const showCabAuxilliaryDetails =  [TRIP_STATUS.CONFIRMED].includes(status) && [TRIP_OCCURENCE_LABELS.UPCOMING].includes(label)
+  const showInventory = showCabAuxilliaryDetails && !hasAssignedDriver;
+  
   const isDisputedTrip = status === TRIP_STATUS.DISPUTED;
   const isCancelledTrip =
     status === TRIP_STATUS.CANCELLED ||
@@ -94,7 +97,6 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
   // Stale trip is a trip that is confirmed or created but has already passed and never made it to ongoing and to completed. In such cases, we don't show the driver section.
   const isStaleTrip = [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) && [TRIP_OCCURENCE_LABELS.PAST].includes(label);
   
-  const hasAssignedDriver = Boolean(bookingDetail?.driver);
   const showDriverSection =
     !isStaleTrip && (!isCancelledTrip || hasAssignedDriver);
    const showDriverContactAction =
@@ -167,7 +169,7 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
           <div className="py-2"></div>
 
           {/* Cab details */}
-                    <TripCabDetails showDescription={showCabAuxilliaryDetails} showInventoryCabNames={showCabAuxilliaryDetails} cabDetails={fleetData} className="mb-4  py-2 px-0" />
+                    <TripCabDetails showDescription={showCabAuxilliaryDetails} showInventoryCabNames={showInventory} cabDetails={fleetData} className="mb-4  py-2 px-0" />
           
           {/* Route timeline */}
           <RouteTimeline
