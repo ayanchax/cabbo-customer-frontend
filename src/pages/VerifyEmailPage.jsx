@@ -3,14 +3,12 @@ import { Link, useSearchParams } from "react-router-dom";
 import { FeedbackState, Loader, SuccessOverlay } from "@/components";
 import {
   useIsLoggedInQuery,
-  useLocalStorage,
   useVerifyCustomerEmail,
 } from "@/hooks";
 import {
   APP,
   ROUTES,
   EXPECTED_EMAIL_VERIFICATION_ENDPOINT,
-  LOCAL_STORAGE_KEYS,
 } from "@/utils";
 
 const EMAIL_VERIFICATION_ERROR_CODES = {
@@ -21,9 +19,7 @@ const EMAIL_VERIFICATION_ERROR_CODES = {
 
 function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
-  const { getItem } = useLocalStorage();
-  const token = getItem(LOCAL_STORAGE_KEYS.token);
-  const { data: isLoggedIn } = useIsLoggedInQuery(Boolean(token));
+  const { data: isLoggedIn } = useIsLoggedInQuery();
   const fallbackRoute = isLoggedIn ? ROUTES.PROFILE : ROUTES.LOGIN;
   const fallbackLabel = isLoggedIn ? "Go to profile" : "Go to login";
 

@@ -1,18 +1,18 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { ROUTES } from "@/utils";
-import { useLocalStorage, useIsLoggedInQuery } from "@/hooks";
-import { LOCAL_STORAGE_KEYS } from "@/utils";
+import { useIsLoggedInQuery } from "@/hooks";
 import { Splash } from "@/components";
 
 
 const PublicRoute = () => {
-  const { getItem } = useLocalStorage();
-  const token = getItem(LOCAL_STORAGE_KEYS.token);
   const { 
     data:isCustomerLoggedIn, 
     isLoading:isCustomerLoggedInStatusLoading, 
     error:isCustomerLoggedInStatusError 
-  } = useIsLoggedInQuery(Boolean(token));
+  } = useIsLoggedInQuery(true, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
 
   // checking session
   if (isCustomerLoggedInStatusLoading) {
@@ -21,7 +21,7 @@ const PublicRoute = () => {
   }
 
   // If already logged in → redirect to home
-  if (token && !isCustomerLoggedInStatusError && isCustomerLoggedIn) {
+  if (!isCustomerLoggedInStatusError && isCustomerLoggedIn) {
     return <Navigate to={ROUTES.HOME} replace />;
   }
 

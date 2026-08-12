@@ -1,15 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/utils";
-import { useAuth, useToast, useLocalStorage } from "@/hooks";
-import { isValidEmail , LOCAL_STORAGE_KEYS} from "@/utils";
+import { useAuth, useToast } from "@/hooks";
+import { isValidEmail } from "@/utils";
 import { isDevMode } from "@/api";
 import { LegalAgreementStatement } from "@/components";
 
 const Onboard = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { setItem } = useLocalStorage();
 
   const { onboardAndLogin } = useAuth();
 
@@ -77,13 +76,8 @@ const Onboard = () => {
         phone_number: state.phone,
       };
 
-      const response = await onboardAndLogin.mutateAsync(payload);
-      if (response.data?.access_token) {
-        setItem(LOCAL_STORAGE_KEYS.token, response.data.access_token);
-        navigate(ROUTES.HOME);
-        return;
-      }
-      throw new Error("No access token received");
+      await onboardAndLogin.mutateAsync(payload);
+      navigate(ROUTES.HOME);
     } catch (err) {
       const status = err?.response?.status || null;
       if (status === 409 && email) {

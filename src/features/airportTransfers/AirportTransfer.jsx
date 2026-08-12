@@ -119,12 +119,6 @@ function AirportTransfer() {
   const [inProgress, setInProgress] = useState(false);
   const [searchResults, setSearchResults] = useState(null); // Store search results to pass to next page
 
-  useLayoutEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-  }, [location.key]);
-
   const getPageHeaderTitle = () => {
     if (trip_type === TRIP_TYPES.AIRPORT_PICKUP) {
       return "Airport pickup";

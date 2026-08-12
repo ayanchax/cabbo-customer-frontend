@@ -4,7 +4,6 @@ export const APP = {
     tagline: "Your ride, simplified"
 }
 export const LOCAL_STORAGE_KEYS = {
-    "token": "token",
     "currentLocation": "currentLocation",
     "currentLocationFix": "currentLocationFix",
     "recentSuggestions": "recentSuggestions",

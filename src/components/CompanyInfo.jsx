@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Building2, ChevronDown } from "lucide-react";
 import { useCompanyQuery } from "@/hooks";
 import { APP } from "@/utils";
@@ -23,9 +23,15 @@ function CompanyInfoCompact({ className = "" }) {
   );
 }
 
-function CompanyDetailsContent() {
+function CompanyDetailsContent({ onReadyToView = () => {} }) {
   const { data, isLoading, isError } = useCompanyQuery(true);
   const company = getCompanyData(data);
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    onReadyToView();
+  }, [isLoading, onReadyToView]);
 
   if (isLoading) {
     return (
@@ -80,6 +86,38 @@ function CompanyDetailsContent() {
 
 function CompanyInfo({ variant = "details", className = "" }) {
   const [isOpen, setIsOpen] = useState(false);
+  const companyDetailsRef = useRef(null);
+  const shouldScrollToDetailsRef = useRef(false);
+
+  const handleToggle = () => {
+    const nextIsOpen = !isOpen;
+    shouldScrollToDetailsRef.current = nextIsOpen;
+    setIsOpen(nextIsOpen);
+  };
+
+  const scrollToDetails = useCallback(() => {
+    if (!isOpen || !shouldScrollToDetailsRef.current) return;
+
+    window.requestAnimationFrame(() => {
+      const detailsElement = companyDetailsRef.current;
+      if (!detailsElement) return;
+
+      const detailsRect = detailsElement.getBoundingClientRect();
+      const isFullyVisible =
+        detailsRect.top >= 0 && detailsRect.bottom <= window.innerHeight;
+
+      if (isFullyVisible) {
+        shouldScrollToDetailsRef.current = false;
+        return;
+      }
+
+      detailsElement.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      shouldScrollToDetailsRef.current = false;
+    });
+  }, [isOpen]);
 
   if (variant === "compact") {
     return <CompanyInfoCompact className={className} />;
@@ -92,7 +130,7 @@ function CompanyInfo({ variant = "details", className = "" }) {
     >
       <button
         type="button"
-        onClick={() => setIsOpen((current) => !current)}
+        onClick={handleToggle}
         className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg text-left focus:outline-none focus:ring-2 focus:ring-primary/15"
         aria-expanded={isOpen}
       >
@@ -118,8 +156,8 @@ function CompanyInfo({ variant = "details", className = "" }) {
       </button>
 
       {isOpen && (
-        <div className="mt-1 border-t border-gray-100 pt-3">
-          <CompanyDetailsContent />
+        <div ref={companyDetailsRef} className="mt-1 border-t border-gray-100 pt-3">
+          <CompanyDetailsContent onReadyToView={scrollToDetails} />
         </div>
       )}
     </section>

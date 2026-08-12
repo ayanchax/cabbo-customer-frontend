@@ -85,12 +85,6 @@ function LocalHourlyRental() {
   }, [packages, selectedPackageId]);
 
   useLayoutEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-  }, [location.key]);
-
-  useLayoutEffect(() => {
     if (!searchResults) return;
 
     window.scrollTo(0, 0);

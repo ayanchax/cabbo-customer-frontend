@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { MessageSquareText, Plus, X } from "lucide-react";
 import { useEditNonCostImpactingTripFields, useToast } from "@/hooks";
 
@@ -15,6 +15,8 @@ function TripSpecialRequest({
   const [savedRequest, setSavedRequest] = useState(normalizedInitialRequest);
   const [requestText, setRequestText] = useState(normalizedInitialRequest);
   const [isAdding, setIsAdding] = useState(false);
+  const requestEditorRef = useRef(null);
+  const requestTextareaRef = useRef(null);
   const hasRequest = savedRequest.length > 0;
   const trimmedRequest = requestText.trim();
   const charsLeft = MAX_SPECIAL_REQUEST_LENGTH - requestText.length;
@@ -32,6 +34,22 @@ function TripSpecialRequest({
     setRequestText("");
     setIsAdding(false);
   };
+
+  const handleStartAdding = () => {
+    setIsAdding(true);
+  };
+
+  useEffect(() => {
+    if (!isAdding) return;
+
+    window.requestAnimationFrame(() => {
+      requestEditorRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      requestTextareaRef.current?.focus({ preventScroll: true });
+    });
+  }, [isAdding]);
 
   const handleSave = async () => {
     
@@ -86,7 +104,7 @@ function TripSpecialRequest({
       {!isAdding ? (
         <button
           type="button"
-          onClick={() => setIsAdding(true)}
+          onClick={handleStartAdding}
           className="flex w-full cursor-pointer items-center justify-between gap-3 text-left focus:outline-none focus:ring-2 focus:ring-primary/20"
         >
           <span className="flex min-w-0 items-center gap-3">
@@ -105,7 +123,7 @@ function TripSpecialRequest({
           <Plus className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
         </button>
       ) : (
-        <div>
+        <div ref={requestEditorRef}>
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="text-sm font-semibold text-gray-950">
@@ -126,6 +144,7 @@ function TripSpecialRequest({
           </div>
 
           <textarea
+            ref={requestTextareaRef}
             value={requestText}
             onChange={(event) => setRequestText(event.target.value)}
             maxLength={MAX_SPECIAL_REQUEST_LENGTH}

@@ -7,7 +7,7 @@ import {
   CarFront,
 } from "lucide-react";
 import { CompanyInfo, PageHeader } from "@/components";
-import { useAuth, useCustomer, useLogoutCustomer } from "@/hooks";
+import { useCustomer, useLogoutCustomer } from "@/hooks";
 import { APP, getInitials, ROUTES } from "@/utils";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
@@ -15,7 +15,6 @@ import { ProfileEmail, ProfileItemDetailRow, ProfileLegalLinks, ProfileName, Pro
 
 function ProfileInformation() {
   const { customer, firstName, joinedOn: joinedOnLabel } = useCustomer();
-  const { logout } = useAuth();
   const logoutCustomer = useLogoutCustomer();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -37,7 +36,6 @@ function ProfileInformation() {
       // Even if the backend logout call fails, clear this device's session.
     } finally {
       queryClient.clear();
-      logout(); // clear the token from local storage
       navigate(ROUTES.LOGIN, { replace: true }); // redirect to login page and remove the current page from history so that user cannot go back to it using browser back button
     }
   };

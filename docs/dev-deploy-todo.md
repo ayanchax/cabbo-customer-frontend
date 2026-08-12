@@ -91,9 +91,9 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
 - [x] Verify booking creation in Razorpay test mode.
 - [x] Verify payment verification redirects to booking detail.
 - [x] Verify newly confirmed booking appears in My Trips.
-- [ ] Verify booking detail page loads from direct URL.
-- [ ] Verify special request update persists after navigating away/back.
-- [ ] Verify cancellation flow in dev.
+- [x] Verify booking detail page loads from direct URL.
+- [x] Verify special request update persists after navigating away/back.
+- [x] Verify cancellation flow in dev.
 - [x] Verify legal/static backend pages load if used by frontend.
 - [x] Verify expected backend errors show in Sentry dev with sanitized data.
 
@@ -110,11 +110,5 @@ This file can be deleted after `https://api.dev.cabbo.co.in` and `https://app.de
 - [x] Sentry dev receives sanitized backend errors/events.
 - [x] No local-only mock provider is enabled in dev.
 - [x] No local container log files are created in dev.
-- [ ] Core customer flow is smoke-tested: login, search, booking, payment, My Trips, booking detail, cancellation.
+- [x] Core customer flow is smoke-tested: login, search, booking, payment, My Trips, booking detail, cancellation.
 
-## 6. Parallel Work
-
-- [x] Start the Admin/Ops MVP frontend project
-  - Keep scope limited to authenticated ops workflows needed for launch support.
-  - Prioritize trip listing, trip detail, driver assignment/reassignment, operational status updates, customer/special-request context, and payment/refund summary display.
-  - Defer dashboards, analytics, pricing/config CRUD, legal CMS, and broader support-ticketing workflows.

@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { isPhoneNumberValid, sanitizePhoneNumber, APP } from "@/utils";
-import { useToast, useGeography, useAuth, useLocalStorage } from "@/hooks";
+import { useToast, useGeography, useAuth } from "@/hooks";
 import { Disclaimer, LegalAgreementStatement, CountryFlag } from "@/components";
-import { ROUTES , LOCAL_STORAGE_KEYS} from "@/utils";
+import { ROUTES } from "@/utils";
 import { isDevMode } from "@/api";
 
 const LOGIN_MESSAGES = {
@@ -29,7 +29,6 @@ const Login = () => {
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
   const [isMdViewport, setIsMdViewport] = useState(false);
-  const { getItem } = useLocalStorage();
   const {
     serverGeo: selectedCountry, // Server geography is the source of truth for country selection to ensure correct phone code and validation rules. So, if there is a mismatch between client and server geographies, we will show a disclaimer message to user but we will still rely on server geography for phone number validation and formatting in the backend.
     isMismatch,
@@ -130,10 +129,8 @@ const Login = () => {
     const fullPhone = `${selectedCountry.phone_code}${sanitizedLocal}`;
     
     try {
-      const token = getItem(LOCAL_STORAGE_KEYS.token);
       const response = await initiateLogin.mutateAsync({
         phone_number: fullPhone,
-        existing_token: token || null,
       });
 
       const resend_timer_data = {
