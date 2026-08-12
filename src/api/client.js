@@ -1,17 +1,22 @@
 import axios from "axios";
-import { LOCAL_STORAGE_KEYS } from "@/utils";
 
 const isDevMode = import.meta.env.VITE_DEV_MODE === "true";
 const api = axios.create({
   // Ensures that all requests are made to the correct API base URL, which can be configured via environment variables for different deployment environments (development, staging, production).
   baseURL: import.meta.env.VITE_API_BASE_URL,
+  withCredentials: true,
 });
 
-// Request interceptor to add auth token to headers
+// Request interceptor.
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem(LOCAL_STORAGE_KEYS.token);
-  if (token && typeof token === "string") {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (isDevMode) {
+    const method = config.method?.toUpperCase() || "GET";
+    const url = `${config.baseURL || ""}${config.url || ""}`;
+
+    console.log(`[API Request] ${method} ${url}`, {
+      params: config.params,
+      data: config.data,
+    });
   }
   return config;
 });

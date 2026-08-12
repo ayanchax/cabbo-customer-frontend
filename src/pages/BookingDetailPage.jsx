@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useLayoutEffect } from "react";
+import React, { lazy, Suspense } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTripBookingDetail } from "@/hooks";
 import { FeedbackState, Loader } from "@/components";
@@ -25,15 +25,6 @@ const OutstationBookingDetail = lazy(() =>
 function BookingDetailPage() {
   const { bookingId } = useParams();
   const navigate = useNavigate();
-
-  useLayoutEffect(() => {
-    if(!bookingId) {
-      return
-    }
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-  }, [bookingId]);
 
   if (!bookingId) {
     throw new Error(

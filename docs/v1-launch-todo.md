@@ -303,7 +303,7 @@ in the local pass were resolved before moving to dev/staging smoke.
   - Aiven dev MySQL
   - dev custom domains and TLS
 - [ ] Complete end-to-end development smoke test using production-like configuration.
-- [ ] Prepare a rollback plan for frontend, backend, and database changes.
+- [x] Prepare a rollback plan for frontend, backend, and database changes.
 - [ ] Prepare launch-day support coverage and escalation contacts.
 
 ## 9. Launch Approval - Business Go/No-Go
@@ -331,5 +331,4 @@ in the local pass were resolved before moving to dev/staging smoke.
 ## Deferred Beyond V1
 
 Deferred product work, including **Book a ride for someone else**, is maintained
-centrally in [backlogs.md](./backlogs.md). These items are not launch blockers
-unless they are explicitly promoted back into the V1 checklist.
+centrally in [backlogs.md](./backlogs.md). These items are not launch blockers.

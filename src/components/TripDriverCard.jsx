@@ -20,6 +20,9 @@ import {
   
 
 function getDriverRatingClassName(rating) {
+  if(!rating){
+    return "bg-rose-50 text-rose-700 ring-rose-100";
+  }
   if (rating >= 4.5) {
     return "bg-emerald-50 text-emerald-700 ring-emerald-100";
   }
@@ -85,7 +88,7 @@ function TripDriverCard({
     .join(" · ");
   const fuelLabel = driver?.fuel_type ? `(${driver.fuel_type})` : "";
   const driverTrustLabel =
-    typeof driver.avg_rating === "number" && driver.avg_rating >= 4.5
+    typeof driver?.avg_rating === "number" && driver?.avg_rating >= 4.5
       ? `Top rated ${APP.name} driver`
       : `${APP.name} driver`;
   const vehicleDetailsText = [driver?.color, driver?.capacity]
@@ -150,12 +153,12 @@ function TripDriverCard({
               <h2 className="truncate text-base font-semibold text-gray-950">
                 {driver.name}
               </h2>
-              {typeof driver.avg_rating === "number" && (
+              {typeof driver?.avg_rating === "number" && (
                 <span
-                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ${getDriverRatingClassName(driver.avg_rating)}`}
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ${getDriverRatingClassName(driver?.avg_rating)}`}
                 >
                   <Star className="h-3 w-3 fill-current" aria-hidden="true" />
-                  {driver.avg_rating.toFixed(1)}
+                  {driver?.avg_rating.toFixed(1)}
                 </span>
               )}
             </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ChevronDown,
   LifeBuoy,
@@ -37,6 +37,8 @@ function TripSupportCard({
   className = "",
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
+  const supportPanelRef = useRef(null);
+  const shouldScrollToSupportRef = useRef(false);
   const supportMutation = useGetSupportContactsForBooking();
   const supportContact = supportMutation.data || null;
   const canLoadSupport = Boolean(origin && tripType);
@@ -70,8 +72,10 @@ function TripSupportCard({
   };
 
   const handleToggle = () => {
-    setIsOpen((current) => !current);
-    onToggle(!isOpen)
+    const nextIsOpen = !isOpen;
+    shouldScrollToSupportRef.current = nextIsOpen;
+    setIsOpen(nextIsOpen);
+    onToggle(nextIsOpen)
   };
 
   useEffect(() => {
@@ -81,6 +85,18 @@ function TripSupportCard({
     // supportPayload is memoized from origin/tripType; load only when opened.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen || !supportContact || !shouldScrollToSupportRef.current) return;
+
+    window.requestAnimationFrame(() => {
+      supportPanelRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      shouldScrollToSupportRef.current = false;
+    });
+  }, [isOpen, supportContact]);
 
   return (
     <section
@@ -115,7 +131,7 @@ function TripSupportCard({
       </button>
 
       {isOpen && (
-        <div className="mt-3 border-t border-gray-100 pt-3">
+        <div ref={supportPanelRef} className="mt-3 border-t border-gray-100 pt-3">
           {!canLoadSupport && (
             <p className="text-xs leading-5 text-amber-700">
               Support contact is unavailable for this booking right now.
@@ -136,7 +152,10 @@ function TripSupportCard({
               </p>
               <button
                 type="button"
-                onClick={() => supportMutation.mutate(supportPayload)}
+                onClick={() => {
+                  shouldScrollToSupportRef.current = true;
+                  supportMutation.mutate(supportPayload);
+                }}
                 className="inline-flex h-8 w-fit cursor-pointer items-center justify-center rounded-md border border-amber-200 bg-amber-50 px-3 text-xs font-semibold text-amber-700 transition hover:bg-amber-100"
               >
                 Retry
@@ -152,7 +171,7 @@ function TripSupportCard({
                     `${APP.name} Customer Support`}
                 </p>
                 <p className="mt-0.5 text-xs leading-5 text-gray-500">
-                  Mention your booking ID when you contact us.
+                  When you call us, please mention your registered mobile number so we can find this booking quickly.
                 </p>
               </div>
 

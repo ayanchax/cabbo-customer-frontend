@@ -1,9 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { ROUTES, LOCAL_STORAGE_KEYS } from "@/utils";
+import { ROUTES } from "@/utils";
 import { parseUtcDate } from "@/utils";
 import { useState, useRef, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
-import { useAuth, useToast, useLocalStorage } from "@/hooks";
+import { useAuth, useToast } from "@/hooks";
 import { isDevMode } from "@/api";
 
 const OTPInput = {
@@ -15,7 +15,6 @@ const Verify = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { resendOtp, verifyLogin, verifyOnboarding } = useAuth();
-  const { setItem } = useLocalStorage();
   const {
     phone,
     displayPhone,
@@ -111,16 +110,12 @@ const Verify = () => {
       setIsVerifying(true);
 
       if (flow === "login") {
-        const response = await verifyLogin.mutateAsync({
+        await verifyLogin.mutateAsync({
           phone_number: phone,
           otp: otpValue,
         });
-        if (response.data?.access_token) {
-          setItem(LOCAL_STORAGE_KEYS.token, response.data.access_token);
-          navigate(ROUTES.HOME);
-          return;
-        }
-        throw new Error("No access token received");
+        navigate(ROUTES.HOME);
+        return;
       } else {
         await verifyOnboarding.mutateAsync({
           phone_number: phone,

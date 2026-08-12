@@ -58,7 +58,7 @@ at `https://app.dev.cabbo.co.in`, and MySQL on Aiven.
   - prod: `https://app.cabbo.co.in`
 
 - [x] Log masked emails only.
-- [ ] Test email verification, resend verification, and expired verification flows in dev.
+- [x] Test email verification, resend verification, and expired verification flows in dev.
 
 ## 4. Dev Deployment
 
@@ -112,18 +112,18 @@ Admin V1 should be boring and operational. No configuration management yet.
   - trip type
   - date range
 - [x] Add/admin-enable trip detail endpoint with internal ops fields separated from customer-facing DTOs.
-- [ ] Add driver assignment mutation.
-- [ ] Add driver reassignment mutation.
-- [ ] Add guarded status transition mutation.
-- [ ] Enforce V1 state transitions:
+- [x] Add driver assignment mutation.
+- [x] Add driver reassignment mutation.
+- [x] Add guarded status transition mutation.
+- [x] Enforce V1 state transitions:
   - `confirmed -> ongoing`
   - `confirmed -> cancelled`
   - `ongoing -> completed`
   - `ongoing -> dispute`
-- [ ] Return clear backend validation errors for invalid transitions.
-- [ ] Show customer notes/special requests to admin where operationally relevant.
-- [ ] Include payment/refund summary fields needed by ops.
-- [ ] Add audit logging for admin actions:
+- [x] Return clear backend validation errors for invalid transitions.
+- [x] Show customer notes/special requests to admin where operationally relevant.
+- [x] Include payment/refund summary fields needed by ops.
+- [x] Add audit logging for admin actions:
   - actor
   - booking ID
   - old value
@@ -149,7 +149,6 @@ Admin V1 should be boring and operational. No configuration management yet.
 - [ ] Configure uptime/health monitoring.
 - [ ] Run production smoke checklist.
 - [ ] Run one controlled real payment before public launch.
-- [ ] Verify production webhook delivery and signatures.
 
 ## 8. Deferred Beyond V1
 

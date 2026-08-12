@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppLayout } from "@/layouts";
 import {
@@ -7,27 +7,20 @@ import {
   Loader,
   PageHeader,
 } from "@/components";
-import { LOCAL_STORAGE_KEYS } from "@/utils";
-import { useLegalPage, useLocalStorage } from "@/hooks";
+import { useLegalPage } from "@/hooks";
 import { useIsLoggedInQuery } from "@/hooks";
 
 function LegalPage() {
-  const { getItem } = useLocalStorage();
-  const token = getItem(LOCAL_STORAGE_KEYS.token);
   const {
     data: isLoggedIn,
     isLoading: isCheckingLogin,
     isError: isLoggedInError,
-  } = useIsLoggedInQuery(Boolean(token));
+  } = useIsLoggedInQuery();
   const { slug } = useParams();
   const navigate = useNavigate();
   const { data: page, isLoading, isError } = useLegalPage(slug);
   const canGoBack =
     typeof window !== "undefined" && window.history.state?.idx > 0;
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [slug]);
 
   const LegalPageContent = (
     <div className="relative mx-auto min-h-screen max-w-full overflow-visible bg-gray-50 px-2 py-2 shadow-[0_2px_16px_0_rgba(16,30,54,0.08)] sm:max-w-screen-sm sm:rounded-xl sm:bg-white sm:px-4 sm:py-6 sm:shadow-lg md:max-w-3xl md:px-6 md:py-8 lg:max-w-5xl lg:px-8 lg:py-10 xl:mb-4 xl:w-2/3 xl:px-10 2xl:max-w-screen-2xl">
@@ -65,7 +58,7 @@ function LegalPage() {
     </div>
   );
 
-  if (!token || (!isCheckingLogin && (!isLoggedIn || isLoggedInError))) {
+  if (!isCheckingLogin && (!isLoggedIn || isLoggedInError)) {
     // If the user is not logged in, we don't wrap the content in AppLayout
     return LegalPageContent;
   }
