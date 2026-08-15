@@ -189,11 +189,15 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
 
   const showDriverSection =
     !isStaleTrip && (!isCancelledTrip || hasAssignedDriver);
-  const showDriverContactAction =
+  const isDriverContactWindow =
     [TRIP_STATUS.CONFIRMED, TRIP_STATUS.ONGOING].includes(status) &&
     [TRIP_OCCURENCE_LABELS.UPCOMING, TRIP_OCCURENCE_LABELS.ONGOING].includes(
       label,
     );
+  const showDriverContactAction =
+    isDriverContactWindow && Boolean(bookingDetail?.driver?.phone);
+  const showDriverContactActionHint =
+    isDriverContactWindow && !showDriverContactAction;
   const showSpecialRequest =
     !isCancelledTrip &&
     !isStaleTrip &&
@@ -313,10 +317,12 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
             {showDriverSection && (
               <TripDriverCard
                 driver={bookingDetail?.driver}
+                assignmentNotice={bookingDetail?.driver_assignment_notice}
                 upgradationInformation={bookingDetail?.upgradation_information}
                 status={status}
                 label={label}
                 showContactAction={showDriverContactAction}
+                showContactActionHint={showDriverContactActionHint}
                 className="mb-4"
               />
             )}

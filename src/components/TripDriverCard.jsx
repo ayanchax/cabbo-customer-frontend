@@ -72,10 +72,12 @@ function getUpgradeMessage(upgradationInformation, status, label) {
 
 function TripDriverCard({
   driver = null,
+  assignmentNotice = null,
   upgradationInformation = null,
   status = null,
   label = null,
   showContactAction = false,
+  showContactActionHint = false,
   className = "",
   showGender = false,
 }) {
@@ -97,6 +99,8 @@ function TripDriverCard({
 
 
   if (!hasDriver) {
+    const displayText = assignmentNotice?.display_text || "30 minutes";
+    const driverAssignmentPoliteCopy = `We will share your driver details closer to pickup, usually about ${displayText} before your trip.`;
     // This will show only for trips which are upcoming/confirmed/created for whom driver is not assigned.
     return (
       <section
@@ -115,7 +119,7 @@ function TripDriverCard({
               Driver and cab details will appear here once your driver is assigned.
             </p>
             <p className="mt-1 text-xs leading-5 text-gray-500">
-              We will share your driver details closer to pickup, usually about 30 minutes before your trip.
+              {driverAssignmentPoliteCopy}
             </p>
           </div>
         </div>
@@ -230,12 +234,12 @@ function TripDriverCard({
           </div>
         )}
 
-        {!showContactAction && (
+        {!showContactAction && showContactActionHint && (
           <p className="text-xs leading-5 text-gray-500 sm:text-right">
             Contact details are shown when the trip is active.
           </p>
         )}
-        {showContactAction && (
+        {showContactAction && !showContactActionHint && (
           <p className="text-xs leading-5 text-gray-500">
             Your driver may call before pickup to coordinate.
           </p>

@@ -7,6 +7,8 @@ export const GeographyProvider = ({ children }) => {
     serverGeographyData,
     fallbackGeography,
     serverGeographyLoading,
+    hasClientGeography,
+    hasServerGeography,
     isMismatch,
   } = useGeographyQuery();
   if (serverGeographyLoading) {
@@ -20,6 +22,8 @@ export const GeographyProvider = ({ children }) => {
         serverGeo: serverGeographyData,
         clientGeo: clientGeographyData,
         fallbackGeo:fallbackGeography,
+        hasClientGeography,
+        hasServerGeography,
         isMismatch: isMismatch,
       }}
     >
