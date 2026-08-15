@@ -8,7 +8,7 @@ const OCCURRENCE_CLASS_MAP = {
   [TRIP_OCCURENCE_LABELS.UPCOMING]: "border-blue-200 bg-blue-50 text-blue-700",
   [TRIP_OCCURENCE_LABELS.ONGOING]:
     "border-emerald-200 bg-emerald-50 text-emerald-700",
-  [TRIP_OCCURENCE_LABELS.COMPLETED]: "border-gray-200 bg-gray-50 text-gray-700",
+  [TRIP_OCCURENCE_LABELS.COMPLETED]: "border-teal-200 bg-teal-50 text-teal-700",
   [TRIP_OCCURENCE_LABELS.CANCELLED]: "border-red-200 bg-red-50 text-red-700",
   [TRIP_OCCURENCE_LABELS.PAST]: "border-gray-200 bg-gray-50 text-gray-700",
   [TRIP_STATUS.DISPUTED]: "border-yellow-200 bg-yellow-50 text-yellow-700",

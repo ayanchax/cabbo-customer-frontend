@@ -10,6 +10,8 @@ const CLIENT_GEO_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours in ms
 const SERVER_GEO_CACHE_KEY = LOCAL_STORAGE_KEYS.serverGeography;
 const SERVER_GEO_CACHE_TTL = 60 * 60 * 1000; // 1 hour in ms, as server geography might change more frequently (e.g., due to CDN routing changes, env file updates) and is less expensive to fetch than client geography
 
+const hasValidGeography = (geography) => Boolean(geography?.country_code);
+
 export const useGeographyQuery = () => {
     const {getItem, setItem} = useLocalStorage();
     const fallbackGeography = DEFAULT_GEOGRAPHY;
@@ -53,11 +55,18 @@ export const useGeographyQuery = () => {
     const { data: clientData, error: clientError } = useQuery({
         queryKey: ["clientGeography"],
         queryFn: async () => {
-            const cached = getCachedClientGeography();
-            if (cached) return cached;
-            const fresh = await fetchClientGeography();
-            setCachedClientGeography(fresh);
-            return fresh;
+            try {
+                const cached = getCachedClientGeography();
+                if (hasValidGeography(cached)) return cached;
+                const fresh = await fetchClientGeography();
+                if (hasValidGeography(fresh)) {
+                    setCachedClientGeography(fresh);
+                    return fresh;
+                }
+                return null;
+            } catch {
+                return null;
+            }
         },
         staleTime: Infinity,
         gcTime: Infinity,
@@ -98,11 +107,18 @@ export const useGeographyQuery = () => {
     const { data: serverData, isLoading, error } = useQuery({
         queryKey: ["serverGeography"],
         queryFn: async () => {
-            const cached = getCachedServerGeography();
-            if (cached) return cached;
-            const fresh = await fetchServerGeography();
-            setCachedServerGeography(fresh);
-            return fresh;
+            try {
+                const cached = getCachedServerGeography();
+                if (hasValidGeography(cached)) return cached;
+                const fresh = await fetchServerGeography();
+                if (hasValidGeography(fresh)) {
+                    setCachedServerGeography(fresh);
+                    return fresh;
+                }
+                return null;
+            } catch {
+                return null;
+            }
         },
         staleTime: Infinity,
         gcTime: Infinity,
@@ -110,12 +126,14 @@ export const useGeographyQuery = () => {
     });
 
     // Use ipapi country_code if available, else fallback
+    const hasClientGeography = hasValidGeography(clientData);
+    const hasServerGeography = hasValidGeography(serverData);
     const clientCountryCode = clientData?.country_code?.toUpperCase() || fallbackGeography.country_code;
     const clientCountryName = clientData?.country_name || fallbackGeography.country_name;
 
     // Compose client geography object
     const clientGeography =
-        (!clientError && clientData && clientData.country_code)
+        hasClientGeography
             ? {
                 ...fallbackGeography,
                 ...clientData,
@@ -125,12 +143,15 @@ export const useGeographyQuery = () => {
             : fallbackGeography;
 
     // Compose server geography object
-    const serverGeography = (!error && serverData && serverData.country_code)
+    const serverGeography = hasServerGeography
         ? serverData
         : fallbackGeography;
 
-    // Mismatch if country_code differs
-    const isMismatch = serverGeography.country_code !== clientGeography.country_code;
+    // Mismatch is meaningful only when both values came from real geography sources.
+    const isMismatch =
+        hasClientGeography &&
+        hasServerGeography &&
+        serverGeography.country_code !== clientGeography.country_code;
 
     return {
         clientGeographyData: clientGeography,
@@ -139,6 +160,8 @@ export const useGeographyQuery = () => {
         serverGeographyError: error,
         clientGeographyCode: clientCountryCode,
         fallbackGeography,
+        hasClientGeography,
+        hasServerGeography,
         isMismatch,
         clientGeographyError: clientError,
     };
