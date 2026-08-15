@@ -99,7 +99,7 @@ at `https://app.dev.cabbo.co.in`, and MySQL on Aiven.
 - [x] Verify OTP send/resend rate limits.
 - [x] Verify search and booking mutation rate limits.
 - [x] Verify no secrets are exposed in frontend env or bundles.
-- [ ] Verify Razorpay payment verification and signature validation.
+- [x] Verify Razorpay payment verification and signature validation.
 - [x] Verify Sentry/log redaction for PII, auth data, OTPs, and payment identifiers.
 
 ## 6. Admin V1 Backend/API Readiness

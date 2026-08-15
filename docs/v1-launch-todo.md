@@ -168,6 +168,8 @@ Recommended order:
 - [x] Show support/legal links.
 - [x] Add logout confirmation.
 - [x] Clear customer authentication and customer-specific cached data on logout.
+  - Centralized client-side logout cleanup in `src/api/logout.js`.
+  - Manual logout clears React Query cache, seeds `["isLoggedIn"]` as `false`, and replaces history with the Login route.
 - [x] Invalidate the backend session where supported.
 - [x] Allow OTP login recovery when the browser has lost its local token but the backend still has a stale active bearer token.
   - Backend clears the stale stored token only when the client cannot present the matching active token.
@@ -197,7 +199,6 @@ Recommended order:
 - [x] Re-test success, failure, retry, duplicate callback, refresh, and abandoned-payment scenarios in local development.
 - [ ] Repeat payment smoke test on the dev deployment before production release.
   - Blocked until dev OTP login can be smoke-tested with an approved SMS sender.
-- [ ] Verify production payment webhook configuration and signatures.
 - [x] Confirm refund and cancellation behavior matches customer-facing policy text.
 - [x] Keep cancellation refund calculation and eligibility backend-authoritative.
 - [x] Persist one active refund record per trip and prevent duplicate refund initiation.
@@ -208,17 +209,17 @@ Recommended order:
 
 ## 4. Admin Frontend And Operations Coding
 
-- [ ] Provide authenticated admin access.
-- [ ] Build a filterable trip list and trip-detail view.
-- [ ] Separate customer-safe and internal data views.
-- [ ] Support driver assignment and reassignment.
-- [ ] Support operational trip-status updates.
-- [ ] Display payment state, customer contact, and special requests.
-- [ ] Support internal operational notes.
-- [ ] Document the driver-assignment process.
-- [ ] Document cancellation and refund operations.
-- [ ] Define the support escalation process and owner.
-- [ ] Define the production incident-response owner.
+- [x] Provide authenticated admin access.
+- [x] Build a filterable trip list and trip-detail view.
+- [x] Separate customer-safe and internal data views.
+- [x] Support driver assignment and reassignment.
+- [x] Support operational trip-status updates.
+- [x] Display payment state, customer contact, and special requests.
+- [x] Support internal operational notes.
+- [x] Document the driver-assignment process.
+- [x] Document cancellation and refund operations.
+- [x] Define the support escalation process and owner.
+- [x] Define the production incident-response owner.
 
 ## 5. Legal, Privacy, And Support - Non-Coding Launch Work
 
@@ -246,6 +247,9 @@ Recommended order:
 - [x] Verify backend input validation and frontend output encoding so that no dangerously set html exist.
 - [x] Remove secrets from frontend environment variables and bundles.
 - [x] Verify authentication, session expiry, and logout behavior.
+  - Centralized stale-session handling in the API client for protected API responses returning `401` with `UNAUTHORIZED`.
+  - Excluded the `/customer/profile/is-logged-in` auth-check endpoint from global stale-session logout handling so route guards can own normal public/protected redirects.
+  - Shared a single React Query client between `main.jsx`, manual logout, and the API interceptor so auth cache cleanup is consistent.
 - [x] Verify stale-session login recovery for missing/mismatched client bearer tokens without weakening valid active-session blocking.
 - [x] Redact personal, authentication, and payment data from logs.
 - [x] Remove development logs containing personal or payment data.
