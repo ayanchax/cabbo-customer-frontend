@@ -1,0 +1,500 @@
+{
+    "options": [
+        {
+            "car_type": "Premium Sedan",
+            "fuel_type": "cng",
+            "total_price": 1198,
+            "price_breakdown": {
+                "base_fare": 779,
+                "platform_fee": 149,
+                "placard_charge": 50,
+                "toll": 120,
+                "parking": 100
+            },
+            "included_kms": 42,
+            "rate_per_km": 28.52,
+            "package_short_label": "Airport Pickup",
+            "package": "Airport Pickup | AC Premium Sedan(4+1) - (cng)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 19,
+                "overage_estimate_amount": 0,
+                "disclaimer": [
+                    "If you exceed the included kilometres (42) for this airport transfer, an additional charge of ₹19 per kilometre will apply."
+                ]
+            },
+            "currency": {
+                "symbol": "₹",
+                "decimal_places": 2,
+                "in_words": "Rupees",
+                "international_name": "Indian Rupee",
+                "symbol_position": "before",
+                "code_position": "after",
+                "thousand_separator": ",",
+                "decimal_separator": ".",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "hash": "c047690c16c73ffd6169af4eb40b9b5676a80408ae1a7ccd63b90cc8c7a9dc74"
+        },
+        {
+            "car_type": "Premium Sedan",
+            "fuel_type": "diesel",
+            "total_price": 1230,
+            "price_breakdown": {
+                "base_fare": 811,
+                "platform_fee": 149,
+                "placard_charge": 50,
+                "toll": 120,
+                "parking": 100
+            },
+            "included_kms": 42,
+            "rate_per_km": 29.29,
+            "package_short_label": "Airport Pickup",
+            "package": "Airport Pickup | AC Premium Sedan(4+1) - (diesel)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 20,
+                "overage_estimate_amount": 0,
+                "disclaimer": [
+                    "If you exceed the included kilometres (42) for this airport transfer, an additional charge of ₹20 per kilometre will apply."
+                ]
+            },
+            "currency": {
+                "symbol": "₹",
+                "decimal_places": 2,
+                "in_words": "Rupees",
+                "international_name": "Indian Rupee",
+                "symbol_position": "before",
+                "code_position": "after",
+                "thousand_separator": ",",
+                "decimal_separator": ".",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "hash": "340fdf40a98e4148fb99dbc8ff12ffec4f86367fc0a24bbbcaa89f24fd3ff3e0"
+        },
+        {
+            "car_type": "Premium Sedan",
+            "fuel_type": "petrol",
+            "total_price": 1263,
+            "price_breakdown": {
+                "base_fare": 844,
+                "platform_fee": 149,
+                "placard_charge": 50,
+                "toll": 120,
+                "parking": 100
+            },
+            "included_kms": 42,
+            "rate_per_km": 30.07,
+            "package_short_label": "Airport Pickup",
+            "package": "Airport Pickup | AC Premium Sedan(4+1) - (petrol)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 21,
+                "overage_estimate_amount": 0,
+                "disclaimer": [
+                    "If you exceed the included kilometres (42) for this airport transfer, an additional charge of ₹21 per kilometre will apply."
+                ]
+            },
+            "currency": {
+                "symbol": "₹",
+                "decimal_places": 2,
+                "in_words": "Rupees",
+                "international_name": "Indian Rupee",
+                "symbol_position": "before",
+                "code_position": "after",
+                "thousand_separator": ",",
+                "decimal_separator": ".",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "hash": "5da850a3522ffc9be22411ff5f92fabda759e1361a21f35532580b25d900f040"
+        },
+        {
+            "car_type": "SUV",
+            "fuel_type": "cng",
+            "total_price": 1619,
+            "price_breakdown": {
+                "base_fare": 1200,
+                "platform_fee": 149,
+                "placard_charge": 50,
+                "toll": 120,
+                "parking": 100
+            },
+            "included_kms": 42,
+            "rate_per_km": 38.55,
+            "package_short_label": "Airport Pickup",
+            "package": "Airport Pickup | AC SUV(6+1) - (cng)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 36,
+                "overage_estimate_amount": 0,
+                "disclaimer": [
+                    "If you exceed the included kilometres (42) for this airport transfer, an additional charge of ₹36 per kilometre will apply."
+                ]
+            },
+            "currency": {
+                "symbol": "₹",
+                "decimal_places": 2,
+                "in_words": "Rupees",
+                "international_name": "Indian Rupee",
+                "symbol_position": "before",
+                "code_position": "after",
+                "thousand_separator": ",",
+                "decimal_separator": ".",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "hash": "ef759b444ebf4a9bdc2020216f03c966a3fdc2c12bbab27e7017b36ee45f6394"
+        },
+        {
+            "car_type": "SUV",
+            "fuel_type": "petrol",
+            "total_price": 1684,
+            "price_breakdown": {
+                "base_fare": 1265,
+                "platform_fee": 149,
+                "placard_charge": 50,
+                "toll": 120,
+                "parking": 100
+            },
+            "included_kms": 42,
+            "rate_per_km": 40.1,
+            "package_short_label": "Airport Pickup",
+            "package": "Airport Pickup | AC SUV(6+1) - (petrol)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 38,
+                "overage_estimate_amount": 0,
+                "disclaimer": [
+                    "If you exceed the included kilometres (42) for this airport transfer, an additional charge of ₹38 per kilometre will apply."
+                ]
+            },
+            "currency": {
+                "symbol": "₹",
+                "decimal_places": 2,
+                "in_words": "Rupees",
+                "international_name": "Indian Rupee",
+                "symbol_position": "before",
+                "code_position": "after",
+                "thousand_separator": ",",
+                "decimal_separator": ".",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "hash": "50351378ce4c768af304ae1e0fa926a493bf72c59d7269f98a522b0f509f282e"
+        },
+        {
+            "car_type": "SUV+",
+            "fuel_type": "diesel",
+            "total_price": 1879,
+            "price_breakdown": {
+                "base_fare": 1460,
+                "platform_fee": 149,
+                "placard_charge": 50,
+                "toll": 120,
+                "parking": 100
+            },
+            "included_kms": 42,
+            "rate_per_km": 44.74,
+            "package_short_label": "Airport Pickup",
+            "package": "Airport Pickup | AC SUV+(7+1) - (diesel)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 42,
+                "overage_estimate_amount": 0,
+                "disclaimer": [
+                    "If you exceed the included kilometres (42) for this airport transfer, an additional charge of ₹42 per kilometre will apply."
+                ]
+            },
+            "currency": {
+                "symbol": "₹",
+                "decimal_places": 2,
+                "in_words": "Rupees",
+                "international_name": "Indian Rupee",
+                "symbol_position": "before",
+                "code_position": "after",
+                "thousand_separator": ",",
+                "decimal_separator": ".",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "hash": "f2622ccd34a76bca065e03b20b094c33755aff509784d9cd6cc5b4ebdd356133"
+        },
+        {
+            "car_type": "SUV+",
+            "fuel_type": "petrol",
+            "total_price": 1911,
+            "price_breakdown": {
+                "base_fare": 1492,
+                "platform_fee": 149,
+                "placard_charge": 50,
+                "toll": 120,
+                "parking": 100
+            },
+            "included_kms": 42,
+            "rate_per_km": 45.5,
+            "package_short_label": "Airport Pickup",
+            "package": "Airport Pickup | AC SUV+(7+1) - (petrol)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 43,
+                "overage_estimate_amount": 0,
+                "disclaimer": [
+                    "If you exceed the included kilometres (42) for this airport transfer, an additional charge of ₹43 per kilometre will apply."
+                ]
+            },
+            "currency": {
+                "symbol": "₹",
+                "decimal_places": 2,
+                "in_words": "Rupees",
+                "international_name": "Indian Rupee",
+                "symbol_position": "before",
+                "code_position": "after",
+                "thousand_separator": ",",
+                "decimal_separator": ".",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "hash": "2e8416db42c5f4bf918488a4cc9e20612b31ae816253200c50c584275199532c"
+        },
+        {
+            "car_type": "Sedan",
+            "fuel_type": "cng",
+            "total_price": 1165,
+            "price_breakdown": {
+                "base_fare": 746,
+                "platform_fee": 149,
+                "placard_charge": 50,
+                "toll": 120,
+                "parking": 100
+            },
+            "included_kms": 42,
+            "rate_per_km": 27.74,
+            "package_short_label": "Airport Pickup",
+            "package": "Airport Pickup | AC Sedan(4+1) - (cng)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 18,
+                "overage_estimate_amount": 0,
+                "disclaimer": [
+                    "If you exceed the included kilometres (42) for this airport transfer, an additional charge of ₹18 per kilometre will apply."
+                ]
+            },
+            "currency": {
+                "symbol": "₹",
+                "decimal_places": 2,
+                "in_words": "Rupees",
+                "international_name": "Indian Rupee",
+                "symbol_position": "before",
+                "code_position": "after",
+                "thousand_separator": ",",
+                "decimal_separator": ".",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "hash": "e84215e6423b521478c5b270d0b0287036a7576d672d0865cd41a8396dcc7cb8"
+        },
+        {
+            "car_type": "Sedan",
+            "fuel_type": "diesel",
+            "total_price": 1198,
+            "price_breakdown": {
+                "base_fare": 779,
+                "platform_fee": 149,
+                "placard_charge": 50,
+                "toll": 120,
+                "parking": 100
+            },
+            "included_kms": 42,
+            "rate_per_km": 28.52,
+            "package_short_label": "Airport Pickup",
+            "package": "Airport Pickup | AC Sedan(4+1) - (diesel)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 19,
+                "overage_estimate_amount": 0,
+                "disclaimer": [
+                    "If you exceed the included kilometres (42) for this airport transfer, an additional charge of ₹19 per kilometre will apply."
+                ]
+            },
+            "currency": {
+                "symbol": "₹",
+                "decimal_places": 2,
+                "in_words": "Rupees",
+                "international_name": "Indian Rupee",
+                "symbol_position": "before",
+                "code_position": "after",
+                "thousand_separator": ",",
+                "decimal_separator": ".",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "hash": "babee29d86cab0f8f25fb6192ff0bfe1684ffc393c86f107e17c7af9298730ca"
+        },
+        {
+            "car_type": "Sedan",
+            "fuel_type": "petrol",
+            "total_price": 1230,
+            "price_breakdown": {
+                "base_fare": 811,
+                "platform_fee": 149,
+                "placard_charge": 50,
+                "toll": 120,
+                "parking": 100
+            },
+            "included_kms": 42,
+            "rate_per_km": 29.29,
+            "package_short_label": "Airport Pickup",
+            "package": "Airport Pickup | AC Sedan(4+1) - (petrol)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 20,
+                "overage_estimate_amount": 0,
+                "disclaimer": [
+                    "If you exceed the included kilometres (42) for this airport transfer, an additional charge of ₹20 per kilometre will apply."
+                ]
+            },
+            "currency": {
+                "symbol": "₹",
+                "decimal_places": 2,
+                "in_words": "Rupees",
+                "international_name": "Indian Rupee",
+                "symbol_position": "before",
+                "code_position": "after",
+                "thousand_separator": ",",
+                "decimal_separator": ".",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "hash": "8fcf160fc561fac886dd18376275d25ded41a702d352fcc26c520a6aecf4aaef"
+        },
+        {
+            "car_type": "Hatchback",
+            "fuel_type": "cng",
+            "total_price": 1003,
+            "price_breakdown": {
+                "base_fare": 584,
+                "platform_fee": 149,
+                "placard_charge": 50,
+                "toll": 120,
+                "parking": 100
+            },
+            "included_kms": 42,
+            "rate_per_km": 23.88,
+            "package_short_label": "Airport Pickup",
+            "package": "Airport Pickup | AC Hatchback(4+1) - (cng)",
+            "overages": {
+                "indicative_overage_warning": false,
+                "overage_amount_per_km": 17,
+                "overage_estimate_amount": 0,
+                "disclaimer": [
+                    "If you exceed the included kilometres (42) for this airport transfer, an additional charge of ₹17 per kilometre will apply."
+                ]
+            },
+            "currency": {
+                "symbol": "₹",
+                "decimal_places": 2,
+                "in_words": "Rupees",
+                "international_name": "Indian Rupee",
+                "symbol_position": "before",
+                "code_position": "after",
+                "thousand_separator": ",",
+                "decimal_separator": ".",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "hash": "be75bebb445ff36d6833ccc9f09be9eb4f69717793daef469312fce66a997d4e"
+        }
+    ],
+    "preferences": {
+        "trip_type": "airport_pickup",
+        "origin": {
+            "display_name": "Kempegowda International Airport Bengaluru",
+            "lat": 13.198909,
+            "lng": 77.7068926,
+            "place_id": "ChIJZWJEdf4crjsRjkEpoelwbCk",
+            "address": "Karnataka 560300, India",
+            "country": "India",
+            "country_code": "IN",
+            "state": "Karnataka",
+            "state_code": "KA",
+            "region": "Bangalore",
+            "region_code": "BLR",
+            "postal_code": "560300",
+            "mobility_hub": "airport"
+        },
+        "destination": {
+            "display_name": "Kodigehalli Road, Medahalli",
+            "lat": 13.0261291,
+            "lng": 77.7118752,
+            "place_id": "ChIJhXtfMU4QrjsRpYP2Zqk2BNM",
+            "address": "2PG6+CQR Sri Kalabhairaveshwara Nilayam, 4/2, Kodigehalli Rd, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+            "country": "India",
+            "country_code": "IN",
+            "state": "Karnataka",
+            "state_code": "KA",
+            "region": "Bangalore",
+            "region_code": "BLR",
+            "postal_code": "560049"
+        },
+        "start_date": "2026-06-08T05:00:00",
+        "num_adults": 2,
+        "num_children": 1,
+        "num_large_suitcases": 2,
+        "num_carryons": 1,
+        "num_backpacks": 0,
+        "num_other_bags": 0,
+        "preferred_car_type": "Premium Sedan",
+        "preferred_fuel_type": "diesel",
+        "flight_number": "AI 345",
+        "terminal_number": "T2",
+        "toll_road_preferred": true,
+        "placard_required": true,
+        "placard_name": "Ravi B",
+        "passenger": "self",
+        "timezone": "Asia/Kolkata",
+        "utc_offset": 330,
+        "retrieve_fleet": false,
+        "total_passengers": 3,
+        "total_luggages": 3
+    },
+    "metadata": {
+        "inclusions": [
+            "Base fare",
+            "Premium AC cab with professional driver",
+            "Doorstep pickup and drop",
+            "Platform/Convenience fee",
+            "Well-maintained and sanitized vehicle",
+            "24/7 customer support",
+            "Toll",
+            "Parking",
+            "Placard charges",
+            "Water bottles and tissues"
+        ],
+        "exclusions": [
+            "Personal expenses",
+            "Self sponsored driver meals",
+            "Tolls(if applicable)",
+            "Paid parking(if applicable)"
+        ],
+        "in_car_amenities": {
+            "ac": true,
+            "music_system": true,
+            "water_bottle": true,
+            "tissues": true
+        },
+        "total_trip_days": 1,
+        "estimated_km": 32.43,
+        "included_kms": 42,
+        "choices": 11
+    },
+    "refund_and_cancellation_policy": [
+        "Full refund if you cancel 30 minutes before trip start.",
+        "If you cancel after this period, 20% of the paid amount will be refunded.",
+        "Full refund if your trip could not be fulfilled due to Cabbo operational issues (e.g., no driver assigned, vehicle breakdown before trip start, or force majeure events).",
+        "Refunds are processed instantly upon cancellation confirmation. Depending on your payment method, it may take 1-3 business days for the amount to reflect in your account.",
+        "For any refund or cancellation queries, please contact Cabbo support. We are committed to transparent and fair policies."
+    ]
+}

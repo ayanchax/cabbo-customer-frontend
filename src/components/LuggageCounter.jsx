@@ -1,0 +1,40 @@
+import React from "react";
+import { Minus, Plus } from "lucide-react";
+
+function LuggageCounter({
+  plusDisabled = false,
+  minusDisabled = false,
+  disabled = false,
+  count = 1,
+  onChange,
+  luggageType = "large suitcases",
+}) {
+  return (
+     <div className="flex-1 flex flex-col items-start">
+      <label className="text-sm sm:text-base text-gray-600 mb-0.5 font-medium first-letter:uppercase">{luggageType}</label>
+      <div className="flex items-center gap-1">
+        <button
+          type="button"
+          className="w-7 h-7 rounded-full border cursor-pointer border-gray-200 flex items-center justify-center text-base font-bold bg-gray-50 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+          onClick={() => onChange?.(Math.max(0, count - 1))}
+          disabled={minusDisabled || count <= 0}
+          aria-label={`Decrease ${luggageType}`}
+        >
+          <Minus size={16} />
+        </button>
+        <span className="w-7 text-center text-base sm:text-lg font-semibold">{count}</span>
+        <button
+          type="button"
+          className="w-7 h-7 rounded-full border cursor-pointer border-gray-200 flex items-center justify-center text-base font-bold bg-gray-50 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+          onClick={() => onChange?.(count + 1)}
+          disabled={plusDisabled || disabled}
+          aria-label={`Increase ${luggageType}`}
+        >
+          <Plus size={16} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export { LuggageCounter };

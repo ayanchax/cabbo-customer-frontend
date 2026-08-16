@@ -1,0 +1,1 @@
+export { useLocalTripSearch } from "./useLocalTripSearch";

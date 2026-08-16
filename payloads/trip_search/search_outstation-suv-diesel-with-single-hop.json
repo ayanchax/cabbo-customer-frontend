@@ -1,0 +1,37 @@
+{
+    "trip_type": "outstation",
+    "origin": {
+        "display_name": "Indiranagar, Bengaluru, KA",
+        "lat": 12.9716,
+        "lng": 77.6412,
+        "place_id": "ChIJd8BlQ2BfUjoR7yE6k5h1K2I",
+        "address": "Indiranagar, Bengaluru, Karnataka, India",
+        "state_code": "KA"
+    },
+    "destination": {
+        "display_name": "Thiruvananthapuram, KL",
+        "lat": 8.5241,
+        "lng": 76.9366,
+        "place_id": "ChIJU4rS9bQs6zsRoOwCNHHyAQs",
+        "address": "Thiruvananthapuram, Kerala, India",
+        "state_code": "KL"
+    },
+    "start_date": "2026-05-19T21:00:00",
+    "end_date": "2026-05-23T20:00:00",
+    "num_adults": 4,
+    "num_children": 1,
+    "num_large_suitcases": 3,
+    "num_carryons": 2,
+    "preferred_car_type": "SUV",
+    "preferred_fuel_type": "diesel",
+    "hops": [
+        {
+            "display_name": "Varkala, KL",
+            "lat": 8.7379,
+            "lng": 76.7163,
+            "place_id": "ChIJT7rMwZAs6zsRpHuAZA_ZTQE",
+            "address": "Varkala, Kerala, India",
+            "state_code": "KL"
+        }
+    ]
+}

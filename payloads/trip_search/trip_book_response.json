@@ -1,0 +1,33 @@
+{
+    "trip_id": "70050930-fa01-4281-92bc-c5464b2c76dd",
+    "order_id": "order_Sv44H9BqFRqDlP",
+    "amount": 109,
+    "amount_in_lowest_unit": 10900,
+    "currency": "INR",
+    "currency_symbol": "₹",
+    "description": "Trip booking for local trip by Ayan C",
+    "customer": {
+        "id": "77f7ddf3-4af8-46ad-b3fa-e318311c244f",
+        "name": "Ayan C",
+        "email": "ayanchax9088@gmail.com",
+        "contact": "+91 9831305667"
+    },
+    "status": "created",
+    "messages": {
+        "status": "created",
+        "status_text": "Your trip has been created!",
+        "next_steps": [
+            {
+                "id": "COMPLETE_ADVANCE_PAYMENT",
+                "step": "Complete Advance Payment",
+                "instruction": "Please complete the advance payment to confirm your trip.",
+                "reason": "This advance payment is our platform/convenience fee that helps us guarantee your trip booking."
+            },
+            {
+                "id": "AWAIT_CONFIRMATION",
+                "step": "Await Confirmation",
+                "instruction": "You will receive a confirmation once the payment is successful."
+            }
+        ]
+    }
+}

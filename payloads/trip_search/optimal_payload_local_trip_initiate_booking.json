@@ -1,0 +1,105 @@
+{
+    "option": {
+        "car_type": "Sedan",
+        "fuel_type": "petrol",
+        "total_price": 1251.0,
+        "price_breakdown": {
+            "base_fare": 1200.0,
+            "platform_fee": 51.0,
+            "driver_allowance": 0.0
+        },
+        "included_kms": 40.0,
+        "included_hours": 4,
+        "package_short_label": "4Hours / 40KM",
+        "package": "4Hours / 40KM | AC Sedan(4+1) - (petrol)",
+        "overages": {
+            "indicative_overage_warning": false,
+            "overage_amount_per_km": 16.0,
+            "overage_amount_per_hour": 300.0,
+            "disclaimer": [
+                "If you exceed the included hours and/or kilometres in your selected package (4Hours / 40KM), an additional charge of ₹300.0 per hour and/or ₹16.0 per km will apply.",
+                "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+            ]
+        },
+        "hash": "5ab6aea7b76b687592a9bbcd406e2f3112861c1b69ab89b9b34819c143a76bca"
+    },
+    "preferences": {
+        "trip_type": "local",
+        "origin": {
+            "display_name": "Indiranagar, Bengaluru, KA",
+            "lat": 12.9716,
+            "lng": 77.6412,
+            "place_id": "ChIJd8BlQ2BfUjoR7yE6k5h1K2I",
+            "address": "Indiranagar, Bengaluru, Karnataka, India",
+            "country": "India",
+            "country_code": "IN",
+            "state": "Karnataka",
+            "state_code": "KA",
+            "region": "Bangalore",
+            "region_code": "BLR"
+        },
+        "destination": {
+            "display_name": "Indiranagar, Bengaluru, KA",
+            "lat": 12.9716,
+            "lng": 77.6412,
+            "place_id": "ChIJd8BlQ2BfUjoR7yE6k5h1K2I",
+            "address": "Indiranagar, Bengaluru, Karnataka, India",
+            "country": "India",
+            "country_code": "IN",
+            "state": "Karnataka",
+            "state_code": "KA",
+            "region": "Bangalore",
+            "region_code": "BLR"
+        },
+        "start_date": "2026-08-18T06:45:00",
+        "expected_end_date": "2026-08-18 05:15:00+00:00",
+        "num_adults": 2,
+        "num_children": 0,
+        "num_large_suitcases": 1,
+        "num_carryons": 1,
+        "num_backpacks": 0,
+        "num_other_bags": 0,
+        "preferred_car_type": "Sedan",
+        "preferred_fuel_type": "petrol",
+        "package_id": "3fbebb71-9ae5-44f8-9168-2a1c335139e5",
+        "toll_road_preferred": false,
+        "placard_required": false,
+        "passenger": {
+            "id": "9be3b1f6-e899-4261-8a2d-385e860d841b",
+            "name": "Sam or self",
+            "phone_number": "+919908109902"
+        }
+
+    },
+    "metadata": {
+        "inclusions": [
+            "Base fare",
+            "Premium AC cab with professional driver",
+            "Doorstep pickup and drop",
+            "Platform/Convenience fee",
+            "Well-maintained and sanitized vehicle",
+            "24/7 customer support",
+            "Water bottles and tissues"
+        ],
+        "exclusions": [
+            "Personal expenses",
+            "Self sponsored driver meals",
+            "Tolls(if applicable)",
+            "Paid parking(if applicable)"
+        ],
+        "in_car_amenities": {
+            "ac": true,
+            "music_system": true,
+            "water_bottle": true,
+            "tissues": true,
+            "phone_charger": true,
+            "aux_cable": true
+        },
+        "total_trip_days": 1,
+        "included_hours": 4.0,
+        "included_kms": 40.0,
+        "choices": 10,
+        "is_round_trip": true
+    }
+}

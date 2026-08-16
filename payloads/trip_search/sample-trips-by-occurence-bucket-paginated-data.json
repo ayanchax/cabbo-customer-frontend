@@ -1,0 +1,1233 @@
+{
+    "bucket": "upcoming",
+    "pagination": {
+        "page": 1,
+        "limit": 10,
+        "total": 26,
+        "total_pages": 3,
+        "has_next": true,
+        "has_previous": false
+    },
+    "trips": [
+        {
+            "booking_id": "RENTAL-X7CE7J15VAK7A4C4",
+            "origin": {
+                "display_name": "Padmeshwari Nagar, Medahalli",
+                "lat": 13.0262903,
+                "lng": 77.71184889999999,
+                "place_id": "ChIJI6a9M04QrjsRPWmuosLR-qE",
+                "address": "3/3, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR"
+            },
+            "destination": {
+                "display_name": "Padmeshwari Nagar, Medahalli",
+                "lat": 13.0262903,
+                "lng": 77.71184889999999,
+                "place_id": "ChIJI6a9M04QrjsRPWmuosLR-qE",
+                "address": "3/3, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR"
+            },
+            "package": {
+                "included_hours": 8,
+                "included_km": 80,
+                "driver_allowance": 0,
+                "best_intended_for": "Best for full-day city travel, business or leisure."
+            },
+            "start_datetime": "2026-06-26T21:00:00",
+            "expected_end_datetime": "2026-06-27T05:00:00",
+            "included_kms": 80,
+            "num_adults": 1,
+            "num_children": 0,
+            "num_passengers": 1,
+            "in_car_amenities": {
+                "ac": true,
+                "music_system": true,
+                "water_bottle": true,
+                "tissues": true,
+                "candies": false,
+                "snacks": false,
+                "phone_charger": true,
+                "aux_cable": true,
+                "bluetooth": false,
+                "wifi": false
+            },
+            "status": "confirmed",
+            "base_fare": 2000,
+            "final_price": 2149,
+            "advance_payment": 149,
+            "balance_payment": 2000,
+            "price_breakdown": {
+                "base_fare": 2000,
+                "platform_fee": 149,
+                "driver_allowance": 0
+            },
+            "overages": {
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (8Hours / 80KM), an additional charge of ₹5 per minute and/or ₹15 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and extra hours, and extra mileage, if applicable - pay the driver directly."
+                ],
+                "overage_amount_per_km": 15,
+                "overage_amount_per_hour": 250,
+                "indicative_overage_warning": false
+            },
+            "rate_per_min": 4.48,
+            "inclusions": [
+                "Base fare",
+                "Premium AC cab with professional driver",
+                "Doorstep pickup and drop",
+                "Platform/Convenience fee",
+                "Well-maintained and sanitized vehicle",
+                "24/7 customer support",
+                "Water bottles and tissues"
+            ],
+            "exclusions": [
+                "Personal expenses",
+                "Self sponsored driver meals",
+                "Tolls(if applicable)",
+                "Paid parking(if applicable)"
+            ],
+            "timezone": "Asia/Kolkata",
+            "trip_type": {
+                "trip_type": "local",
+                "display_name": "Local City Ride",
+                "description": "Hourly rental for city travel. Flexible for errands, meetings, and sightseeing within city limits."
+            },
+            "currency": {
+                "code": "INR",
+                "symbol": "₹",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "fleet": {
+                "car_type": "Hatchback",
+                "fuel_type": "cng",
+                "name": "Hatchback",
+                "description": "Compact hatchbacks, ideal for city rides and short trips.",
+                "cab_names": [
+                    "WagonR",
+                    "Celerio",
+                    "Tiago",
+                    "Santro",
+                    "i10",
+                    "Swift"
+                ],
+                "inventory_cab_names": [
+                    "WagonR"
+                ],
+                "capacity": "4+1",
+                "passenger_capacity": 4,
+                "luggage_capacity": {
+                    "num_large_suitcases": 1,
+                    "num_carryons": 1,
+                    "num_backpacks": 1,
+                    "num_other_bags": 0
+                },
+                "roof_carrier": false,
+                "total_luggages": 3
+            },
+            "label": "upcoming"
+        },
+        {
+            "booking_id": "RENTAL-TARWDH1TR3BSE2BM",
+            "origin": {
+                "display_name": "5th Cross Road, Medahalli",
+                "lat": 13.0263763,
+                "lng": 77.71189989999999,
+                "place_id": "ChIJj6KqdwARrjsRMp4DkkUCGVU",
+                "address": "3/2, KALABYRAVA, 3rd main, 5th Cross Rd, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR"
+            },
+            "destination": {
+                "display_name": "5th Cross Road, Medahalli",
+                "lat": 13.0263763,
+                "lng": 77.71189989999999,
+                "place_id": "ChIJj6KqdwARrjsRMp4DkkUCGVU",
+                "address": "3/2, KALABYRAVA, 3rd main, 5th Cross Rd, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR"
+            },
+            "package": {
+                "included_hours": 4,
+                "included_km": 40,
+                "driver_allowance": 0,
+                "best_intended_for": "Perfect for short city trips, errands, or quick meetings."
+            },
+            "start_datetime": "2026-06-28T04:15:00",
+            "expected_end_datetime": "2026-06-28T08:15:00",
+            "included_kms": 40,
+            "num_adults": 1,
+            "num_children": 0,
+            "num_passengers": 1,
+            "in_car_amenities": {
+                "ac": true,
+                "music_system": true,
+                "water_bottle": true,
+                "tissues": true,
+                "candies": false,
+                "snacks": false,
+                "phone_charger": true,
+                "aux_cable": true,
+                "bluetooth": false,
+                "wifi": false
+            },
+            "status": "confirmed",
+            "base_fare": 1200,
+            "final_price": 1319,
+            "advance_payment": 119,
+            "balance_payment": 1200,
+            "price_breakdown": {
+                "base_fare": 1200,
+                "platform_fee": 119,
+                "driver_allowance": 0
+            },
+            "overages": {
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (4Hours / 40KM), an additional charge of ₹5 per minute and/or ₹16 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+                ],
+                "overage_amount_per_km": 16,
+                "overage_amount_per_hour": 300,
+                "indicative_overage_warning": false
+            },
+            "rate_per_min": 5.5,
+            "inclusions": [
+                "Base fare",
+                "Premium AC cab with professional driver",
+                "Doorstep pickup and drop",
+                "Platform/Convenience fee",
+                "Well-maintained and sanitized vehicle",
+                "24/7 customer support",
+                "Water bottles and tissues"
+            ],
+            "exclusions": [
+                "Personal expenses",
+                "Self sponsored driver meals",
+                "Tolls(if applicable)",
+                "Paid parking(if applicable)"
+            ],
+            "timezone": "Asia/Kolkata",
+            "trip_type": {
+                "trip_type": "local",
+                "display_name": "Local City Ride",
+                "description": "Hourly rental for city travel. Flexible for errands, meetings, and sightseeing within city limits."
+            },
+            "currency": {
+                "code": "INR",
+                "symbol": "₹",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "fleet": {
+                "car_type": "Sedan",
+                "fuel_type": "diesel",
+                "name": "Sedan",
+                "description": "Comfortable sedans, suitable for city and outstation travel.",
+                "cab_names": [
+                    "Dzire",
+                    "Amaze",
+                    "Indigo"
+                ],
+                "inventory_cab_names": [
+                    "Dzire"
+                ],
+                "capacity": "4+1",
+                "passenger_capacity": 4,
+                "luggage_capacity": {
+                    "num_large_suitcases": 1,
+                    "num_carryons": 1,
+                    "num_backpacks": 1,
+                    "num_other_bags": 0
+                },
+                "roof_carrier": false,
+                "total_luggages": 3
+            },
+            "label": "upcoming"
+        },
+        {
+            "booking_id": "OUTSTATION-16R0L9IH194WT7YK",
+            "origin": {
+                "display_name": "Padmeshwari Nagar, Medahalli",
+                "lat": 13.0262903,
+                "lng": 77.71184889999999,
+                "place_id": "ChIJI6a9M04QrjsRPWmuosLR-qE",
+                "address": "3/3, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "Bangalore Division"
+            },
+            "destination": {
+                "display_name": "Mysuru",
+                "lat": 12.2958104,
+                "lng": 76.6393805,
+                "place_id": "ChIJ-S5XHThwrzsRbTn4wOjsiSs",
+                "address": "Mysuru, Karnataka, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "Mysore Division"
+            },
+            "is_interstate": false,
+            "total_unique_states": 1,
+            "is_round_trip": true,
+            "start_datetime": "2026-06-28T06:15:00",
+            "expected_end_datetime": "2026-06-30T06:15:00",
+            "end_datetime": "2026-06-30T06:15:00",
+            "total_days": 2,
+            "included_kms": 600,
+            "num_adults": 1,
+            "num_children": 0,
+            "num_large_suitcases": 0,
+            "num_carryons": 0,
+            "num_backpacks": 0,
+            "num_other_bags": 0,
+            "num_luggages": 0,
+            "num_passengers": 1,
+            "in_car_amenities": {
+                "ac": true,
+                "music_system": true,
+                "water_bottle": true,
+                "tissues": true,
+                "candies": true,
+                "snacks": false,
+                "phone_charger": true,
+                "aux_cable": true,
+                "bluetooth": true,
+                "wifi": false
+            },
+            "status": "confirmed",
+            "base_fare": 6600,
+            "final_price": 7699,
+            "advance_payment": 299,
+            "balance_payment": 7400,
+            "price_breakdown": {
+                "base_fare": 6600,
+                "permit_fee": 0,
+                "platform_fee": 299,
+                "driver_allowance": 800
+            },
+            "overages": {
+                "disclaimer": [
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "If you extend the trip beyond the booked 2 day(s), an additional ₹3700 per extra day will apply - pay the driver directly.",
+                    "If the driver is required to drive during night hours (8PM to 6AM), a night surcharge of ₹100.0 per hour will apply - pay the driver directly.",
+                    "If you exceed the included mileage of 600 kms, an overage charge of ₹11 per km will apply - pay the driver directly.",
+                    "Extra charges apply for tolls, paid parking, night driving surcharges and exceeding included days or mileage (if applicable) - pay the driver directly.",
+                    "If the trip includes hill climbs, the cab AC may be switched off during such climbs."
+                ],
+                "overage_amount_per_km": 11,
+                "overage_estimate_amount": 0,
+                "indicative_overage_warning": false
+            },
+            "rate_per_km": 12.83,
+            "inclusions": [
+                "Base fare",
+                "Premium AC cab with professional driver",
+                "Doorstep pickup and drop",
+                "Platform/Convenience fee",
+                "Well-maintained and sanitized vehicle",
+                "24/7 customer support",
+                "Driver allowance",
+                "Water bottles, candies, and tissues"
+            ],
+            "exclusions": [
+                "Personal expenses",
+                "Self sponsored driver meals",
+                "Tolls(if applicable)",
+                "Paid parking(if applicable)",
+                "Self sponsored driver accomodation",
+                "Night surcharges(if applicable)"
+            ],
+            "estimated_km": 322.55,
+            "timezone": "Asia/Kolkata",
+            "trip_type": {
+                "trip_type": "outstation",
+                "display_name": "Outstation Trip",
+                "description": "Multi-day intercity travel. Ideal for business, leisure, or family trips outside your city."
+            },
+            "currency": {
+                "code": "INR",
+                "symbol": "₹",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "fleet": {
+                "car_type": "Hatchback",
+                "fuel_type": "diesel",
+                "name": "Hatchback",
+                "description": "Compact hatchbacks, ideal for city rides and short trips.",
+                "cab_names": [
+                    "WagonR",
+                    "Celerio",
+                    "Tiago",
+                    "Santro",
+                    "i10",
+                    "Swift"
+                ],
+                "inventory_cab_names": [
+                    "WagonR"
+                ],
+                "capacity": "4+1",
+                "passenger_capacity": 4,
+                "luggage_capacity": {
+                    "num_large_suitcases": 1,
+                    "num_carryons": 1,
+                    "num_backpacks": 1,
+                    "num_other_bags": 0
+                },
+                "roof_carrier": false,
+                "total_luggages": 3
+            },
+            "label": "upcoming"
+        },
+        {
+            "booking_id": "RENTAL-5QWRDC3QRP1UZHCY",
+            "origin": {
+                "display_name": "Padmeshwari Nagar, Medahalli",
+                "lat": 13.0262903,
+                "lng": 77.71184889999999,
+                "place_id": "ChIJI6a9M04QrjsRPWmuosLR-qE",
+                "address": "3/3, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR"
+            },
+            "destination": {
+                "display_name": "Padmeshwari Nagar, Medahalli",
+                "lat": 13.0262903,
+                "lng": 77.71184889999999,
+                "place_id": "ChIJI6a9M04QrjsRPWmuosLR-qE",
+                "address": "3/3, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR"
+            },
+            "package": {
+                "included_hours": 8,
+                "included_km": 80,
+                "driver_allowance": 0,
+                "best_intended_for": "Best for full-day city travel, business or leisure."
+            },
+            "start_datetime": "2026-06-28T13:15:00",
+            "expected_end_datetime": "2026-06-28T21:15:00",
+            "included_kms": 80,
+            "num_adults": 2,
+            "num_children": 0,
+            "num_passengers": 2,
+            "in_car_amenities": {
+                "ac": true,
+                "music_system": true,
+                "water_bottle": true,
+                "tissues": true,
+                "candies": false,
+                "snacks": false,
+                "phone_charger": true,
+                "aux_cable": true,
+                "bluetooth": false,
+                "wifi": false
+            },
+            "status": "confirmed",
+            "base_fare": 2640,
+            "final_price": 2819,
+            "advance_payment": 179,
+            "balance_payment": 2640,
+            "price_breakdown": {
+                "base_fare": 2640,
+                "platform_fee": 179,
+                "driver_allowance": 0
+            },
+            "overages": {
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (8Hours / 80KM), an additional charge of ₹6 per minute and/or ₹16 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+                ],
+                "overage_amount_per_km": 16,
+                "overage_amount_per_hour": 330,
+                "indicative_overage_warning": false
+            },
+            "rate_per_min": 5.87,
+            "inclusions": [
+                "Base fare",
+                "Premium AC cab with professional driver",
+                "Doorstep pickup and drop",
+                "Platform/Convenience fee",
+                "Well-maintained and sanitized vehicle",
+                "24/7 customer support",
+                "Water bottles and tissues"
+            ],
+            "exclusions": [
+                "Personal expenses",
+                "Self sponsored driver meals",
+                "Tolls(if applicable)",
+                "Paid parking(if applicable)"
+            ],
+            "timezone": "Asia/Kolkata",
+            "trip_type": {
+                "trip_type": "local",
+                "display_name": "Local City Ride",
+                "description": "Hourly rental for city travel. Flexible for errands, meetings, and sightseeing within city limits."
+            },
+            "currency": {
+                "code": "INR",
+                "symbol": "₹",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "fleet": {
+                "car_type": "Sedan",
+                "fuel_type": "diesel",
+                "name": "Sedan",
+                "description": "Comfortable sedans, suitable for city and outstation travel.",
+                "cab_names": [
+                    "Dzire",
+                    "Amaze",
+                    "Indigo"
+                ],
+                "inventory_cab_names": [
+                    "Dzire"
+                ],
+                "capacity": "4+1",
+                "passenger_capacity": 4,
+                "luggage_capacity": {
+                    "num_large_suitcases": 1,
+                    "num_carryons": 1,
+                    "num_backpacks": 1,
+                    "num_other_bags": 0
+                },
+                "roof_carrier": false,
+                "total_luggages": 3
+            },
+            "label": "upcoming"
+        },
+        {
+            "booking_id": "RENTAL-8VMRFA7X1NFR49QT",
+            "origin": {
+                "display_name": "Kodigehalli Road, Medahalli",
+                "lat": 13.0262608,
+                "lng": 77.7121698,
+                "place_id": "ChIJDyvGNU4QrjsR5uiUURGMeRw",
+                "address": "267, Kodigehalli Rd, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR"
+            },
+            "destination": {
+                "display_name": "Hagadur Main Road",
+                "lat": 12.9643286,
+                "lng": 77.7537874,
+                "place_id": "Ek5IYWdhZHVyIE1haW4gUm9hZCwgTmFyYXlhbmFwcGEgR2FyZGVuLCBXaGl0ZWZpZWxkLCBCZW5nYWx1cnUsIEthcm5hdGFrYSwgSW5kaWEiLiosChQKEgkfaC2v8A2uOxEBouUMjeiWPhIUChIJsZRHgvkNrjsR9Ix6Frx1aI0",
+                "address": "Hagadur Main Rd, Narayanappa Garden, Whitefield, Bengaluru, Karnataka 560066, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR"
+            },
+            "package": {
+                "included_hours": 4,
+                "included_km": 40,
+                "driver_allowance": 0,
+                "best_intended_for": "Perfect for short city trips, errands, or quick meetings."
+            },
+            "start_datetime": "2026-06-29T04:30:00",
+            "expected_end_datetime": "2026-06-29T08:30:00",
+            "included_kms": 40,
+            "num_adults": 1,
+            "num_children": 0,
+            "num_passengers": 1,
+            "in_car_amenities": {
+                "ac": true,
+                "music_system": true,
+                "water_bottle": true,
+                "tissues": true,
+                "candies": false,
+                "snacks": false,
+                "phone_charger": true,
+                "aux_cable": true,
+                "bluetooth": false,
+                "wifi": false
+            },
+            "status": "confirmed",
+            "base_fare": 1200,
+            "final_price": 1319,
+            "advance_payment": 119,
+            "balance_payment": 1200,
+            "price_breakdown": {
+                "base_fare": 1200,
+                "platform_fee": 119,
+                "driver_allowance": 0
+            },
+            "overages": {
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (4Hours / 40KM), an additional charge of ₹5 per minute and/or ₹16 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+                ],
+                "overage_amount_per_km": 16,
+                "overage_amount_per_hour": 300,
+                "indicative_overage_warning": false
+            },
+            "rate_per_min": 5.5,
+            "inclusions": [
+                "Base fare",
+                "Premium AC cab with professional driver",
+                "Doorstep pickup and drop",
+                "Platform/Convenience fee",
+                "Well-maintained and sanitized vehicle",
+                "24/7 customer support",
+                "Water bottles and tissues"
+            ],
+            "exclusions": [
+                "Personal expenses",
+                "Self sponsored driver meals",
+                "Tolls(if applicable)",
+                "Paid parking(if applicable)"
+            ],
+            "timezone": "Asia/Kolkata",
+            "trip_type": {
+                "trip_type": "local",
+                "display_name": "Local City Ride",
+                "description": "Hourly rental for city travel. Flexible for errands, meetings, and sightseeing within city limits."
+            },
+            "currency": {
+                "code": "INR",
+                "symbol": "₹",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "fleet": {
+                "car_type": "Sedan",
+                "fuel_type": "diesel",
+                "name": "Sedan",
+                "description": "Comfortable sedans, suitable for city and outstation travel.",
+                "cab_names": [
+                    "Dzire",
+                    "Amaze",
+                    "Indigo"
+                ],
+                "inventory_cab_names": [
+                    "Dzire"
+                ],
+                "capacity": "4+1",
+                "passenger_capacity": 4,
+                "luggage_capacity": {
+                    "num_large_suitcases": 1,
+                    "num_carryons": 1,
+                    "num_backpacks": 1,
+                    "num_other_bags": 0
+                },
+                "roof_carrier": false,
+                "total_luggages": 3
+            },
+            "label": "upcoming"
+        },
+        {
+            "booking_id": "RENTAL-M8LG8I3FVJBJY52C",
+            "origin": {
+                "display_name": "5th Cross Road, Medahalli",
+                "lat": 13.0263763,
+                "lng": 77.71189989999999,
+                "place_id": "ChIJj6KqdwARrjsRMp4DkkUCGVU",
+                "address": "3/2, KALABYRAVA, 3rd main, 5th Cross Rd, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR"
+            },
+            "destination": {
+                "display_name": "TCS Brigade Bhuwalka",
+                "lat": 12.9871727,
+                "lng": 77.739519,
+                "place_id": "ChIJ2y7cWwARrjsRCkca4hblATA",
+                "address": "1, Whitefield Main Rd, Pattandur Agrahara, Whitefield, Bengaluru, Karnataka 560066, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR"
+            },
+            "package": {
+                "included_hours": 4,
+                "included_km": 40,
+                "driver_allowance": 0,
+                "best_intended_for": "Perfect for short city trips, errands, or quick meetings."
+            },
+            "start_datetime": "2026-07-01T03:30:00",
+            "expected_end_datetime": "2026-07-01T07:30:00",
+            "included_kms": 40,
+            "num_adults": 1,
+            "num_children": 0,
+            "num_passengers": 1,
+            "in_car_amenities": {
+                "ac": true,
+                "music_system": true,
+                "water_bottle": true,
+                "tissues": true,
+                "candies": false,
+                "snacks": false,
+                "phone_charger": true,
+                "aux_cable": true,
+                "bluetooth": false,
+                "wifi": false
+            },
+            "status": "confirmed",
+            "base_fare": 1120,
+            "final_price": 1229,
+            "advance_payment": 109,
+            "balance_payment": 1120,
+            "price_breakdown": {
+                "base_fare": 1120,
+                "platform_fee": 109,
+                "driver_allowance": 0
+            },
+            "overages": {
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (4Hours / 40KM), an additional charge of ₹5 per minute and/or ₹15 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+                ],
+                "overage_amount_per_km": 15,
+                "overage_amount_per_hour": 280,
+                "indicative_overage_warning": false
+            },
+            "rate_per_min": 5.12,
+            "inclusions": [
+                "Base fare",
+                "Premium AC cab with professional driver",
+                "Doorstep pickup and drop",
+                "Platform/Convenience fee",
+                "Well-maintained and sanitized vehicle",
+                "24/7 customer support",
+                "Water bottles and tissues"
+            ],
+            "exclusions": [
+                "Personal expenses",
+                "Self sponsored driver meals",
+                "Tolls(if applicable)",
+                "Paid parking(if applicable)"
+            ],
+            "timezone": "Asia/Kolkata",
+            "trip_type": {
+                "trip_type": "local",
+                "display_name": "Local City Ride",
+                "description": "Hourly rental for city travel. Flexible for errands, meetings, and sightseeing within city limits."
+            },
+            "currency": {
+                "code": "INR",
+                "symbol": "₹",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "fleet": {
+                "car_type": "Sedan",
+                "fuel_type": "diesel",
+                "name": "Sedan",
+                "description": "Comfortable sedans, suitable for city and outstation travel.",
+                "cab_names": [
+                    "Dzire",
+                    "Amaze",
+                    "Indigo"
+                ],
+                "inventory_cab_names": [
+                    "Dzire"
+                ],
+                "capacity": "4+1",
+                "passenger_capacity": 4,
+                "luggage_capacity": {
+                    "num_large_suitcases": 1,
+                    "num_carryons": 1,
+                    "num_backpacks": 1,
+                    "num_other_bags": 0
+                },
+                "roof_carrier": false,
+                "total_luggages": 3
+            },
+            "label": "upcoming"
+        },
+        {
+            "booking_id": "AIRPORTTFR-DROP-J9EQGSPSBFZA3MI6",
+            "origin": {
+                "display_name": "Padmeshwari Nagar, Medahalli",
+                "lat": 13.0262903,
+                "lng": 77.71184889999999,
+                "place_id": "ChIJI6a9M04QrjsRPWmuosLR-qE",
+                "address": "3/3, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR"
+            },
+            "destination": {
+                "display_name": "Kempegowda International Airport Bengaluru",
+                "lat": 13.198909,
+                "lng": 77.7068926,
+                "place_id": "ChIJZWJEdf4crjsRjkEpoelwbCk",
+                "address": "Karnataka 560300, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR",
+                "mobility_hub": "airport"
+            },
+            "start_datetime": "2026-07-01T15:15:00",
+            "num_adults": 1,
+            "num_children": 0,
+            "num_large_suitcases": 0,
+            "num_carryons": 0,
+            "num_backpacks": 0,
+            "num_other_bags": 0,
+            "num_luggages": 0,
+            "num_passengers": 1,
+            "in_car_amenities": {
+                "ac": true,
+                "music_system": true,
+                "water_bottle": true,
+                "tissues": true,
+                "candies": false,
+                "snacks": false,
+                "phone_charger": false,
+                "aux_cable": false,
+                "bluetooth": false,
+                "wifi": false
+            },
+            "status": "confirmed",
+            "base_fare": 572,
+            "final_price": 841,
+            "advance_payment": 149,
+            "balance_payment": 692,
+            "price_breakdown": {
+                "toll": 120,
+                "base_fare": 572,
+                "platform_fee": 149
+            },
+            "overages": {
+                "disclaimer": [
+                    "Fare applies to the selected airport transfer route. This fare includes selected toll-road tolls. Extra charges may apply for customer-requested route changes, detours, additional stops, waiting, or charges outside the selected fare."
+                ],
+                "overage_amount_per_km": 17,
+                "overage_estimate_amount": 0,
+                "indicative_overage_warning": false
+            },
+            "inclusions": [
+                "Base fare",
+                "Toll",
+                "Premium AC cab with professional driver",
+                "Doorstep pickup and drop",
+                "Platform/Convenience fee",
+                "Well-maintained and sanitized vehicle",
+                "24/7 customer support",
+                "Water bottles and tissues"
+            ],
+            "exclusions": [
+                "Personal expenses",
+                "Self sponsored driver meals",
+                "Tolls(if applicable)",
+                "Paid parking(if applicable)"
+            ],
+            "toll_road_preferred": true,
+            "timezone": "Asia/Kolkata",
+            "trip_type": {
+                "trip_type": "airport_drop",
+                "display_name": "Airport Drop",
+                "description": "Drop to airport from your location. Timely service for stress-free departures."
+            },
+            "currency": {
+                "code": "INR",
+                "symbol": "₹",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "fleet": {
+                "car_type": "Hatchback",
+                "fuel_type": "cng",
+                "name": "Hatchback",
+                "description": "Compact hatchbacks, ideal for city rides and short trips.",
+                "cab_names": [
+                    "WagonR",
+                    "Celerio",
+                    "Tiago",
+                    "Santro",
+                    "i10",
+                    "Swift"
+                ],
+                "inventory_cab_names": [
+                    "WagonR"
+                ],
+                "capacity": "4+1",
+                "passenger_capacity": 4,
+                "luggage_capacity": {
+                    "num_large_suitcases": 1,
+                    "num_carryons": 1,
+                    "num_backpacks": 1,
+                    "num_other_bags": 0
+                },
+                "roof_carrier": false,
+                "total_luggages": 3
+            },
+            "label": "upcoming"
+        },
+        {
+            "booking_id": "AIRPORTTFR-DROP-150WOT1KPGSIC7FC",
+            "origin": {
+                "display_name": "Padmeshwari Nagar, Medahalli",
+                "lat": 13.0262903,
+                "lng": 77.71184889999999,
+                "place_id": "ChIJI6a9M04QrjsRPWmuosLR-qE",
+                "address": "3/3, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR"
+            },
+            "destination": {
+                "display_name": "Kempegowda International Airport Bengaluru",
+                "lat": 13.198909,
+                "lng": 77.7068926,
+                "place_id": "ChIJZWJEdf4crjsRjkEpoelwbCk",
+                "address": "Karnataka 560300, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR",
+                "mobility_hub": "airport"
+            },
+            "start_datetime": "2026-07-01T17:45:00",
+            "num_adults": 2,
+            "num_children": 0,
+            "num_large_suitcases": 0,
+            "num_carryons": 0,
+            "num_backpacks": 0,
+            "num_other_bags": 0,
+            "num_luggages": 0,
+            "num_passengers": 2,
+            "in_car_amenities": {
+                "ac": true,
+                "music_system": true,
+                "water_bottle": true,
+                "tissues": true,
+                "candies": false,
+                "snacks": false,
+                "phone_charger": false,
+                "aux_cable": false,
+                "bluetooth": false,
+                "wifi": false
+            },
+            "status": "confirmed",
+            "base_fare": 762,
+            "final_price": 1031,
+            "advance_payment": 149,
+            "balance_payment": 882,
+            "price_breakdown": {
+                "toll": 120,
+                "base_fare": 762,
+                "platform_fee": 149
+            },
+            "overages": {
+                "disclaimer": [
+                    "Fare applies to the selected airport transfer route. This fare includes selected toll-road tolls. Extra charges may apply for customer-requested route changes, detours, additional stops, waiting, or charges outside the selected fare."
+                ],
+                "overage_amount_per_km": 19,
+                "overage_estimate_amount": 0,
+                "indicative_overage_warning": false
+            },
+            "inclusions": [
+                "Base fare",
+                "Toll",
+                "Premium AC cab with professional driver",
+                "Doorstep pickup and drop",
+                "Platform/Convenience fee",
+                "Well-maintained and sanitized vehicle",
+                "24/7 customer support",
+                "Water bottles and tissues"
+            ],
+            "exclusions": [
+                "Personal expenses",
+                "Self sponsored driver meals",
+                "Tolls(if applicable)",
+                "Paid parking(if applicable)"
+            ],
+            "toll_road_preferred": true,
+            "timezone": "Asia/Kolkata",
+            "trip_type": {
+                "trip_type": "airport_drop",
+                "display_name": "Airport Drop",
+                "description": "Drop to airport from your location. Timely service for stress-free departures."
+            },
+            "currency": {
+                "code": "INR",
+                "symbol": "₹",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "fleet": {
+                "car_type": "Sedan",
+                "fuel_type": "diesel",
+                "name": "Sedan",
+                "description": "Comfortable sedans, suitable for city and outstation travel.",
+                "cab_names": [
+                    "Dzire",
+                    "Amaze",
+                    "Indigo"
+                ],
+                "inventory_cab_names": [
+                    "Dzire"
+                ],
+                "capacity": "4+1",
+                "passenger_capacity": 4,
+                "luggage_capacity": {
+                    "num_large_suitcases": 1,
+                    "num_carryons": 1,
+                    "num_backpacks": 1,
+                    "num_other_bags": 0
+                },
+                "roof_carrier": false,
+                "total_luggages": 3
+            },
+            "label": "upcoming"
+        },
+        {
+            "booking_id": "AIRPORTTFR-PICKUP-2C0785DLPWG023VW",
+            "origin": {
+                "display_name": "Kempegowda International Airport Bengaluru",
+                "lat": 13.198909,
+                "lng": 77.7068926,
+                "place_id": "ChIJZWJEdf4crjsRjkEpoelwbCk",
+                "address": "Karnataka 560300, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR",
+                "mobility_hub": "airport"
+            },
+            "destination": {
+                "display_name": "Padmeshwari Nagar, Medahalli",
+                "lat": 13.0262903,
+                "lng": 77.71184889999999,
+                "place_id": "ChIJI6a9M04QrjsRPWmuosLR-qE",
+                "address": "3/3, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR"
+            },
+            "start_datetime": "2026-07-01T18:00:00",
+            "num_adults": 1,
+            "num_children": 0,
+            "num_large_suitcases": 0,
+            "num_carryons": 0,
+            "num_backpacks": 0,
+            "num_other_bags": 0,
+            "num_luggages": 0,
+            "num_passengers": 1,
+            "in_car_amenities": {
+                "ac": true,
+                "music_system": true,
+                "water_bottle": true,
+                "tissues": true,
+                "candies": false,
+                "snacks": false,
+                "phone_charger": false,
+                "aux_cable": false,
+                "bluetooth": false,
+                "wifi": false
+            },
+            "status": "confirmed",
+            "base_fare": 585,
+            "final_price": 834,
+            "advance_payment": 149,
+            "balance_payment": 685,
+            "price_breakdown": {
+                "toll": 0,
+                "parking": 100,
+                "base_fare": 585,
+                "platform_fee": 149,
+                "placard_charge": 0
+            },
+            "overages": {
+                "disclaimer": [
+                    "Fare applies to the selected airport transfer route. This fare includes airport parking. Extra charges may apply for customer-requested route changes, detours, additional stops, waiting, or charges outside the selected fare."
+                ],
+                "overage_amount_per_km": 17,
+                "overage_estimate_amount": 0,
+                "indicative_overage_warning": false
+            },
+            "inclusions": [
+                "Base fare",
+                "Premium AC cab with professional driver",
+                "Doorstep pickup and drop",
+                "Platform/Convenience fee",
+                "Well-maintained and sanitized vehicle",
+                "24/7 customer support",
+                "Parking",
+                "Water bottles and tissues"
+            ],
+            "exclusions": [
+                "Personal expenses",
+                "Self sponsored driver meals",
+                "Tolls(if applicable)",
+                "Paid parking(if applicable)"
+            ],
+            "placard_required": false,
+            "timezone": "Asia/Kolkata",
+            "trip_type": {
+                "trip_type": "airport_pickup",
+                "display_name": "Airport Pickup",
+                "description": "Pickup from airport to your destination. Includes flight tracking and driver meet & greet."
+            },
+            "currency": {
+                "code": "INR",
+                "symbol": "₹",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "fleet": {
+                "car_type": "Hatchback",
+                "fuel_type": "cng",
+                "name": "Hatchback",
+                "description": "Compact hatchbacks, ideal for city rides and short trips.",
+                "cab_names": [
+                    "WagonR",
+                    "Celerio",
+                    "Tiago",
+                    "Santro",
+                    "i10",
+                    "Swift"
+                ],
+                "inventory_cab_names": [
+                    "WagonR"
+                ],
+                "capacity": "4+1",
+                "passenger_capacity": 4,
+                "luggage_capacity": {
+                    "num_large_suitcases": 1,
+                    "num_carryons": 1,
+                    "num_backpacks": 1,
+                    "num_other_bags": 0
+                },
+                "roof_carrier": false,
+                "total_luggages": 3
+            },
+            "label": "upcoming"
+        },
+        {
+            "booking_id": "RENTAL-60RC6ZG1ZZWZZYT3",
+            "origin": {
+                "display_name": "Kodigehalli Road, Medahalli",
+                "lat": 13.0262608,
+                "lng": 77.7121698,
+                "place_id": "ChIJDyvGNU4QrjsR5uiUURGMeRw",
+                "address": "267, Kodigehalli Rd, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR"
+            },
+            "destination": {
+                "display_name": "Kodigehalli Road, Medahalli",
+                "lat": 13.0262608,
+                "lng": 77.7121698,
+                "place_id": "ChIJDyvGNU4QrjsR5uiUURGMeRw",
+                "address": "267, Kodigehalli Rd, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+                "country_code": "IN",
+                "state_code": "KA",
+                "region_code": "BLR"
+            },
+            "package": {
+                "included_hours": 6,
+                "included_km": 60,
+                "driver_allowance": 0,
+                "best_intended_for": "Great for half-day outings or city sightseeing."
+            },
+            "start_datetime": "2026-07-02T13:00:00",
+            "expected_end_datetime": "2026-07-02T19:00:00",
+            "included_kms": 60,
+            "num_adults": 1,
+            "num_children": 0,
+            "num_passengers": 1,
+            "in_car_amenities": {
+                "ac": true,
+                "music_system": true,
+                "water_bottle": true,
+                "tissues": true,
+                "candies": false,
+                "snacks": false,
+                "phone_charger": true,
+                "aux_cable": true,
+                "bluetooth": false,
+                "wifi": false
+            },
+            "status": "confirmed",
+            "base_fare": 1680,
+            "final_price": 1819,
+            "advance_payment": 139,
+            "balance_payment": 1680,
+            "price_breakdown": {
+                "base_fare": 1680,
+                "platform_fee": 139,
+                "driver_allowance": 0
+            },
+            "overages": {
+                "disclaimer": [
+                    "If you exceed the included hours and/or kilometres in your selected package (6Hours / 60KM), an additional charge of ₹5 per minute and/or ₹15 per km will apply.",
+                    "You will be charged the full fare even if your trip is shorter than the booked duration or included mileage.",
+                    "Extra charges apply for tolls, paid parking, and exceeding included hours or mileage (if applicable) - pay the driver directly."
+                ],
+                "overage_amount_per_km": 15,
+                "overage_amount_per_hour": 280,
+                "indicative_overage_warning": false
+            },
+            "rate_per_min": 5.05,
+            "inclusions": [
+                "Base fare",
+                "Premium AC cab with professional driver",
+                "Doorstep pickup and drop",
+                "Platform/Convenience fee",
+                "Well-maintained and sanitized vehicle",
+                "24/7 customer support",
+                "Water bottles and tissues"
+            ],
+            "exclusions": [
+                "Personal expenses",
+                "Self sponsored driver meals",
+                "Tolls(if applicable)",
+                "Paid parking(if applicable)"
+            ],
+            "timezone": "Asia/Kolkata",
+            "trip_type": {
+                "trip_type": "local",
+                "display_name": "Local City Ride",
+                "description": "Hourly rental for city travel. Flexible for errands, meetings, and sightseeing within city limits."
+            },
+            "currency": {
+                "code": "INR",
+                "symbol": "₹",
+                "lowest_unit_name": "Paise",
+                "lowest_unit_conversion_factor": 100
+            },
+            "fleet": {
+                "car_type": "Hatchback",
+                "fuel_type": "diesel",
+                "name": "Hatchback",
+                "description": "Compact hatchbacks, ideal for city rides and short trips.",
+                "cab_names": [
+                    "WagonR",
+                    "Celerio",
+                    "Tiago",
+                    "Santro",
+                    "i10",
+                    "Swift"
+                ],
+                "inventory_cab_names": [
+                    "WagonR"
+                ],
+                "capacity": "4+1",
+                "passenger_capacity": 4,
+                "luggage_capacity": {
+                    "num_large_suitcases": 1,
+                    "num_carryons": 1,
+                    "num_backpacks": 1,
+                    "num_other_bags": 0
+                },
+                "roof_carrier": false,
+                "total_luggages": 3
+            },
+            "label": "upcoming"
+        }
+    ]
+}

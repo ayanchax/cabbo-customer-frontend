@@ -1,0 +1,182 @@
+{
+    "booking_id": "AIRPORTTFR-DROP-JIBEH0AZARGI2XB2",
+    "origin": {
+        "display_name": "Kodigehalli Road, Medahalli",
+        "lat": 13.0265434,
+        "lng": 77.7118131,
+        "place_id": "ChIJjQbOzE8QrjsRlMiJx_GLFKk",
+        "address": "Sri Malleshwara Swamy Nilayam, 2/4, Kodigehalli Rd, Rifco Shantiniketan Layout, Padmeshwari Nagar, Medahalli, Bengaluru, Karnataka 560049, India",
+        "country_code": "IN",
+        "state_code": "KA",
+        "region_code": "BLR"
+    },
+    "destination": {
+        "display_name": "Kempegowda International Airport Bengaluru",
+        "lat": 13.198909,
+        "lng": 77.7068926,
+        "place_id": "ChIJZWJEdf4crjsRjkEpoelwbCk",
+        "address": "Karnataka 560300, India",
+        "country_code": "IN",
+        "state_code": "KA",
+        "region_code": "BLR",
+        "mobility_hub": "airport"
+    },
+    "is_interstate": false,
+    "is_round_trip": false,
+    "package_label": "Airport Drop | AC Sedan(4+1) - (diesel)",
+    "package_label_short": "Airport Drop",
+    "start_datetime": "2026-06-21T13:00:00",
+    "expected_end_datetime": "2026-06-21T14:00:00",
+    "total_days": 1,
+    "included_kms": 42,
+    "num_adults": 3,
+    "num_children": 0,
+    "num_large_suitcases": 0,
+    "num_carryons": 0,
+    "num_backpacks": 0,
+    "num_other_bags": 0,
+    "num_luggages": 0,
+    "num_passengers": 3,
+    "preferred_car_type": "Sedan",
+    "preferred_fuel_type": "diesel",
+    "in_car_amenities": {
+        "ac": true,
+        "music_system": true,
+        "water_bottle": true,
+        "tissues": true,
+        "candies": false,
+        "snacks": false,
+        "phone_charger": false,
+        "aux_cable": false,
+        "bluetooth": false,
+        "wifi": false
+    },
+    "driver": {
+        "id": "501e143a-aa76-43c9-a752-cc709872be42",
+        "name": "Babu Driver",
+        "email": "babu@example.com",
+        "phone": "+91 9812345678",
+        "dob": "1985-07-15T00:00:00",
+        "gender": "male",
+        "emergency_contact_name": "Shankar",
+        "emergency_contact_number": "+91 9087209876",
+        "nationality": "Indian",
+        "religion": "Hindu",
+        "address": {
+            "address_line1": "St Louis suite",
+            "address_line2": "Govindgiri road",
+            "state": "KA",
+            "country": "India",
+            "landmark": "something"
+        },
+        "is_active": true,
+        "s3_image_info": {
+            "key": "drivers/profile/501e143a-aa76-43c9-a752-cc709872be42/images/avatar/e514c22d2c31421fbe2f718b05b24403.png",
+            "url": "https://cabbo-dev-assets.s3.ap-south-2.amazonaws.com/drivers/profile/501e143a-aa76-43c9-a752-cc709872be42/images/avatar/e514c22d2c31421fbe2f718b05b24403.png"
+        },
+        "cab_type": "Sedan",
+        "fuel_type": "diesel",
+        "cab_model_and_make": "Maruti Swift Dzire",
+        "cab_registration_number": "KA01AB2316",
+        "payment_mode": "gpay",
+        "payment_phone_number": "+91 9812345678",
+        "bank_details": {
+            "account_holder_name": "Ravi Kumar",
+            "account_number": "124567890",
+            "ifsc_code": "SBIN0001234",
+            "bank_name": "State Bank of India"
+        }
+    },
+    "status": "confirmed",
+    "base_fare": 762,
+    "driver_allowance": 0,
+    "tolls": 120,
+    "parking": 0,
+    "permit_fee": 0,
+    "platform_fee": 149,
+    "final_price": 1031,
+    "final_display_price": 882,
+    "advance_payment": 149,
+    "balance_payment": 882,
+    "payment_provider_metadata": {
+        "razorpay_order_id": "order_T3qHgHzAYn3NyX",
+        "razorpay_signature": "9b86fe8345e61459486c61f62ee4908021dd97cb0b6e139493b2f81b251ad7a8",
+        "razorpay_payment_id": "pay_T3qHvhlJKEElh2"
+    },
+    "price_breakdown": {
+        "toll": 120,
+        "base_fare": 762,
+        "platform_fee": 149
+    },
+    "overages": {
+        "disclaimer": [
+            "Fare applies to the selected airport transfer route. This fare includes selected toll-road tolls. Extra charges may apply for customer-requested route changes, detours, additional stops, waiting, or charges outside the selected fare."
+        ],
+        "overage_amount_per_km": 19,
+        "overage_estimate_amount": 0,
+        "indicative_overage_warning": false
+    },
+    "rate_per_min": 0,
+    "rate_per_km": 24.55,
+    "inclusions": [
+        "Base fare",
+        "Toll",
+        "Premium AC cab with professional driver",
+        "Doorstep pickup and drop",
+        "Platform/Convenience fee",
+        "Well-maintained and sanitized vehicle",
+        "24/7 customer support",
+        "Water bottles and tissues"
+    ],
+    "exclusions": [
+        "Personal expenses",
+        "Self sponsored driver meals",
+        "Tolls(if applicable)",
+        "Paid parking(if applicable)"
+    ],
+    "toll_road_preferred": true,
+    "placard_required": false,
+    "estimated_km": 31.73,
+    "indicative_overage_warning": false,
+    "created_at": "2026-06-20T09:51:30",
+    "updated_at": "2026-06-20T10:16:04",
+    "timezone": "Asia/Kolkata",
+    "utc_offset": 330,
+    "is_active": true,
+    "creator_id": "77f7ddf3-4af8-46ad-b3fa-e318311c244f",
+    "creator_type": "customer",
+    "trip_type": {
+        "trip_type": "airport_drop",
+        "display_name": "Airport Drop",
+        "description": "Drop to airport from your location. Timely service for stress-free departures."
+    },
+    "currency": {
+        "code": "INR",
+        "symbol": "₹",
+        "lowest_unit_name": "Paise",
+        "lowest_unit_conversion_factor": 100
+    },
+    "fleet": {
+        "car_type": "Sedan",
+        "fuel_type": "diesel",
+        "name": "Sedan",
+        "description": "Comfortable sedans, suitable for city and outstation travel.",
+        "cab_names": [
+            "Dzire",
+            "Amaze",
+            "Indigo"
+        ],
+        "inventory_cab_names": [
+            "Dzire"
+        ],
+        "capacity": "4+1"
+    },
+    "refund_and_cancellation_policy": [
+        "Full refund if you cancel atleast 30 minutes before trip start.",
+        "If you cancel after this period, 20% of the paid amount will be refunded.",
+        "Full refund if your trip could not be fulfilled due to Cabbo operational issues (e.g., no driver assigned, vehicle breakdown before trip start, or force majeure events).",
+        "Refunds are processed instantly upon cancellation confirmation. Depending on your payment method, it may take 1-3 business days for the amount to reflect in your source account.",
+        "For any refund or cancellation queries, please contact Cabbo support. We are committed to transparent and fair policies."
+    ],
+    "label": "upcoming"
+}
