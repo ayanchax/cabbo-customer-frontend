@@ -21,7 +21,8 @@ import {
   TripDisclaimer,
   TogglePreference,
   IncludedServicePills,
-  NoRidesAvailable
+  NoRidesAvailable,
+  RideOptionsSearchSkeleton,
 } from "@/components";
 import {
   AirportPickupDetailsManager,
@@ -195,6 +196,7 @@ const getOverlaySubtext = () => {
     if (inProgress) return; // Prevent multiple submissions
     try {
       setInProgress(true);
+       
       if (!origin) {
         const msg = "Pickup location is required to book an airport transfer.";
         showToast(msg, "error", { position: "top-center" });
@@ -419,6 +421,14 @@ const getOverlaySubtext = () => {
             className="px-0 mb-4"
           />
 
+          {inProgress ? (
+            <div className="px-4">
+              <RideOptionsSearchSkeleton
+                title="Finding airport rides"
+                message={getOverlaySubtext()}
+              />
+            </div>
+          ) : (
           <div className="px-4">
             {/* Route timeline */}
             <RouteTimeline pickupLocation={origin} dropoffLocation={dropOff} />
@@ -520,6 +530,7 @@ const getOverlaySubtext = () => {
               </button>
             </div>
           </div>
+          )}
         </div>
       </div>
     );

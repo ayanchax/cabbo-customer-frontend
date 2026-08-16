@@ -17,7 +17,8 @@ import {
   RouteTimeline,
   PageHeader,
   TripDisclaimer,
-  NoRidesAvailable
+  NoRidesAvailable,
+  RideOptionsSearchSkeleton,
 } from "@/components";
 import {
   PackageCards,
@@ -204,7 +205,8 @@ function LocalHourlyRental() {
         shadow-[0_2px_16px_0_rgba(16,30,54,0.08)] max-w-full mb-4 ${inProgress ? "pointer-events-none opacity-70" : ""}`}
       >
         <div className="relative z-10 animate-slide-up duration-300 transition-all">
-          
+           
+
           {searchResults?.options?.length === 0 && (
                       <div className="px-4 mt-4 max-w-2xl mx-auto">
                         <NoRidesAvailable
@@ -227,6 +229,7 @@ function LocalHourlyRental() {
             className="px-0 mb-2"
           />
 
+           
           {/* Trip Itinerary */}
           {searchResults?.options && (
             // Only show trip itinerary if there are search results to display, otherwise user will just see empty page with option to go back and change their search criteria
@@ -315,6 +318,14 @@ function LocalHourlyRental() {
             className="px-0 mb-4"
           />
 
+          {inProgress ? (
+            <div className="px-4">
+              <RideOptionsSearchSkeleton
+                title="Finding hourly city rides"
+                message="Searching available cabs and packages in your area."
+              />
+            </div>
+          ) : (
           <div className="px-4">
             {/* Route timeline */}
             <RouteTimeline pickupLocation={origin} dropoffLocation={dropOff} />
@@ -399,6 +410,7 @@ function LocalHourlyRental() {
               </button>
             </div>
           </div>
+          )}
         </div>
       </div>
     );

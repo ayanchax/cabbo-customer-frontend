@@ -18,3 +18,4 @@ export {SuccessOverlay} from "./SuccessOverlay";
 export {TogglePreference} from "./TogglePreference";
 export {FeedbackState} from "./FeedbackState";
 export {CountryFlag} from "./CountryFlag";
+export { RideOptionsSearchSkeleton } from "./RideOptionsSearchSkeleton";

@@ -19,7 +19,8 @@ import {
   TripDisclaimer,
   OutstationRoutePlanningIllustration,
   IncludedServicePills,
-  NoRidesAvailable
+  NoRidesAvailable,
+  RideOptionsSearchSkeleton,
 } from "@/components";
 
 import {
@@ -446,6 +447,14 @@ function Outstation() {
             className="px-0 mb-4"
           />
 
+          {inProgress ? (
+            <div className="px-4">
+              <RideOptionsSearchSkeleton
+                title="Finding outstation rides"
+                message="Finding rides for your route and dates."
+              />
+            </div>
+          ) : (
           <div className="px-4">
             {/* Route timeline */}
             <RouteTimeline
@@ -577,6 +586,7 @@ function Outstation() {
               </button>
             </div>
           </div>
+          )}
         </div>
       </div>
     );
