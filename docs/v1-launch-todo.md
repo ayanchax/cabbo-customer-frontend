@@ -95,6 +95,7 @@ Recommended order:
 - [x] Add backend-provided occurrence labels to booking-detail headers.
   - Supports Upcoming, Ongoing, Completed, Cancelled, and Past presentation.
   - Uses semantic color mapping while keeping readable text labels.
+  - Ongoing trip labels show a subtle live pulse indicator.
 - [x] Adapt booking-detail copy for active versus past trips across supported features.
   - Uses future-facing pickup and amenity copy for upcoming confirmed trips.
   - Uses neutral historical copy for past, completed, and cancelled trips.
@@ -107,6 +108,8 @@ Recommended order:
   - Keeps stale records transparent without changing the booking navigation flow.
 - [x] Add status-aware read-only fare-summary sections across booking details.
   - Always retains fare breakdown, inclusions/exclusions, and backend fare disclaimers as the booking record.
+  - Supports structured inclusion/exclusion items with customer-friendly descriptions and backward-compatible string-array rendering for older booking records.
+  - Uses designated inclusion/exclusion icons for known structured labels and falls back to check/X where no label-specific icon exists.
   - Hides overage rates for cancelled trips.
   - Shows refund/cancellation policies for upcoming, ongoing, cancelled, and disputed trips.
   - Hides refund/cancellation policies for completed/closed and generic past trips.
@@ -116,6 +119,8 @@ Recommended order:
   - Handle pending, processed, failed, not-applicable, and missing-refund-detail states.
   - Keep the fare breakdown as the original booking record while making the refund summary the primary financial status for cancelled trips.
   - Support actions for delayed or failed refunds are tracked under booking-detail operational sections.
+- [x] Show exact trip-timezone refund/cancellation cutoff datetimes for newly created bookings where backend policy text includes concrete cutoffs.
+  - Older saved booking records can continue showing legacy relative policy text.
 - [x] Add a disputed-trip blocked state to booking-detail pages.
   - Show a clear feedback panel explaining that disputed trips are handled offline by Cabbo support.
   - Hide customer self-service edit, refund, and payment actions while the dispute is active.
@@ -141,7 +146,11 @@ Recommended order:
 - [x] Render the safe driver profile, contact action, cab details, and rating.
 - [x] Show actual assigned vehicle signals on the driver card.
   - Includes registration number, color, capacity, roof-carrier availability, and a free-upgrade trust message when Cabbo upgrades the booked preference at no extra charge.
+  - Falls back to detecting allowed free upgrades from booked preferred cab/fuel versus assigned driver cab/fuel if backend upgradation information is unavailable.
 - [x] Gracefully handle missing optional driver fields and an unassigned driver.
+- [x] Render driver contact and coordination hints according to trip state.
+  - Shows pre-pickup coordination copy only for upcoming trips with contact available.
+  - Keeps ongoing trips contactable without showing pre-pickup copy after the ride has started.
 - [x] Add Call Cabbo and WhatsApp support actions.
 - [x] Prefill support messages with only the booking ID and necessary context.
 - [x] Resolve customer support contacts from backend routing instead of hardcoding support numbers.
@@ -214,6 +223,7 @@ Recommended order:
 - [x] Separate customer-safe and internal data views.
 - [x] Support driver assignment and reassignment.
 - [x] Support operational trip-status updates.
+- [x] Show admin-friendly status-transition rejection durations using the highest readable time unit instead of raw minutes only.
 - [x] Display payment state, customer contact, and special requests.
 - [x] Support internal operational notes.
 - [x] Document the driver-assignment process.
@@ -286,6 +296,7 @@ in the local pass were resolved before moving to dev/staging smoke.
 - [x] Keyboard navigation and visible focus.
 - [x] Accessible names, readable errors, adequate contrast, and no text overflow.
 - [x] Loading, empty, offline, and degraded-network states.
+  - Added a subtle ride-search skeleton during the brief Find rides handoff on local hourly rental, airport transfers, and outstation flows.
 - [x] Cross-browser smoke test on supported browsers.
 
 ## 8. Production Readiness - DevOps And Operations
@@ -313,9 +324,9 @@ in the local pass were resolved before moving to dev/staging smoke.
 ## 9. Launch Approval - Business Go/No-Go
 
 - [ ] All required V1 items above are complete or explicitly accepted as launch risks.
-- [ ] No open P0 defects.
-- [ ] P1 defects have an owner and documented launch decision.
-- [ ] Legal and operational owners have approved launch readiness.
+- [x] No open P0 defects.
+- [x] P1 defects have an owner and documented launch decision.
+- [x] Legal and operational owners have approved launch readiness.
 - [ ] Payment, booking, support, driver assignment, cancellation, and refund flows pass staging checks.
 - [ ] Production smoke test checklist is ready.
 - [ ] Go/no-go decision is recorded.
@@ -334,5 +345,5 @@ in the local pass were resolved before moving to dev/staging smoke.
 
 ## Deferred Beyond V1
 
-Deferred product work, including **Book a ride for someone else**, is maintained
+Deferred product work, for example - **Book a ride for someone else**, is maintained
 centrally in [backlogs.md](./backlogs.md). These items are not launch blockers.

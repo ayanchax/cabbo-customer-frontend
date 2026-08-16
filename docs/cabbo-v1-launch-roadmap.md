@@ -13,9 +13,19 @@ V1 should prioritize reliable search, transparent pricing, successful payment, o
 
 ---
 
+## Current Readiness
+
+Customer frontend and Admin/Ops MVP feature coding are complete for V1. The
+remaining work before production is release execution: dev/prod smoke testing,
+environment verification, payment/webhook checks, and launch-day support
+coverage.
+
+---
+
 ## Sequencing Decision
 
-Do not complete every remaining cross-trip feature before starting outstation.
+The original sequencing below has been completed for customer and admin/ops
+feature scope.
 
 Use this order:
 
@@ -73,7 +83,7 @@ Before production launch, verify these completed controls in staging with paymen
 
 Real customer bookings cannot launch without an operational control surface.
 
-The admin MVP must support:
+The Admin/Ops MVP is now implemented for V1 and supports:
 
 - authenticated admin access
 - trip list with useful filters
@@ -84,6 +94,7 @@ The admin MVP must support:
 - view payment state
 - view customer contact and special request
 - record operational notes
+- clearer status-transition rejection messages using days/hours/minutes instead of raw minute counts
 
 A polished analytics dashboard is not required for v1.
 
@@ -246,6 +257,9 @@ Suggested states:
 
 Use subdued semantic colors and text together; color alone must not carry meaning.
 
+Ongoing booking-detail labels include a subtle pulse indicator so active trips
+feel live without making the header distracting.
+
 ### Driver Details
 
 Render driver details only when the customer-safe `driver` object is present.
@@ -262,6 +276,15 @@ Show:
 - average rating
 
 Do not show internal or sensitive driver attributes.
+
+Driver detail presentation is status-aware:
+
+- pre-pickup coordination copy appears only for upcoming trips where driver
+  contact is available
+- ongoing trips remain contactable without pre-pickup copy
+- if backend upgradation information is unavailable, the frontend conservatively
+  attempts a fallback free-upgrade message from the booked preferred cab/fuel and
+  assigned driver cab/fuel using the same allowed-upgrade paths as the backend
 
 ### Get Help for This Trip
 
@@ -303,6 +326,18 @@ Keep the current airport policy:
 - toll preference cannot be removed
 - placard service cannot be removed
 - passenger/luggage metadata remains locked
+
+### Fare Policy and Inclusions/Exclusions
+
+V1 fare and policy presentation is backend-authoritative and customer-readable:
+
+- refund/cancellation policy text for newly created bookings can include exact
+  cutoff datetimes in the trip timezone
+- older saved booking records can continue showing relative policy text
+- inclusions and exclusions support structured `{ label, description }` items
+  with label-specific icons
+- legacy string-array inclusions/exclusions remain supported without invented
+  descriptions
 
 ---
 
@@ -443,6 +478,8 @@ Test all trip types end to end:
 - production error monitoring
 - API error logging with sensitive-data redaction
 - loading and empty states
+- subtle ride-search skeleton during the Find rides handoff for local hourly
+  rental, airport transfers, and outstation
 - idempotent customer actions
 - network/offline behavior
 - route refresh support
