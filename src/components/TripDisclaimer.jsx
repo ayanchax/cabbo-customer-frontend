@@ -18,7 +18,7 @@ function TripDisclaimer({
             </span>
           )}
         </div>
-        <ul className="list-disc pl-6 text-gray-600 text-sm sm:text-base space-y-1">
+        <ul className="list-disc pl-6 text-gray-600 text-xs sm:text-sm space-y-1">
           {disclaimers.map((text, idx) => (
             <li className="mb-1.5" key={idx}>{text}</li>
           ))}
