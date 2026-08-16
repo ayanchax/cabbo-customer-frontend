@@ -51,7 +51,7 @@ at `https://app.dev.cabbo.co.in`, and MySQL on Aiven.
 ## 3. Email
 
 - [x] Keep Brevo for dev and early prod if it remains reliable.
-- [x] Verify SPF, DKIM, and DMARC for the sending domain.
+- [x] Verify SPF, DKIM, and DMARC for the sending domain in domain provider DNS settings 
 - [x] Verify sender identity, reply-to, and no-reply addresses.
 - [x] Verify email verification links use the correct frontend domain:
   - dev: `https://app.dev.cabbo.co.in`
@@ -84,11 +84,11 @@ at `https://app.dev.cabbo.co.in`, and MySQL on Aiven.
   - source: `/*`
   - destination: `/index.html`
   - action: `Rewrite`
-- [ ] Smoke test auth OTP login.
-- [ ] Smoke test trip search for airport transfer, local hourly rental, and outstation.
-- [ ] Smoke test booking creation and Razorpay test payment verification.
-- [ ] Smoke test customer profile, email verification, My Trips feed, booking detail, cancellation, and special request update.
-- [ ] Verify backend errors appear in Sentry dev with sanitized context.
+- [x] Smoke test auth OTP login.
+- [x] Smoke test trip search for airport transfer, local hourly rental, and outstation.
+- [x] Smoke test booking creation and Razorpay test payment verification.
+- [x] Smoke test customer profile, email verification, My Trips feed, booking detail, cancellation, and special request update.
+- [x] Verify backend errors appear in Sentry dev with sanitized context.
 
 ## 5. Security And Privacy Gate
 
@@ -149,6 +149,7 @@ Admin V1 should be boring and operational. No configuration management yet.
 - [ ] Configure uptime/health monitoring.
 - [ ] Run production smoke checklist.
 - [ ] Run one controlled real payment before public launch.
+- [ ] Run one controlled real cancel and refund flow where money gets credited back to customer account from razorpay on cancellation.
 
 ## 8. Deferred Beyond V1
 

@@ -206,8 +206,7 @@ Recommended order:
 - [x] Keep failed payments retryable from the pre-confirmation page.
 - [x] Clean temporary trips through the failure API and scheduled cleanup.
 - [x] Re-test success, failure, retry, duplicate callback, refresh, and abandoned-payment scenarios in local development.
-- [ ] Repeat payment smoke test on the dev deployment before production release.
-  - Blocked until dev OTP login can be smoke-tested with an approved SMS sender.
+- [x] Repeat payment smoke test on the dev deployment before production release.
 - [x] Confirm refund and cancellation behavior matches customer-facing policy text.
 - [x] Keep cancellation refund calculation and eligibility backend-authoritative.
 - [x] Persist one active refund record per trip and prevent duplicate refund initiation.
@@ -323,7 +322,7 @@ in the local pass were resolved before moving to dev/staging smoke.
 
 ## 9. Launch Approval - Business Go/No-Go
 
-- [ ] All required V1 items above are complete or explicitly accepted as launch risks.
+- [x] All required V1 items above are complete or explicitly accepted as launch risks.
 - [x] No open P0 defects.
 - [x] P1 defects have an owner and documented launch decision.
 - [x] Legal and operational owners have approved launch readiness.
