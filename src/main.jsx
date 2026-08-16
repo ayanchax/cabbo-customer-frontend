@@ -6,7 +6,7 @@ import App from "./App.jsx";
 import { ToastProvider, GeographyProvider } from "@/context";
 import { ErrorBoundary } from "@/components";
 import { OverlayProvider } from "@/context";
-import { queryClient } from "@/api";
+import { queryClient } from "@/api/queryClient";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

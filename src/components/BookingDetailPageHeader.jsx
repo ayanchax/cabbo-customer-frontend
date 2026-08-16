@@ -40,6 +40,7 @@ function BookingDetailPageHeader({
   };
 
   const hasValidLabel = VALID_OCCURRENCE_LABELS.includes(normalizedLabel);
+  const isOngoingLabel = normalizedLabel === TRIP_OCCURENCE_LABELS.ONGOING;
 
   if (occurenceLabel && !hasValidLabel && isDevMode) {
     console.warn(
@@ -53,6 +54,12 @@ function BookingDetailPageHeader({
 
   const statusTag = hasValidLabel ? (
     <span className={`${statusTagClassName} px-2 py-0.5 text-xs`}>
+      {isOngoingLabel && (
+        <span
+          className="mr-1.5 h-2 w-2 rounded-full bg-emerald-500 animate-pulse"
+          aria-hidden="true"
+        />
+      )}
       {getNormalizedLabel()}
     </span>
   ) : null;
@@ -61,6 +68,12 @@ function BookingDetailPageHeader({
     <span
       className={`${statusTagClassName} mt-0.5 shrink-0 px-1.5 py-0 text-[10px] leading-4`}
     >
+      {isOngoingLabel && (
+        <span
+          className="mr-1 h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"
+          aria-hidden="true"
+        />
+      )}
       {getNormalizedLabel()}
     </span>
   ) : null;

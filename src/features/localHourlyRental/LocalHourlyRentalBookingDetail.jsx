@@ -109,6 +109,8 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
     isDriverContactWindow && Boolean(bookingDetail?.driver?.phone);
   const showDriverContactActionHint =
     isDriverContactWindow && !showDriverContactAction;
+  const showDriverCoordinationHint =
+    showDriverContactAction && label === TRIP_OCCURENCE_LABELS.UPCOMING;
   const showSpecialRequest =
     !isCancelledTrip &&
     !isStaleTrip &&
@@ -209,10 +211,17 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
               driver={bookingDetail?.driver}
               assignmentNotice={bookingDetail?.driver_assignment_notice}
               upgradationInformation={bookingDetail?.upgradation_information}
+              preferredCabType={
+                bookingDetail?.preferred_car_type || fleet?.car_type
+              }
+              preferredFuelType={
+                bookingDetail?.preferred_fuel_type || fleet?.fuel_type
+              }
               status={status}
               label={label}
               showContactAction={showDriverContactAction}
               showContactActionHint={showDriverContactActionHint}
+              showDriverCoordinationHint={showDriverCoordinationHint}
               className="mb-4"
             />
           )}

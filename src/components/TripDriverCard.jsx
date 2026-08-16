@@ -10,7 +10,8 @@ import {
 } from "lucide-react";
 import {
   APP,
-  FUEL_TYPES,
+  CAB_FUEL_TYPES,
+  CAB_TYPES,
   getInitials,
   titleCase,
   TRIP_OCCURENCE_LABELS,
@@ -35,16 +36,116 @@ function getDriverRatingClassName(rating) {
 }
 
 function formatVehicleUpgradeLabel(fuelType, cabType) {
-  const fuelLabel =
-    fuelType === FUEL_TYPES.CNG ? fuelType.toUpperCase() : titleCase(fuelType);
+  const fuelLabel = fuelType
+    ? fuelType === CAB_FUEL_TYPES.CNG
+      ? fuelType.toUpperCase()
+      : titleCase(fuelType)
+    : null;
 
   return [fuelLabel, cabType].filter(Boolean).join(" ");
+}
+
+const ALLOWED_FUEL_UPGRADES = new Set(["cng->diesel", "diesel->petrol"]);
+const ALLOWED_CAB_TYPE_UPGRADES = new Set([
+  "hatchback->sedan",
+  "sedan->sedan_plus",
+  "suv->suv_plus",
+]);
+
+const CAB_TYPE_LABELS = {
+  hatchback: "Hatchback",
+  sedan: "Sedan",
+  sedan_plus: "Premium Sedan",
+  suv: "SUV",
+  suv_plus: "SUV+",
+};
+
+const FUEL_TYPE_LABELS = {
+  cng: "CNG",
+  diesel: "Diesel",
+  petrol: "Petrol",
+};
+
+function normalizeVehicleValue(value) {
+  if (!value) return "";
+
+  return String(value)
+    .trim()
+    .toLowerCase()
+    .replace(/\+/g, "_plus")
+    .replace(/premium\s+sedan/g, "sedan_plus")
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+}
+
+function formatFallbackFuelLabel(value) {
+  const normalized = normalizeVehicleValue(value);
+  return FUEL_TYPE_LABELS[normalized] || formatVehicleUpgradeLabel(value, null);
+}
+
+function formatFallbackCabLabel(value) {
+  const normalized = normalizeVehicleValue(value);
+  return CAB_TYPE_LABELS[normalized] || titleCase(value);
+}
+
+function getFallbackUpgradeMessage({
+  preferredCabType, // customer preferred cab type
+  preferredFuelType, // customer preferred fuel
+  assignedCabType, // cabbo assigned driver cab type
+  assignedFuelType, // cabbo assigned driver fuel type
+  status,
+  label,
+}) {
+  const normalizedPreferredCab = normalizeVehicleValue(preferredCabType);
+  const normalizedAssignedCab = normalizeVehicleValue(assignedCabType);
+  const normalizedPreferredFuel = normalizeVehicleValue(preferredFuelType);
+  const normalizedAssignedFuel = normalizeVehicleValue(assignedFuelType);
+
+  const hasCabUpgrade =
+    normalizedPreferredCab &&
+    normalizedAssignedCab &&
+    normalizedPreferredCab !== normalizedAssignedCab &&
+    ALLOWED_CAB_TYPE_UPGRADES.has(
+      `${normalizedPreferredCab}->${normalizedAssignedCab}`,
+    );
+  const hasFuelUpgrade =
+    normalizedPreferredFuel &&
+    normalizedAssignedFuel &&
+    normalizedPreferredFuel !== normalizedAssignedFuel &&
+    ALLOWED_FUEL_UPGRADES.has(
+      `${normalizedPreferredFuel}->${normalizedAssignedFuel}`,
+    );
+
+  if (!hasCabUpgrade && !hasFuelUpgrade) return null;
+
+  const fromVehicle = [
+    normalizedPreferredFuel ? formatFallbackFuelLabel(preferredFuelType) : null,
+    normalizedPreferredCab ? formatFallbackCabLabel(preferredCabType) : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const toVehicle = [
+    normalizedAssignedFuel ? formatFallbackFuelLabel(assignedFuelType) : null,
+    normalizedAssignedCab ? formatFallbackCabLabel(assignedCabType) : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const isActiveTrip =
+    [TRIP_STATUS.CONFIRMED, TRIP_STATUS.ONGOING].includes(status) &&
+    [TRIP_OCCURENCE_LABELS.UPCOMING, TRIP_OCCURENCE_LABELS.ONGOING].includes(
+      label,
+    );
+
+  if (!fromVehicle || !toVehicle) return null;
+  
+  return isActiveTrip
+    ? `We've upgraded your ride from ${fromVehicle} to ${toVehicle} at no extra charge.`
+    : `This ride was upgraded from ${fromVehicle} to ${toVehicle} at no extra charge.`;
 }
 
 function getUpgradeMessage(upgradationInformation, status, label) {
   if (!upgradationInformation?.upgraded) return null;
   if (upgradationInformation.is_free_upgradation === false) return null;
-
   const isActiveTrip =
     [TRIP_STATUS.CONFIRMED, TRIP_STATUS.ONGOING].includes(status) &&
     [TRIP_OCCURENCE_LABELS.UPCOMING, TRIP_OCCURENCE_LABELS.ONGOING].includes(
@@ -74,10 +175,13 @@ function TripDriverCard({
   driver = null,
   assignmentNotice = null,
   upgradationInformation = null,
+  preferredCabType = null,  // customer preferred cab type
+  preferredFuelType = null, // customer preferred fuel type
   status = null,
   label = null,
   showContactAction = false,
   showContactActionHint = false,
+  showDriverCoordinationHint = false,
   className = "",
   showGender = false,
 }) {
@@ -126,7 +230,16 @@ function TripDriverCard({
       </section>
     );
   }
-  const upgradeMessage = getUpgradeMessage(upgradationInformation, status, label);
+  const upgradeMessage =
+    getUpgradeMessage(upgradationInformation, status, label) ||
+    getFallbackUpgradeMessage({
+      preferredCabType,
+      preferredFuelType,
+      assignedCabType: driver?.cab_type,
+      assignedFuelType: driver?.fuel_type,
+      status,
+      label,
+    });
   return (
     <section
       className={`rounded-xl border border-gray-100 bg-white p-4 shadow-sm ${className}`}
@@ -239,7 +352,7 @@ function TripDriverCard({
             Contact details are shown when the trip is active.
           </p>
         )}
-        {showContactAction && !showContactActionHint && (
+        {showContactAction && showDriverCoordinationHint && (
           <p className="text-xs leading-5 text-gray-500">
             Your driver may call before pickup to coordinate.
           </p>

@@ -169,11 +169,7 @@ export const REFUND_STATUS={
     SUCCESS: "success",
 }
 
-export const FUEL_TYPES = {
-    PETROL: "petrol",
-    DIESEL: "diesel",
-    CNG: "cng",
-}
+
 
 export const SERVER_ERROR_CODES = {
     ALREADY_BOOKED_ON_THIS_SLOT: "ALREADY_BOOKED_ON_THIS_SLOT",
