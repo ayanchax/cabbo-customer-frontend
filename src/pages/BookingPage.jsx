@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, lazy, Suspense } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useInitiateTripBookingMutation } from "@/hooks";
+import { useAnalytics, useInitiateTripBookingMutation } from "@/hooks";
 import { FeedbackState, Loader } from "@/components";
 import {
   TRIP_TYPES,
@@ -9,15 +9,17 @@ import {
   SERVER_ERROR_CODES,
   ROUTES,
 } from "@/utils";
+import { ANALYTICS_EVENTS } from "@/analytics";
 
 function BookingPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const bookingPayload = location.state?.bookingPayload;
+  const { track } = useAnalytics();
 
   const [bookingError, setBookingError] = useState(null); // <-- Add this
 
-  const { trip_type = null } = bookingPayload.preferences;
+  const { trip_type = null } = bookingPayload?.preferences || {};
 
   const [bookingOrderData, setBookingOrderData] = useState(null);
   const hasBookedRef = useRef(false);
@@ -75,14 +77,34 @@ function BookingPage() {
           preferred_fuel_type: fuel_type, // Override the preferred fuel type with the selected option
           retrieve_fleet: true, // Add this flag to indicate that we want the API to return fleet data along with booking initiation
         };
+        track(ANALYTICS_EVENTS.BOOKING_INITIATED, {
+          trip_type,
+          car_type,
+          fuel_type,
+          total_price: bookingPayload.option?.total_price,
+          currency:
+            bookingPayload.option?.currency?.code ||
+            bookingPayload.option?.currency,
+        });
 
         const response = await bookingApi.mutateAsync({
           option: bookingPayload.option,
           preferences: updatedPreferences,
           metadata: bookingPayload.metadata,
         });
+        track(ANALYTICS_EVENTS.BOOKING_INITIATION_SUCCEEDED, {
+          trip_type,
+          trip_id: response?.data?.trip_id,
+          order_id: response?.data?.order_id,
+          car_type,
+          fuel_type,
+        });
         setBookingOrderData(response?.data || null);
       } catch (error) {
+        track(ANALYTICS_EVENTS.BOOKING_INITIATION_FAILED, {
+          trip_type,
+          reason: error?.response?.data?.error_code || "unexpected_error",
+        });
         const bookingInitiationError = new Error(
           error?.response?.data?.detail ||
             "Unexpected error occurred while initiating the booking. Please try again later.",

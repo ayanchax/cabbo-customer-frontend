@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useGetSupportContactsForBooking } from "@/hooks";
 import { APP, ROUTES } from "@/utils";
+import { ANALYTICS_EVENTS, useAnalytics } from "@/analytics";
 function normalizePhoneForWhatsApp(phoneNumber) {
   if (!phoneNumber) return "";
   return phoneNumber.replace(/[^\d]/g, "");
@@ -39,7 +40,9 @@ function TripSupportCard({
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const supportPanelRef = useRef(null);
   const shouldScrollToSupportRef = useRef(false);
+  const supportContactTrackedRef = useRef(false);
   const supportMutation = useGetSupportContactsForBooking();
+  const { track } = useAnalytics();
   const supportContact = supportMutation.data || null;
   const canLoadSupport = Boolean(origin && tripType);
 
@@ -75,6 +78,14 @@ function TripSupportCard({
     const nextIsOpen = !isOpen;
     shouldScrollToSupportRef.current = nextIsOpen;
     setIsOpen(nextIsOpen);
+    if (nextIsOpen) {
+      track(ANALYTICS_EVENTS.SUPPORT_OPENED, {
+        booking_id: bookingId,
+        trip_type: tripType,
+        trip_label: tripLabel,
+        reason,
+      });
+    }
     onToggle(nextIsOpen)
   };
 
@@ -97,6 +108,29 @@ function TripSupportCard({
       shouldScrollToSupportRef.current = false;
     });
   }, [isOpen, supportContact]);
+
+  useEffect(() => {
+    if (!supportContact || supportContactTrackedRef.current) return;
+
+    supportContactTrackedRef.current = true;
+    track(ANALYTICS_EVENTS.SUPPORT_CONTACT_LOADED, {
+      booking_id: bookingId,
+      trip_type: tripType,
+      trip_label: tripLabel,
+      reason,
+      has_phone: Boolean(phoneHref),
+      has_whatsapp: Boolean(whatsappHref),
+    });
+  }, [
+    bookingId,
+    phoneHref,
+    reason,
+    supportContact,
+    track,
+    tripLabel,
+    tripType,
+    whatsappHref,
+  ]);
 
   return (
     <section
@@ -179,6 +213,14 @@ function TripSupportCard({
                 {phoneHref && (
                   <a
                     href={phoneHref}
+                    onClick={() =>
+                      track(ANALYTICS_EVENTS.SUPPORT_CALL_CLICKED, {
+                        booking_id: bookingId,
+                        trip_type: tripType,
+                        reason,
+                        support_channel: "phone",
+                      })
+                    }
                     className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-gray-200 bg-white px-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                   >
                     <Phone className="h-4 w-4" aria-hidden="true" />
@@ -190,6 +232,14 @@ function TripSupportCard({
                     href={whatsappHref}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={() =>
+                      track(ANALYTICS_EVENTS.SUPPORT_WHATSAPP_CLICKED, {
+                        booking_id: bookingId,
+                        trip_type: tripType,
+                        reason,
+                        support_channel: "whatsapp",
+                      })
+                    }
                     className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-primary px-3 text-sm font-semibold text-white shadow-sm transition hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/20"
                   >
                     <MessageCircle className="h-4 w-4" aria-hidden="true" />

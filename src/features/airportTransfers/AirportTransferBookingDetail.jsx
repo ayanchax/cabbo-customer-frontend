@@ -19,6 +19,7 @@ import {
   useBookingDetailBackNavigation,
   useEditNonCostImpactingTripFields,
   useToast,
+  useAnalytics,
 } from "@/hooks";
 import { isDevMode } from "@/api";
 import { Plane } from "lucide-react";
@@ -33,9 +34,11 @@ import {
 } from "@/utils";
 import { useAirportTransferServices } from "./hooks/useAirportTransferServices";
 import { AirportPickupDetailsManager } from "./components/AirportPickupDetailsManager";
+import { ANALYTICS_EVENTS } from "@/analytics";
 function AirportTransferBookingDetail({ bookingDetail = {} }) {
   const { timezone: client_timezone } = useTimezone();
   const { showToast } = useToast();
+  const { track } = useAnalytics();
 
   const location = useLocation();
   const comingFromBookingPaymentPage =
@@ -125,6 +128,13 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     useState(false);
 
   const handleEditOperationalDetails = () => {
+    track(ANALYTICS_EVENTS.AIRPORT_ARRIVAL_DETAILS_EDIT_STARTED, {
+      booking_id,
+      trip_type: trip_type?.trip_type,
+      has_flight_number: Boolean(operationalDetails.flight_number?.trim()),
+      has_terminal: Boolean(operationalDetails.terminal_number?.trim()),
+      placard_required: Boolean(operationalDetails.placard_required),
+    });
     setIsEditingOperationalDetails(true);
   };
 
@@ -145,12 +155,24 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
       if (response && response?.message) {
         // The API returns the unwrapped response body after a successful update.
         setOperationalDetails(details);
+        track(ANALYTICS_EVENTS.AIRPORT_ARRIVAL_DETAILS_SAVED, {
+          booking_id,
+          trip_type: trip_type?.trip_type,
+          has_flight_number: Boolean(details.flight_number?.trim()),
+          has_terminal: Boolean(details.terminal_number?.trim()),
+          placard_required: Boolean(details.placard_required),
+        });
         showToast("Arrival details updated.", "success");
       }
     } catch (error) {
       if (isDevMode) {
         console.error("Error saving operational details:", error);
       }
+      track(ANALYTICS_EVENTS.AIRPORT_ARRIVAL_DETAILS_SAVE_FAILED, {
+        booking_id,
+        trip_type: trip_type?.trip_type,
+        reason: error?.response?.data?.error_code || "unexpected_error",
+      });
       showToast(
         "We couldn't update your arrival details. Please try again.",
         "error",

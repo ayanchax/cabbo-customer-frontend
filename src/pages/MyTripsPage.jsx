@@ -3,6 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import { Loader, PageHeader } from "@/components";
 import { TRIP_OCCURENCE_LABELS } from "@/utils";
 import { AppLayout } from "@/layouts";
+import { useAnalytics } from "@/hooks";
+import { ANALYTICS_EVENTS } from "@/analytics";
 
 const UpcomingTrips = lazy(() =>
   import("@/features/trips/Upcoming").then((m) => ({ default: m.Upcoming })),
@@ -22,6 +24,7 @@ const TABS = [
   { id: TRIP_OCCURENCE_LABELS.PAST, label: "Past" },
 ];
 function MyTripsPage() {
+  const { track } = useAnalytics();
   const [tripCountsByBucket, setTripCountsByBucket] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedTab = searchParams.get("tab") || TRIP_OCCURENCE_LABELS.UPCOMING;
@@ -31,6 +34,10 @@ function MyTripsPage() {
 
   const handleTabChange = (tab) => {
     setSearchParams({ tab });
+    track(ANALYTICS_EVENTS.MY_TRIPS_TAB_SELECTED, {
+      tab,
+      visible_count: tripCountsByBucket[tab],
+    });
 
   };
 
