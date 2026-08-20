@@ -84,7 +84,7 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
     occurrence_label: label || null,
   };
   const amenitiesLabel= status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'You will get these amenities in your cab:' : 'Amenities that were provided for this trip:';
-  const pickupLabel = status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'Pickup' : 'Pickup details';
+  const pickupLabel = status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'Pickup at' : 'Pickup details';
   const hasAssignedDriver = Boolean(bookingDetail?.driver);
   const showCabAuxilliaryDetails =  [TRIP_STATUS.CONFIRMED].includes(status) && [TRIP_OCCURENCE_LABELS.UPCOMING].includes(label)
   const showInventory = showCabAuxilliaryDetails && !hasAssignedDriver;
@@ -233,18 +233,6 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
               className="mb-4"
             />
           )}
-
-          {!isCancelledTrip && (
-            <TripSupportCard
-              bookingId={booking_id}
-              origin={origin}
-              tripType={TRIP_TYPES.LOCAL}
-              tripLabel="hourly rental"
-              reason="Booking help"
-              className="mb-4"
-            />
-          )}
-
           {showSpecialRequest && (
             <TripSpecialRequest
               bookingId={booking_id}
@@ -253,11 +241,9 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
             />
           )}
 
-          
-
           {/* In-car amenities */}
           {bookingDetail?.in_car_amenities && (
-            <div className="mb-2">
+            <div className="mb-4">
               <InCarAmenities
                 {...bookingDetail?.in_car_amenities}
                 className=""
@@ -265,6 +251,8 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
               />
             </div>
           )}
+
+         
 
           {isCancelledTrip && (
             <TripRefundSummary
@@ -290,12 +278,29 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
             />
           )}
 
+          
+
           {/* Fare summary */}
           {fareData && (
             <div className="mb-2">
               <TripFareSummary fareData={fareData} />
             </div>
           )}
+
+          
+
+           {!isCancelledTrip && (
+            <TripSupportCard
+              bookingId={booking_id}
+              origin={origin}
+              tripType={TRIP_TYPES.LOCAL}
+              tripLabel="hourly rental"
+              reason="Booking help"
+              className="mb-4"
+            />
+          )}
+
+          
 
           {showCancellationAction && (
             <CancelTripAction bookingId={booking_id} className="mb-4" />
