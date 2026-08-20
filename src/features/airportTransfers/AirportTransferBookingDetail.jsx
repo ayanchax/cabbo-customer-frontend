@@ -24,7 +24,13 @@ import { isDevMode } from "@/api";
 import { Plane } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
-import { DEFAULT_USER_TIMEZONE, TRIP_TYPES, ROUTES, TRIP_STATUS, TRIP_OCCURENCE_LABELS } from "@/utils";
+import {
+  DEFAULT_USER_TIMEZONE,
+  TRIP_TYPES,
+  ROUTES,
+  TRIP_STATUS,
+  TRIP_OCCURENCE_LABELS,
+} from "@/utils";
 import { useAirportTransferServices } from "./hooks/useAirportTransferServices";
 import { AirportPickupDetailsManager } from "./components/AirportPickupDetailsManager";
 function AirportTransferBookingDetail({ bookingDetail = {} }) {
@@ -166,17 +172,16 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
       : "Amenities that were provided for this trip:";
   const pickupLabel =
     status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING
-      ? "Pickup"
+      ? "Pickup at"
       : "Pickup details";
   const hasAssignedDriver = Boolean(bookingDetail?.driver);
-  
+
   const showCabAuxilliaryDetails =
     [TRIP_STATUS.CONFIRMED].includes(status) &&
-    [TRIP_OCCURENCE_LABELS.UPCOMING].includes(label)
-  
+    [TRIP_OCCURENCE_LABELS.UPCOMING].includes(label);
+
   const showInventory = showCabAuxilliaryDetails && !hasAssignedDriver;
-  
-  
+
   const isDisputedTrip = status === TRIP_STATUS.DISPUTED;
   const isCancelledTrip =
     status === TRIP_STATUS.CANCELLED ||
@@ -209,21 +214,61 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     !isStaleTrip &&
     [TRIP_STATUS.CONFIRMED, TRIP_STATUS.CREATED].includes(status) &&
     label === TRIP_OCCURENCE_LABELS.UPCOMING;
-  const existingTripReview =
-    bookingDetail?.rating || null 
+  const existingTripReview = bookingDetail?.rating || null;
   const isFulfilledReviewEligible =
     !isCancelledTrip &&
     [TRIP_STATUS.COMPLETED, TRIP_STATUS.CLOSED].includes(status) &&
     Number(bookingDetail?.balance_payment ?? 0) === 0;
-  const isCancelledDriverReviewEligible =
-    isCancelledTrip && hasAssignedDriver;
+  const isCancelledDriverReviewEligible = isCancelledTrip && hasAssignedDriver;
   const showTripReview =
     !isStaleTrip &&
     (isFulfilledReviewEligible || isCancelledDriverReviewEligible);
-  
-   
-  
-    return (
+
+  const isAirportPickupTrip =
+    trip_type?.trip_type === TRIP_TYPES.AIRPORT_PICKUP;
+  const hasAirportPickupOperationalDetails =
+    Boolean(operationalDetails.flight_number?.trim()) ||
+    Boolean(operationalDetails.terminal_number?.trim()) ||
+    Boolean(
+      operationalDetails.placard_required &&
+      operationalDetails.placard_name?.trim(),
+    );
+  const isUpcomingAirportPickupDetails =
+    status === TRIP_STATUS.CONFIRMED &&
+    label === TRIP_OCCURENCE_LABELS.UPCOMING;
+  const isOngoingAirportPickupDetails =
+    status === TRIP_STATUS.ONGOING || label === TRIP_OCCURENCE_LABELS.ONGOING;
+  const showAirportPickupDetails =
+    isAirportPickupTrip &&
+    (isUpcomingAirportPickupDetails ||
+      isOngoingAirportPickupDetails ||
+      hasAirportPickupOperationalDetails);
+  const hideEmptyAirportPickupReadOnlyFields =
+    !isUpcomingAirportPickupDetails && !isOngoingAirportPickupDetails;
+
+  const airportPickupDetailsSection = showAirportPickupDetails ? (
+    <AirportPickupDetailsManager
+      read
+      write={isUpcomingAirportPickupDetails}
+      helperTextLabel={
+        isUpcomingAirportPickupDetails
+          ? "Helps your driver coordinate your airport pickup."
+          : "These arrival details were provided for this airport pickup."
+      }
+      id="airportPickupDetails"
+      value={operationalDetails}
+      isEditing={isEditingOperationalDetails}
+      isSaving={isSavingOperationalDetails}
+      onChange={setOperationalDetails}
+      onEdit={handleEditOperationalDetails}
+      onSave={handleSaveOperationalDetails}
+      onCancel={handleCancelOperationalDetails}
+      hideEmptyReadOnlyFields={hideEmptyAirportPickupReadOnlyFields}
+      className="mt-4 mb-4"
+    />
+  ) : null;
+
+  return (
     <div
       className={` relative
           xl:w-3/4 min-h-screen overflow-y-auto
@@ -251,6 +296,7 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
         {isDisputedTrip ? (
           <div className="space-y-4 px-4">
             <DisputedBookingBlockedState className="mt-4" />
+            {airportPickupDetailsSection}
             <TripSupportCard
               bookingId={booking_id}
               origin={origin}
@@ -291,30 +337,7 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
               pickupLabel={pickupLabel}
             />
 
-            {trip_type?.trip_type === TRIP_TYPES.AIRPORT_PICKUP && (
-              <AirportPickupDetailsManager
-                read
-                write={
-                  status === TRIP_STATUS.CONFIRMED &&
-                  label === TRIP_OCCURENCE_LABELS.UPCOMING
-                }
-                helperTextLabel={
-                  status === TRIP_STATUS.CONFIRMED &&
-                  label === TRIP_OCCURENCE_LABELS.UPCOMING
-                    ? "Helps your driver coordinate your airport pickup."
-                    : "These arrival details were provided for this airport pickup."
-                }
-                id="airportPickupDetails"
-                value={operationalDetails}
-                isEditing={isEditingOperationalDetails}
-                isSaving={isSavingOperationalDetails}
-                onChange={setOperationalDetails}
-                onEdit={handleEditOperationalDetails}
-                onSave={handleSaveOperationalDetails}
-                onCancel={handleCancelOperationalDetails}
-                className="mt-4 mb-4"
-              />
-            )}
+            {airportPickupDetailsSection}
 
             {showDriverSection && (
               <TripDriverCard
@@ -344,17 +367,6 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
               />
             )}
 
-            {!isCancelledTrip && (
-              <TripSupportCard
-                bookingId={booking_id}
-                origin={origin}
-                tripType={trip_type?.trip_type}
-                tripLabel={pageHeaderLabel || "airport transfer"}
-                reason="Booking help"
-                className="mb-4"
-              />
-            )}
-
             {showSpecialRequest && (
               <TripSpecialRequest
                 bookingId={booking_id}
@@ -363,11 +375,9 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
               />
             )}
 
-            
-
             {/* In-car amenities */}
             {bookingDetail?.in_car_amenities && (
-              <div className="mb-2">
+              <div className="mb-4">
                 <InCarAmenities
                   {...bookingDetail?.in_car_amenities}
                   className=""
@@ -388,7 +398,6 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
                 className="mb-4 mt-4"
               />
             )}
-
             {isCancelledTrip && (
               <TripSupportCard
                 bookingId={booking_id}
@@ -407,11 +416,21 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
               </div>
             )}
 
+            
+
+            {!isCancelledTrip && (
+              <TripSupportCard
+                bookingId={booking_id}
+                origin={origin}
+                tripType={trip_type?.trip_type}
+                tripLabel={pageHeaderLabel || "airport transfer"}
+                reason="Booking help"
+                className="mb-4"
+              />
+            )}
             {showCancellationAction && (
               <CancelTripAction bookingId={booking_id} className="mb-4" />
             )}
-
-
           </div>
         )}
       </div>

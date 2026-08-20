@@ -34,6 +34,7 @@ function AirportPickupDetailsManager({
   onCancel = () => {},
   className = "",
   helperTextLabel = "",
+  hideEmptyReadOnlyFields = false,
 }) {
   const [isEditing, setIsEditing] = useState(write && !read);
   const [draft, setDraft] = useState({
@@ -180,6 +181,20 @@ function AirportPickupDetailsManager({
     });
   }
 
+  const displayFields =
+    read && !write && hideEmptyReadOnlyFields
+      ? fields.filter((fieldConfig) => {
+          const fieldValue = activeValue[fieldConfig.field];
+          return typeof fieldValue === "string"
+            ? fieldValue.trim().length > 0
+            : Boolean(fieldValue);
+        })
+      : fields;
+
+    if (read && !write && hideEmptyReadOnlyFields && displayFields.length === 0) {
+      return null;
+    }
+
   const getRef= (field) => {
     if (field === "flight_number") return flightNumberInputRef;
     if (field === "placard_name") return placardNameInputRef;
@@ -222,7 +237,7 @@ function AirportPickupDetailsManager({
       </div>
 
       <div className="grid grid-cols-1 gap-2 xs:grid-cols-2">
-        {fields.map((fieldConfig) => {
+        {displayFields.map((fieldConfig) => {
           const Icon = fieldConfig.icon;
           const fieldValue = activeValue[fieldConfig.field];
           const hasValue =

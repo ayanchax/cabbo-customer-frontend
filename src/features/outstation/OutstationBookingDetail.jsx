@@ -90,7 +90,7 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
       : "Amenities that were provided for this trip:";
   const pickupLabel =
     status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING
-      ? "Pickup"
+      ? "Pickup at"
       : "Pickup details";
   const hasAssignedDriver = Boolean(bookingDetail?.driver);
   const showCabAuxilliaryDetails =
@@ -255,16 +255,7 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
               />
             )}
 
-            {!isCancelledTrip && (
-              <TripSupportCard
-                bookingId={booking_id}
-                origin={origin}
-                tripType={TRIP_TYPES.OUTSTATION}
-                tripLabel="outstation"
-                reason="Booking help"
-                className="mb-4 mt-4"
-              />
-            )}
+            
 
             {showSpecialRequest && (
               <TripSpecialRequest
@@ -276,7 +267,7 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
 
             {/* In-car amenities */}
             {bookingDetail?.in_car_amenities && (
-              <div className="mb-2">
+              <div className="mb-4">
                 <InCarAmenities
                   {...bookingDetail?.in_car_amenities}
                   className=""
@@ -309,13 +300,30 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
               />
             )}
 
+            
+
             {/* Fare summary */}
             {fareData && (
               <div className="mb-2">
                 <TripFareSummary fareData={fareData} />
               </div>
             )}
-            {showCancellationAction && (
+           
+
+            
+
+            {!isCancelledTrip && (
+              <TripSupportCard
+                bookingId={booking_id}
+                origin={origin}
+                tripType={TRIP_TYPES.OUTSTATION}
+                tripLabel="outstation"
+                reason="Booking help"
+                className="mb-4 mt-4"
+              />
+            )}
+
+             {showCancellationAction && (
               <CancelTripAction bookingId={booking_id} className="mb-4" />
             )}
           </div>
