@@ -6,6 +6,9 @@ import escapeTheRoutineOutstation from "@/assets/brand-features/escape-the-routi
 import meetNGreetPlacards from "@/assets/brand-features/meet-n-greet-placards.png";
 import premiumExperienceTwo from "@/assets/brand-features/premium-exp-2.png";
 import trustFirstFairFare from "@/assets/brand-features/trust-first-fair-fare.png";
+import scheduledRidesThoughtfullyPlanned from "@/assets/brand-features/scheduled-rides-thoughtfully-planned.png";
+import trustedDrivers from "@/assets/brand-features/trusted-drivers.png";
+
 import {APP} from "@/utils"
 const brandFeatures = [
   {
@@ -24,6 +27,11 @@ const brandFeatures = [
     alt: "Cabbo outstation rides for trips outside the city",
   },
   {
+    id: "scheduled-rides-thoughtfully-planned",
+    image: scheduledRidesThoughtfullyPlanned,
+    alt: "Cabbo scheduled rides that are thoughtfully planned",
+  },
+  {
     id: "trust-first-fair-fare",
     image: trustFirstFairFare,
     alt: "Cabbo trusted service with fair fares",
@@ -32,6 +40,11 @@ const brandFeatures = [
     id: "premium-experience-two",
     image: premiumExperienceTwo,
     alt: "Cabbo comfortable cab experience",
+  },
+  {
+    id: "trusted-drivers",
+    image: trustedDrivers,
+    alt: "Cabbo provides trusted drivers",
   },
   {
     id: "meet-n-greet-placards",
