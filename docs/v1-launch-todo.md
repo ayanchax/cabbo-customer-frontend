@@ -300,25 +300,25 @@ in the local pass were resolved before moving to dev/staging smoke.
 
 ## 8. Production Readiness - DevOps And Operations
 
-- [ ] Configure the production domain and TLS.
-- [ ] Verify production frontend and backend environment configuration.
+- [x] Configure the production domain and TLS.
+- [x] Verify production frontend and backend environment configuration.
 - [x] Verify database backups and perform a restore drill.
-- [ ] Restrict production database inbound access to backend outbound IPs only, if the backend host provides stable/static outbound IPs.
+- [x] Restrict production database inbound access to backend outbound IPs only, if the backend host provides stable/static outbound IPs.
   - For Railway, enable Static Outbound IPs before production if needed and add those `/32` IPs to the Aiven allowlist.
   - Do not treat the open dev database allowlist as a launch blocker while credentials, TLS, and least-privilege users are in place.
-- [ ] Enable production error monitoring and alerts.
+- [x] Enable production error monitoring and alerts.
 - [x] Verify API error logging with sensitive-data redaction.
 - [x] Verify dev route refresh and deep-link hosting configuration on Render using `/* -> /index.html`.
-- [ ] Verify production route refresh and deep-link hosting configuration.
-- [ ] Run database migrations against a production-like environment.
+- [x] Verify production route refresh and deep-link hosting configuration.
+- [x] Run database migrations against a production-like environment.
 - [x] Complete initial development environment deployment rehearsal:
   - customer frontend dev on Render
   - backend dev on Railway
   - Aiven dev MySQL
   - dev custom domains and TLS
-- [ ] Complete end-to-end development smoke test using production-like configuration.
+- [x] Complete end-to-end development smoke test using production-like configuration.
 - [x] Prepare a rollback plan for frontend, backend, and database changes.
-- [ ] Prepare launch-day support coverage and escalation contacts.
+- [x] Prepare launch-day support coverage and escalation contacts.
 
 ## 9. Launch Approval - Business Go/No-Go
 
@@ -326,21 +326,25 @@ in the local pass were resolved before moving to dev/staging smoke.
 - [x] No open P0 defects.
 - [x] P1 defects have an owner and documented launch decision.
 - [x] Legal and operational owners have approved launch readiness.
-- [ ] Payment, booking, support, driver assignment, cancellation, and refund flows pass staging checks.
-- [ ] Production smoke test checklist is ready.
-- [ ] Go/no-go decision is recorded.
+- [x] Payment, booking, support, driver assignment, cancellation, and refund flows pass staging checks.
+- [x] Production smoke test checklist is ready.
+- [x] Go/no-go decision is recorded.
 
 ## 10. Launch Day - Deployment And Monitoring
 
-- [ ] Deploy backend and run required migrations.
-- [ ] Deploy frontend.
-- [ ] Run production smoke tests for every trip type.
-- [ ] Complete one controlled end-to-end real payment and booking test.
-- [ ] Verify confirmation email content, dates, timezone, and links.
-- [ ] Verify admin visibility and driver assignment.
-- [ ] Verify support phone and WhatsApp actions.
-- [ ] Monitor errors, payment webhooks, bookings, and latency.
-- [ ] Record and triage launch issues.
+- [x] Deploy backend and run required migrations.
+- [x] Deploy frontend.
+- [x] Run production smoke tests for every trip type.
+- [x] Complete one controlled end-to-end real payment and booking test.
+- [x] Verify confirmation email content, dates, timezone, and links.
+- [x] Verify admin visibility and driver assignment.
+- [x] Verify support phone and WhatsApp actions.
+- [x] Monitor errors, payment webhooks, bookings, and latency.
+- [x] Record and triage launch issues.
+
+
+LAUNCHED ON 22ND AUGUST 2026 with all pre-requisites fulfilled.
+
 
 ## Deferred Beyond V1
 
