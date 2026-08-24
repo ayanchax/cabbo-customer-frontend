@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, MapPin } from "lucide-react";
 import {
   LocationInput,
   LocationSuggestions,
@@ -436,6 +436,14 @@ const SearchCard = () => {
                 ? "Explore rentals"
                 : "Search cabs"}
           </button>
+          <p className="mt-3 flex items-start gap-2 text-xs leading-5 text-gray-500">
+            <MapPin
+              size={14}
+              className="mt-0.5 shrink-0 text-primary/70"
+              aria-hidden="true"
+            />
+            <span>Currently serving trips that start from Bengaluru, Karnataka.</span>
+          </p>
         </div>
       </div>
     </div>

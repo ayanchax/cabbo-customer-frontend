@@ -135,10 +135,10 @@ Admin V1 should be boring and operational. No configuration management yet.
 ## 7. Production Readiness
 
 - [x] Prepare prod environment variables separately from dev.
-- [ ] Verify production domains and TLS.
+- [x] Verify production domains and TLS.
 - [x] Verify database backup schedule.
-- [ ] Run one restore drill before launch.
-- [ ] Restrict production database inbound access to backend outbound IPs only, if the backend host provides stable/static outbound IPs.
+- [x] Run one restore drill before launch.
+- [x] Restrict production database inbound access to backend outbound IPs only, if the backend host provides stable/static outbound IPs.
   - For Railway, enable Static Outbound IPs before production if needed and add those `/32` IPs to the Aiven allowlist.
   - Keep dev database allowlisting flexible until static backend egress is available; rely on strong credentials, TLS, and least-privilege app users during dev.
 - [x] Rehearse migrations against a prod-like database.
@@ -146,10 +146,12 @@ Admin V1 should be boring and operational. No configuration management yet.
 - [x] Verify prod seed/config data before starting the production backend container.
 - [x] Confirm rollback plan for backend deployment.
 - [x] Configure production Sentry alerts.
-- [ ] Configure uptime/health monitoring.
-- [ ] Run production smoke checklist.
-- [ ] Run one controlled real payment before public launch.
-- [ ] Run one controlled real cancel and refund flow where money gets credited back to customer account from razorpay on cancellation.
+- [x] Configure uptime/health monitoring.
+- [x] Run production smoke checklist.
+- [x] Run one controlled real payment before public launch.
+- [x] Run one controlled real cancel and refund flow where money gets credited back to customer account from razorpay on cancellation.
+
+LAUNCHED ON 22ND AUGUST 2026 with all pre-requisites fulfilled.
 
 ## 8. Deferred Beyond V1
 
