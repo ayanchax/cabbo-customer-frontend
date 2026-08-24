@@ -567,3 +567,5 @@ And Cabbo operations can:
 - support the customer
 - verify payment and fare information
 - fulfil or cancel/refund the trip through a documented process
+
+LAUNCHED ON 22ND AUGUST 2026 with all pre-requisites fulfilled.
