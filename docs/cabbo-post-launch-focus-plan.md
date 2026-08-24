@@ -23,6 +23,9 @@
 - [....] Show a helpful message when someone selects an unsupported origin. Not doing for V1: keep the generic `NoRidesAvailable` state because failures can have several causes, and the Bengaluru-origin availability note now sets the expectation before search.
 - [x] Monitor the complete journey: app open → OTP → search → selection → booking → payment. Already doing it using PostHog captures throughout the app. We have this change only on the main production branch. We do not need to hammer posthog api calls in dev.
 - [x] Verify confirmations, cancellations, refunds in production.
+- [x] Add foundational technical SEO for the launched app: descriptive homepage metadata, canonical URL, structured service data, and environment-generated `robots.txt`/`sitemap.xml` files. Dev builds should point to `app.dev.cabbo.co.in` and block indexing; prod builds should point to `app.cabbo.co.in`.
+- [ ] Submit the production app to Google Search Console and inspect `https://app.cabbo.co.in/`, `robots.txt`, and `sitemap.xml` after deployment.
+- [ ] Keep public organic-content work minimal until demand is clearer: route/use-case pages belong in Stage 3 after real search and booking data show what people want.
 - [...] Personally observe and support the first online bookings. In progress. Already doing. So far 14 unique customers logged in, no trips yet.
 - [...] Fix genuine customer friction before adding new features. Nothing reported or monitored to be fixed yet.
 
@@ -53,7 +56,7 @@
 **Use customer behaviour to decide what to build and promote.**
 
 - [ ] Strengthen Cabbo's Google Business Profile and foundational SEO.
-- [ ] Track the routes and destinations customers search for most.
+- [x] Track the routes and destinations customers search for most. Posthog is applied for that.
 - [ ] Create prefilled trip-search links/cards for proven high-interest routes.
 - [ ] Publish route-focused content for airport, local and outstation travel.
 - [ ] Run only small, Bengaluru-targeted and measurable ad experiments.

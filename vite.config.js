@@ -1,5 +1,5 @@
 
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
@@ -9,12 +9,55 @@ import fs from 'fs/promises'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-export default defineConfig({
+const normalizeBaseUrl = (value) => (value || 'https://app.cabbo.co.in').replace(/\/+$/, '')
+
+const createRobotsTxt = ({ appBaseUrl, isProduction }) => {
+  if (!isProduction) {
+    return `User-agent: *
+Disallow: /
+
+Sitemap: ${appBaseUrl}/sitemap.xml
+`
+  }
+
+  return `User-agent: *
+Allow: /
+Disallow: /booking
+Disallow: /trips
+Disallow: /profile
+Disallow: /verify
+Disallow: /onboard
+
+Sitemap: ${appBaseUrl}/sitemap.xml
+`
+}
+
+const createSitemapXml = ({ appBaseUrl }) => `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${appBaseUrl}/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${appBaseUrl}/login</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>
+`
+
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, __dirname, '')
+  const appBaseUrl = normalizeBaseUrl(env.VITE_APP_BASE_URL)
+  const isProduction = mode === 'prod' || env.VITE_DEV_MODE === 'false'
+
+  return {
   plugins: [
     react(),
     tailwindcss(),
     {
-      name: 'remove-non-production-folders',
+      name: 'prepare-production-artifacts',
       apply: 'build',
       async closeBundle() {
         const outDir = path.resolve(__dirname, 'dist')
@@ -22,6 +65,16 @@ export default defineConfig({
           fs.rm(path.join(outDir, 'docs'), { recursive: true, force: true }),
           fs.rm(path.join(outDir, 'payloads'), { recursive: true, force: true }),
           fs.rm(path.join(outDir, 'favicon.svg'), { force: true }),
+          fs.writeFile(
+            path.join(outDir, 'robots.txt'),
+            createRobotsTxt({ appBaseUrl, isProduction }),
+            'utf8',
+          ),
+          fs.writeFile(
+            path.join(outDir, 'sitemap.xml'),
+            createSitemapXml({ appBaseUrl }),
+            'utf8',
+          ),
         ])
       },
     },
@@ -80,4 +133,5 @@ export default defineConfig({
       },
     },
   },
+  }
 })
