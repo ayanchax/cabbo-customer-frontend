@@ -68,6 +68,7 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     price_breakdown,
     status,
     label = undefined, // can be upcoming, completed, cancelled, past etc.
+    tax_inclusive=false
   } = bookingDetail;
   const dropOff = destination || null;
 
@@ -110,6 +111,7 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     locked_add_on_keys: lockedAddOnKeys,
     trip_status: status || null,
     occurrence_label: label || null,
+    tax_inclusive
   };
 
   const initialOperationalDetails = {
