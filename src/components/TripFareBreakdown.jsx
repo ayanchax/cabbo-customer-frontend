@@ -2,11 +2,19 @@ import React from "react";
 import { Info } from "lucide-react";
 import { formatMoney, ROUTES } from "@/utils";
 
+const INTERNAL_PRICE_BREAKDOWN_KEYS = new Set([
+  "platform_fee_base",
+  "platform_fee_tax",
+  "platform_fee_tax_rate_percent",
+  "platform_fee_tax_type",
+]);
+
 function TripFareBreakdown({
   priceBreakdown,
   currencySymbol,
   lockedAddOnKeys = [],
   addOnDisclaimer = null,
+  inclusiveOfAllTaxes = false,
   className = "",
 }) {
   const lockedAddOnKeySet = new Set(lockedAddOnKeys);
@@ -14,7 +22,9 @@ function TripFareBreakdown({
     lockedAddOnKeySet.has(key),
   );
   const visibleEntries = Object.entries(priceBreakdown || {}).filter(
-    ([, value]) => (typeof value === "number" ? value !== 0 : true),
+    ([key, value]) =>
+      !(inclusiveOfAllTaxes && INTERNAL_PRICE_BREAKDOWN_KEYS.has(key)) &&
+      (typeof value === "number" ? value !== 0 : true),
   );
   const sortByAmountDescending = ([, firstValue], [, secondValue]) => {
     if (
@@ -52,6 +62,8 @@ function TripFareBreakdown({
           </li>
         ))}
       </ul>
+      
+
       {addOnDisclaimer && hasLockedAddOns && (
         <div className="mt-3 flex items-start gap-2 rounded-md border border-blue-100 bg-blue-50/70 px-3 py-2 text-xs leading-5 text-gray-600">
           <Info
@@ -61,6 +73,12 @@ function TripFareBreakdown({
           />
           {addOnDisclaimer && <span>{addOnDisclaimer}</span>}
         </div>
+      )}
+
+      {inclusiveOfAllTaxes && (
+        <p className="mt-1.5 text-xs leading-5 text-gray-500">
+          Fares shown are inclusive of applicable GST.
+        </p>
       )}
 
       <div className="mt-3 text-xs text-gray-500">

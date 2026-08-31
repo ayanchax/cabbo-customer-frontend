@@ -39,6 +39,7 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
     timezone: server_timezone,
     status,
     label=undefined, // can be upcoming, completed, cancelled, past etc.
+    tax_inclusive=false
   } = bookingDetail;
   let dropOff = destination || null;
   if (origin?.place_id === dropOff?.place_id) {
@@ -82,6 +83,7 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
     currency: bookingDetail?.currency || null,
     trip_status: status || null,
     occurrence_label: label || null,
+    tax_inclusive
   };
   const amenitiesLabel= status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'You will get these amenities in your cab:' : 'Amenities that were provided for this trip:';
   const pickupLabel = status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING ? 'Pickup at' : 'Pickup details';

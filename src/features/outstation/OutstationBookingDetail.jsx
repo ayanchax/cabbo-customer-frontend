@@ -43,6 +43,7 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
     timezone: server_timezone,
     status,
     label = undefined, // can be upcoming, completed, cancelled, past etc.
+    tax_inclusive=false
   } = bookingDetail;
   const dropOff = destination || null;
   const fetchedHops = bookingDetail?.hops || null;
@@ -83,6 +84,7 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
     currency: bookingDetail?.currency || null,
     trip_status: status || null,
     occurrence_label: label || null,
+    tax_inclusive
   };
   const amenitiesLabel =
     status === TRIP_STATUS.CONFIRMED && label === TRIP_OCCURENCE_LABELS.UPCOMING
