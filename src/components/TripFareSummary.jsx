@@ -102,6 +102,7 @@ function TripFareSummary({ fareData, className = "", showPayRestToDriver = true 
     locked_add_on_keys = [],
     trip_status = null,
     occurrence_label = null,
+    tax_inclusive=false
   } = fareData || {};
 
   const currencyCode = currency?.code || DEFAULT_CURRENCY_CODE;
@@ -227,7 +228,9 @@ function TripFareSummary({ fareData, className = "", showPayRestToDriver = true 
           title="Fare Breakdown"
           titleClassName="text-gray-500 text-sm md:text-base lg:text-md font-normal"
         >
+          
           <TripFareBreakdown
+            inclusiveOfAllTaxes={tax_inclusive}
             priceBreakdown={price_breakdown}
             currencySymbol={currencyCode}
             lockedAddOnKeys={locked_add_on_keys}

@@ -93,7 +93,9 @@ function TripPaymentSummary({ orderData, fareData, onPay = () => {} }) {
             title="Fare Breakdown"
             titleClassName="text-gray-500 text-sm md:text-base lg:text-md mb-1 font-normal"
           >
+            
             <TripFareBreakdown
+              inclusiveOfAllTaxes // New trips are always inclusive of all taxes
               priceBreakdown={price_breakdown}
               currencySymbol={currency_code}
               lockedAddOnKeys={locked_add_on_keys}
