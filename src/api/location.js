@@ -12,8 +12,16 @@ export const reverseGeocode = async (lat, lng) => {
 // Location search: get location suggestions based on query and optionally coordinates (for relevance sorting)
 // Uses sessionToken for better results and to enable features like location enrichment in the future, but it's optional to allow caching across users for popular queries
 export const searchLocations = async (query, coordinates = {}, signal=null, sessionToken=null) => {
-  const { lat, lng } = coordinates; // optional, can be undefined if user did not provide location access or if we want to search globally
-  const { data } = await api.get(`${ENDPOINTS.LOCATION.SEARCH}?query=${encodeURIComponent(query)}&lat=${lat}&lng=${lng}&session_token=${sessionToken}`, { signal });
+  const { lat, lng } = coordinates ?? {}; // optional, can be undefined if user did not provide location access or if we want to search globally
+  const params = new URLSearchParams({ query });
+  if (lat != null && lng != null) {
+    params.set("lat", lat);
+    params.set("lng", lng);
+  }
+  if (sessionToken) {
+    params.set("session_token", sessionToken);
+  }
+  const { data } = await api.get(`${ENDPOINTS.LOCATION.SEARCH}?${params.toString()}`, { signal });
   return data;
 }
 
