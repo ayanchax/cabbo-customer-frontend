@@ -10,6 +10,8 @@ import {
 import {
   DEFAULT_USER_LOCALE,
   DEFAULT_USER_TIMEZONE,
+  DEFAULT_CURRENCY_CODE,
+  formatMoney,
   titleCase,
   TRIP_TYPES,
   TRIP_STATUS,
@@ -93,6 +95,12 @@ function getFleetLabel(booking) {
   return `${carType}${fuelType}`;
 }
 
+function toFiniteNumber(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
 function StatusPill({ displayStatus }) {
   const [showWhy, setShowWhy] = useState(false);
 
@@ -142,9 +150,19 @@ function TripBookingCard({
   const tripType = booking?.trip_type?.trip_type || null;
   const status = booking?.status || null;
   const label = booking?.label || null;
-  const currencySymbol = booking?.currency?.symbol || null;
-  const price = booking?.final_price ?? null;
-  const fareLabel = price !== null ? `${currencySymbol}${price}` : null;
+  const currencyCode = booking?.currency?.code || DEFAULT_CURRENCY_CODE;
+  const price = toFiniteNumber(booking?.final_price);
+  const advancePayment = toFiniteNumber(booking?.advance_payment);
+  const driverPaymentAmount = toFiniteNumber(booking?.balance_payment);
+  const isOngoingTrip =
+    status === TRIP_STATUS.ONGOING ||
+    label === TRIP_OCCURENCE_LABELS.ONGOING;
+  const showOngoingPaymentSplit =
+    isOngoingTrip &&
+    price !== null &&
+    advancePayment !== null &&
+    driverPaymentAmount !== null;
+  const fareLabel = price !== null ? formatMoney(price, currencyCode) : null;
   const datetime = booking?.start_datetime;
   const normalizedDatetime =
     datetime && !/Z$|[+-]\d{2}:\d{2}$/.test(datetime)
@@ -157,7 +175,7 @@ function TripBookingCard({
     return null; // Skip rendering this booking card if datetime is invalid
   }
 
-  if (!tripType || !tripLabel || !status || !currencySymbol || !price) {
+  if (!tripType || !tripLabel || !status || price === null) {
     return null; // Skip rendering this booking card if essential data is missing
   }
 
@@ -221,6 +239,21 @@ function TripBookingCard({
             <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
             <span className="line-clamp-2">{getRouteSummary(booking)}</span>
           </div>
+
+          {showOngoingPaymentSplit && (
+            <div className="mt-2.5 flex items-center gap-2 overflow-x-auto pb-0.5 text-xs scrollbar-hide">
+              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 font-medium text-emerald-700 ring-1 ring-emerald-100">
+                <span className="text-emerald-600/80">You paid</span>
+                <span>{formatMoney(advancePayment, currencyCode)}</span>
+              </span>
+              <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-gray-50 px-2.5 py-0.5 font-semibold text-gray-700 ring-1 ring-gray-200">
+                <span>Pay to driver</span>
+                <span className="text-sm font-bold text-gray-900">
+                  {formatMoney(driverPaymentAmount, currencyCode)}
+                </span>
+              </span>
+            </div>
+          )}
         </div>
 
         <ChevronRight className="mt-1 h-5 w-5 shrink-0 text-gray-300 transition group-hover:text-primary" />
