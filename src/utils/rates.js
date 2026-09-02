@@ -11,7 +11,7 @@ export const calculatePerMinRate = (option) => {
 
 export const calculatePerKmRate = (option) => {
     if (option.rate_per_km) {
-        return option.rate_per_km.toFixed(2);
+        return option.rate_per_km;
     }
 
     return null;
