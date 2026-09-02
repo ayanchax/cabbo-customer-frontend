@@ -6,6 +6,7 @@ import {
   useToast,
   useTimezone,
   useOverlay,
+  useAnalytics,
 } from "@/hooks";
 import {
   InlineDateTimePicker,
@@ -29,12 +30,14 @@ import {} from "@/components";
 import { isDevMode } from "@/api";
 import { Info } from "lucide-react";
 import {ROUTES, enrichOptionsWithRates, DEFAULT_USER_TIMEZONE} from "@/utils";
+import { ANALYTICS_EVENTS } from "@/analytics";
 
 const DEFAULT_MINIMUM_BOOKING_HOURS = 6; // Default to 6 hours if API doesn't provide a value
 function LocalHourlyRental() {
   const location = useLocation();
   const { timezone: client_timezone } = useTimezone();
   const { showOverlay, hideOverlay } = useOverlay();
+  const { track } = useAnalytics();
   const searchTrips = useLocalTripSearch();
   // Origin is passed in navigation state from previous step
   const origin = location.state?.pickup;
@@ -103,17 +106,28 @@ function LocalHourlyRental() {
         const msg =
           "Pickup location is required to book a local hourly rental.";
         showToast(msg, "error", { position: "top-center" });
-
+        track(ANALYTICS_EVENTS.RIDE_SEARCH_VALIDATION_FAILED, {
+          trip_type,
+          reason: "missing_pickup",
+        });
         return;
       }
       if (!startDate) {
         const msg = "Please select a start date and time.";
         showToast(msg, "error", { position: "top-center" });
+        track(ANALYTICS_EVENTS.RIDE_SEARCH_VALIDATION_FAILED, {
+          trip_type,
+          reason: "missing_start_datetime",
+        });
         return;
       }
       if (!selectedPackageId) {
         const msg = "Please select a package.";
         showToast(msg, "error", { position: "top-center" });
+        track(ANALYTICS_EVENTS.RIDE_SEARCH_VALIDATION_FAILED, {
+          trip_type,
+          reason: "missing_package",
+        });
         return;
       }
       if (
@@ -122,6 +136,12 @@ function LocalHourlyRental() {
       ) {
         const msg = `Start time must be at least ${priorBookingWindow || DEFAULT_MINIMUM_BOOKING_HOURS} hours from now.`;
         showToast(msg, "error", { position: "top-center" });
+        track(ANALYTICS_EVENTS.RIDE_SEARCH_VALIDATION_FAILED, {
+          trip_type,
+          reason: "start_datetime_too_soon",
+          minimum_booking_hours:
+            priorBookingWindow || DEFAULT_MINIMUM_BOOKING_HOURS,
+        });
         return;
       }
       const overlayProps = {
@@ -142,6 +162,14 @@ function LocalHourlyRental() {
         timezone: client_timezone.timezone,
         utc_offset: client_timezone.utc_offset_minutes,
       };
+      track(ANALYTICS_EVENTS.RIDE_SEARCH_SUBMITTED, {
+        trip_type,
+        package_id: selectedPackageId,
+        passenger_count:
+          Number(ridePreferences.num_adults || 0) +
+          Number(ridePreferences.num_children || 0),
+        has_dropoff: Boolean(dropOff),
+      });
       const response = await searchTrips.mutateAsync(payload);
       if (isDevMode) {
         console.log("Search response:", response);
@@ -152,12 +180,26 @@ function LocalHourlyRental() {
       data.options = enrichedOptions;
 
       setSearchResults(data); // Store search results to pass to next page
+      track(
+        data?.options?.length > 0
+          ? ANALYTICS_EVENTS.RIDE_OPTIONS_LOADED
+          : ANALYTICS_EVENTS.RIDE_OPTIONS_EMPTY,
+        {
+          trip_type,
+          package_id: selectedPackageId,
+          options_count: data?.options?.length || 0,
+        },
+      );
       hideOverlay();
     } catch (e) {
       hideOverlay();
       if (isDevMode) {
         console.error("Error during booking:", e);
       }
+      track(ANALYTICS_EVENTS.RIDE_SEARCH_FAILED, {
+        trip_type,
+        reason: e?.response?.data?.error_code || "unexpected_error",
+      });
       const msg = "An unexpected error occurred. Please try again.";
       showToast(msg, "error", { position: "top-center" });
     } finally {
@@ -167,6 +209,14 @@ function LocalHourlyRental() {
 
   const handleBook = (option) => {
      setInProgress(true); 
+     track(ANALYTICS_EVENTS.RIDE_OPTION_SELECTED, {
+      trip_type,
+      package_id: selectedPackageId,
+      car_type: option?.car_type,
+      fuel_type: option?.fuel_type,
+      total_price: option?.total_price,
+      currency: option?.currency?.code || option?.currency,
+    });
      const payload ={
       option,
       preferences: searchResults?.preferences || {},

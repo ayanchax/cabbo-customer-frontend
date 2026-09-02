@@ -3,8 +3,9 @@ import { ROUTES } from "@/utils";
 import { parseUtcDate } from "@/utils";
 import { useState, useRef, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
-import { useAuth, useToast } from "@/hooks";
+import { useAnalytics, useAuth, useToast } from "@/hooks";
 import { isDevMode } from "@/api";
+import { ANALYTICS_EVENTS } from "@/analytics";
 
 const OTPInput = {
   size: 6,
@@ -15,6 +16,7 @@ const Verify = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { resendOtp, verifyLogin, verifyOnboarding } = useAuth();
+  const { track } = useAnalytics();
   const {
     phone,
     displayPhone,
@@ -93,11 +95,20 @@ const Verify = () => {
       );
 
       setSecondsLeft(newRemaining);
+      track(ANALYTICS_EVENTS.OTP_REQUESTED, {
+        flow,
+        resent: true,
+      });
       showToast("OTP resent successfully, check your phone.", "success");
     } catch (err) {
       if (isDevMode) {
         console.error("Resend failed", err);
       }
+      track(ANALYTICS_EVENTS.OTP_REQUEST_FAILED, {
+        flow,
+        reason: err?.response?.data?.error_code || "resend_failed",
+        resent: true,
+      });
       setSecondsLeft(resend_timer_data.resend_after || 60); // Reset to default on failure to prevent spamming
       showToast("Failed to resend OTP. Please try again.", "error");
     }
@@ -114,12 +125,18 @@ const Verify = () => {
           phone_number: phone,
           otp: otpValue,
         });
+        track(ANALYTICS_EVENTS.OTP_VERIFIED, {
+          flow: "login",
+        });
         navigate(ROUTES.HOME);
         return;
       } else {
         await verifyOnboarding.mutateAsync({
           phone_number: phone,
           otp: otpValue,
+        });
+        track(ANALYTICS_EVENTS.OTP_VERIFIED, {
+          flow: "onboarding",
         });
 
         navigate(ROUTES.ONBOARD, {state:{
@@ -130,6 +147,10 @@ const Verify = () => {
       if (isDevMode) {
         console.error("OTP verification failed", err);
       }
+      track(ANALYTICS_EVENTS.OTP_VERIFICATION_FAILED, {
+        flow,
+        reason: err?.response?.data?.error_code || "invalid_otp",
+      });
       setOtp(Array(OTPInput.size).fill(""));
       inputRefs.current[0]?.focus();
       setShake(true);

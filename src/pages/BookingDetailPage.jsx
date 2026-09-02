@@ -1,8 +1,9 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useTripBookingDetail } from "@/hooks";
+import { useAnalytics, useTripBookingDetail } from "@/hooks";
 import { FeedbackState, Loader } from "@/components";
 import { ROUTES, SERVER_ERROR_CODES, TRIP_TYPES } from "@/utils";
+import { ANALYTICS_EVENTS } from "@/analytics";
 
 const LocalHourlyRentalBookingDetail = lazy(() =>
   import("@/features/localHourlyRental/LocalHourlyRentalBookingDetail").then(
@@ -25,6 +26,7 @@ const OutstationBookingDetail = lazy(() =>
 function BookingDetailPage() {
   const { bookingId } = useParams();
   const navigate = useNavigate();
+  const { track } = useAnalytics();
 
   if (!bookingId) {
     throw new Error(
@@ -42,6 +44,17 @@ function BookingDetailPage() {
   const statusCode = error?.response?.status;
   const isTripNotFound =
     statusCode === 404 || errorCode === SERVER_ERROR_CODES.TRIP_NOT_FOUND;
+
+  useEffect(() => {
+    if (!bookingDetailData) return;
+
+    track(ANALYTICS_EVENTS.BOOKING_DETAIL_VIEWED, {
+      booking_id: bookingDetailData?.booking_id,
+      trip_type: bookingDetailData?.trip_type?.trip_type,
+      status: bookingDetailData?.status,
+      occurrence_label: bookingDetailData?.label,
+    });
+  }, [bookingDetailData, track]);
 
   if (isTripNotFound) {
     return (
@@ -81,10 +94,6 @@ function BookingDetailPage() {
   if (!bookingDetailData || isLoading) {
     return <Loader message="Loading your booking..." />;
   }
-
-
-
-  
 
   // Trip type is essential to determine which booking detail component to render, so we validate its presence and value before proceeding
   const tripType = bookingDetailData?.trip_type?.trip_type || null; // Fallback to generic term if trip type is not available

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { CircleCheck, Send, Star } from "lucide-react";
 import { useSubmitTripReview, useToast } from "@/hooks";
 import {APP} from "@/utils"
+import { ANALYTICS_EVENTS, useAnalytics } from "@/analytics";
 const MAX_FEEDBACK_LENGTH = 500;
 const RATING_OPTIONS = [1, 2, 3, 4, 5];
 
@@ -94,6 +95,7 @@ function ReadOnlyReview({ review, justSubmitted = false }) {
 
 function TripReview({ bookingId, initialReview = null, className = "" }) {
   const { showToast } = useToast();
+  const { track } = useAnalytics();
   const [submittedReview, setSubmittedReview] = useState(() =>
     normalizeReview(initialReview),
   );
@@ -133,12 +135,23 @@ function TripReview({ bookingId, initialReview = null, className = "" }) {
         return;
       }
       // At this point, the review submission is a success.
+      track(ANALYTICS_EVENTS.REVIEW_SUBMITTED, {
+        booking_id: bookingId,
+        rating,
+        has_feedback: Boolean(trimmedFeedback),
+      });
       setSubmittedReview(payload);
       setJustSubmitted(true);
       setRating(0);
       setFeedback("");
       showToast("Thanks for your review.", "success");
     } catch (error) {
+      track(ANALYTICS_EVENTS.REVIEW_FAILED, {
+        booking_id: bookingId,
+        rating,
+        has_feedback: Boolean(trimmedFeedback),
+        reason: error?.response?.data?.error_code || "unexpected_error",
+      });
       showToast(
         error?.response?.data?.detail ||
           "We couldn't submit your review. Please try again.",
