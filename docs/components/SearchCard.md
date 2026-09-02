@@ -16,6 +16,7 @@ suggestions, and trip-classification routing.
 | `pickupEnrichId` / `dropEnrichId` | Selected `place_id` awaiting details |
 | `pickupEnrichToken` / `dropEnrichToken` | Session token captured at selection |
 | `sessionToken` | Rotating Google Autocomplete billing-session UUID |
+| `locationResolveMessage` | Short inline prompt shown when a selected place cannot be resolved before search |
 
 `SearchCard` does not force-fill pickup or request location permission on
 mount. The user can select **Use current location** from pickup suggestions.
@@ -121,6 +122,18 @@ const finalPickup = pickupEnrichId
   ? (enrichedPickup ?? pickup)
   : pickup;
 ```
+
+Because enrichment is asynchronous, the user may click the search CTA before
+Place Details has completed. `handleSearch` treats the hook as the source of
+truth and calls the relevant query's `refetch()` as a final guard when a
+selected place has a `place_id` but no coordinates yet.
+
+The classification API is called only after pickup and optional drop resolve
+to coordinate-bearing locations. If details still cannot be resolved, the
+component shows a short reassuring inline prompt, such as `We couldn't identify
+this pickup. Please choose it again.` or `We couldn't identify this drop-off.
+Please choose it again.`, and skips the backend call. This keeps a recoverable
+autocomplete issue out of the global error/no-rides flow.
 
 ## Trip Classification
 

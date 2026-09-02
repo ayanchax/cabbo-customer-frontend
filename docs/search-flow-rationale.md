@@ -23,6 +23,19 @@ Cabbo's trip search flow is designed to balance user experience, trust, and oper
 - **Transparency:** Users know exactly what information is being used to generate results.
 - **Scalability:** Backend is designed to support more advanced flows in the future if needed.
 
+### Location Completeness Guard
+
+Autocomplete suggestions may initially contain only display fields and a
+`place_id`. Cabbo enriches those selections through Place Details before using
+them for classification or trip search, because downstream APIs require
+coordinate-bearing locations.
+
+If the customer taps Search before background enrichment finishes, the frontend
+uses the existing Place Details query to refetch the selected location before
+calling the classification API. If coordinates still cannot be resolved, the
+UI shows a short inline prompt to reselect that location and does not send a
+partial payload to the backend.
+
 ### Downsides
 - Slightly slower to see options (one extra click).
 - Requires user to provide all required info before seeing cabs.
