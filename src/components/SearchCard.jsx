@@ -22,6 +22,27 @@ import { isDevMode } from "@/api";
 import {TRIP_TYPES, ROUTES} from "@/utils"
 import {APP} from "@/utils";
 
+const hasLocationCoordinates = (location) =>
+  location &&
+  (location.lat != null || location.latitude != null) &&
+  (location.lng != null || location.longitude != null);
+
+const resolveSearchLocation = async (location, locationDetailsQuery) => {
+  try {
+    if (!location || hasLocationCoordinates(location)) return location;
+    if (!location.place_id) return location;
+
+    // Enrichment Fallback by place_id if in case the query is not yet complete, or if the user selected a suggestion that doesn't have coordinates yet due to slow network/internet, we will refetch the location details using the place_id to get the full location data including coordinates.
+    const { data } = await locationDetailsQuery.refetch();
+    return data ?? location;
+  } catch (e) {
+    if (isDevMode) {
+      console.error("Failed to resolve search location", e);
+    }
+    return location;
+  }
+};
+
 
 
 const SearchCard = () => {
@@ -35,6 +56,7 @@ const SearchCard = () => {
   const [drop, setDrop] = useState(null); // raw selection (display only)
 
   const [noRidesError, setNoRidesError] = useState(false); // error state for no rides available scenario
+  const [locationResolveMessage, setLocationResolveMessage] = useState("");
   // Local session token — rotates after each select to correctly bound Google billing sessions.
   // Autocomplete + Place Details must share the same token; rotating after each select
   // groups them into one billing unit (~$0.017) instead of per-request Autocomplete charges.
@@ -52,14 +74,16 @@ const SearchCard = () => {
 
   // Background enrichment: search results only carry display_name/address/place_id;
   // fetch full details (lat, lng, country, state…) silently after selection.
-  const { data: enrichedPickup } = useLocationByPlaceIdQuery(
+  const pickupDetailsQuery = useLocationByPlaceIdQuery(
     pickupEnrichId,
     pickupEnrichToken,
   );
-  const { data: enrichedDrop } = useLocationByPlaceIdQuery(
+  const dropDetailsQuery = useLocationByPlaceIdQuery(
     dropEnrichId,
     dropEnrichToken,
   );
+  const enrichedPickup = pickupDetailsQuery.data;
+  const enrichedDrop = dropDetailsQuery.data;
 
   // For navigation: prefer enriched (fully formed) over raw selection
   const finalPickup = pickupEnrichId ? (enrichedPickup ?? pickup) : pickup;
@@ -175,12 +199,37 @@ const SearchCard = () => {
     if (inProgress) return; // prevent multiple rapid clicks
     try {
       setInProgress(true);
-      // Use fully enriched location for navigation; fall back to raw if enrichment is still loading
-
-      const pickupForNav = pickupCleared ? null : finalPickup;
-      const dropForNav = finalDrop;
+      setLocationResolveMessage("");
+      // Search suggestions can be display-only at first. Resolve Place Details
+      // here as the final guard so the backend never receives a partial place.
+      // The resolveSearchLocation function is a fallback to ensure that we never go in the backend with a location that doesn't have coordinates, even if the user selected a suggestion that doesn't have coordinates yet due to slow network/internet.
+      const pickupForNav = pickupCleared
+        ? null
+        : await resolveSearchLocation(finalPickup, pickupDetailsQuery);
+      const dropForNav = await resolveSearchLocation(
+        finalDrop,
+        dropDetailsQuery,
+      );
 
       if (!pickupForNav) return;
+      if (!hasLocationCoordinates(pickupForNav)) {
+        setLocationResolveMessage(
+          "We couldn't identify this pickup. Please choose it again.",
+        );
+        return;
+      }
+      if (dropForNav && !hasLocationCoordinates(dropForNav)) {
+        setLocationResolveMessage(
+          "We couldn't identify this drop-off. Please choose it again.",
+        );
+        return;
+      }
+
+      // Ensuring the cache is updated with the latest selection before navigating, so that the recent suggestions are always up to date and does not depend solely on the useEffect that caches the selection on mount. This is important because the user may have selected a location and then navigated away before the useEffect had a chance to run, and we want to ensure that the recent suggestions are always up to date.
+      cacheSuggestionToLocalStorage(pickupForNav);
+      if (dropForNav) {
+        cacheSuggestionToLocalStorage(dropForNav);
+      }
       const response = await classifyTripType.mutateAsync({
         pickup: pickupForNav,
         dropoff: dropForNav,
@@ -300,6 +349,7 @@ const SearchCard = () => {
                 }}
                 onChange={(value) => {
                   setPickupQuery(value);
+                  setLocationResolveMessage("");
                   if (value === "") {
                     setPickup(null);
                     setPickupEnrichId(null);
@@ -348,6 +398,7 @@ const SearchCard = () => {
                 }}
                 onChange={(value) => {
                   setDropQuery(value);
+                  setLocationResolveMessage("");
                   if (value === "") {
                     setDrop(null);
                     setDropEnrichId(null);
@@ -386,6 +437,7 @@ const SearchCard = () => {
               isLocating={isLocatingPickup}
               currentLocationError={currentLocationError}
               onSelect={(item) => {
+                setLocationResolveMessage("");
                 // Record explicit selections immediately. Enriched details replace
                 // this entry later using the same place_id.
                 cacheSuggestionToLocalStorage(item);
@@ -398,7 +450,11 @@ const SearchCard = () => {
                   setPickupCleared(false);
                   // Snapshot current token for Place Details, then rotate for next cycle
                   setPickupEnrichToken(sessionToken);
-                  setPickupEnrichId(item.lat ? null : (item.place_id ?? null));
+                  setPickupEnrichId(
+                    hasLocationCoordinates(item)
+                      ? null
+                      : (item.place_id ?? null),
+                  );
                   setPickupQuery("");
                 } else {
                   setDrop((prev) => {
@@ -406,7 +462,11 @@ const SearchCard = () => {
                     return item;
                   });
                   setDropEnrichToken(sessionToken);
-                  setDropEnrichId(item.lat ? null : (item.place_id ?? null));
+                  setDropEnrichId(
+                    hasLocationCoordinates(item)
+                      ? null
+                      : (item.place_id ?? null),
+                  );
                   setDropQuery("");
                 }
                 rotateSession();
@@ -436,13 +496,20 @@ const SearchCard = () => {
                 ? "Explore rentals"
                 : "Search cabs"}
           </button>
+          {locationResolveMessage && (
+            <p className="mt-2 text-center text-xs leading-5 text-gray-500">
+              {locationResolveMessage}
+            </p>
+          )}
           <p className="mt-3 flex items-start gap-2 text-xs leading-5 text-gray-500">
             <MapPin
               size={14}
               className="mt-0.5 shrink-0 text-primary/70"
               aria-hidden="true"
             />
-            <span>Currently serving trips that start from Bengaluru, Karnataka.</span>
+            <span>
+              Currently serving trips that start from Bengaluru, Karnataka.
+            </span>
           </p>
         </div>
       </div>
