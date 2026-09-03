@@ -7,7 +7,7 @@ import {
   useOverlay,
   useAnalytics,
 } from "@/hooks";
-import { Route } from "lucide-react";
+import { Info, Route } from "lucide-react";
 import {
   InlineDateTimePicker,
   GettingRideOptionsIllustration,
@@ -163,9 +163,9 @@ function AirportTransfer() {
 
   const getTollRoadHelperText = () => {
     if (trip_type === TRIP_TYPES.AIRPORT_DROPOFF) {
-      return "Helps your driver choose faster routes so you can reach the airport on time. Toll charges may apply.";
+      return "Helps your driver choose the airport toll route so you can reach the airport on time.";
     } else {
-      return "Helps your driver choose faster routes from the airport when available. Toll charges may apply.";
+      return "Helps your driver choose the airport toll route from the airport when available.";
     }
   };
 
@@ -555,6 +555,19 @@ const getOverlaySubtext = () => {
                   }))
                 }
               />
+              {ridePreferences.toll_road_preferred && (
+                <p className="mt-2 flex items-start gap-2 rounded-md border border-blue-100 bg-blue-50/60 px-3 py-2 text-[11px] leading-4 text-gray-500 sm:text-xs sm:leading-5">
+                  <Info
+                    size={14}
+                    className="mt-1 shrink-0 text-blue-500"
+                    aria-hidden="true"
+                  />
+                  <span>
+                    We'll include the standard airport toll for this route. If
+                    your journey crosses any other toll gates, those extra tolls will be payable directly to the driver.
+                  </span>
+                </p>
+              )}
             </div>
 
             {/* Optional: Preferences like num_adults, children and luggage */}
