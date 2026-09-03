@@ -133,15 +133,15 @@ A single `AirportTransfer.jsx` component handles both sub-types, parameterized v
 
 Some airport transfer preferences can affect the final fare:
 
-- **`toll_road_preferred`** - allows the backend to include applicable toll-road charges when toll routes are preferred.
+- **`toll_road_preferred`** - allows the backend to include the standard airport toll-road charge for the selected airport route when that toll route is preferred. This does not mean every possible toll gate during the trip is covered.
 - **`placard_required`** - enables name-board pickup at arrivals. A nominal placard charge may apply because the driver/operator prepares the name board and waits at arrivals.
 
 The exact charge should not be fetched or displayed before the customer searches for rides. The actual toll and placard charges are calculated by the backend during search based on airport, route, region, and applicable pricing rules.
 
 Frontend disclosure should be staged:
 
-- On the search form, use lightweight helper copy such as "Toll charges may apply" or "A nominal placard charge may apply."
-- On the ride-options screen, show compact included-service pills only when relevant, for example `Includes tolls` and `Includes name board pickup`.
+- On the search form, keep the toll preference helper focused on route preference, not pricing. When the customer selects toll roads, show a subtle selected-state note explaining that Cabbo will include the standard airport toll for the selected route. If the journey crosses any other toll gates, any extra tolls are paid directly to the driver.
+- On the ride-options screen, show compact included-service pills only when relevant, for example `Includes standard airport toll` and `Includes name board pickup`.
 - On the booking/payment confirmation step, rely on the fare breakdown as the source of truth for actual charges. Do not repeat included-service pills if the fare breakdown already shows toll, parking, placard, or similar add-on charges.
 - On the booking/payment confirmation step, show a stronger disclaimer that selected add-on services are included in the fare and cannot be removed after booking confirmation without repricing or support intervention.
 
@@ -174,7 +174,7 @@ Recommended display order after search:
 
 Included-service pills should be shown once near the search context, not repeated heavily on every option card, when the services apply to all returned options. Example pills:
 
-- `Includes tolls`
+- `Includes standard airport toll`
 - `Includes name board pickup`
 
 `TripOptionCard` should remain focused on the ride option itself:

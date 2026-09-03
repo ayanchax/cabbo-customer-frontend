@@ -10,7 +10,7 @@ export const getAirportIncludedServices = (preferences = {}) => {
     if (preferences.toll_road_preferred) {
         services.push({
             id: "tolls",
-            label: "Tolls",
+            label: "Standard airport toll",
             icon: Route,
         });
     }
