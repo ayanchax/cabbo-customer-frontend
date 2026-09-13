@@ -10,7 +10,7 @@ The goal is to launch safely without letting baseline infra cost eat the project
 | --- | --- | --- |
 | Customer frontend dev | Render Static Site | `https://app.dev.cabbo.co.in` |
 | Customer frontend prod | Render Static Site | `https://app.cabbo.co.in` |
-| Admin frontend prod | Render Static Site or equivalent static host | `https://admin.cabbo.co.in` |
+| Admin frontend prod | Render Static Site or equivalent static host | `https://console.cabbo.co.in` |
 | Backend dev | Railway | `https://api.dev.cabbo.co.in` |
 | Backend prod | Railway | `https://api.cabbo.co.in` |
 | MySQL dev | Aiven Managed MySQL | private/dev connection details |
@@ -107,7 +107,7 @@ Dev should use real infrastructure but test-mode integrations wherever money or 
 ### Prod
 
 - Customer frontend: `https://app.cabbo.co.in`
-- Admin frontend: `https://admin.cabbo.co.in`
+- Admin frontend: `https://console.cabbo.co.in`
 - Backend: `https://api.cabbo.co.in`
 - Database: DigitalOcean Managed MySQL prod database/cluster
 - Sentry environment: `prod`
@@ -176,7 +176,7 @@ Customer prod:
 
 Admin prod:
 
-- domain: `admin.cabbo.co.in`
+- domain: `console.cabbo.co.in`
 - API base URL: `https://api.cabbo.co.in`
 
 No admin dev frontend is planned for V1. Admin hosting can use Render Static Site or an equivalent static frontend host when the admin MVP is created.
@@ -210,7 +210,7 @@ The following admin configuration endpoints are deferred until traction:
 - [ ] Cloudflare DNS owns `cabbo.co.in`.
 - [x] `app.dev.cabbo.co.in` points to Render Static Site customer dev.
 - [ ] `app.cabbo.co.in` points to Render Static Site customer prod.
-- [ ] `admin.cabbo.co.in` points to Render Static Site or the selected admin static host.
+- [ ] `console.cabbo.co.in` points to Render Static Site or the selected admin static host.
 - [ ] `api.dev.cabbo.co.in` points to Railway backend dev.
 - [ ] `api.cabbo.co.in` points to Railway backend prod.
 - [x] Railway dev CORS allows only dev frontend origin.
