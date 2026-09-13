@@ -38,44 +38,27 @@ second deferred-feature list.
   and validated.
 - **Priority:** V2; not required for launch.
 
-## Booking-Specific Alternate Contact Number (v2)
+## Post-Trip Review Prompt And Detailed Feedback (v2)
 
-- **Feature:** Let a customer provide an alternate phone number for a specific
-  confirmed booking.
-- **V1 behavior:** Drivers and Cabbo operations use the customer's verified
-  primary phone number. Exceptional contact changes are handled through
-  support.
-- **Why deferred:** The field requires validation, consent and ownership
-  considerations, clear driver-facing contact priority, and protection against
-  accidental or malicious third-party phone-number entry.
-- **Future behavior:**
-  - Label the number clearly as an alternate contact for this booking.
-  - Validate its country code and format.
-  - Prefer OTP verification before exposing it to a driver.
-  - Define whether the primary or alternate number should be contacted first.
-  - Record when and by whom the number was added.
-  - Prevent arbitrary changes once the trip reaches an operational cutoff.
-  - Include the number only in customer-safe and driver-safe booking responses
-    that genuinely require it.
-- **Relationship to passenger booking:** When booking for someone else, the
-  selected passenger's validated phone number should normally serve as the
-  rider contact. Avoid maintaining two competing contact concepts without a
-  clear precedence rule.
-- **Special requests:** Do not accept phone numbers through the free-text
-  special-request field.
-- **Priority:** V2; not required for launch.
-
-## Detailed Trip Experience Review (v2)
-
-- **Feature:** Extend the post-trip review beyond the V1 star rating and
-  optional feedback.
+- **Feature:** Prompt customers to review their latest completed trip when they
+  revisit the app, and optionally extend the V1 review beyond the compact star
+  rating and feedback form.
 - **V1 behavior:** The customer sees a compact rating form with a required
-  1-5 star rating and optional short feedback only.
-- **Why deferred:** Detailed questions such as cab cleanliness, AC condition,
-  driving behavior, punctuality, and overall cab condition make the review feel
-  heavier. V1 should capture the main quality signal without slowing the
-  customer down after a trip.
+  1-5 star rating and optional short feedback inside booking details only.
+- **Why deferred:** V1 should capture the main quality signal without adding
+  modal timing, skip tracking, or extra notification flows. Detailed questions
+  such as cab cleanliness, AC condition, driving behavior, punctuality, and
+  overall cab condition can also make the review feel heavier if shown too
+  early.
 - **Future behavior:**
+  - Ask the backend for a single review prompt eligibility signal after login
+    or app resume.
+  - Show a mobile-friendly responsive modal for the latest completed trip only
+    when the backend says the trip was completed within the configured review
+    window, has not already been reviewed, and has not already been skipped.
+  - Let the customer submit the existing `TripReview` flow directly from the
+    modal or skip the prompt.
+  - Record skips in the backend so the same trip prompt is not shown again - ofcourse customer can to the booking detail and provide review but we won't prompt it again.
   - Show detailed fields behind a small `Tell us more` action.
   - Prefer showing the expanded questions after low ratings, where operational
     diagnosis matters most.
@@ -84,51 +67,43 @@ second deferred-feature list.
     overall cab condition, and optional extra comments.
   - Use the structured data in admin dashboards for driver, fleet, and service
     quality monitoring.
-- **Priority:** V2; not required for launch.
+  - Defer WhatsApp feedback links unless Cabbo later adds WhatsApp automation
+    for operational messages; keep the in-app modal as the primary V2 review
+    prompt.
+- **Priority:** V2; modal prompt first, WhatsApp feedback link optional later.
 
-## Terms And Privacy Acceptance Version Tracking (v2)
+## Terms And Privacy Change Notification And Consent (v2)
 
-- **Feature:** Record the Terms of Service and Privacy Policy versions accepted
-  by each customer.
+- **Feature:** Notify customers about Terms of Service and Privacy Policy
+  changes, and require explicit acceptance only when a change is material or
+  counsel requires affirmative consent.
 - **V1 behavior:** The customer frontend links to backend-published,
   versioned legal pages. The backend owns the active legal files and exposes
   their version and effective date.
-- **Why deferred:** V1 does not yet need a full legal acceptance ledger because
-  legal pages are backend-versioned and Cabbo is not running frequent
-  re-consent workflows. Building acceptance history now would add backend data
-  model and UX surface area without blocking core booking validation.
+- **Why deferred:** V1 does not yet need a full legal change-management flow
+  because legal pages are backend-versioned and Cabbo is not running frequent
+  re-consent workflows. Building acceptance history for every legal update
+  would add backend data model and UX surface area without blocking core
+  booking validation.
 - **Future behavior:**
-  - Store customer ID, document slug, version, accepted timestamp, and source
-    surface.
-  - Require acceptance during onboarding and re-acceptance after material
-    Terms/Privacy changes.
+  - Classify legal updates as minor/editorial, standard notice, or material
+    consent-required changes.
+  - For minor/editorial changes, publish the new backend document version
+    without interrupting customers.
+  - For standard notice changes, notify customers by email and/or show a
+    dismissible login or booking banner that links to the updated documents.
+  - For material changes, require explicit acceptance during onboarding,
+    login, or before key booking/payment flows continue.
+  - Store customer ID, document slug, version, event type (`notified`,
+    `banner_seen`, `dismissed`, `accepted`), timestamp, and source surface
+    where tracking is required.
   - Preserve historical document versions for audit and support.
-  - Expose admin/internal views for acceptance status if needed.
-- **Priority:** V2 unless counsel requires it before launch.
+  - Expose admin/internal views for notification and acceptance status if
+    needed.
+- **Priority:** V2 legal hardening; keep notice-first unless counsel requires
+  customer-level acceptance tracking for specific changes.
 
-## Counsel-Led Aggregator And State Requirement Review (v2)
-
-- **Feature:** Have counsel review Cabbo's customer policies, state-specific
-  operating requirements, aggregator obligations, grievance wording, and
-  customer-facing legal flows.
-- **V1 behavior:** Cabbo publishes practical, generic cab-app policies that
-  match the current product behavior, backend fare/refund logic, and support
-  process.
-- **Why deferred:** V1 needs speed and operational validation. The current
-  legal pages are versioned and visible to customers, but a deeper
-  counsel-led jurisdictional review can happen after the core launch unless a
-  specific regulatory requirement is identified before go-live.
-- **Future behavior:**
-  - Review Terms, Privacy, Cancellation/Refund, Fare/Charges, Safety, Contact,
-    and Grievance pages.
-  - Add state-specific wording if Cabbo expands operations or regulatory
-    exposure.
-  - Review whether explicit acceptance-version tracking should become
-    mandatory.
-  - Maintain reviewed versions in backend legal content with effective dates.
-- **Priority:** V2/legal hardening; promote earlier if a launch jurisdiction
-  or partner requires it.
-
+ 
 ## Self-Serve Account Deletion And Data Export (v2)
 
 - **Feature:** Let customers request account deletion, deactivation,
@@ -157,37 +132,12 @@ second deferred-feature list.
 - Discount and coupon engine.
 - Campaign or marketing CMS.
 - Fully dynamic, region-personalized homepage.
-- Real-time traffic-based pricing (on investment and if we go instant booking mode)
-- Advanced live driver/customer tracking (on investment and if we go instant booking mode)
-- Full support ticketing or in-app chat.
-- Rich trip-status timeline.
 - Promotional homepage sections that could delay core booking readiness.
+- Advanced live driver/customer tracking (on investment and if we go instant booking mode)
+- Full support ticketing or in-app chat (on investment)
+- Real-time traffic-based pricing (on investment and if we go instant booking mode)
 
-## MSG91 SMS And WhatsApp Automation (post-launch)
-
-- **Feature:** Move Cabbo messaging from the temporary Twilio OTP bridge to a
-  lower-cost India-first messaging setup with MSG91 for SMS/OTP and WhatsApp.
-- **V1 behavior:** Use Twilio only for OTP delivery with strict rate limits and
-  spend monitoring. Do not block launch on WhatsApp automation. Driver
-  assignment remains visible in app and can be supported by email/manual ops
-  during early launch.
-- **Why deferred:** MSG91 SMS and WhatsApp setup currently requires DLT,
-  template, company incorporation, and Meta/Facebook verification work. Company
-  incorporation is still in progress, so this should not block dev or V1
-  launch.
-- **Future behavior:**
-  - Complete DLT registration and sender/template approvals.
-  - Complete WhatsApp Business onboarding and Meta verification.
-  - Add MSG91 OTP/SMS provider adapter.
-  - Add MSG91 WhatsApp provider adapter.
-  - Use WhatsApp first for high-trust operational notifications such as driver
-    assignment/reassignment.
-  - Keep OTP delivery rate-limited and monitored.
-  - Log masked phone numbers only.
-  - Track provider delivery failures for ops visibility.
-- **Priority:** Post-launch cost/trust improvement; not required for V1
-  launch.
-
+ 
 ## Consent-Based Device Switching (v2+)
 - **Feature:** Allow users to switch their active session to a new device with explicit consent, logging out the previous device.
 - **V1 behavior:** The backend recovers from stale sessions when the browser has lost its local token by clearing the old stored bearer token and allowing OTP login. If the client still presents the matching and valid active token, the backend continues to return `ALREADY_LOGGED_IN`.
