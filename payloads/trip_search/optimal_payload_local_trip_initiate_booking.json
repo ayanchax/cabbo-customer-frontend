@@ -1,7 +1,6 @@
 {
     "option": {
         "car_type": "Sedan",
-        "fuel_type": "petrol",
         "total_price": 1251.0,
         "price_breakdown": {
             "base_fare": 1200.0,
@@ -61,7 +60,6 @@
         "num_backpacks": 0,
         "num_other_bags": 0,
         "preferred_car_type": "Sedan",
-        "preferred_fuel_type": "petrol",
         "package_id": "3fbebb71-9ae5-44f8-9168-2a1c335139e5",
         "toll_road_preferred": false,
         "placard_required": false,

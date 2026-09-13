@@ -194,12 +194,12 @@ For dev and prod V1:
 
 The following admin configuration endpoints are deferred until traction:
 
-- airport pricing by cab type, fuel type, and region
-- local pricing by cab type, fuel type, and region
-- outstation pricing by cab type, fuel type, and state
+- airport pricing by cab type and region
+- local pricing by cab type and region
+- outstation pricing by cab type and state
 - fixed platform fee by country
 - night pricing by region or state
-- permit fee by cab type, fuel type, and state
+- permit fee by cab type and state
 - local trip package config by `region_id`
 - trip common pricing by `trip_type_id` and region/state
 - cancellation policy by `region_id` and trip type ID

@@ -14,6 +14,5 @@
     "num_large_suitcases": 1,
     "num_carryons": 1,
     "preferred_car_type": "Sedan",
-    "preferred_fuel_type": "petrol",
     "package_id": "{{hourly_package_id}}"
 }

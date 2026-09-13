@@ -29,7 +29,7 @@
     "timezone": "Asia/Kolkata",
     "fleet": {
         "car_type": "SUV",
-        "fuel_type": "diesel",
+        
         "name": "SUV",
         "description": "Spacious SUVs, ideal for outstation and group travel.",
         "inventory_cab_names": [

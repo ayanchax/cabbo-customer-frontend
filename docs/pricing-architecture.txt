@@ -1,459 +1,351 @@
-# ========================================
-# CABBO PRICING ARCHITECTURE DOCUMENTATION
-# ========================================
-# Last Updated: December 4, 2025
-# Architecture: Geography-Based Multi-Level Pricing System
-# ========================================
+# Cabbo Pricing Architecture
 
-## OVERVIEW
-Cabbo uses a hierarchical geography-based pricing model that enables:
-- Multi-country operations with localized pricing
-- State-level regulatory compliance (permits, taxes)
-- City-level operational pricing (demand/supply dynamics)
-- Scalable expansion to new markets without code changes
+Last Updated: September 9, 2026
 
-## GEOGRAPHY HIERARCHY
-```
-Country (Global Settings)
-  ├── Currency, Platform Fees, Regulations
-  │
-  ├── State (Regional Regulations)
-  │   ├── Outstation Pricing
-  │   ├── Permit Fees (Interstate travel)
-  │   └── State-specific Taxes
-  |   └── Night allowances
-  │
-  └── Region (City-level Operations)
-      ├── Local/Hourly Rental Pricing
-      ├── Airport Transfer Pricing
-      ├── Trip Package Configurations
-      └── City-specific Surcharges like night allowances
+Cabbo uses geography-based pricing with different commercial contracts for each trip domain. Airport transfers, local hourly rentals, and outstation trips have different customer expectations and different driver economics, so they should not be forced into one universal formula.
+
+## Core Principle
+
+Cabbo sells the service category, not the fuel type.
+
+Customer-facing pricing and selection:
+
+```text
+geography x trip type x cab type
 ```
 
-## PRICING TABLE ARCHITECTURE
+Operational fulfilment:
 
-### 1. REGION-BASED PRICING (City Operations)
-Used for: Local trips/Hourly rentals, Airport transfers
-
-#### LocalCabPricing
-- **Geography**: region_id (FK to regions_master)
-- **Purpose**: Hourly rental pricing for city-based trips
-- **Granularity**: Per cab_type, fuel_type, region
-- **Key Fields**:
-  - hourly_rate: Base rate per hour
-  - overage_amount_per_hour: Extra charge beyond included hours
-  - overage_amount_per_km: Extra charge beyond included km
-  - is_available_in_network: Cab availability flag
-- **Example**: Bangalore's Sedan+Petrol hourly rate = ₹300/hr
-
-#### AirportCabPricing
-- **Geography**: region_id (FK to regions_master)
-- **Purpose**: Fixed pricing for airport pickup/drop trips
-- **Granularity**: Per cab_type, fuel_type, trip_type (pickup/drop), region
-- **Key Fields**:
-  - base_fare: Fixed fare for the trip
-  - is_available_in_network: Cab availability flag
-- **Example**: Bangalore Airport Drop in Sedan = ₹800
-
-#### TripPackageConfig
-- **Geography**: region_id (FK to regions_master)
-- **Purpose**: Define hourly rental packages (e.g., "4H/40KM")
-- **Granularity**: Per trip_type, region
-- **Key Fields**:
-  - included_hours: Hours included in package
-  - included_km: Kilometers included in package
-  - package_label: Display name (e.g., "4 Hours / 40 KM")
-  - driver_allowance: Driver charges per package
-- **Example**: Bangalore offers 4H/40KM, 8H/80KM, 12H/120KM packages
-- **Note**: Same package label can exist in different regions with different pricing
-
-#### CommonPricingConfiguration (Region-specific)
-- **Geography**: region_id (FK to regions_master) for local/airport trips
-- **Purpose**: Common trip-specific configurations (toll, parking, etc.)
-- **Granularity**: Per trip_type, region
-- **Key Fields**:
-  - dynamic_platform_fee_percent: Variable platform fee %
-  - max_included_km: Maximum included km for trip
-  - toll: Standard toll charge
-  - parking: Parking charges
-  - placard_charge: Driver placard fee (airport pickups)
-  - overage_warning_km_threshold: When to warn user about overage
-- **Example**: Bangalore Airport Pickup has ₹100 parking + ₹50 placard
-
----
-
-### 2. STATE-BASED PRICING (Interstate Operations)
-Used for: Outstation trips, Interstate permits
-
-#### OutstationCabPricing
-- **Geography**: state_id (FK to states_master)
-- **Purpose**: Per-kilometer pricing for outstation/intercity trips
-- **Granularity**: Per cab_type, fuel_type, state
-- **Key Fields**:
-  - base_fare_per_km: Rate per kilometer
-  - driver_allowance_per_day: Daily driver charges
-  - min_included_km_per_day: Minimum km per day (e.g., 300 km/day)
-  - overage_amount_per_km: Extra charge beyond min km
-  - is_available_in_network: Cab availability flag
-- **Example**: Karnataka outstation Sedan = ₹12/km + ₹400/day driver allowance
-- **Why State-level?**: Interstate regulations, permits, and pricing vary by state
-
-#### PermitFeeConfiguration
-- **Geography**: state_id (FK to states_master)
-- **Purpose**: Weekly permit fees for interstate travel
-- **Granularity**: Per cab_type, fuel_type, state
-- **Key Fields**:
-  - weekly_permit_fee: Cost of 7-day permit
-- **Example**: Karnataka-to-TamilNadu in Sedan = ₹500/week permit
-- **Why State-level?**: Each state has different permit regulations
-
-#### CommonPricingConfiguration (State-specific)
-- **Geography**: state_id (FK to states_master) for outstation trips
-- **Purpose**: Outstation-specific configurations
-- **Key Fields**:
-  - dynamic_platform_fee_percent: Variable platform fee %
-  - max_included_km: Maximum included km
-  - min_included_km: Minimum included km
-  - toll: Standard toll charges
-- **Example**: Karnataka outstation has 1% platform fee
-
----
-
-### 3. COUNTRY-BASED PRICING (Global Settings)
-Used for: Platform-wide configurations
-
-#### FixedPlatformPricingConfiguration
-- **Geography**: country_id (FK to countries_master)
-- **Purpose**: Fixed platform/convenience fee per booking
-- **Granularity**: Per country
-- **Key Fields**:
-  - fixed_platform_fee: Flat fee per booking
-- **Example**: 
-  - India: ₹50 per booking
-  - UAE: AED 10 per booking (if expanded)
-  - USA: $2.50 per booking (if expanded)
-- **Why Country-level?**: 
-  - Currency differences (₹50 vs $50 vs AED 50)
-  - Operating costs vary by country
-  - Market positioning differs per country
-
----
-
-### 4. ADDITIONAL PRICING CONFIGURATIONS
-
-#### NightPricingConfiguration
-- **Geography**: region_id (FK to regions_master)
-- **Purpose**: Define night hours for surcharge application during outstation or hourly rental exceeding 12 hours
-- **Key Fields**:
-  - night_start_hour: When night pricing starts (e.g., 23:00)
-  - night_end_hour: When night pricing ends (e.g., 06:00)
-  - night_surcharge_percent: Extra % during night hours
-- **Example**: 11 PM to 6 AM = +25% surcharge
-
-#### CancellationPolicyPricing
-- **Geography**: region_id (FK to regions_master) for local and airport transfers
-                 state_id (FK to states_master) for outstation trips.
-- **Purpose**: Cancellation fees and policies
-- **Granularity**: Per trip_type, region
-- **Key Fields**:
-  - cancellation_fee_before_x_hours: Fee if cancelled X hours before trip
-  - cancellation_fee_within_x_hours: Fee if cancelled within X hours
-  - no_show_fee: Fee if customer doesn't show up
-- **Example**: Cancel <2 hours before trip = ₹100 fee
-
----
-
-## PRICING CALCULATION FLOW
-
-### Example 1: Local/Hourly Rental Trip (Bangalore, 4H/40KM)
-```
-1. Get TripPackageConfig (region_id = Bangalore, package = "4H/40KM")
-   → included_hours = 4, included_km = 40
-
-2. Get LocalCabPricing (region_id = Bangalore, cab = Sedan, fuel = Petrol)
-   → hourly_rate = ₹300/hr
-   → Base cost = 4 × ₹300 = ₹1,200
-
-3. Get CommonPricingConfiguration (region_id = Bangalore, trip_type = Local)
-   → toll = ₹0 (optional)
-   → parking = ₹80 (if applicable)
-
-4. Get FixedPlatformPricingConfiguration (country_id = India)
-   → platform_fee = ₹50
-
-5. Calculate Overages (if trip goes beyond 4H/40KM)
-   → Extra hours: overage_amount_per_hour
-   → Extra km: overage_amount_per_km
-
-Total = Base + Parking + Platform Fee + Overages
-      = ₹1,200 + ₹80 + ₹50 + overages
+```text
+cab type x available vehicle x driver eligibility x fuel type
 ```
 
-### Example 2: Airport Pickup (Bangalore to Kempegowda Airport)
-```
-1. Get AirportCabPricing (region_id = Bangalore, trip_type = Airport Pickup, cab = Sedan)
-   → base_fare = ₹900
+Fuel type remains useful operational data, but it is no longer a customer-facing product dimension and no longer part of pricing identity.
 
-2. Get CommonPricingConfiguration (region_id = Bangalore, trip_type = Airport Pickup)
-   → toll = ₹120
-   → parking = ₹100
-   → placard_charge = ₹50
-   → max_included_km = 42
+## Why Fuel Is Not Customer-Facing
 
-3. Get FixedPlatformPricingConfiguration (country_id = India)
-   → platform_fee = ₹50
+Fuel type is an operational attribute. Customers primarily care about:
 
-4. Check if distance > 42 km
-   → If yes, add overage charges
+- Cab category and capacity
+- Clear upfront fare
+- Reliability and comfort
+- Whether the promised cab category arrives
 
-Total = Base Fare + Toll + Parking + Placard + Platform Fee + Overages
-      = ₹900 + ₹120 + ₹100 + ₹50 + ₹50 + overages
-```
+Showing separate options such as Sedan Petrol, Sedan Diesel, and Sedan Hybrid creates artificial products. Customers naturally choose the cheapest fuel option, demand gets concentrated on that fuel type, and assigning a different fuel vehicle later feels like a substitution even when the customer experience is equivalent.
 
-### Example 3: Outstation Trip (Bangalore to Mysore, 2 days)
-```
-1. Get OutstationCabPricing (state_id = Karnataka, cab = Sedan, fuel = Diesel)
-   → base_fare_per_km = ₹12/km
-   → driver_allowance_per_day = ₹400
-   → min_included_km_per_day = 300 km
+Cabbo now shows one option per eligible cab type:
 
-2. Calculate base cost
-   → Estimated distance = 280 km (round trip = 560 km)
-   → Days = 2
-   → Minimum km = 300 × 2 = 600 km (enforced minimum)
-   → Base cost = 600 × ₹12 = ₹7,200
-   → Driver allowance = 2 × ₹400 = ₹800
-
-3. Get PermitFeeConfiguration (state_id = Karnataka, cab = Sedan)
-   → weekly_permit_fee = ₹500 (if crossing state borders)
-
-4. Get CommonPricingConfiguration (state_id = Karnataka, trip_type = Outstation)
-   → dynamic_platform_fee_percent = 1%
-   → toll = ₹200
-
-5. Get FixedPlatformPricingConfiguration (country_id = India)
-   → fixed_platform_fee = ₹50
-
-Total = (KM Cost + Driver Allowance) + Permit + Toll + Platform Fee (dynamic + fixed)
-      = (₹7,200 + ₹800) + ₹500 + ₹200 + (₹80 + ₹50)
-      = ₹8,830
+```text
+Sedan
+Sedan Plus
+SUV
+SUV Plus
 ```
 
----
+Cabbo may fulfil a booked Sedan using petrol, diesel, hybrid, CNG, or eventually EV inventory, provided the assigned vehicle matches the promised cab category and service quality.
 
-## KEY DESIGN PRINCIPLES
+## Fuel Data Still Exists
 
-### 1. Normalization
-Each table has a single responsibility:
-- ✅ LocalCabPricing: ONLY hourly rates
-- ✅ TripPackageConfig: ONLY package definitions
-- ✅ CommonPricingConfiguration: ONLY trip-specific extras
-- ❌ NOT: Everything in one mega-table
+Fuel type should remain in:
 
-### 2. Geography-Based Indexing
-All pricing tables have geography foreign keys with indexes:
-```sql
--- Fast queries
-SELECT * FROM local_cab_pricing WHERE region_id = 'bangalore_uuid';
-SELECT * FROM outstation_cab_pricing WHERE state_id = 'karnataka_uuid';
-SELECT * FROM fixed_platform_pricing WHERE country_id = 'india_uuid';
+- Fuel master data
+- Driver profiles
+- Vehicle records
+- Assignment and operations logic
+- Actual fulfilled trip metadata
+
+Fuel type should not be used for:
+
+- Customer ride option labels
+- Customer ride search filtering
+- Customer-facing price identity
+- Booking hash identity for new searches
+- Best-choice recommendation
+- Upgrade/downgrade wording
+
+Future EV handling should follow the same rule: do not sell "EV Sedan" as a normal ride option. If an EV is assigned, Cabbo can later show it as a post-booking benefit, such as estimated CO2e avoided, using actual trip distance and a documented baseline.
+
+## Geography Hierarchy
+
+```text
+Country
+  - Currency
+  - Platform fee tax
+  - Fixed platform fee
+
+State
+  - Outstation pricing
+  - Interstate permit fees
+  - State-level distance/day guardrails
+  - Night allowance configuration where applicable
+
+Region
+  - Local hourly rental pricing
+  - Airport pickup/drop pricing
+  - Local package configuration
+  - Airport toll/parking/placard configuration
 ```
 
-### 3. Scalability
-Adding new markets requires ZERO code changes:
-```python
-# Launch in Mumbai
-SEED_REGIONS.append(("Mumbai", "BOM", ["Bombay"], "MH"))
-# All 75 pricing configs auto-created via seed functions
+## Pricing Tables
 
-# Launch in UAE
-SEED_COUNTRIES.append({"country_code": "AE", "currency": "AED", ...})
-# Platform fee auto-configured
+### LocalCabPricing
+
+Used for local hourly rentals.
+
+- Geography: `region_id`
+- Granularity: cab type + region
+- Unique identity: `region_id, cab_type_id`
+- Main fields:
+  - `hourly_rate`
+  - `overage_amount_per_hour`
+  - `overage_amount_per_km`
+  - `is_available_in_network`
+
+Local pricing is not route-distance pricing. The package is sold by time, with included kilometers acting as a usage boundary.
+
+### AirportCabPricing
+
+Used for airport pickup and airport drop.
+
+- Geography: `region_id`
+- Granularity: cab type + region
+- Unique identity: `region_id, cab_type_id`
+- Main fields:
+  - `fare_per_km`
+  - `overage_amount_per_km`
+  - `is_available_in_network`
+
+Airport trips are priced upfront from the estimated route distance:
+
+```text
+billable_km = max(estimated_route_km, min_included_km)
+base_fare = billable_km x fare_per_km
+total_price = base_fare + selected toll + parking + placard + platform fee
+rate_per_km = base_fare / billable_km
 ```
 
-### 4. Flexibility per Market
-Same package label, different pricing:
-- Bangalore: "4H/40KM" = ₹1,200
-- Mumbai: "4H/40KM" = ₹1,500 (higher due to demand)
-- Chennai: "4H/40KM" = ₹1,000 (lower due to competition)
+`max_included_km` may exist in shared config but is not used as an airport billing cap. Extreme airport-looking trips are routed to the correct domain by trip classification and distance validation.
 
-### 5. Composite Unique Constraints
-Prevent duplicate configurations:
-```sql
--- TripPackageConfig
-UNIQUE (trip_type_id, region_id, package_label)
+Normal airport pricing does not show route-distance overage warnings. The route distance is already priced into the upfront fare.
 
--- LocalCabPricing
-UNIQUE (cab_type_id, fuel_type_id, region_id)
+### OutstationCabPricing
 
--- FixedPlatformPricingConfiguration
-UNIQUE (country_id)
+Used for outstation/intercity trips.
+
+- Geography: `state_id`
+- Granularity: cab type + state
+- Unique identity: `state_id, cab_type_id`
+- Main fields:
+  - `base_fare_per_km`
+  - `driver_allowance_per_day`
+  - `min_included_km_per_day`
+  - `overage_amount_per_km`
+  - `is_available_in_network`
+
+Outstation pricing is a day/km package:
+
+```text
+included_km = min_included_km_per_day x total_trip_days
+base_fare = base_fare_per_km x included_km
+driver_allowance = driver_allowance_per_day x total_trip_days
+total_price = base_fare + driver_allowance + permit_fee + platform fee
+rate_per_km = base_fare / included_km
 ```
 
----
+Extra kilometers, extra days, tolls, paid parking, and night charges are actuals when incurred. They are not folded into the initial payable fare.
 
-## PRICING MATRIX EXAMPLE
+### PermitFeeConfiguration
 
-### Bangalore (Region-level)
+Used for interstate outstation trips.
 
-| Cab Type | Fuel | Hourly Rate | Overage/Hr | Overage/Km | Airport Pickup | Airport Drop |
-|----------|------|-------------|------------|------------|----------------|--------------|
-| Hatchback | CNG | ₹250 | ₹13 | ₹11 | ₹700 | ₹600 |
-| Sedan | Petrol | ₹300 | ₹15 | ₹13 | ₹900 | ₹800 |
-| Sedan+ | Diesel | ₹350 | ₹17 | ₹15 | ₹1,000 | ₹900 |
-| SUV | Diesel | ₹450 | ₹22 | ₹19 | ₹1,300 | ₹1,200 |
-| SUV+ | Diesel | ₹550 | ₹27 | ₹23 | ₹1,600 | ₹1,500 |
+- Geography: `state_id`
+- Granularity: cab type + state
+- Unique identity: `cab_type_id, state_id`
+- Permit fees are configured as weekly state-level fees per cab type.
+- Permit fee applies when the route crosses configured state borders.
 
-### Karnataka (State-level - Outstation)
+### CommonPricingConfiguration
 
-| Cab Type | Fuel | Per KM | Driver/Day | Min KM/Day | Weekly Permit |
-|----------|------|--------|------------|------------|---------------|
-| Sedan | Diesel | ₹12 | ₹400 | 300 | ₹500 |
-| SUV | Diesel | ₹15 | ₹500 | 300 | ₹800 |
+Common pricing config is trip-type specific and scoped by geography.
 
-### India (Country-level)
+For airport/local:
 
-| Setting | Value |
-|---------|-------|
-| Fixed Platform Fee | ₹50 |
-| Currency | INR (₹) |
-| Distance Unit | Kilometers |
+- Geography: `region_id`
+- Holds platform fee percent, airport toll, airport parking, placard charge, platform fee caps, and booking-window rules.
 
----
+For outstation:
 
-## AVAILABILITY MATRIX
+- Geography: `state_id`
+- Holds platform fee percent, distance/day guardrails, booking-window rules, and overage warning thresholds.
 
-Not all cab-fuel combinations are available for all trip types:
+### TripPackageConfig
 
-### Local/Hourly Rental
-- ❌ Hatchback + Petrol/Diesel (Most hatchbacks are CNG-only)
-- ❌ SUV + Diesel/CNG (Diesel expensive, CNG rare in SUVs)
-- ❌ SUV+ + CNG (CNG not available in premium SUVs)
-- ✅ All other combinations
+Used for local hourly rental packages.
 
-### Outstation
-- All combinations available (longer trips justify variety)
+- Geography: `region_id`
+- Granularity: trip type + region + package
+- Main fields:
+  - `included_hours`
+  - `included_km`
+  - `package_label`
+  - `driver_allowance`
+
+Examples:
+
+- 4H / 40KM
+- 6H / 60KM
+- 8H / 80KM
+- 10H / 100KM
+- 12H / 120KM
+
+### FixedPlatformPricingConfiguration
+
+Used for country-level fixed platform fee.
+
+- Geography: `country_id`
+- Combined with dynamic platform fee percentage.
+- In the v2 platform-fee calculation, the fixed fee plus dynamic percentage is treated as the real platform fee base.
+- `max_platform_fee` is enforced as the customer trust guardrail for high-value trips.
+- `min_platform_fee` remains available in config for legacy compatibility, but v2 does not use it to push low-value trips upward.
+- The base platform fee is rounded before tax using the 9-ending pricing rule.
+- Platform fee tax is calculated after the base platform fee is finalized; the final tax-inclusive amount does not need to end in 9.
+
+Current India seed direction:
+
+```text
+fixed_platform_fee = INR 65
+
+Platform fee v2:
+raw_fee = fixed_platform_fee + (dynamic_platform_fee_percent x total_price_before_platform_fee)
+after_cap_fee = min(raw_fee, max_platform_fee) when max_platform_fee is configured
+platform_fee_base = round_fee(after_cap_fee)
+platform_fee = platform_fee_base + applicable platform fee tax
+```
+
+## Unified Price Selection
+
+The old seed data had fuel-specific prices. The unified cab-level seed price is chosen as the upper median of the old fuel-specific values for the same geography, trip type, and cab type.
+
+Example:
+
+```text
+Sedan old rates: CNG 23, Diesel 24, Petrol 25
+Unified Sedan rate: 24
+```
+
+This is intentionally not the cheapest rate. It protects fulfilment when Cabbo assigns petrol or diesel inventory, while staying close enough to market pricing for conversion.
+
+BLR/Karnataka review after migration:
+
+- Airport Sedan at INR 24/km is acceptable for BLR airport transfers.
+- Local Sedan at INR 280/hour is aligned with 8H/80KM market pricing.
+- Outstation Sedan at INR 12/km plus INR 400/day driver allowance is competitive.
+- SUV Plus at INR 20/km outstation is acceptable when mapped to premium SUV/Crysta-like supply.
+
+The current BLR/Karnataka numbers are good enough to keep. Do not reduce them just because hybrid/CNG was previously cheaper.
+
+## Domain Semantics
 
 ### Airport
-- All combinations available (fixed pricing)
 
-**Implementation**: `is_available_in_network` flag in pricing tables
+Airport pricing should feel like a clean fixed quote for the selected estimated route.
 
----
+- Bill full estimated route km, subject only to a minimum billable km floor.
+- Do not cap billable km at `max_included_km`.
+- Include toll only when customer selects the airport toll-road preference.
+- The included toll-road charge covers the standard airport toll for the selected route only.
+- Additional toll gates caused by route changes, detours, or extra stops are paid as actuals.
+- Pickup parking can be included when configured.
+- Drop parking is currently zero.
+- Placard is pickup-only and only when requested.
+- Airport `rate_per_km` is computed from base fare, not total fare.
 
-## EXPANSION STRATEGY
+### Local Hourly Rental
 
-### Adding a New Region (e.g., Mumbai)
-1. Add to `SEED_REGIONS`: `("Mumbai", "BOM", ["Bombay"], "MH")`
-2. Run `_seed_local_cab_pricing()` → Creates 75 pricing rows
-3. Run `_seed_airport_cab_pricing()` → Creates 30 airport pricing rows
-4. Run `_seed_local_trip_packages()` → Creates 3-5 package configs
-5. **Total**: ~110 rows auto-created, zero code changes
+Local rental is a time package.
 
-### Adding a New State (e.g., Tamil Nadu)
-1. Add to `SEED_STATES`: `("Tamil Nadu", "TN")`
-2. Add to `WEEKLY_PERMIT_FEES_MAPPING`: TN-specific permit fees
-3. Run `_seed_outstation_cab_pricing()` → Creates 15 outstation pricing rows
-4. Run `_seed_permit_fee_configuration()` → Creates 15 permit fee rows
-5. **Total**: ~30 rows auto-created
+- Price by selected package hours.
+- Included kilometers define the usage allowance.
+- Overage applies for extra time and extra kilometers.
+- No advance toll/parking balance hold exists.
+- Tolls and paid parking are actuals if incurred.
+- `rate_per_min` is the meaningful product-facing rate.
+- `rate_per_km` remains in the API shape only for schema consistency and is not product-facing.
 
-### Adding a New Country (e.g., UAE)
-1. Add to `SEED_COUNTRIES`: UAE config with AED currency
-2. Add to `PLATFORM_FEE_BY_COUNTRY`: `"AE": 10.0`
-3. Run `_seed_fixed_platform_fee()` → Creates 1 platform fee row
-4. Add emirates as "states" and cities as "regions"
-5. Rest follows same pattern as India
+### Outstation
 
----
+Outstation is a day/km package.
 
-## ADMIN PANEL REQUIREMENTS
+- Included kilometers are calculated from total trip days.
+- Driver allowance is charged per day.
+- Interstate permit fee is added per cab type when configured states are crossed.
+- Overage warning is shown when estimated route km is close to or above included km.
+- Extra km, extra days, tolls, paid parking, and night driving charges are actuals if incurred.
+- Outstation `rate_per_km` is computed from base fare, not total fare.
 
-### Pricing Management Features Needed:
-1. **Region Pricing Editor**: Update hourly rates per cab-fuel-region
-2. **Package Manager**: Add/edit/disable packages per region
-3. **Outstation Pricing Editor**: Update per-km rates per state
-4. **Permit Fee Manager**: Update weekly permit fees per state
-5. **Platform Fee Manager**: Update fixed fees per country
-6. **Availability Toggle**: Enable/disable cab-fuel combinations
-7. **Night Surcharge Config**: Set night hours and % per region
-8. **Cancellation Policy Editor**: Update fees per trip type and region
-9. **Bulk Upload**: CSV import for pricing across multiple regions
+## Availability Rules
 
-### Audit Requirements:
-- Track WHO changed pricing and WHEN
-- Version history of pricing changes
-- Rollback capability for pricing errors
-- A/B test different pricing in same region (future)
+Availability is controlled by `is_available_in_network` on pricing rows plus active flags on cab master data.
 
----
+Current launch direction:
 
-## FUTURE ENHANCEMENTS
+- Hatchback rows may exist for future use but should not be customer-prominent unless supply quality is reliable.
+- Best-match chooses the closest eligible car type by rank, then price.
+- Fuel availability does not decide whether a customer-facing ride option appears.
+- Assignment may still consider driver vehicle fuel type internally if operations needs it.
 
-### 1. Dynamic Pricing (Surge)
-```python
-class SurgePricingConfiguration(Base):
-    region_id = Column(FK)  # Region-specific
-    surge_multiplier = Column(Float)  # 1.5x, 2x, etc.
-    active_hours = Column(JSON)  # Peak hours
-    demand_threshold = Column(Integer)  # Trigger surge at X bookings
+## Calculation Examples
+
+### Local 4H / 40KM
+
+```text
+package = 4H / 40KM
+base_fare = hourly_rate x 4
+total_price = base_fare + driver_allowance + platform fee
+rate_per_min = total_price / 240
 ```
 
-### 2. Promo Codes
-```python
-class PromoCode(Base):
-    code = Column(String)
-    discount_type = Column(Enum)  # FLAT, PERCENT
-    discount_value = Column(Float)
-    region_id = Column(FK)  # Region-specific or null for global
-    valid_from = Column(DateTime)
-    valid_until = Column(DateTime)
+Trip-end actuals may include extra time, extra km, tolls, or paid parking.
+
+### Airport Transfer
+
+```text
+estimated_route_km = 54
+billable_km = max(54, min_included_km)
+base_fare = billable_km x fare_per_km
+total_price = base_fare + selected standard airport toll + parking + placard + platform fee
+rate_per_km = base_fare / billable_km
 ```
 
-### 3. Corporate Pricing
-```python
-class CorporatePricing(Base):
-    company_id = Column(FK)
-    region_id = Column(FK)
-    discount_percent = Column(Float)  # Bulk discount
-    billing_cycle = Column(Enum)  # MONTHLY, QUARTERLY
+No distance overage warning is needed because route distance is priced upfront.
+
+### Outstation 2-Day Trip
+
+```text
+included_km = 300 x 2
+base_fare = included_km x base_fare_per_km
+driver_allowance = 2 x driver_allowance_per_day
+total_price = base_fare + driver_allowance + cab-specific permit_fee + platform fee
+rate_per_km = base_fare / included_km
 ```
 
-### 4. Loyalty Program
-```python
-class LoyaltyPricing(Base):
-    tier = Column(Enum)  # SILVER, GOLD, PLATINUM
-    discount_percent = Column(Float)
-    region_id = Column(FK)  # Region-specific benefits
-```
+Actuals can apply for extra km, extra days, tolls, paid parking, and night driving.
 
----
+## Operational Notes
 
-## NOTES
+- Booked trips should preserve their quoted pricing values for auditability.
+- Future pricing changes should affect new searches/bookings, not old booked trips.
+- Admin screens should expose cab-level pricing rows, availability toggles, package configs, platform fee config, permit fees, night config, fuel master data, and cancellation policies.
+- Fuel master data remains admin-editable for operations and driver/vehicle metadata.
+- Pricing changes should be auditable by actor and timestamp.
+- Future dynamic toll APIs should not be part of the core airport fare path unless operations can handle assignment-time route changes and payment recalculation cleanly.
 
-- All pricing in this document uses Indian Rupees (₹) as example
-- Actual pricing should be configured per market based on local economics
-- Distance unit is kilometers (km) - can be configured per country
-- Time is in 24-hour format (HH:MM)
-- All UUIDs are stored as MySQL_CHAR(36)
-- All geography tables have is_serviceable flag to enable/disable markets
+## References
 
----
-
-## REFERENCES
-
-- Geography Models: `models/geography/`
-- Pricing Models: `models/pricing/`
-- Trip Models: `models/trip/`
-- Seed Data: `services/seed_data_service.py`
-- Pricing Services: `services/pricing_service.py`
-
----
-
-## VERSION HISTORY
-
-- v1.0 (Dec 4, 2025): Initial architecture documentation
-  - Geography-based pricing model
-  - Multi-level (Country/State/Region) pricing
-  - Scalable for multi-country operations
-
----
+- Pricing services: `src/services/trips/*_service.py`
+- Pricing helpers: `src/services/pricing_service.py`
+- Pricing schemas/ORM: `src/models/pricing/`
+- Fuel enum: `src/models/trip/trip_enums.py`
+- Seed data: `src/services/seed_data_service.py`
+- Migration: `alembic/versions/f1a2b3c4d5e6_remove_fuel_from_pricing_identity.py`
+- Upgrades: `src/services/trips/upgradation_service.py`

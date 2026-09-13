@@ -13,7 +13,6 @@
     "num_children": 0,
     "num_large_suitcases": 1,
     "num_carryons": 1,
-    "preferred_car_type": "Sedan",
-    "preferred_fuel_type": "petrol"
+    "preferred_car_type": "Sedan"
      
 }

@@ -14,7 +14,6 @@
     "num_large_suitcases": 2,
     "num_carryons": 1,
     "preferred_car_type": "Sedan",
-    "preferred_fuel_type": "diesel",
     "flight_number": "AI123",
     "terminal_number": "T1",
     "toll_road_preferred": true,

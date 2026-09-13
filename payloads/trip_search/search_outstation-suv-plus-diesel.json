@@ -22,6 +22,5 @@
     "num_children": 2,
     "num_large_suitcases": 4,
     "num_carryons": 3,
-    "preferred_car_type": "SUV+",
-    "preferred_fuel_type": "diesel"
+    "preferred_car_type": "SUV+"
 }

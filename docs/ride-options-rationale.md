@@ -5,7 +5,7 @@
 	- Final price
 	- Per-minute rate
 	- Cab type (e.g., Sedan, SUV, etc.)
-	- Fuel type (if relevant)
+	- Cab type only; fuel type is not shown in ride options
 - **Do NOT show:**
 	- Capacity (users generally know this for common types)
 	- Description, inventory, or specific car models (e.g., “Dzire”)—not decision drivers at this stage

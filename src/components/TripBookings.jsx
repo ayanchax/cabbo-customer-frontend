@@ -91,8 +91,7 @@ function getRouteSummary(booking) {
 function getFleetLabel(booking) {
   const fleet = booking?.fleet || {};
   const carType = fleet.name || fleet.car_type || "Cab";
-  const fuelType = fleet.fuel_type ? ` (${fleet.fuel_type})` : "";
-  return `${carType}${fuelType}`;
+  return carType;
 }
 
 function toFiniteNumber(value) {

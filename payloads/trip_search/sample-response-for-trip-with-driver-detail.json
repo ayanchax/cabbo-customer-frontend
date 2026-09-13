@@ -38,7 +38,6 @@
     "num_luggages": 0,
     "num_passengers": 3,
     "preferred_car_type": "Sedan",
-    "preferred_fuel_type": "diesel",
     "in_car_amenities": {
         "ac": true,
         "music_system": true,
@@ -75,7 +74,7 @@
             "url": "https://cabbo-dev-assets.s3.ap-south-2.amazonaws.com/drivers/profile/501e143a-aa76-43c9-a752-cc709872be42/images/avatar/e514c22d2c31421fbe2f718b05b24403.png"
         },
         "cab_type": "Sedan",
-        "fuel_type": "diesel",
+        
         "cab_model_and_make": "Maruti Swift Dzire",
         "cab_registration_number": "KA01AB2316",
         "payment_mode": "gpay",
@@ -158,7 +157,7 @@
     },
     "fleet": {
         "car_type": "Sedan",
-        "fuel_type": "diesel",
+        
         "name": "Sedan",
         "description": "Comfortable sedans, suitable for city and outstation travel.",
         "cab_names": [

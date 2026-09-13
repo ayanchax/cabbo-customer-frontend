@@ -16098,17 +16098,7 @@
                         ],
                         "default": "Sedan"
                     },
-                    "preferred_fuel_type": {
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/FuelTypeEnum"
-                            },
-                            {
-                                "type": "null"
-                            }
-                        ],
-                        "default": "diesel"
-                    },
+                   
                     "package_id": {
                         "anyOf": [
                             {

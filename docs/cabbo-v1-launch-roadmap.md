@@ -58,7 +58,7 @@ Current customer-safe `driver` response contract:
   "phone": "+91 9812345678",
   "gender": "male",
   "cab_type": "Sedan",
-  "fuel_type": "diesel",
+  
   "cab_model_and_make": "Maruti Swift Dzire",
   "cab_registration_number": "KA01AB2316",
   "avg_rating": 4,
@@ -272,7 +272,7 @@ Show:
 - email, if product design requires it
 - cab make/model
 - registration number
-- cab type and fuel type
+- cab type
 - average rating
 
 Do not show internal or sensitive driver attributes.
@@ -283,8 +283,8 @@ Driver detail presentation is status-aware:
   contact is available
 - ongoing trips remain contactable without pre-pickup copy
 - if backend upgradation information is unavailable, the frontend conservatively
-  attempts a fallback free-upgrade message from the booked preferred cab/fuel and
-  assigned driver cab/fuel using the same allowed-upgrade paths as the backend
+  attempts a fallback free-upgrade message from the booked preferred cab category and
+  assigned driver cab category using the same allowed-upgrade paths as the backend
 
 ### Get Help for This Trip
 

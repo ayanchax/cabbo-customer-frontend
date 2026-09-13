@@ -2,7 +2,7 @@
     "options": [
         {
             "car_type": "Premium Sedan",
-            "fuel_type": "cng",
+            
             "total_price": 1198,
             "price_breakdown": {
                 "base_fare": 779,
@@ -39,7 +39,7 @@
         },
         {
             "car_type": "Premium Sedan",
-            "fuel_type": "diesel",
+            
             "total_price": 1230,
             "price_breakdown": {
                 "base_fare": 811,
@@ -76,7 +76,7 @@
         },
         {
             "car_type": "Premium Sedan",
-            "fuel_type": "petrol",
+            
             "total_price": 1263,
             "price_breakdown": {
                 "base_fare": 844,
@@ -113,7 +113,7 @@
         },
         {
             "car_type": "SUV",
-            "fuel_type": "cng",
+            
             "total_price": 1619,
             "price_breakdown": {
                 "base_fare": 1200,
@@ -150,7 +150,7 @@
         },
         {
             "car_type": "SUV",
-            "fuel_type": "petrol",
+            
             "total_price": 1684,
             "price_breakdown": {
                 "base_fare": 1265,
@@ -187,7 +187,7 @@
         },
         {
             "car_type": "SUV+",
-            "fuel_type": "diesel",
+            
             "total_price": 1879,
             "price_breakdown": {
                 "base_fare": 1460,
@@ -224,7 +224,7 @@
         },
         {
             "car_type": "SUV+",
-            "fuel_type": "petrol",
+            
             "total_price": 1911,
             "price_breakdown": {
                 "base_fare": 1492,
@@ -261,7 +261,7 @@
         },
         {
             "car_type": "Sedan",
-            "fuel_type": "cng",
+            
             "total_price": 1165,
             "price_breakdown": {
                 "base_fare": 746,
@@ -298,7 +298,7 @@
         },
         {
             "car_type": "Sedan",
-            "fuel_type": "diesel",
+            
             "total_price": 1198,
             "price_breakdown": {
                 "base_fare": 779,
@@ -335,7 +335,7 @@
         },
         {
             "car_type": "Sedan",
-            "fuel_type": "petrol",
+            
             "total_price": 1230,
             "price_breakdown": {
                 "base_fare": 811,
@@ -372,7 +372,7 @@
         },
         {
             "car_type": "Hatchback",
-            "fuel_type": "cng",
+            
             "total_price": 1003,
             "price_breakdown": {
                 "base_fare": 584,
@@ -447,7 +447,6 @@
         "num_backpacks": 0,
         "num_other_bags": 0,
         "preferred_car_type": "Premium Sedan",
-        "preferred_fuel_type": "diesel",
         "flight_number": "AI 345",
         "terminal_number": "T2",
         "toll_road_preferred": true,
