@@ -23,7 +23,6 @@
     "num_large_suitcases": 3,
     "num_carryons": 2,
     "preferred_car_type": "SUV",
-    "preferred_fuel_type": "diesel",
     "hops": [
         {
             "display_name": "Varkala, KL",

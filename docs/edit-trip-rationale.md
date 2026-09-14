@@ -50,7 +50,6 @@ If a requested change fails any of these conditions, it should be handled throug
 | Passenger counts | No | No | No | No |
 | Luggage counts | No | No | No | No |
 | Cab/fleet type | No | No | No | No |
-| Fuel type | No | No | No | No |
 | Package/duration | Not applicable | Not applicable | No | No, where applicable |
 
 This matrix describes direct customer self-service editing after confirmation. Backend or support tooling may apply stricter rules based on trip status and operational cut-off times.
@@ -129,9 +128,9 @@ These fields are best classified as **booking-critical matching data**, not nece
 
 ---
 
-## Why Cab, Fuel, and Package Choices Are Locked
+## Why Cab and Package Choices Are Locked
 
-The selected cab/fleet and fuel type identify the ride option the customer reserved. Changing either may affect:
+The selected cab category and package identify the ride option the customer reserved. Changing either may affect:
 
 - fare
 - inventory

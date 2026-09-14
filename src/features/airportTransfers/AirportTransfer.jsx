@@ -1,10 +1,12 @@
-import React, { useLayoutEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   useTripPriorBookingWindowQuery,
   useToast,
   useTimezone,
   useOverlay,
+  useMediaQuery,
+  useSearchResultsAutoScroll,
   useAnalytics,
 } from "@/hooks";
 import { Info, Route } from "lucide-react";
@@ -43,6 +45,8 @@ import {
 import { ANALYTICS_EVENTS } from "@/analytics";
 
 const DEFAULT_MINIMUM_BOOKING_HOURS = 3; // Default to 3 hours if API doesn't provide a value
+const DESKTOP_OPTIONS_QUERY = "(min-width: 640px)";
+
 function AirportTransfer() {
   const location = useLocation();
   const { timezone: client_timezone } = useTimezone();
@@ -120,8 +124,15 @@ function AirportTransfer() {
     placard_required: false,
     placard_name: null,
   });
+  const isDesktopOptionsLayout = useMediaQuery(DESKTOP_OPTIONS_QUERY, true);
   const [inProgress, setInProgress] = useState(false);
   const [searchResults, setSearchResults] = useState(null); // Store search results to pass to next page
+  const searchResultsAnchorRef = useSearchResultsAutoScroll(
+    Boolean(searchResults),
+    {
+      preferResultsAnchor: false, // Scroll to top of page instead of results anchor, because we want user to see the entire search results page including header and trip itinerary, as everything is visible on desktop layout.
+    },
+  );
 
   const getPageHeaderTitle = () => {
     if (trip_type === TRIP_TYPES.AIRPORT_PICKUP) {
@@ -132,14 +143,6 @@ function AirportTransfer() {
       return "Airport transfer";
     }
   };
-
-  useLayoutEffect(() => {
-    if (!searchResults) return;
-
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-  }, [searchResults]);
 
   const getPageHeaderInitialSubtitle = () => {
     if (trip_type === TRIP_TYPES.AIRPORT_PICKUP) {
@@ -407,7 +410,10 @@ const getOverlaySubtext = () => {
           {/* Trip Itinerary */}
           {searchResults?.options && (
             // Only show trip itinerary if there are search results to display, otherwise user will just see empty page with option to go back and change their search criteria
-            <div className="px-4">
+            <div
+              ref={searchResultsAnchorRef}
+              className="scroll-mt-4 px-4"
+            >
               <div className="py-2"></div>
 
               {/* Route timeline */}
@@ -435,24 +441,66 @@ const getOverlaySubtext = () => {
               />
 
               {/* Trip options list  */}
-              <TripOptionsList
-                options={searchResults?.options}
-                onSelect={handleBook}
-                className=" py-4 mb-4 w-full"
-                showRatePerKm
-              />
+              {isDesktopOptionsLayout && (
+                <TripOptionsList
+                  options={searchResults?.options}
+                  onSelect={handleBook}
+                  className="py-4 mb-4 w-full"
+                  showRatePerKm
+                />
+              )}
 
               {/* Trip general disclaimer/terms and conditions */}
-              {searchResults?.disclaimers &&
+              {isDesktopOptionsLayout &&
+                searchResults?.disclaimers &&
                 searchResults.options?.length > 0 &&
                 // Only show disclaimers if there are search results to display, otherwise user will just see empty page with option to go back and change their search criteria
                 Array.isArray(searchResults.disclaimers) && (
                   <TripDisclaimer
                     disclaimers={searchResults.disclaimers}
-                    className=" mt-4 mb-4"
+                    className="mt-4 mb-4"
                   />
                 )}
             </div>
+          )}
+          {!isDesktopOptionsLayout && (
+          <div className="mx-auto mt-4 w-full max-w-screen-sm sm:hidden">
+            <div className="relative mx-auto max-h-[64vh] w-full max-w-screen-sm overflow-hidden rounded-t-3xl border border-gray-100 bg-white shadow-[0_-10px_30px_rgba(15,23,42,0.16)] animate-slide-up">
+              <div className="sticky top-0 z-10 rounded-t-3xl bg-white px-4 pt-3 pb-2">
+                <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-gray-300" />
+                <div className="flex items-baseline justify-between gap-3">
+                  <div>
+                    <h2 className="text-base font-semibold text-gray-950">
+                      Choose a ride
+                    </h2>
+                    <p className="mt-0.5 text-xs text-gray-500">
+                      {searchResults.options.length} options available
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="max-h-[calc(64vh-72px)] overflow-y-auto px-4 pb-8 scrollbar-hide">
+                <TripOptionsList
+                  options={searchResults?.options}
+                  onSelect={handleBook}
+                  className="w-full py-2"
+                  showRatePerKm
+                />
+                {searchResults?.disclaimers &&
+                  searchResults.options?.length > 0 &&
+                  Array.isArray(searchResults.disclaimers) && (
+                    <TripDisclaimer
+                      disclaimers={searchResults.disclaimers}
+                      className="mt-4 mb-2"
+                    />
+                )}
+              </div>
+              <div
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-linear-to-t from-white via-white/90 to-transparent"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
           )}
           </>
           )}

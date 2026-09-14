@@ -146,7 +146,7 @@ Recommended order:
 - [x] Render the safe driver profile, contact action, cab details, and rating.
 - [x] Show actual assigned vehicle signals on the driver card.
   - Includes registration number, color, capacity, roof-carrier availability, and a free-upgrade trust message when Cabbo upgrades the booked preference at no extra charge.
-  - Falls back to detecting allowed free upgrades from booked preferred cab/fuel versus assigned driver cab/fuel if backend upgradation information is unavailable.
+  - Falls back to detecting allowed free upgrades from booked preferred cab category versus assigned driver cab category if backend upgradation information is unavailable.
 - [x] Gracefully handle missing optional driver fields and an unassigned driver.
 - [x] Render driver contact and coordination hints according to trip state.
   - Shows pre-pickup coordination copy only for upcoming trips with contact available.

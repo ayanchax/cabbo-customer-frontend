@@ -83,17 +83,15 @@
         Integer, nullable=True, default=1) # Total passengers including adults and children
     # Passenger and luggage information - END
 
-    # Car and fuel preferences
+    # Car preferences
     preferred_car_type = Column(
         Enum(CarTypeEnum), nullable=True, default=CarTypeEnum.sedan
     )
-    preferred_fuel_type = Column(
-        Enum(FuelTypeEnum), nullable=True, default=FuelTypeEnum.diesel
-    )
+   
     in_car_amenities = Column(
         JSON, nullable=True
     )  # JSON/text list of in-car amenities (e.g., AC, music system, etc.)
-    # Car and fuel preferences - END
+    # Car preferences - END
 
   
 
@@ -278,17 +276,15 @@ class Trip(Base):
 
     # Passenger and luggage information - END
 
-    # Car and fuel preferences
+    # Car preferences
     preferred_car_type = Column(
         Enum(CarTypeEnum), nullable=True, default=CarTypeEnum.sedan
     )
-    preferred_fuel_type = Column(
-        Enum(FuelTypeEnum), nullable=True, default=FuelTypeEnum.diesel
-    )
+     
     in_car_amenities = Column(
         JSON, nullable=True
     )  # JSON/text list of in-car amenities (e.g., AC, music system, etc.)
-    # Car and fuel preferences - END
+    # Car preferences - END
 
     # Driver assignment fields
     driver_id = Column(

@@ -71,7 +71,7 @@ http://localhost:8000/api/v1/trips/bookings/my/feed?bucket=past&page=1&limit=10
 "avg_rating": 4,
 "cab_registration_number": "KA01AB2316",
 "cab_type": "Sedan",
-"fuel_type": "diesel",
+
 "cab_model_and_make": "Maruti Swift Dzire",
 "gender": "male"
 },
@@ -150,7 +150,7 @@ http://localhost:8000/api/v1/trips/bookings/my/feed?bucket=past&page=1&limit=10
 },
 "fleet": {
 "car_type": "Sedan",
-"fuel_type": "diesel",
+
 "name": "Sedan",
 "description": "Comfortable sedans, suitable for city and outstation travel.",
 "cab_names": [
@@ -276,7 +276,7 @@ http://localhost:8000/api/v1/trips/bookings/RENTAL-TEXYSEZY08E17OLW
     },
     "fleet": {
         "car_type": "Sedan",
-        "fuel_type": "diesel",
+        
         "name": "Sedan",
         "description": "Comfortable sedans, suitable for city and outstation travel.",
         "cab_names": [
@@ -434,7 +434,7 @@ Response:
     },
     "fleet": {
         "car_type": "Sedan",
-        "fuel_type": "diesel",
+        
         "name": "Sedan",
         "description": "Comfortable sedans, suitable for city and outstation travel.",
         "cab_names": [
@@ -575,7 +575,7 @@ Response
     },
     "fleet": {
         "car_type": "Sedan",
-        "fuel_type": "diesel",
+        
         "name": "Sedan",
         "description": "Comfortable sedans, suitable for city and outstation travel.",
         "cab_names": [
@@ -853,7 +853,7 @@ Response:
                 "rank": 0,
                 "roof_carrier": false
             },
-            "fuel_type": "cng",
+            
             "total_price": 834,
             "price_breakdown": {
                 "base_fare": 585,
@@ -898,7 +898,7 @@ Response:
                 "rank": 1,
                 "roof_carrier": false
             },
-            "fuel_type": "cng",
+            
             "total_price": 997,
             "price_breakdown": {
                 "base_fare": 748,
@@ -943,7 +943,7 @@ Response:
                 "rank": 1,
                 "roof_carrier": false
             },
-            "fuel_type": "diesel",
+            
             "total_price": 1029,
             "price_breakdown": {
                 "base_fare": 780,
@@ -988,7 +988,7 @@ Response:
                 "rank": 1,
                 "roof_carrier": false
             },
-            "fuel_type": "petrol",
+            
             "total_price": 1062,
             "price_breakdown": {
                 "base_fare": 813,
@@ -1033,7 +1033,7 @@ Response:
                 "rank": 2,
                 "roof_carrier": false
             },
-            "fuel_type": "cng",
+            
             "total_price": 1029,
             "price_breakdown": {
                 "base_fare": 780,
@@ -1078,7 +1078,7 @@ Response:
                 "rank": 2,
                 "roof_carrier": false
             },
-            "fuel_type": "diesel",
+            
             "total_price": 1062,
             "price_breakdown": {
                 "base_fare": 813,
@@ -1123,7 +1123,7 @@ Response:
                 "rank": 2,
                 "roof_carrier": false
             },
-            "fuel_type": "petrol",
+            
             "total_price": 1094,
             "price_breakdown": {
                 "base_fare": 845,
@@ -1168,7 +1168,7 @@ Response:
                 "rank": 3,
                 "roof_carrier": true
             },
-            "fuel_type": "cng",
+            
             "total_price": 1452,
             "price_breakdown": {
                 "base_fare": 1203,
@@ -1213,7 +1213,7 @@ Response:
                 "rank": 3,
                 "roof_carrier": true
             },
-            "fuel_type": "petrol",
+            
             "total_price": 1517,
             "price_breakdown": {
                 "base_fare": 1268,
@@ -1258,7 +1258,7 @@ Response:
                 "rank": 4,
                 "roof_carrier": true
             },
-            "fuel_type": "diesel",
+            
             "total_price": 1712,
             "price_breakdown": {
                 "base_fare": 1463,
@@ -1303,7 +1303,7 @@ Response:
                 "rank": 4,
                 "roof_carrier": true
             },
-            "fuel_type": "petrol",
+            
             "total_price": 1744,
             "price_breakdown": {
                 "base_fare": 1495,

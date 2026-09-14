@@ -105,7 +105,7 @@
             },
             "fleet": {
                 "car_type": "Hatchback",
-                "fuel_type": "cng",
+                
                 "name": "Hatchback",
                 "description": "Compact hatchbacks, ideal for city rides and short trips.",
                 "cab_names": [
@@ -228,7 +228,7 @@
             },
             "fleet": {
                 "car_type": "Sedan",
-                "fuel_type": "diesel",
+                
                 "name": "Sedan",
                 "description": "Comfortable sedans, suitable for city and outstation travel.",
                 "cab_names": [
@@ -360,7 +360,7 @@
             },
             "fleet": {
                 "car_type": "Hatchback",
-                "fuel_type": "diesel",
+                
                 "name": "Hatchback",
                 "description": "Compact hatchbacks, ideal for city rides and short trips.",
                 "cab_names": [
@@ -483,7 +483,7 @@
             },
             "fleet": {
                 "car_type": "Sedan",
-                "fuel_type": "diesel",
+                
                 "name": "Sedan",
                 "description": "Comfortable sedans, suitable for city and outstation travel.",
                 "cab_names": [
@@ -603,7 +603,7 @@
             },
             "fleet": {
                 "car_type": "Sedan",
-                "fuel_type": "diesel",
+                
                 "name": "Sedan",
                 "description": "Comfortable sedans, suitable for city and outstation travel.",
                 "cab_names": [
@@ -723,7 +723,7 @@
             },
             "fleet": {
                 "car_type": "Sedan",
-                "fuel_type": "diesel",
+                
                 "name": "Sedan",
                 "description": "Comfortable sedans, suitable for city and outstation travel.",
                 "cab_names": [
@@ -840,7 +840,7 @@
             },
             "fleet": {
                 "car_type": "Hatchback",
-                "fuel_type": "cng",
+                
                 "name": "Hatchback",
                 "description": "Compact hatchbacks, ideal for city rides and short trips.",
                 "cab_names": [
@@ -960,7 +960,7 @@
             },
             "fleet": {
                 "car_type": "Sedan",
-                "fuel_type": "diesel",
+                
                 "name": "Sedan",
                 "description": "Comfortable sedans, suitable for city and outstation travel.",
                 "cab_names": [
@@ -1079,7 +1079,7 @@
             },
             "fleet": {
                 "car_type": "Hatchback",
-                "fuel_type": "cng",
+                
                 "name": "Hatchback",
                 "description": "Compact hatchbacks, ideal for city rides and short trips.",
                 "cab_names": [
@@ -1202,7 +1202,7 @@
             },
             "fleet": {
                 "car_type": "Hatchback",
-                "fuel_type": "diesel",
+                
                 "name": "Hatchback",
                 "description": "Compact hatchbacks, ideal for city rides and short trips.",
                 "cab_names": [

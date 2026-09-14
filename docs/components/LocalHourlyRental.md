@@ -14,7 +14,7 @@ This document describes the core logic, required fields, and backend integration
 ## Optional Fields
 - **destination:** Optional for local rentals. User may specify a drop-off location, but can leave it blank (open-ended rental).
 - **num_adults, num_children:** Optional. If not provided, backend will set sensible defaults. These are the only passenger fields shown for local/hourly rental, as luggage fields are not relevant for short in-city trips.
-- **preferred_car_type, preferred_fuel_type:** Optional. Backend defaults to Sedan/Diesel if not provided. (Not shown in UI for now.)
+- **preferred_car_type:** Optional. Backend defaults cab type if not provided. (Not shown in UI for now.)
 - **passenger:** For now, always self (current user). "Book for someone else" will be added later.
 
 ## Not Used in Local/Hourly Rental
@@ -31,14 +31,11 @@ def _set_default_preferences(search_in: TripSearchRequest):
     """
     Ensures all required trip search preferences have sensible defaults.
     - Sets 'preferred_car_type' to CarTypeEnum.sedan if not provided.
-    - Sets 'preferred_fuel_type' to CarTypeEnum.diesel if not provided.
     - Ensures at least one adult is present (defaults to 1 if missing or < 1).
     - Ensures number of children is not negative (defaults to 0 if missing or < 0).
     """
     if not search_in.preferred_car_type:
         search_in.preferred_car_type = CarTypeEnum.sedan
-    if not search_in.preferred_fuel_type:
-        search_in.preferred_fuel_type = CarTypeEnum.diesel
     if search_in.num_adults < 1 or search_in.num_adults is None:
         search_in.num_adults = 1
     if search_in.num_children < 0 or search_in.num_children is None:
@@ -60,7 +57,6 @@ This means the frontend can safely omit these fields if the user does not provid
 | num_adults           | Optional | Defaults to 1 if not provided; only passenger field shown  |
 | num_children         | Optional | Defaults to 0 if not provided; only passenger field shown  |
 | preferred_car_type   | Optional | Defaults to Sedan if not provided (not shown in UI)        |
-| preferred_fuel_type  | Optional | Defaults to Diesel if not provided (not shown in UI)       |
 | passenger            | Optional | Always self for now; "Book for someone else" coming later  |
 | hops                 | Not used | Only for outstation trips                                  |
 | Luggage fields       | Not used | Only for airport/outstation trips                          |

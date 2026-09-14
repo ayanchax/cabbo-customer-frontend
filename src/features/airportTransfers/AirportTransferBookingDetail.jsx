@@ -371,9 +371,6 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
                 preferredCabType={
                   bookingDetail?.preferred_car_type || fleet?.car_type
                 }
-                preferredFuelType={
-                  bookingDetail?.preferred_fuel_type || fleet?.fuel_type
-                }
                 status={status}
                 label={label}
                 showContactAction={showDriverContactAction}

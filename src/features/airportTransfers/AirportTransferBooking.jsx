@@ -52,7 +52,6 @@ function AirportTransferBooking({ orderData, bookingData }) {
   const fleet = {
     capacity: selectedFleet?.capacity || null,
     car_type: bookingData?.option?.car_type || null,
-    fuel_type: bookingData?.option?.fuel_type || null,
     currency: bookingData?.option?.currency || null,
     description: selectedFleet?.description || null,
     inventory_cab_names: selectedFleet?.inventory_cab_names || null,

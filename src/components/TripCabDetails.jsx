@@ -3,7 +3,22 @@ import { ArrowLeft, BaggageClaim, Sparkles } from "lucide-react";
 import { CAB_TYPES, DEFAULT_CURRENCY_SYMBOL } from "@/utils";
 import { Cab } from "@/components";
 
-const MAX_CAB_MODELS_TO_SHOW = 3; // Maximum number of cab models to show in the details, if there are more we will show "+X more" text
+const MAX_CAB_MODELS_TO_SHOW = 3;
+
+const getInventoryCabNamesLabel = (cabNames = []) => {
+  if (!Array.isArray(cabNames)) {
+    return null;
+  }
+
+  const visibleCabNames = cabNames.filter(Boolean).slice(0, MAX_CAB_MODELS_TO_SHOW);
+
+  if (visibleCabNames.length === 0) {
+    return null;
+  }
+
+  return `${visibleCabNames.join(", ")} or equivalent`;
+};
+
 function TripCabDetails({
   cabDetails = null,
   showDescription = true,
@@ -15,6 +30,7 @@ function TripCabDetails({
   className = "",
 }) {
   const option = cabDetails || {};
+  const inventoryCabNamesLabel = getInventoryCabNamesLabel(option?.inventory_cab_names);
   const isRecommended =
     showRecommendation && Boolean(option?.car_capacity?.recommended ?? option?.recommended ?? false);
   const hasRoofCarrier = Boolean(option?.car_capacity?.roof_carrier ?? option?.roof_carrier);
@@ -33,10 +49,7 @@ function TripCabDetails({
             cabType={option.car_type}
             className="h-14 w-14 -translate-y-2 drop-shadow-md"
           />
-          {/* Fuel type pill for mobile, inside cab div */}
-          <span className="absolute -top-3 left-1/2 min-w-11 -translate-x-1/2 rounded-full border border-gray-200 bg-gray-100 px-2 py-0 text-center text-[10px] font-medium text-gray-600 shadow md:hidden">
-            {option.fuel_type}
-          </span>
+          
           {hasRoofCarrier && (
             <span
               className="absolute -bottom-2 -right-2 inline-flex h-6 w-6 items-center justify-center rounded-full border border-sky-200 bg-sky-50 text-sky-700 shadow md:hidden"
@@ -65,9 +78,6 @@ function TripCabDetails({
               <span className="truncate text-base font-semibold text-gray-900 sm:text-lg md:text-xl">
                 {getCabTypeLabel(option.car_type)}
               </span>
-              <span className="hidden shrink-0 text-xs font-normal text-gray-500 sm:inline sm:text-sm">
-                ({option?.fuel_type})
-              </span>
             </span>
 
             {isRecommended && (
@@ -93,19 +103,11 @@ function TripCabDetails({
               {option?.description}
             </span>
           )}
-          {showInventoryCabNames &&
-            option?.inventory_cab_names &&
-            Array.isArray(option.inventory_cab_names) &&
-            option?.inventory_cab_names.length > 0 && (
-              <span className="text-xs sm:text-sm text-gray-500 font-normal mt-0.5">
-                You may get:{" "}
-                {option?.inventory_cab_names
-                  .slice(0, MAX_CAB_MODELS_TO_SHOW)
-                  .join(", ")}
-                {option?.inventory_cab_names.length > MAX_CAB_MODELS_TO_SHOW &&
-                  ` +${option.inventory_cab_names.length - MAX_CAB_MODELS_TO_SHOW} more`}
-              </span>
-            )}
+          {showInventoryCabNames && inventoryCabNamesLabel && (
+            <span className="text-xs sm:text-sm text-gray-500 font-normal mt-0.5">
+              You may get: {inventoryCabNamesLabel}
+            </span>
+          )}
         </div>
 
         {showRatePerMin && option?.rate_per_min && (

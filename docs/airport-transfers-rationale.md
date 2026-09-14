@@ -48,7 +48,6 @@ The driver physically enters the airport and waits at arrivals. They need to kno
     "num_large_suitcases": 2,
     "num_carryons": 1,
     "preferred_car_type": "Sedan",
-    "preferred_fuel_type": "diesel",
     "flight_number": "AI123",
     "terminal_number": "T1",
     "toll_road_preferred": true,
@@ -90,7 +89,6 @@ The driver picks up the passenger at their current location (home, hotel, office
     "num_backpacks": 1,
     "num_other_bags": 0,
     "preferred_car_type": "Premium Sedan",
-    "preferred_fuel_type": "petrol",
     "toll_road_preferred": true
 }
 ```
@@ -180,7 +178,7 @@ Included-service pills should be shown once near the search context, not repeate
 `TripOptionCard` should remain focused on the ride option itself:
 
 - cab type and cab details
-- fuel type or relevant vehicle metadata
+- relevant vehicle metadata, excluding fuel type in ride options
 - rate summary
 - total fare
 - reserve button

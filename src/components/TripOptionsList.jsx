@@ -12,7 +12,7 @@ import {
  * TripOptionsList
  *
  * Minimal, modern, and fully responsive results UI for cab/package options.
- * - Shows all key info: car type, fuel, price, included hours/km, overage, and warnings.
+ * - Shows all key info: car type, price, included hours/km, overage, and warnings.
  * - Polished, mobile-first, and industry-standard layout.
  * - Designed for use across all flows: rental, outstation, airport, etc. (just pass different options data).
  *

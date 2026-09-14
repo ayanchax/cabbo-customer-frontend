@@ -2,7 +2,7 @@
     "options": [
         {
             "car_type": "Sedan",
-            "fuel_type": "diesel",
+            
             "total_price": 1819,
             "price_breakdown": {
                 "base_fare": 1680,
@@ -28,7 +28,7 @@
         },
         {
             "car_type": "Sedan",
-            "fuel_type": "cng",
+            
             "total_price": 1749,
             "price_breakdown": {
                 "base_fare": 1620,
@@ -54,7 +54,7 @@
         },
         {
             "car_type": "Sedan",
-            "fuel_type": "petrol",
+            
             "total_price": 1939,
             "price_breakdown": {
                 "base_fare": 1800,
@@ -80,7 +80,7 @@
         },
         {
             "car_type": "Premium Sedan",
-            "fuel_type": "diesel",
+            
             "total_price": 2189,
             "price_breakdown": {
                 "base_fare": 2040,
@@ -106,7 +106,7 @@
         },
         {
             "car_type": "SUV+",
-            "fuel_type": "diesel",
+            
             "total_price": 2689,
             "price_breakdown": {
                 "base_fare": 2520,
@@ -132,7 +132,7 @@
         },
         {
             "car_type": "Premium Sedan",
-            "fuel_type": "cng",
+            
             "total_price": 2129,
             "price_breakdown": {
                 "base_fare": 1980,
@@ -158,7 +158,7 @@
         },
         {
             "car_type": "Premium Sedan",
-            "fuel_type": "petrol",
+            
             "total_price": 2249,
             "price_breakdown": {
                 "base_fare": 2100,
@@ -184,7 +184,7 @@
         },
         {
             "car_type": "SUV",
-            "fuel_type": "petrol",
+            
             "total_price": 2569,
             "price_breakdown": {
                 "base_fare": 2400,
@@ -210,7 +210,7 @@
         },
         {
             "car_type": "SUV+",
-            "fuel_type": "petrol",
+            
             "total_price": 2879,
             "price_breakdown": {
                 "base_fare": 2700,
@@ -236,7 +236,7 @@
         },
         {
             "car_type": "Hatchback",
-            "fuel_type": "cng",
+            
             "total_price": 1629,
             "price_breakdown": {
                 "base_fare": 1500,
@@ -300,7 +300,6 @@
         "num_backpacks": 0,
         "num_other_bags": 0,
         "preferred_car_type": "Sedan",
-        "preferred_fuel_type": "diesel",
         "package_id": "88ab1e08-16ac-4342-b17e-7ccb88763b53",
         "toll_road_preferred": false,
         "placard_required": false,
