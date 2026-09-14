@@ -75,7 +75,6 @@ function BookingPage() {
         track(ANALYTICS_EVENTS.BOOKING_INITIATED, {
           trip_type,
           car_type,
-          fuel_type,
           total_price: bookingPayload.option?.total_price,
           currency:
             bookingPayload.option?.currency?.code ||
@@ -92,7 +91,6 @@ function BookingPage() {
           trip_id: response?.data?.trip_id,
           order_id: response?.data?.order_id,
           car_type,
-          fuel_type,
         });
         setBookingOrderData(response?.data || null);
       } catch (error) {
