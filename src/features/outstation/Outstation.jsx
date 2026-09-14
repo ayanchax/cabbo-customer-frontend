@@ -358,7 +358,6 @@ function Outstation() {
     track(ANALYTICS_EVENTS.RIDE_OPTION_SELECTED, {
       trip_type,
       car_type: option?.car_type,
-      fuel_type: option?.fuel_type,
       total_price: option?.total_price,
       currency: option?.currency?.code || option?.currency,
       hops_count: hops.length,

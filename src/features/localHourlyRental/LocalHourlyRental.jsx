@@ -214,7 +214,6 @@ function LocalHourlyRental() {
       trip_type,
       package_id: selectedPackageId,
       car_type: option?.car_type,
-      fuel_type: option?.fuel_type,
       total_price: option?.total_price,
       currency: option?.currency?.code || option?.currency,
     });
