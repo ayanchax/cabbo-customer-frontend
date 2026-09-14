@@ -17,5 +17,6 @@ export { useBookingDetailBackNavigation } from "./useBookingDetailBackNavigation
 export { useFragmentScroll } from "./useFragmentScroll";
 export { useMediaQuery } from "./useMediaQuery";
 export { useSearchResultsAutoScroll } from "./useSearchResultsAutoScroll";
+export { useAnalytics } from "@/analytics";
 export * from "./query";
 export * from "./mutation";

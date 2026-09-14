@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { AlertTriangle, ChevronDown, X } from "lucide-react";
 import { useCancelTripBooking, useToast, useFragmentScroll } from "@/hooks";
 import { APP } from "@/utils";
+import { ANALYTICS_EVENTS, useAnalytics } from "@/analytics";
 
 const MAX_CANCELLATION_REASON_LENGTH = 250;
 const CANCELLATION_REASONS = [
@@ -16,6 +17,7 @@ const OTHER_REASON = "Other";
 function CancelTripAction({ bookingId, className = "" }) {
   const { scrollToFragment } = useFragmentScroll();
   const { showToast } = useToast();
+  const { track } = useAnalytics();
   const cancelTripApi = useCancelTripBooking();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedReason, setSelectedReason] = useState("");
@@ -60,12 +62,24 @@ function CancelTripAction({ bookingId, className = "" }) {
 
     try {
       await cancelTripApi.mutateAsync({ bookingId, payload });
+      track(ANALYTICS_EVENTS.CANCELLATION_CONFIRMED, {
+        booking_id: bookingId,
+        cancellation_reason_type:
+          selectedReason === OTHER_REASON ? "other" : "predefined",
+        reason: selectedReason === OTHER_REASON ? OTHER_REASON : finalReason,
+      });
       showToast(
         "Trip cancelled. Refund details will update shortly.",
         "success",
       );
       setIsOpen(false);
     } catch {
+      track(ANALYTICS_EVENTS.CANCELLATION_FAILED, {
+        booking_id: bookingId,
+        cancellation_reason_type:
+          selectedReason === OTHER_REASON ? "other" : "predefined",
+        reason: selectedReason === OTHER_REASON ? OTHER_REASON : finalReason,
+      });
       showToast(
         "We couldn't cancel this trip. Please try again or contact support.",
         "error",
@@ -80,7 +94,17 @@ function CancelTripAction({ bookingId, className = "" }) {
     >
       <button
         type="button"
-        onClick={() => setIsOpen((current) => !current)}
+        onClick={() =>
+          setIsOpen((current) => {
+            const nextIsOpen = !current;
+            if (nextIsOpen) {
+              track(ANALYTICS_EVENTS.CANCELLATION_STARTED, {
+                booking_id: bookingId,
+              });
+            }
+            return nextIsOpen;
+          })
+        }
         className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg text-left focus:outline-none focus:ring-2 focus:ring-red-100"
         aria-expanded={isOpen}
         disabled={isOpen && cancelTripApi.isPending} // Disable the button while the cancellation is in progress
@@ -141,7 +165,15 @@ function CancelTripAction({ bookingId, className = "" }) {
                 <button
                   key={reasonOption}
                   type="button"
-                  onClick={() => setSelectedReason(reasonOption)}
+                  onClick={() => {
+                    setSelectedReason(reasonOption);
+                    track(ANALYTICS_EVENTS.CANCELLATION_REASON_SELECTED, {
+                      booking_id: bookingId,
+                      cancellation_reason_type:
+                        reasonOption === OTHER_REASON ? "other" : "predefined",
+                      reason: reasonOption,
+                    });
+                  }}
                   className={`inline-flex min-h-8 cursor-pointer items-center rounded-full px-2.5 py-1 text-[11px] font-semibold leading-4 ring-1 transition sm:px-3 sm:text-xs ${
                     isSelected
                       ? "bg-red-50 text-red-700 ring-red-200"

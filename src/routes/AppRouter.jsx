@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ROUTES } from "@/utils";
 import { PublicRoute, ProtectedRoute } from "@/routes";
 import { Splash } from "@/components";
+import { RouteAnalyticsTracker } from "@/analytics";
 // Lazy load all routes
 const LazyLoadedRoutes = {
   Home: lazy(() => import("@/pages/Home")),
@@ -48,6 +49,7 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <RouteAnalyticsTracker />
       <Suspense fallback={<Splash message="Loading Cabbo..." />}>
       <Routes>
 

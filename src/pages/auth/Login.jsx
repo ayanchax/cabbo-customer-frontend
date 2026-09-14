@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { isPhoneNumberValid, sanitizePhoneNumber, APP } from "@/utils";
-import { useToast, useGeography, useAuth } from "@/hooks";
+import { useToast, useGeography, useAuth, useAnalytics } from "@/hooks";
 import { Disclaimer, LegalAgreementStatement, CountryFlag } from "@/components";
 import { ROUTES } from "@/utils";
 import { isDevMode } from "@/api";
+import { ANALYTICS_EVENTS } from "@/analytics";
 
 const LOGIN_MESSAGES = {
   countryUnavailable:
@@ -24,6 +25,7 @@ const LOGIN_MESSAGES = {
 const Login = () => {
   const { initiateLogin, initiateOnboarding } = useAuth();
   const { showToast } = useToast();
+  const { track } = useAnalytics();
   const inputRef = useRef(null);
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
@@ -67,6 +69,10 @@ const Login = () => {
       const response = await initiateOnboarding.mutateAsync({
         phone_number: full_phone_number,
       });
+      track(ANALYTICS_EVENTS.OTP_REQUESTED, {
+        flow: "onboarding",
+        country_code: selectedCountry?.country_code,
+      });
       const resend_timer_data = {
         resend_after: response.data?.resend_interval_seconds || 60,
         last_sent_time: response.data?.last_sent_at || new Date().toISOString(),
@@ -83,9 +89,19 @@ const Login = () => {
         console.error("Onboarding initiation failed:", error);
       }
       if (error_code === "OTP_ALREADY_SENT") {
+        track(ANALYTICS_EVENTS.OTP_REQUESTED, {
+          flow: "onboarding",
+          country_code: selectedCountry?.country_code,
+          already_sent: true,
+        });
         handleOtpSuccess(full_phone_number, phone, "onboarding");
         return;
       }
+      track(ANALYTICS_EVENTS.OTP_REQUEST_FAILED, {
+        flow: "onboarding",
+        country_code: selectedCountry?.country_code,
+        reason: error_code || "unexpected_error",
+      });
       if(error_code ==="OTP_RATE_LIMITED"){
         showToast(LOGIN_MESSAGES.rateLimited, "error");
         return;
@@ -107,6 +123,10 @@ const Login = () => {
         LOGIN_MESSAGES.countryUnavailable,
         "error",
       );
+      track(ANALYTICS_EVENTS.OTP_REQUEST_FAILED, {
+        flow: "login",
+        reason: "country_unavailable",
+      });
       return;
     }
 
@@ -121,6 +141,11 @@ const Login = () => {
       setTimeout(() => setShake(true), 0);
       inputRef.current?.focus();
       setError("Enter a valid 10-digit phone number");
+      track(ANALYTICS_EVENTS.OTP_REQUEST_FAILED, {
+        flow: "login",
+        country_code: selectedCountry?.country_code,
+        reason: "invalid_phone",
+      });
       return;
     }
 
@@ -131,6 +156,10 @@ const Login = () => {
     try {
       const response = await initiateLogin.mutateAsync({
         phone_number: fullPhone,
+      });
+      track(ANALYTICS_EVENTS.OTP_REQUESTED, {
+        flow: "login",
+        country_code: selectedCountry?.country_code,
       });
 
       const resend_timer_data = {
@@ -144,10 +173,16 @@ const Login = () => {
       if (status === 404) {
         // 🔥 fallback to onboarding as customer does not exist.
         await handleOnboarding(fullPhone);
+        return;
       } else if (status === 429) {
         showToast(LOGIN_MESSAGES.rateLimited, "error");
       } else if (status === 400) {
         if (error_code === "OTP_ALREADY_SENT") {
+          track(ANALYTICS_EVENTS.OTP_REQUESTED, {
+            flow: "login",
+            country_code: selectedCountry?.country_code,
+            already_sent: true,
+          });
           handleOtpSuccess(fullPhone, phone, "login");
           return;
         }
@@ -174,6 +209,11 @@ const Login = () => {
       else {
         showToast(LOGIN_MESSAGES.generic, "error");
       }
+      track(ANALYTICS_EVENTS.OTP_REQUEST_FAILED, {
+        flow: "login",
+        country_code: selectedCountry?.country_code,
+        reason: error_code || status || "unexpected_error",
+      });
     } finally {
       setShake(false);
     }
