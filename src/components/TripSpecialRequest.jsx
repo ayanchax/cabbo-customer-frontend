@@ -116,7 +116,7 @@ function TripSpecialRequest({
                 Add a special request
               </span>
               <span className="mt-0.5 block text-xs leading-5 text-gray-500">
-                Add once if your driver should know something before the trip.
+                Add anything we should know before the trip.
               </span>
             </span>
           </span>
@@ -130,8 +130,8 @@ function TripSpecialRequest({
                 Special request
               </p>
               <p className="mt-0.5 text-xs leading-5 text-gray-500">
-               You can add this once. We'll do our best to accommodate it where possible.
-               </p>
+                You can add this once. We'll do our best to accommodate it where possible.
+              </p>
             </div>
             <button
               type="button"

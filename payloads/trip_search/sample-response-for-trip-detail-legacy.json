@@ -54,7 +54,6 @@
     "num_luggages": 0,
     "num_passengers": 1,
     "preferred_car_type": "Sedan",
-    "preferred_fuel_type": "diesel",
     "in_car_amenities": {
         "ac": true,
         "music_system": true,
@@ -146,7 +145,7 @@
     },
     "fleet": {
         "car_type": "Sedan",
-        "fuel_type": "diesel",
+        
         "id": "1a4ea425-abdc-4d09-a5eb-de19dfa16004",
         "name": "Sedan",
         "description": "Comfortable sedans, suitable for city and outstation travel.",

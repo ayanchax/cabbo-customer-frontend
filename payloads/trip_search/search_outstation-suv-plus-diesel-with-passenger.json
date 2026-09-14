@@ -23,7 +23,6 @@
     "num_large_suitcases": 4,
     "num_carryons": 3,
     "preferred_car_type": "SUV+",
-    "preferred_fuel_type": "diesel",
     "passenger":{
         "id":"{{passenger_id}}"
     }

@@ -55,7 +55,6 @@ function LocalHourlyRentalBooking({ orderData, bookingData }) {
   const fleet = {
     capacity: selectedFleet?.capacity || null,
     car_type: bookingData?.option?.car_type || null,
-    fuel_type: bookingData?.option?.fuel_type || null,
     rate_per_min: bookingData?.option?.rate_per_min || null,
     currency: bookingData?.option?.currency || null,
     description: selectedFleet?.description || null,

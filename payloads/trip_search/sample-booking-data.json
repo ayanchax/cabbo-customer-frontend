@@ -1,7 +1,7 @@
 {
     "option": {
         "car_type": "Premium Sedan",
-        "fuel_type": "diesel",
+        
         "total_price": 1230,
         "price_breakdown": {
             "base_fare": 811,
@@ -76,7 +76,6 @@
         "num_backpacks": 1,
         "num_other_bags": 0,
         "preferred_car_type": "Premium Sedan",
-        "preferred_fuel_type": "diesel",
         "flight_number": "AI90",
         "terminal_number": "T2",
         "toll_road_preferred": true,

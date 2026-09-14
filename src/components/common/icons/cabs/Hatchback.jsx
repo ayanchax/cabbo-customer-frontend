@@ -1,10 +1,11 @@
 function HatchbackCabIcon({
   className = "w-20 h-auto",
   color = "currentColor",
+  viewBox = "0 -96 1226 1226",
 }) {
   return (
     <svg
-      viewBox="0 -96 1226 1226"
+      viewBox={viewBox}
       fill={color}
       xmlns="http://www.w3.org/2000/svg"
       className={className}

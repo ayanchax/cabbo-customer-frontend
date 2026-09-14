@@ -10,8 +10,6 @@ import {
 } from "lucide-react";
 import {
   APP,
-  CAB_FUEL_TYPES,
-  CAB_TYPES,
   getInitials,
   titleCase,
   TRIP_OCCURENCE_LABELS,
@@ -35,17 +33,6 @@ function getDriverRatingClassName(rating) {
   return "bg-rose-50 text-rose-700 ring-rose-100";
 }
 
-function formatVehicleUpgradeLabel(fuelType, cabType) {
-  const fuelLabel = fuelType
-    ? fuelType === CAB_FUEL_TYPES.CNG
-      ? fuelType.toUpperCase()
-      : titleCase(fuelType)
-    : null;
-
-  return [fuelLabel, cabType].filter(Boolean).join(" ");
-}
-
-const ALLOWED_FUEL_UPGRADES = new Set(["cng->diesel", "diesel->petrol"]);
 const ALLOWED_CAB_TYPE_UPGRADES = new Set([
   "hatchback->sedan",
   "sedan->sedan_plus",
@@ -60,12 +47,6 @@ const CAB_TYPE_LABELS = {
   suv_plus: "SUV+",
 };
 
-const FUEL_TYPE_LABELS = {
-  cng: "CNG",
-  diesel: "Diesel",
-  petrol: "Petrol",
-};
-
 function normalizeVehicleValue(value) {
   if (!value) return "";
 
@@ -78,11 +59,6 @@ function normalizeVehicleValue(value) {
     .replace(/^_+|_+$/g, "");
 }
 
-function formatFallbackFuelLabel(value) {
-  const normalized = normalizeVehicleValue(value);
-  return FUEL_TYPE_LABELS[normalized] || formatVehicleUpgradeLabel(value, null);
-}
-
 function formatFallbackCabLabel(value) {
   const normalized = normalizeVehicleValue(value);
   return CAB_TYPE_LABELS[normalized] || titleCase(value);
@@ -90,16 +66,12 @@ function formatFallbackCabLabel(value) {
 
 function getFallbackUpgradeMessage({
   preferredCabType, // customer preferred cab type
-  preferredFuelType, // customer preferred fuel
   assignedCabType, // cabbo assigned driver cab type
-  assignedFuelType, // cabbo assigned driver fuel type
   status,
   label,
 }) {
   const normalizedPreferredCab = normalizeVehicleValue(preferredCabType);
   const normalizedAssignedCab = normalizeVehicleValue(assignedCabType);
-  const normalizedPreferredFuel = normalizeVehicleValue(preferredFuelType);
-  const normalizedAssignedFuel = normalizeVehicleValue(assignedFuelType);
 
   const hasCabUpgrade =
     normalizedPreferredCab &&
@@ -108,28 +80,11 @@ function getFallbackUpgradeMessage({
     ALLOWED_CAB_TYPE_UPGRADES.has(
       `${normalizedPreferredCab}->${normalizedAssignedCab}`,
     );
-  const hasFuelUpgrade =
-    normalizedPreferredFuel &&
-    normalizedAssignedFuel &&
-    normalizedPreferredFuel !== normalizedAssignedFuel &&
-    ALLOWED_FUEL_UPGRADES.has(
-      `${normalizedPreferredFuel}->${normalizedAssignedFuel}`,
-    );
 
-  if (!hasCabUpgrade && !hasFuelUpgrade) return null;
+  if (!hasCabUpgrade) return null;
 
-  const fromVehicle = [
-    normalizedPreferredFuel ? formatFallbackFuelLabel(preferredFuelType) : null,
-    normalizedPreferredCab ? formatFallbackCabLabel(preferredCabType) : null,
-  ]
-    .filter(Boolean)
-    .join(" ");
-  const toVehicle = [
-    normalizedAssignedFuel ? formatFallbackFuelLabel(assignedFuelType) : null,
-    normalizedAssignedCab ? formatFallbackCabLabel(assignedCabType) : null,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const fromVehicle = formatFallbackCabLabel(preferredCabType);
+  const toVehicle = formatFallbackCabLabel(assignedCabType);
   const isActiveTrip =
     [TRIP_STATUS.CONFIRMED, TRIP_STATUS.ONGOING].includes(status) &&
     [TRIP_OCCURENCE_LABELS.UPCOMING, TRIP_OCCURENCE_LABELS.ONGOING].includes(
@@ -146,29 +101,18 @@ function getFallbackUpgradeMessage({
 function getUpgradeMessage(upgradationInformation, status, label) {
   if (!upgradationInformation?.upgraded) return null;
   if (upgradationInformation.is_free_upgradation === false) return null;
+  const fromVehicle = formatFallbackCabLabel(upgradationInformation.from_cab_type);
+  const toVehicle = formatFallbackCabLabel(upgradationInformation.to_cab_type);
+  if (!fromVehicle || !toVehicle || fromVehicle === toVehicle) return null;
+
   const isActiveTrip =
     [TRIP_STATUS.CONFIRMED, TRIP_STATUS.ONGOING].includes(status) &&
     [TRIP_OCCURENCE_LABELS.UPCOMING, TRIP_OCCURENCE_LABELS.ONGOING].includes(
       label,
     );
-  const fromVehicle = formatVehicleUpgradeLabel(
-    upgradationInformation.from_fuel_type,
-    upgradationInformation.from_cab_type,
-  );
-  const toVehicle = formatVehicleUpgradeLabel(
-    upgradationInformation.to_fuel_type,
-    upgradationInformation.to_cab_type,
-  );
-
-  if (fromVehicle && toVehicle) {
-    return isActiveTrip
-      ? `We've upgraded your ride from ${fromVehicle} to ${toVehicle} at no extra charge.`
-      : `This ride was upgraded from ${fromVehicle} to ${toVehicle} at no extra charge.`;
-  }
-
   return isActiveTrip
-    ? "You got a free cab upgrade at no extra charge."
-    : "This ride included a free cab upgrade at no extra charge.";
+    ? `We've upgraded your ride from ${fromVehicle} to ${toVehicle} at no extra charge.`
+    : `This ride was upgraded from ${fromVehicle} to ${toVehicle} at no extra charge.`;
 }
 
 function TripDriverCard({
@@ -176,7 +120,6 @@ function TripDriverCard({
   assignmentNotice = null,
   upgradationInformation = null,
   preferredCabType = null,  // customer preferred cab type
-  preferredFuelType = null, // customer preferred fuel type
   status = null,
   label = null,
   showContactAction = false,
@@ -234,9 +177,7 @@ function TripDriverCard({
     getUpgradeMessage(upgradationInformation, status, label) ||
     getFallbackUpgradeMessage({
       preferredCabType,
-      preferredFuelType,
       assignedCabType: driver?.cab_type,
-      assignedFuelType: driver?.fuel_type,
       status,
       label,
     });

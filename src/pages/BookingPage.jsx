@@ -5,7 +5,6 @@ import { FeedbackState, Loader } from "@/components";
 import {
   TRIP_TYPES,
   CAB_TYPES,
-  CAB_FUEL_TYPES,
   SERVER_ERROR_CODES,
   ROUTES,
 } from "@/utils";
@@ -64,15 +63,11 @@ function BookingPage() {
     hasBookedRef.current = true;
     const initiateBooking = async () => {
       try {
-        const {
-          car_type = CAB_TYPES.SEDAN,
-          fuel_type = CAB_FUEL_TYPES.DIESEL,
-        } = bookingPayload.option;
+        const { car_type = CAB_TYPES.SEDAN } = bookingPayload.option;
 
         const updatedPreferences = {
           ...bookingPayload.preferences,
           preferred_car_type: car_type, // Override the preferred car type with the selected option
-          preferred_fuel_type: fuel_type, // Override the preferred fuel type with the selected option
           retrieve_fleet: true, // Add this flag to indicate that we want the API to return fleet data along with booking initiation
         };
 

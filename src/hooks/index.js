@@ -15,5 +15,7 @@ export { useSticky } from "./useSticky";
 export { useRazorPay } from "./useRazorPay";
 export { useBookingDetailBackNavigation } from "./useBookingDetailBackNavigation";
 export { useFragmentScroll } from "./useFragmentScroll";
+export { useMediaQuery } from "./useMediaQuery";
+export { useSearchResultsAutoScroll } from "./useSearchResultsAutoScroll";
 export * from "./query";
 export * from "./mutation";

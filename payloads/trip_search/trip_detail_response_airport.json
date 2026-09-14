@@ -29,7 +29,7 @@
     "placard_name": "Ayan Chakraborty",
     "fleet": {
         "car_type": "Sedan",
-        "fuel_type": "diesel",
+        
         "name": "Sedan",
         "description": "Comfortable sedans, suitable for city and outstation travel.",
         "inventory_cab_names": [
