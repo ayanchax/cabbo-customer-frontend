@@ -368,7 +368,7 @@ const getOverlaySubtext = () => {
     DEFAULT_USER_TIMEZONE;
 
   const {includedServices} = useAirportTransferServices(searchResults?.preferences);
-
+  const findRidesButtonDisabled = !origin || !startDate || inProgress;
   if (searchResults) {
     return (
       <div
@@ -495,7 +495,7 @@ const getOverlaySubtext = () => {
                 )}
               </div>
               <div
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-linear-to-t from-white via-white/90 to-transparent"
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-14 border-b border-white bg-linear-to-t from-white via-white/95 to-white/0 shadow-[0_-14px_24px_rgba(255,255,255,0.92)]"
                 aria-hidden="true"
               />
             </div>
@@ -640,9 +640,9 @@ const getOverlaySubtext = () => {
             {/* Book button - sticky up to xl, inside main content */}
             <div className="xl:sticky fixed left-0 right-0 bottom-0 z-20 bg-gray-50 sm:bg-white xl:bg-transparent px-2 xs:px-3 xl:px-0 pb-2 pt-2 xl:pt-0 xl:pb-0 border-t border-gray-200 xl:border-0 shadow-[0_-2px_16px_0_rgba(16,30,54,0.04)] max-w-full mx-auto ">
               <button
-                className="w-full cursor-pointer bg-primary text-white py-3 rounded font-semibold disabled:opacity-50 text-base shadow-sm"
+                className="w-full cursor-pointer disabled:cursor-not-allowed bg-primary text-white py-3 rounded font-semibold disabled:opacity-50 text-base shadow-sm"
                 onClick={handleRideOptionSearch}
-                disabled={!origin || !startDate || inProgress}
+                disabled={ findRidesButtonDisabled}
               >
                 Find rides
                 {/* Suggestions:
