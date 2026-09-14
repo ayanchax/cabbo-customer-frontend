@@ -9,6 +9,7 @@ import {
   useTripTypeConstraintsQuery,
   useMediaQuery,
   useSearchResultsAutoScroll,
+  useAnalytics,
 } from "@/hooks";
 import {
   InlineDateTimePicker,
@@ -36,6 +37,7 @@ import {
 } from "@/features/outstation/hooks";
 import { isDevMode } from "@/api";
 import { ROUTES, DEFAULT_USER_TIMEZONE, enrichOptionsWithRates } from "@/utils";
+import { ANALYTICS_EVENTS } from "@/analytics";
 const DEFAULT_MINIMUM_BOOKING_HOURS = 48; // Default to 48 hours if API doesn't provide a value
 const DESKTOP_OPTIONS_QUERY = "(min-width: 640px)";
 
@@ -43,6 +45,7 @@ function Outstation() {
   const location = useLocation();
   const { timezone: client_timezone } = useTimezone();
   const { showOverlay, hideOverlay } = useOverlay();
+  const { track } = useAnalytics();
   const searchTrips = useOutstationTripSearch();
   // Origin is passed in navigation state from previous step
 
@@ -145,12 +148,20 @@ function Outstation() {
         showToast("Please choose where your trip starts.", "error", {
           position: "top-center",
         });
+        track(ANALYTICS_EVENTS.RIDE_SEARCH_VALIDATION_FAILED, {
+          trip_type,
+          reason: "missing_pickup",
+        });
         return;
       }
 
       if (!dropOff) {
         showToast("Please choose your outstation destination.", "error", {
           position: "top-center",
+        });
+        track(ANALYTICS_EVENTS.RIDE_SEARCH_VALIDATION_FAILED, {
+          trip_type,
+          reason: "missing_dropoff",
         });
         return;
       }
@@ -159,12 +170,20 @@ function Outstation() {
         showToast("Please choose when you want to leave.", "error", {
           position: "top-center",
         });
+        track(ANALYTICS_EVENTS.RIDE_SEARCH_VALIDATION_FAILED, {
+          trip_type,
+          reason: "missing_start_datetime",
+        });
         return;
       }
 
       if (!endDate) {
         showToast("Please choose when you want to return.", "error", {
           position: "top-center",
+        });
+        track(ANALYTICS_EVENTS.RIDE_SEARCH_VALIDATION_FAILED, {
+          trip_type,
+          reason: "missing_return_datetime",
         });
         return;
       }
@@ -175,6 +194,10 @@ function Outstation() {
           "error",
           { position: "top-center" },
         );
+        track(ANALYTICS_EVENTS.RIDE_SEARCH_VALIDATION_FAILED, {
+          trip_type,
+          reason: "trip_day_constraints_unavailable",
+        });
         return;
       }
 
@@ -196,6 +219,12 @@ function Outstation() {
             position: "top-center",
           },
         );
+        track(ANALYTICS_EVENTS.RIDE_SEARCH_VALIDATION_FAILED, {
+          trip_type,
+          reason: "too_many_hops",
+          hops_count: hops.length,
+          max_hops: maxHops,
+        });
         return;
       }
 
@@ -210,6 +239,12 @@ function Outstation() {
           "error",
           { position: "top-center" },
         );
+        track(ANALYTICS_EVENTS.RIDE_SEARCH_VALIDATION_FAILED, {
+          trip_type,
+          reason: "start_datetime_too_soon",
+          minimum_booking_hours:
+            priorBookingWindow || DEFAULT_MINIMUM_BOOKING_HOURS,
+        });
         return;
       }
 
@@ -220,6 +255,11 @@ function Outstation() {
           "error",
           { position: "top-center" },
         );
+        track(ANALYTICS_EVENTS.RIDE_SEARCH_VALIDATION_FAILED, {
+          trip_type,
+          reason: "return_datetime_too_soon",
+          min_trip_days: minTripDays,
+        });
         return;
       }
 
@@ -229,6 +269,11 @@ function Outstation() {
           "error",
           { position: "top-center" },
         );
+        track(ANALYTICS_EVENTS.RIDE_SEARCH_VALIDATION_FAILED, {
+          trip_type,
+          reason: "return_datetime_too_late",
+          max_trip_days: maxTripDays,
+        });
         return;
       }
 
@@ -254,6 +299,19 @@ function Outstation() {
         timezone: client_timezone.timezone,
         utc_offset: client_timezone.utc_offset_minutes,
       };
+      track(ANALYTICS_EVENTS.RIDE_SEARCH_SUBMITTED, {
+        trip_type,
+        passenger_count:
+          Number(ridePreferences.num_adults || 0) +
+          Number(ridePreferences.num_children || 0),
+        luggage_count:
+          Number(ridePreferences.num_large_suitcases || 0) +
+          Number(ridePreferences.num_carryons || 0) +
+          Number(ridePreferences.num_backpacks || 0) +
+          Number(ridePreferences.num_other_bags || 0),
+        hops_count: hops.length,
+        is_round_trip: Boolean(isRoundTripOnly),
+      });
       if (isDevMode) {
         console.log("Searching trips with payload:", payload);
       }
@@ -268,12 +326,26 @@ function Outstation() {
       data.options = enrichedOptions;
 
       setSearchResults(data); // Store search results to pass to next page
+      track(
+        data?.options?.length > 0
+          ? ANALYTICS_EVENTS.RIDE_OPTIONS_LOADED
+          : ANALYTICS_EVENTS.RIDE_OPTIONS_EMPTY,
+        {
+          trip_type,
+          options_count: data?.options?.length || 0,
+          hops_count: hops.length,
+        },
+      );
       hideOverlay();
     } catch (e) {
       hideOverlay();
       if (isDevMode) {
         console.error("Error during booking:", e);
       }
+      track(ANALYTICS_EVENTS.RIDE_SEARCH_FAILED, {
+        trip_type,
+        reason: e?.response?.data?.error_code || "unexpected_error",
+      });
       const msg = "An unexpected error occurred. Please try again.";
       showToast(msg, "error", { position: "top-center" });
     } finally {
@@ -283,6 +355,14 @@ function Outstation() {
 
   const handleBook = (option) => {
     setInProgress(true);
+    track(ANALYTICS_EVENTS.RIDE_OPTION_SELECTED, {
+      trip_type,
+      car_type: option?.car_type,
+      fuel_type: option?.fuel_type,
+      total_price: option?.total_price,
+      currency: option?.currency?.code || option?.currency,
+      hops_count: hops.length,
+    });
     
     const payload = {
       option,

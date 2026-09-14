@@ -3,12 +3,14 @@ import { DEFAULT_CURRENCY_CODE, APP, ROUTES, SERVER_ERROR_CODES} from "@/utils"
 import { useOverlay } from "./useOverlay";
 import { useCleanupStagedTrip, useVerifyPaymentForTrip } from "./mutation";
 import { isDevMode } from "@/api";
+import { ANALYTICS_EVENTS, useAnalytics } from "@/analytics";
 
 export const useRazorPay = () => {
     const navigate = useNavigate();
     const verifyPaymentApi = useVerifyPaymentForTrip();
     const cleanupStagedTripApi = useCleanupStagedTrip();
     const { showOverlay, hideOverlay } = useOverlay();
+    const { track } = useAnalytics();
 
     const clean = async (id) => {
         try {
@@ -20,6 +22,14 @@ export const useRazorPay = () => {
         }
     }
     const handlePay = async (orderData, overlayProps, pendingConfirmationContext = {}) => {
+        track(ANALYTICS_EVENTS.PAYMENT_STARTED, {
+            trip_id: orderData?.trip_id,
+            order_id: orderData?.order_id,
+            amount: orderData?.amount,
+            amount_in_lowest_unit: orderData?.amount_in_lowest_unit,
+            currency: orderData?.currency,
+            trip_type: pendingConfirmationContext?.tripType,
+        });
         showOverlay(overlayProps);
         
         // Dynamically load Razorpay script if not already loaded
@@ -50,6 +60,12 @@ export const useRazorPay = () => {
                 handler: async function (response) {
                     if (!response.razorpay_payment_id || !response.razorpay_order_id || !response.razorpay_signature) {
                         hideOverlay();
+                        track(ANALYTICS_EVENTS.PAYMENT_FAILED, {
+                            trip_id: orderData?.trip_id,
+                            order_id: orderData?.order_id,
+                            trip_type: pendingConfirmationContext?.tripType,
+                            reason: "missing_payment_details",
+                        });
                         // We do not clean up temp trip even if payment failed, since we do not call verify payment endpoint at all - and give user a chance to retry payment as long as they are in the same context.
                         // In the long run, we have a scheduled job in backend that responsibly cleans abandoned trips.
                         reject(new Error("Payment failed: Missing payment details in response."));
@@ -66,6 +82,12 @@ export const useRazorPay = () => {
                     try {
                         const result = await verifyPaymentApi.mutateAsync(payload);
                         hideOverlay(); // Dismiss before resolving so component renders SuccessOverlay into a clean screen
+                        track(ANALYTICS_EVENTS.BOOKING_CONFIRMED, {
+                            booking_id: result?.data?.booking_id,
+                            trip_id: orderData?.trip_id,
+                            order_id: orderData?.order_id,
+                            trip_type: pendingConfirmationContext?.tripType,
+                        });
                         resolve(result);
                     } catch (error) {
                         if (isDevMode) {
@@ -75,6 +97,12 @@ export const useRazorPay = () => {
                         if(error_code===SERVER_ERROR_CODES.PAYMENT_VERIFIED_WITH_PENDING_CONFIRMATION){
                             // In case of payment verified but trip could not be confirmed
                             hideOverlay();
+                            track(ANALYTICS_EVENTS.PAYMENT_PENDING_CONFIRMATION, {
+                                trip_id: orderData?.trip_id,
+                                order_id: orderData?.order_id,
+                                trip_type: pendingConfirmationContext?.tripType,
+                                reason: error_code,
+                            });
                             navigate(ROUTES.PAYMENT_PENDING_CONFIRMATION, {
                                 replace: true,
                                 state: {
@@ -89,12 +117,23 @@ export const useRazorPay = () => {
                         // Attempt to cleanup staged trip to avoid orphaned bookings, in case of razor pay verification failure.
                         await clean(orderData.trip_id)
                         hideOverlay();
+                        track(ANALYTICS_EVENTS.PAYMENT_FAILED, {
+                            trip_id: orderData?.trip_id,
+                            order_id: orderData?.order_id,
+                            trip_type: pendingConfirmationContext?.tripType,
+                            reason: error_code || "verification_failed",
+                        });
                         reject(new Error("Payment verification failed. Please contact support if your payment was successful but this error persists."));
                     }
                 },
                 modal: {
                     ondismiss: async function () {
                         hideOverlay();
+                        track(ANALYTICS_EVENTS.PAYMENT_CANCELLED, {
+                            trip_id: orderData?.trip_id,
+                            order_id: orderData?.order_id,
+                            trip_type: pendingConfirmationContext?.tripType,
+                        });
                         // We do not clean on user cancellation because user might retry even after cancelling as long as they are in same context.
                         // In the long run, we have a scheduled job in backend that responsibly cleans abandoned trips.
                         reject(new Error("Payment cancelled by user."));

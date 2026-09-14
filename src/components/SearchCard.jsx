@@ -16,11 +16,13 @@ import {
   useLocationByPlaceIdQuery,
   useCurrentLocation,
   useRecentSuggestions,
-  useOverlay
+  useOverlay,
+  useAnalytics,
 } from "@/hooks";
 import { isDevMode } from "@/api";
 import {TRIP_TYPES, ROUTES} from "@/utils"
 import {APP} from "@/utils";
+import { ANALYTICS_EVENTS } from "@/analytics";
 
 const hasLocationCoordinates = (location) =>
   location &&
@@ -49,6 +51,7 @@ const SearchCard = () => {
   const navigate = useNavigate();
   const classifyTripType = useClassifyTripType();
   const { showOverlay, hideOverlay } = useOverlay();
+  const { track } = useAnalytics();
 
   // Pickup remains empty until the user makes an explicit selection.
   const [pickup, setPickup] = useState(null); // raw selection (display only)
@@ -230,10 +233,25 @@ const SearchCard = () => {
       if (dropForNav) {
         cacheSuggestionToLocalStorage(dropForNav);
       }
+      if (!pickupForNav) {
+        track(ANALYTICS_EVENTS.HOME_SEARCH_FAILED, {
+          reason: "missing_pickup",
+          has_dropoff: Boolean(dropForNav),
+        });
+        return;
+      }
+      track(ANALYTICS_EVENTS.HOME_SEARCH_SUBMITTED, {
+        has_pickup: Boolean(pickupForNav),
+        has_dropoff: Boolean(dropForNav),
+      });
       const response = await classifyTripType.mutateAsync({
         pickup: pickupForNav,
         dropoff: dropForNav,
         validate_serviceable_area: true,
+      });
+      track(ANALYTICS_EVENTS.TRIP_TYPE_CLASSIFIED, {
+        trip_type: response?.trip_type,
+        has_dropoff: Boolean(dropForNav),
       });
 
       // Overlay and navigation mapping by trip type
@@ -285,6 +303,9 @@ const SearchCard = () => {
       if (isDevMode) {
         console.error("Trip classification failed", e);
       }
+      track(ANALYTICS_EVENTS.HOME_SEARCH_FAILED, {
+        reason: e?.response?.data?.error_code || "classification_failed",
+      });
       setNoRidesError(true);
     } finally {
       setInProgress(false);
