@@ -32,16 +32,30 @@ export const useRazorPay = () => {
         });
         showOverlay(overlayProps);
         
-        // Dynamically load Razorpay script if not already loaded
-        if (!window.Razorpay) {
-            const script = document.createElement("script");
-            script.src = "https://checkout.razorpay.com/v1/checkout.js";
-            script.async = true;
-            document.body.appendChild(script);
-            await new Promise((resolve) => {
-                script.onload = resolve;
+        try {
+            // Dynamically load Razorpay script if not already loaded
+            if (!window.Razorpay) {
+                const script = document.createElement("script");
+                script.src = "https://checkout.razorpay.com/v1/checkout.js";
+                script.async = true;
+                document.body.appendChild(script);
+                await new Promise((resolve, reject) => {
+                    script.onload = resolve;
+                    script.onerror = reject;
+                });
+            }
+        } catch (error) {
+            hideOverlay();
+            track(ANALYTICS_EVENTS.PAYMENT_FAILED, {
+                trip_id: orderData?.trip_id,
+                order_id: orderData?.order_id,
+                trip_type: pendingConfirmationContext?.tripType,
+                reason: "razorpay_script_load_failed",
             });
+            throw error;
         }
+
+        hideOverlay();
 
         return new Promise((resolve, reject) => {
             //Reference: https://razorpay.com/docs/payments/payment-gateway/web-integration/standard/integration-steps/
@@ -80,6 +94,7 @@ export const useRazorPay = () => {
                         },
                     };
                     try {
+                        showOverlay(overlayProps);
                         const result = await verifyPaymentApi.mutateAsync(payload);
                         hideOverlay(); // Dismiss before resolving so component renders SuccessOverlay into a clean screen
                         track(ANALYTICS_EVENTS.BOOKING_CONFIRMED, {
@@ -141,7 +156,12 @@ export const useRazorPay = () => {
                 },
             };
             const rzp = new window.Razorpay(options);
-            rzp.open();
+            try {
+                rzp.open();
+            } catch (error) {
+                hideOverlay();
+                reject(error);
+            }
         });
     };
 
