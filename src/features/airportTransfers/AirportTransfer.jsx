@@ -26,6 +26,7 @@ import {
   IncludedServicePills,
   NoRidesAvailable,
   RideOptionsSearchSkeleton,
+  CompactRideContextSummary,
 } from "@/components";
 import {
   AirportPickupDetailsManager,
@@ -415,29 +416,57 @@ const getOverlaySubtext = () => {
             >
               <div className="py-2"></div>
 
-              {/* Route timeline */}
-              <RouteTimeline
-                pickupLocation={origin}
-                dropoffLocation={dropOff}
-                className="mb-4"
-              />
-              {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
-              <RideTimings
-                startDatetime={fetchedStartDate}
-                className=" mt-4 mb-4"
-                timezone={fetchedTimezone}
-              />
+              {isDesktopOptionsLayout ? (
+                <>
+                  {/* Route timeline */}
+                  <RouteTimeline
+                    pickupLocation={origin}
+                    dropoffLocation={dropOff}
+                    className="mb-4"
+                  />
+                  {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
+                  <RideTimings
+                    startDatetime={fetchedStartDate}
+                    className=" mt-4 mb-4"
+                    timezone={fetchedTimezone}
+                  />
 
-              {/* Horizontal divider */}
-              <div className="py-1">
-                <hr className="border-t border-gray-300" />
-              </div>
+                  {/* Horizontal divider */}
+                  <div className="py-1">
+                    <hr className="border-t border-gray-300" />
+                  </div>
 
-              {/* Ride add-on for service pills for cost-impacting selections like toll road preference and placard */}
-              <IncludedServicePills
-                services={includedServices}
-                className="mt-3 mb-1"
-              />
+                  {/* Ride add-on for service pills for cost-impacting selections like toll road preference and placard */}
+                  <IncludedServicePills
+                    services={includedServices}
+                    className="mt-3 mb-1"
+                  />
+                </>
+              ) : (
+                <CompactRideContextSummary
+                  pickupLocation={origin}
+                  dropoffLocation={dropOff}
+                  startDatetime={fetchedStartDate}
+                  timezone={fetchedTimezone}
+                   
+                  className="mb-3"
+                >
+                  <RouteTimeline
+                    pickupLocation={origin}
+                    dropoffLocation={dropOff}
+                    className="mb-4"
+                  />
+                  <RideTimings
+                    startDatetime={fetchedStartDate}
+                    className="mt-4 mb-4"
+                    timezone={fetchedTimezone}
+                  />
+                  <IncludedServicePills
+                    services={includedServices}
+                    className="mt-3 mb-1"
+                  />
+                </CompactRideContextSummary>
+              )}
 
               {/* Trip options list  */}
               {isDesktopOptionsLayout && (
@@ -464,7 +493,7 @@ const getOverlaySubtext = () => {
           )}
           {!isDesktopOptionsLayout && (
           <div className="mx-auto mt-4 w-full max-w-screen-sm sm:hidden">
-            <div className="relative mx-auto max-h-[64vh] w-full max-w-screen-sm overflow-hidden rounded-t-3xl border border-gray-100 bg-white shadow-[0_-10px_30px_rgba(15,23,42,0.16)] animate-slide-up">
+            <div className="relative mx-auto h-[calc(100dvh-230px)] w-full max-w-screen-sm overflow-hidden rounded-t-3xl border border-gray-100 bg-white shadow-[0_-10px_30px_rgba(15,23,42,0.16)] animate-slide-up">
               <div className="sticky top-0 z-10 rounded-t-3xl bg-white px-4 pt-3 pb-2">
                 <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-gray-300" />
                 <div className="flex items-baseline justify-between gap-3">
@@ -478,7 +507,7 @@ const getOverlaySubtext = () => {
                   </div>
                 </div>
               </div>
-              <div className="max-h-[calc(64vh-72px)] overflow-y-auto px-4 pb-8 scrollbar-hide">
+              <div className="h-[calc(100dvh-302px)] overflow-y-auto px-4 pb-8 scrollbar-hide">
                 <TripOptionsList
                   options={searchResults?.options}
                   onSelect={handleBook}
@@ -494,10 +523,6 @@ const getOverlaySubtext = () => {
                     />
                 )}
               </div>
-              <div
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-14 border-b border-white bg-linear-to-t from-white via-white/95 to-white/0 shadow-[0_-14px_24px_rgba(255,255,255,0.92)]"
-                aria-hidden="true"
-              />
             </div>
           </div>
           )}
