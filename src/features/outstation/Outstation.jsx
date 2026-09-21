@@ -24,6 +24,7 @@ import {
   IncludedServicePills,
   NoRidesAvailable,
   RideOptionsSearchSkeleton,
+  CompactRideContextSummary,
 } from "@/components";
 
 import {
@@ -445,42 +446,105 @@ function Outstation() {
             >
               <div className="py-2"></div>
 
-              {/* Route timeline */}
-              <RouteTimeline
-                pickupLocation={origin}
-                dropoffLocation={dropOff}
-                hops={fetchedHops}
-                showReturn
-                className="mb-4"
-              />
-              {isRoundTripOnly && <RoundTripOnlyDisclaimer />}
+              {isDesktopOptionsLayout ? (
+                <>
+                  {/* Route timeline */}
+                  <RouteTimeline
+                    pickupLocation={origin}
+                    dropoffLocation={dropOff}
+                    hops={fetchedHops}
+                    showReturn
+                    className="mb-4"
+                  />
+                  {isRoundTripOnly && <RoundTripOnlyDisclaimer />}
 
-              {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
-              <RideTimings
-                startDatetime={fetchedStartDate}
-                endDatetime={fetchedEndDate}
-                pickupLabel="Departure"
-                dropoffLabel="Return"
-                className=" mt-4 mb-4"
-                timezone={fetchedTimezone}
-              />
-              {totalTripDays && totalTripDays > 0 && (
-                <OutstationPackage
-                  totalTripDays={totalTripDays}
-                  includedKms={includedKms}
-                />
+                  {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
+                  <RideTimings
+                    startDatetime={fetchedStartDate}
+                    endDatetime={fetchedEndDate}
+                    pickupLabel="Departure"
+                    dropoffLabel="Return"
+                    className=" mt-4 mb-4"
+                    timezone={fetchedTimezone}
+                  />
+                  {totalTripDays && totalTripDays > 0 && (
+                    <OutstationPackage
+                      totalTripDays={totalTripDays}
+                      includedKms={includedKms}
+                    />
+                  )}
+
+                  {/* Horizontal divider */}
+                  <div className="py-1">
+                    <hr className="border-t border-gray-300" />
+                  </div>
+
+                  {/* Ride add-on for service pills for cost-impacting selections like toll road preference and placard */}
+                  <IncludedServicePills
+                    services={includedServices}
+                    className="mt-3 mb-1"
+                  />
+                </>
+              ) : (
+                <CompactRideContextSummary
+                  pickupLocation={origin}
+                  dropoffLocation={dropOff}
+                  hops={fetchedHops}
+                  showReturn
+                  startDatetime={fetchedStartDate}
+                  endDatetime={fetchedEndDate}
+                  timezone={fetchedTimezone}
+                  metaItems={[
+                    totalTripDays && totalTripDays > 0
+                      ? {
+                          iconType: "roundTrip",
+                          label: `${totalTripDays}-day round trip`,
+                        }
+                      : null,
+                    includedKms
+                      ? {
+                          iconType: "distance",
+                          label: `${includedKms} km package`,
+                        }
+                      : null,
+                  ]}
+                  className="mb-3"
+                >
+                   
+                  {/* Route timeline */}
+                  <RouteTimeline
+                    pickupLocation={origin}
+                    dropoffLocation={dropOff}
+                    hops={fetchedHops}
+                    showReturn
+                    className="mb-4"
+                  />
+                  {isRoundTripOnly && <RoundTripOnlyDisclaimer />}
+
+                  
+                  {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
+                  <RideTimings
+                    startDatetime={fetchedStartDate}
+                    endDatetime={fetchedEndDate}
+                    pickupLabel="Departure"
+                    dropoffLabel="Return"
+                    className=" mt-4 mb-4"
+                    timezone={fetchedTimezone}
+                  />
+                   
+
+                  {/* Horizontal divider */}
+                  <div className="py-1">
+                    <hr className="border-t border-gray-300" />
+                  </div>
+
+                  {/* Ride add-on for service pills for cost-impacting selections like toll road preference and placard */}
+                  <IncludedServicePills
+                    services={includedServices}
+                    className="mt-3 mb-1"
+                  />
+                </CompactRideContextSummary>
               )}
-
-              {/* Horizontal divider */}
-              <div className="py-1">
-                <hr className="border-t border-gray-300" />
-              </div>
-
-              {/* Ride add-on for service pills for cost-impacting selections like toll road preference and placard */}
-              <IncludedServicePills
-                services={includedServices}
-                className="mt-3 mb-1"
-              />
 
               {/* Trip options list  */}
               {isDesktopOptionsLayout && (
@@ -507,11 +571,7 @@ function Outstation() {
           )}
           {!isDesktopOptionsLayout && (
             <div className="fixed inset-x-0 bottom-0 z-30 sm:hidden">
-              <div
-                className="pointer-events-none absolute inset-x-0 -top-12 mx-auto h-12 w-full max-w-screen-sm bg-linear-to-t from-white/95 via-white/60 to-transparent"
-                aria-hidden="true"
-              />
-              <div className="relative mx-auto max-h-[64vh] w-full max-w-screen-sm overflow-hidden rounded-t-3xl border border-gray-100 bg-white shadow-[0_-10px_30px_rgba(15,23,42,0.16)] animate-slide-up">
+              <div className="relative mx-auto h-[calc(100dvh-230px)] w-full max-w-screen-sm overflow-hidden rounded-t-3xl border border-gray-100 bg-white shadow-[0_-10px_30px_rgba(15,23,42,0.16)] animate-slide-up">
                 <div className="sticky top-0 z-10 rounded-t-3xl bg-white px-4 pt-3 pb-2">
                   <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-gray-300" />
                   <div className="flex items-baseline justify-between gap-3">
@@ -525,7 +585,7 @@ function Outstation() {
                     </div>
                   </div>
                 </div>
-                <div className="max-h-[calc(64vh-72px)] overflow-y-auto px-4 pb-8 scrollbar-hide">
+                <div className="h-[calc(100dvh-302px)] overflow-y-auto px-4 pb-8 scrollbar-hide">
                   <TripOptionsList
                     options={searchResults?.options}
                     onSelect={handleBook}
@@ -541,10 +601,6 @@ function Outstation() {
                       />
                     )}
                 </div>
-                <div
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-14 border-b border-white bg-linear-to-t from-white via-white/95 to-white/0 shadow-[0_-14px_24px_rgba(255,255,255,0.92)]"
-                  aria-hidden="true"
-                />
               </div>
             </div>
           )}
@@ -656,8 +712,8 @@ function Outstation() {
                 hasValidTripDayConstraints && (
                   <>
                     <p className="mb-2 text-sm text-gray-400">
-                      You can choose a return time between {minTripDays} and{" "}
-                      {maxTripDays} days after departure.
+                      Outstation trips can be from {minTripDays} to{" "}
+                      {maxTripDays} days.
                     </p>
                     <InlineDateTimePicker
                       id="endDateTime"
