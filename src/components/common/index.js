@@ -19,3 +19,4 @@ export {TogglePreference} from "./TogglePreference";
 export {FeedbackState} from "./FeedbackState";
 export {CountryFlag} from "./CountryFlag";
 export { RideOptionsSearchSkeleton } from "./RideOptionsSearchSkeleton";
+export { CompactRideContextSummary } from "./CompactRideContextSummary";

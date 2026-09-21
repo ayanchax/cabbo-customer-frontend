@@ -22,6 +22,7 @@ import {
   TripDisclaimer,
   NoRidesAvailable,
   RideOptionsSearchSkeleton,
+  CompactRideContextSummary,
 } from "@/components";
 import {
   PackageCards,
@@ -291,29 +292,69 @@ function LocalHourlyRental() {
             >
               <div className="py-2"></div>
 
-              {/* Route timeline */}
-              <RouteTimeline
-                pickupLocation={origin}
-                dropoffLocation={dropOff}
-                className="mb-4"
-              />
-              {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
-              <RideTimings
-                startDatetime={fetchedStartDate}
-                className=" mt-4 mb-4"
-                timezone={fetchedTimezone}
-              />
-              {/* Selected package */}
-              {selectedPackage && (
-                <SelectedPackage
-                  selectedPackage={selectedPackage}
-                  className=" mt-2 md:mb-4"
-                />
+              {isDesktopOptionsLayout ? (
+                <>
+                  {/* Route timeline */}
+                  <RouteTimeline
+                    pickupLocation={origin}
+                    dropoffLocation={dropOff}
+                    className="mb-4"
+                  />
+                  {/* Pick up date/time in readable format, like Friday, June 14, 2024, 3:00 PM */}
+                  <RideTimings
+                    startDatetime={fetchedStartDate}
+                    className=" mt-4 mb-4"
+                    timezone={fetchedTimezone}
+                  />
+                  {/* Selected package */}
+                  {selectedPackage && (
+                    <SelectedPackage
+                      selectedPackage={selectedPackage}
+                      className=" mt-2 md:mb-4"
+                    />
+                  )}
+                  {/* Horizontal divider */}
+                  <div className="py-1">
+                    <hr className="border-t border-gray-300" />
+                  </div>
+                </>
+              ) : (
+                <CompactRideContextSummary
+                  pickupLocation={origin}
+                  dropoffLocation={dropOff}
+                  startDatetime={fetchedStartDate}
+                  timezone={fetchedTimezone}
+                  metaItems={
+                    selectedPackage
+                      ? [
+                          {
+                            iconType: "time",
+                            label: `${selectedPackage.included_hours}h / ${selectedPackage.included_km}km`,
+                          },
+                           
+                        ]
+                      : []
+                  }
+                  className="mb-3"
+                >
+                  <RouteTimeline
+                    pickupLocation={origin}
+                    dropoffLocation={dropOff}
+                    className="mb-4"
+                  />
+                  <RideTimings
+                    startDatetime={fetchedStartDate}
+                    className="mt-4 mb-4"
+                    timezone={fetchedTimezone}
+                  />
+                  {selectedPackage && (
+                    <SelectedPackage
+                      selectedPackage={selectedPackage}
+                      className="mt-2 md:mb-4"
+                    />
+                  )}
+                </CompactRideContextSummary>
               )}
-              {/* Horizontal divider */}
-              <div className="py-1">
-                <hr className="border-t border-gray-300" />
-              </div>
               
               
               {/* Trip options list  */}
@@ -343,7 +384,7 @@ function LocalHourlyRental() {
           )}
           {!isDesktopOptionsLayout && (
             <div className="mx-auto mt-4 w-full max-w-screen-sm sm:hidden">
-              <div className="relative mx-auto max-h-[64vh] w-full max-w-screen-sm overflow-hidden rounded-t-3xl border border-gray-100 bg-white shadow-[0_-10px_30px_rgba(15,23,42,0.16)] animate-slide-up">
+              <div className="relative mx-auto h-[calc(100dvh-230px)] w-full max-w-screen-sm overflow-hidden rounded-t-3xl border border-gray-100 bg-white shadow-[0_-10px_30px_rgba(15,23,42,0.16)] animate-slide-up">
                 <div className="sticky top-0 z-10 rounded-t-3xl bg-white px-4 pt-3 pb-2">
                   <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-gray-300" />
                   <div className="flex items-baseline justify-between gap-3">
@@ -357,7 +398,7 @@ function LocalHourlyRental() {
                     </div>
                   </div>
                 </div>
-                <div className="max-h-[calc(64vh-72px)] overflow-y-auto px-4 pb-8 scrollbar-hide">
+                <div className="h-[calc(100dvh-302px)] overflow-y-auto px-4 pb-8 scrollbar-hide">
                   <TripOptionsList
                     options={searchResults?.options}
                     onSelect={handleBook}
@@ -373,10 +414,6 @@ function LocalHourlyRental() {
                       />
                     )}
                 </div>
-                <div
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-14 border-b border-white bg-linear-to-t from-white via-white/95 to-white/0 shadow-[0_-14px_24px_rgba(255,255,255,0.92)]"
-                  aria-hidden="true"
-                />
               </div>
             </div>
           )}

@@ -136,6 +136,7 @@ second deferred-feature list.
 - Advanced live driver/customer tracking (on investment and if we go instant booking mode)
 - Full support ticketing or in-app chat (on investment)
 - Real-time traffic-based pricing (on investment and if we go instant booking mode)
+- Outstation stop editing directly on the route timeline. Current `OutstationHopManager` is acceptable for V1 because it already supports adding, editing, removing, and reordering stops. A future UX polish pass can explore placing "Add stop" and stop management inline with the route timeline for a more modern route-planning interaction. Lower priority unless customer testing shows the current separate stop manager causes confusion.
 
  
 ## Consent-Based Device Switching (v2+)

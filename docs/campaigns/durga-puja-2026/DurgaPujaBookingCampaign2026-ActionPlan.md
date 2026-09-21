@@ -7,8 +7,7 @@ physical standee objective with the online Puja booking objective.
 
 1. Online Puja booking campaign: runs from 15 September to 15 October, then
    closes.
-2. Offline flex/standee presence: runs at BSS and possibly SBSF as Cabbo app
-   recall and adoption.
+2. Offline flex/standee presence: runs at BSS as Cabbo app recall and adoption.
 
 Both tracks can share the same brand identity, but they should use different
 copy, QR destinations, and success metrics.
@@ -41,7 +40,6 @@ Supporting message:
 - WhatsApp forwards and existing customer broadcasts
 - Instagram and Facebook posts
 - BSS social media posts or shout-outs about this campaign.
-- SBSF social media mention if confirmed
 
 ### QR And Link Target
 
@@ -56,7 +54,6 @@ Use source-specific links for attribution:
 - `DURGA_PUJA_FB_POSTER_2026`
 - `DURGA_PUJA_IG_POSTER_2026`
 - `BSS_SOCIAL_2026`
-- `SBSF_SOCIAL_2026`
 
 Suggested WhatsApp message:
 
@@ -113,10 +110,8 @@ details.
 - BSS is the stronger current option because it offers a 4 ft standee/banner at
   a prime visibility area for `Rs 8,000`, social media presence, and support for
   the pre-Puja booking campaign.
-- SBSF is optional and pending. Proceed only if they agree to `Rs 10,000` with a
-  visible standee/banner and QR permission.
-- Cabbo can participate in both BSS and SBSF with each location getting separate QR code
-  source tracking.
+ 
+- Cabbo shall participate in BSS
 
 ### BSS Plan
 
@@ -126,16 +121,7 @@ details.
 - Avoid year-specific text.
 - Point the QR to the Cabbo app/homepage with BSS source tracking.
 
-### SBSF Decision Rule
-
-- Counter at `Rs 10,000` with one visible standee/banner placement included.
-- Ask for placement at the main entry/exit gate, or near the
-  pickup/drop-off/parking area.
-- Request permission to include Cabbo logo, app link, WhatsApp number, and QR
-  code.
-- Skip SBSF if they cannot include a visible standee/banner at `Rs 10,000`.
-- DO NOT SPEND `Rs 25,000` for SBSF.
-
+ 
 ### Flex Banner QR Target
 
 The standee QR should open the Cabbo app/homepage, ideally with source tracking.
@@ -143,7 +129,7 @@ The standee QR should open the Cabbo app/homepage, ideally with source tracking.
 Examples:
 
 - `https://app.cabbo.co.in/?utm_source=bss_standee&utm_campaign=durga_puja_2026`
-- `https://app.cabbo.co.in/?utm_source=sbsf_standee&utm_campaign=durga_puja_2026`
+ 
 
 Do not make the physical standee QR depend only on the Durga Puja campaign page,
 because the standee should remain useful after the campaign.
@@ -181,17 +167,16 @@ campaign page.
 - [ ] Finalize the BSS sponsorship terms in writing: amount, standee size,
   placement, social media support, artwork deadline, installation details, and
   display dates.
-- [ ] Wait for SBSF response; proceed only if they agree to a `Rs 10,000`
+ 
   package with a visible standee/banner and QR permission.
-- [x] Design one reusable 4 ft standee/flex banner that can be used at BSS and,
-  if confirmed, SBSF.
+- [x] Design one reusable 4 ft standee/flex banner that can be used at BSS 
 - [x] Avoid year-specific text on the standee so it can be reused for future
   Durga Puja/community visibility.
 - [x] Include a Kannada line in the header to acknowledge the local Bengaluru
   context.
 - [x] Keep the physical standee app-first; use only a small festive greeting if
   space allows.
-- [x] Generate separate QR links for BSS and SBSF standee placements and print them and paste them in the QR slot in the flex banner, so that next year - only QRs will be printed and the entire thing reused.
+- [x] Generate separate QR links for BSS standee placements and print them and paste them in the QR slot in the flex banner, so that next year - only QRs will be printed and the entire thing reused.
 - [x] Point the standee QR to the Cabbo app/homepage with source tracking.
 - [x] Do not depend on during-Puja standee traffic for same-day bookings.
 
@@ -339,7 +324,6 @@ App handling:
 Online Puja booking campaign metrics:
 
 - BSS social media enquiries from links posted from BSS in collab with cabbo.
-- SBSF social media enquiries, if confirmed.
 - Public campaign page visits from social media links posted from official cabbo handle.
 - WhatsApp campaign enquiries from broadcasts.
 - App banner clicks from the app landing or login.
@@ -356,8 +340,8 @@ Online Puja booking campaign metrics:
 Offline flex/standee app recall metrics:
 
 - BSS standee QR scans and homepage visits from BSS standee utm.
-- SBSF standee QR scans and homepage visits from SBSF standee utm., if confirmed.
-- WhatsApp or call enquiries that mention BSS/SBSF.
+ 
+- WhatsApp or call enquiries that mention BSS.
 - New customer logins attributable to standee source links.
 - Repeat/referral potential.
 
@@ -365,7 +349,7 @@ Minimum useful outcome:
 
 - Learn whether Bengaluru Puja/pandal-hopping produces real cab enquiries.
 - Complete a few manually controlled trips without operational confusion.
-- Learn whether BSS/SBSF offline presence improves Cabbo app recall enough to
+- Learn whether BSS offline presence improves Cabbo app recall enough to
   repeat community sponsorships in various ocassions ahead.
 - Build reusable local trust and content for Cabbo without confusing the two
   campaign tracks.
@@ -380,8 +364,8 @@ After Puja, answer:
 4. What package was most requested?
 5. What vehicle category was most requested?
 6. What questions did customers ask repeatedly?
-7. How many app/homepage visits or enquiries came from BSS/SBSF standee links?
-8. Did BSS/SBSF offline visibility produce enough app recall value to repeat
+7. How many app/homepage visits or enquiries came from BSS standee links?
+8. Did BSS offline visibility produce enough app recall value to repeat
    community sponsorships?
 9. Should seasonal booking pages remain manual, become semi-automated, or be
    skipped next time?
