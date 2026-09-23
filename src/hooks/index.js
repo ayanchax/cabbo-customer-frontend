@@ -18,5 +18,6 @@ export { useFragmentScroll } from "./useFragmentScroll";
 export { useMediaQuery } from "./useMediaQuery";
 export { useSearchResultsAutoScroll } from "./useSearchResultsAutoScroll";
 export { useAnalytics } from "@/analytics";
+export {useClientGeography} from "./useClientGeography"
 export * from "./query";
 export * from "./mutation";
