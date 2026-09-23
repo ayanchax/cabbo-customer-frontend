@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { ANALYTICS_EVENTS, useAnalytics } from "@/analytics";
 import { useClientGeography } from "@/hooks";
 
 const getCampaignUrl = (slug) => {
@@ -32,29 +33,62 @@ function AdCampaign({
   altText = "Alt text for the campaign image",
   runAdInRegions = [],
 }) {
+  const { track } = useAnalytics();
   const { clientGeographyData } = useClientGeography();
   const clientRegionCode = clientGeographyData?.region_code?.toUpperCase() || null;
   const campaignRegionCodes = runAdInRegions.map((region) =>
     String(region).toUpperCase(),
   );
   const hasRegionGate = campaignRegionCodes.length > 0;
+  const shouldRender =
+    enabled &&
+    imageSrc &&
+    (!hasRegionGate ||
+      (clientRegionCode && campaignRegionCodes.includes(clientRegionCode)));
+  const campaignUrl = withCampaignParams({
+    url: getCampaignUrl(slug),
+    placement,
+    campaignKey,
+  });
 
-  if (!enabled || !imageSrc) return null;
+  useEffect(() => {
+    if (!shouldRender) return;
 
-  if (
-    hasRegionGate &&
-    (!clientRegionCode || !campaignRegionCodes.includes(clientRegionCode))
-  ) {
-    return null;
-  }
+    track(ANALYTICS_EVENTS.AD_CAMPAIGN_BANNER_VIEWED, {
+      campaign_key: campaignKey,
+      placement,
+      slug,
+      region_code: clientRegionCode,
+      has_region_gate: hasRegionGate,
+    });
+  }, [
+    campaignKey,
+    clientRegionCode,
+    hasRegionGate,
+    placement,
+    shouldRender,
+    slug,
+    track,
+  ]);
+
+  if (!shouldRender) return null;
 
   return (
     <a
-      href={withCampaignParams({
-        url: getCampaignUrl(slug),
-        placement,
-        campaignKey,
-      })}
+      href={campaignUrl}
+      onClick={() =>
+        track(ANALYTICS_EVENTS.AD_CAMPAIGN_BANNER_CLICKED, {
+          campaign_key: campaignKey,
+          placement,
+          slug,
+          region_code: clientRegionCode,
+          destination_url: campaignUrl,
+          utm_source: "ad_campaign_banner",
+          utm_medium: "cabbo_app",
+          utm_campaign: campaignKey,
+          utm_content: placement,
+        })
+      }
       target="_blank"
       rel="noreferrer"
       aria-label={ariaLabel}
