@@ -2,10 +2,16 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { isPhoneNumberValid, sanitizePhoneNumber, APP } from "@/utils";
 import { useToast, useGeography, useAuth, useAnalytics } from "@/hooks";
-import { Disclaimer, LegalAgreementStatement, CountryFlag } from "@/components";
+import {
+  Disclaimer,
+  LegalAgreementStatement,
+  CountryFlag,
+  AdCampaign,
+} from "@/components";
 import { ROUTES } from "@/utils";
 import { isDevMode } from "@/api";
 import { ANALYTICS_EVENTS } from "@/analytics";
+import durgaPujaBookingBanner from "@/assets/campaigns/blr/durga-puja-2026/booking-banner-cta.png";
 
 const LOGIN_MESSAGES = {
   countryUnavailable:
@@ -220,7 +226,18 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-2">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gray-50 px-2 py-4">
+      <AdCampaign
+        placement="login"
+        imageSrc={durgaPujaBookingBanner}
+        slug={`campaign/durga-puja-bengaluru-2026`}
+        campaignKey="durga-puja-blr-2026"
+        ariaLabel="Explore Durga Puja 2026 Bengaluru cab packages"
+        altText="Durga Puja 2026 Bengaluru cab packages by Cabbo, starting from Rs 1,999 for 4 hours and 40 km"
+        className="w-full max-w-lg sm:max-w-xl md:max-w-2xl"
+        enabled ={import.meta.env.VITE_DURGA_PUJA_CAMPAIGN_ENABLED==="true"}
+        runAdInRegions={["WB","KA","KL","TN","AP","TS", "OD", "AS"]}
+      />
       <div className="w-full max-w-lg p-12 bg-white rounded-3xl shadow-lg border border-gray-100">
         <div className="mb-8 text-center flex flex-col items-center">
           <img

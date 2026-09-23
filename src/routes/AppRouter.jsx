@@ -19,7 +19,8 @@ const LazyLoadedRoutes = {
   Login: lazy(() => import("@/pages/auth/Login")),
   Verify: lazy(() => import("@/pages/auth/Verify")),
   Onboard: lazy(() => import("@/pages/auth/Onboard")),
-  VerifyEmail: lazy(() => import("@/pages/VerifyEmailPage"))
+  VerifyEmail: lazy(() => import("@/pages/VerifyEmailPage")),
+  Campaign:lazy(() => import("@/pages/CampaignDetailPage")),
 };
 
 function ScrollToTop() {
@@ -78,7 +79,8 @@ const AppRouter = () => {
 
          <Route path={ROUTES.LEGAL_PAGE} element={<LazyLoadedRoutes.LegalPage />} />
          <Route path={ROUTES.VERIFY_EMAIL} element={<LazyLoadedRoutes.VerifyEmail />} />
-          
+         <Route path={ROUTES.CAMPAIGN} element={<LazyLoadedRoutes.Campaign />} />
+         
       </Routes>
       </Suspense>
     </BrowserRouter>

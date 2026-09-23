@@ -1,6 +1,9 @@
 export const ANALYTICS_EVENTS = {
   APP_PAGE_VIEWED: "app_page_viewed",
 
+  AD_CAMPAIGN_BANNER_VIEWED: "ad_campaign_banner_viewed",
+  AD_CAMPAIGN_BANNER_CLICKED: "ad_campaign_banner_clicked",
+
   OTP_REQUESTED: "otp_requested",
   OTP_REQUEST_FAILED: "otp_request_failed",
   OTP_VERIFIED: "otp_verified",

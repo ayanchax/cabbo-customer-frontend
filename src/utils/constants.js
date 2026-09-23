@@ -91,6 +91,7 @@ export const ROUTES = {
     LEGAL: "/legal",
     LEGAL_PAGE: "/legal/:slug",
     VERIFY_EMAIL: "/verify-email",
+    CAMPAIGN:"/campaign/:campaignId"
 };
 
 export const TRIP_TYPES =
