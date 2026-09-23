@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { CalendarDays, Info, MessageCircle, Phone, Route } from "lucide-react";
 import campaignBanner from "@/assets/campaigns/blr/durga-puja-2026/campaign-detail.png";
 import { APP } from "@/utils";
+import { UnknownCampaign } from "@/features/campaigns/components";
 
 const WHATSAPP_MESSAGE = `Hi ${APP.name}, I want to book a Durga Puja pandal-hopping cab in Bengaluru.`;
 
@@ -75,7 +76,7 @@ const packages = [
 function DurgaPujaBengaluru2026() {
   const primaryActionsRef = useRef(null);
   const [showFloatingActions, setShowFloatingActions] = useState(false);
-
+  const canRender = import.meta.env.VITE_DURGA_PUJA_CAMPAIGN_ENABLED==="true"
   useEffect(() => {
     const primaryActions = primaryActionsRef.current;
     if (!primaryActions) return undefined;
@@ -94,6 +95,9 @@ function DurgaPujaBengaluru2026() {
     return () => observer.disconnect();
   }, []);
 
+  if (!canRender){
+    return <UnknownCampaign/>
+  }
   return (
     <main className="min-h-screen bg-[#fff8f2] text-gray-950">
       <section className="mx-auto max-w-5xl px-4 py-5 sm:px-6 lg:px-8">
@@ -226,7 +230,7 @@ function DurgaPujaBengaluru2026() {
                 aria-hidden="true"
               />
               <span>
-                Small cars include Dzire, Etios, or similar. Large cars include
+                Small cars are 4 seaters that include Dzire, Etios, or similar. Large cars are 6 or 7 seaters which include
                 Ertiga, Innova, or similar. Vehicle model is subject to
                 availability. 12-hour packages include driver allowance. Toll
                 and parking are charged at actuals. You will be charged the full
@@ -242,8 +246,8 @@ function DurgaPujaBengaluru2026() {
             Pujo places to explore in Bengaluru
           </h2>
           <p className="mt-2 text-sm leading-6 text-gray-600">
-            Planning a day out or new to the Bengaluru Pujo scene? Here are a few community pujos you can check out across the city.
-            
+            Planning a day out or new to the Bengaluru Pujo scene? Here are a
+            few community pujos you can check out across the city.
           </p>
 
           <ul className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
@@ -256,9 +260,10 @@ function DurgaPujaBengaluru2026() {
           </ul>
 
           <p className="mt-4 text-xs leading-5 text-gray-500">
-            This list is for everyone, whether you travel with {APP.name} or make
-            your own plans. Check each organiser's latest venue and visiting hours before
-            heading out. This is a list of suggestions, not a fixed itinerary.
+            This list is for everyone, whether you travel with {APP.name} or
+            make your own plans. Check each organiser's latest venue and
+            visiting hours before heading out. This is a list of suggestions,
+            not a fixed itinerary.
           </p>
         </section>
       </section>

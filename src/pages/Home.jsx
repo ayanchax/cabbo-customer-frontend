@@ -24,7 +24,7 @@ const Home = () => {
         altText="Durga Puja 2026 Bengaluru cab packages by Cabbo, starting from Rs 1,999 for 4 hours and 40 km"
         className="mx-auto mb-4 w-[calc(100%-1rem)] max-w-screen-sm md:max-w-2xl lg:max-w-2xl"
         enabled ={import.meta.env.VITE_DURGA_PUJA_CAMPAIGN_ENABLED==="true"}
-        runAdInRegions={["WB","KA","KL","TN","AP","TS"]}
+        runAdInRegions={["WB","KA","KL","TN","AP","TS", "OD", "AS"]}
       />
       <MobileBrandSignature />
       
