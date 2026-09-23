@@ -157,11 +157,11 @@ function DurgaPujaBengaluru2026() {
                 <button
                   type="button"
                   onClick={scrollToPackages}
-                  className="border-b border-dotted border-gray-500 font-medium text-gray-800 transition hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:ring-offset-2"
+                  className="inline border-b border-dotted border-gray-500 bg-transparent p-0 font-medium text-gray-800 transition hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:ring-offset-2"
                 >
-                  ride package
-                </button>
-                . Reach out to us with your plan and preferred time, and we'll
+                  ride package.
+                </button>{" "}
+                Reach out to us with your plan and preferred time, and we'll
                 confirm the ride details.
               </p>
             </div>
