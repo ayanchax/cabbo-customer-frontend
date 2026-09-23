@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { CalendarDays, Info, MessageCircle, Phone, Route } from "lucide-react";
+import {
+  CalendarDays,
+  Info,
+  LoaderCircle,
+  MessageCircle,
+  Phone,
+  Route,
+} from "lucide-react";
 import campaignBanner from "@/assets/campaigns/blr/durga-puja-2026/campaign-detail.png";
 import { APP } from "@/utils";
 import { UnknownCampaign } from "@/features/campaigns/components";
@@ -75,8 +82,18 @@ const packages = [
 
 function DurgaPujaBengaluru2026() {
   const primaryActionsRef = useRef(null);
+  const packagesSectionRef = useRef(null);
   const [showFloatingActions, setShowFloatingActions] = useState(false);
+  const [isCampaignBannerLoaded, setIsCampaignBannerLoaded] = useState(false);
   const canRender = import.meta.env.VITE_DURGA_PUJA_CAMPAIGN_ENABLED==="true"
+
+  const scrollToPackages = () => {
+    packagesSectionRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
   useEffect(() => {
     const primaryActions = primaryActionsRef.current;
     if (!primaryActions) return undefined;
@@ -101,11 +118,28 @@ function DurgaPujaBengaluru2026() {
   return (
     <main className="min-h-screen bg-[#fff8f2] text-gray-950">
       <section className="mx-auto max-w-5xl px-4 py-5 sm:px-6 lg:px-8">
-        <img
-          src={campaignBanner}
-          alt="Durga Puja 2026 Bengaluru cab packages by Cabbo"
-          className="w-full rounded-2xl border border-red-100 bg-white shadow-sm"
-        />
+        <div className="relative overflow-hidden rounded-2xl border border-red-100 bg-white shadow-sm">
+          
+          {!isCampaignBannerLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-50/70">
+              <LoaderCircle
+                className="h-5 w-5 animate-spin text-primary/70"
+                aria-hidden="true"
+              />
+            </div>
+          )}
+          <img
+            src={campaignBanner}
+            alt="Durga Puja 2026 Bengaluru cab packages by Cabbo"
+            loading="eager"
+            decoding="async"
+            onLoad={() => setIsCampaignBannerLoaded(true)}
+            onError={() => setIsCampaignBannerLoaded(true)}
+            className={`block w-full transition-opacity duration-300 ${
+              isCampaignBannerLoaded ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        </div>
       </section>
 
       <section className="mx-auto max-w-5xl px-4 pb-10 sm:px-6 lg:px-8">
@@ -119,10 +153,16 @@ function DurgaPujaBengaluru2026() {
                 Durga Puja rides with {APP.name}
               </h1>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base">
-                Time-bound cab packages for Durga Puja pandal visits in
-                Bengaluru. Send an enquiry and {APP.name} will confirm
-                availability, vehicle category, pickup time, and payment details
-                manually.
+                Plan your pandal visits with a {APP.name}{" "}
+                <button
+                  type="button"
+                  onClick={scrollToPackages}
+                  className="border-b border-dotted border-gray-500 font-medium text-gray-800 transition hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:ring-offset-2"
+                >
+                  ride package
+                </button>
+                . Reach out to us with your plan and preferred time, and we'll
+                confirm the ride details.
               </p>
             </div>
 
@@ -170,15 +210,18 @@ function DurgaPujaBengaluru2026() {
                 className="h-5 w-5 text-primary"
                 aria-hidden="true"
               />
-              <p className="mt-2 text-sm font-semibold">Booking mode</p>
+              <p className="mt-2 text-sm font-semibold">How to book</p>
               <p className="text-sm text-gray-600">
-                Manual enquiry and confirmation. Just give us a call.
+                 Call us and we'll help you book.
               </p>
             </div>
           </div>
         </div>
 
-        <section className="mt-5 rounded-2xl border border-red-100 bg-white p-5 shadow-sm sm:p-6">
+        <section
+          ref={packagesSectionRef}
+          className="mt-5 scroll-mt-4 rounded-2xl border border-red-100 bg-white p-5 shadow-sm sm:p-6"
+        >
           <h2 className="text-xl font-bold text-gray-950">Packages</h2>
           <div className="mt-4 overflow-hidden rounded-xl border border-gray-100">
             <div className="grid grid-cols-4 bg-gray-50 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-gray-500">

@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { LoaderCircle } from "lucide-react";
 import { ANALYTICS_EVENTS, useAnalytics } from "@/analytics";
 import { useClientGeography } from "@/hooks";
 
@@ -34,6 +35,7 @@ function AdCampaign({
   runAdInRegions = [],
 }) {
   const { track } = useAnalytics();
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const { clientGeographyData } = useClientGeography();
   const clientRegionCode = clientGeographyData?.region_code?.toUpperCase() || null;
   const campaignRegionCodes = runAdInRegions.map((region) =>
@@ -92,12 +94,25 @@ function AdCampaign({
       target="_blank"
       rel="noreferrer"
       aria-label={ariaLabel}
-      className={`block overflow-hidden rounded-2xl border border-red-100 bg-white shadow-sm transition hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${className}`}
+      className={`relative block overflow-hidden rounded-2xl border border-red-100 bg-white shadow-sm transition hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${className}`}
     >
+      {!isImageLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-50/70">
+          <LoaderCircle
+            className="h-5 w-5 animate-spin text-primary/70"
+            aria-hidden="true"
+          />
+        </div>
+      )}
       <img
         src={imageSrc}
         alt={altText}
-        className="block h-auto w-full"
+        decoding="async"
+        onLoad={() => setIsImageLoaded(true)}
+        onError={() => setIsImageLoaded(true)}
+        className={`block h-auto w-full transition-opacity duration-300 ${
+          isImageLoaded ? "opacity-100" : "opacity-0"
+        }`}
         loading={placement === "login" ? "eager" : "lazy"}
       />
     </a>
