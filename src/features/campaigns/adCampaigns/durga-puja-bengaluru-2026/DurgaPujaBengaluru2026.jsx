@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   CalendarDays,
+  ClipboardList,
   Info,
   LoaderCircle,
   MessageCircle,
@@ -19,6 +20,7 @@ const WHATSAPP_BOOKING_SUPPORT_NUMBER = CALL_BOOKING_SUPPORT_NUMBER.replace(
   "",
 );
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_BOOKING_SUPPORT_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+const CALLBACK_REQUEST_URL = "https://forms.gle/fV4RFAHH54TW7ZeE9";
 
 const suggestedPujos = [
   { name: "Begur Bengali Sharodiya Durgotsav", area: "Milana Greens, Begur" },
@@ -168,7 +170,7 @@ function DurgaPujaBengaluru2026() {
 
             <div
               ref={primaryActionsRef}
-              className="flex shrink-0 flex-col gap-2 xs:flex-row md:flex-col"
+              className="grid shrink-0 grid-cols-1 gap-2 xs:grid-cols-2 md:flex md:flex-col"
             >
               <a
                 href={WHATSAPP_URL}
@@ -185,6 +187,15 @@ function DurgaPujaBengaluru2026() {
               >
                 <Phone className="h-4 w-4" aria-hidden="true" />
                 Call {APP.name}
+              </a>
+              <a
+                href={CALLBACK_REQUEST_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700 transition hover:border-red-200 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:ring-offset-2 xs:col-span-2"
+              >
+                <ClipboardList className="h-4 w-4" aria-hidden="true" />
+                Request callback
               </a>
             </div>
           </div>
@@ -212,7 +223,7 @@ function DurgaPujaBengaluru2026() {
               />
               <p className="mt-2 text-sm font-semibold">How to book</p>
               <p className="text-sm text-gray-600">
-                 Call us and we'll help you book.
+                Call us or request a callback, and we'll help you book.
               </p>
             </div>
           </div>
@@ -332,6 +343,19 @@ function DurgaPujaBengaluru2026() {
             className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white shadow-lg shadow-blue-900/20 transition hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 sm:h-14 sm:w-14"
           >
             <Phone className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
+          </a>
+          <a
+            href={CALLBACK_REQUEST_URL}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Request a callback for Durga Puja cab booking"
+            title="Request callback"
+            className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-red-600 text-white shadow-lg shadow-red-900/20 transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:h-14 sm:w-14"
+          >
+            <ClipboardList
+              className="h-5 w-5 sm:h-6 sm:w-6"
+              aria-hidden="true"
+            />
           </a>
         </div>
       )}
