@@ -1,6 +1,6 @@
 import axios from "axios";
 import { logout } from "@/api/logout";
-import { ENDPOINTS, ROUTES, SERVER_ERROR_CODES } from "@/utils";
+import { ENDPOINTS, ROUTES, SERVER_ERROR_CODES, SERVER_STATUS_CODES } from "@/utils";
 
 const isDevMode = import.meta.env.VITE_DEV_MODE === "true";
 const api = axios.create({
@@ -29,10 +29,10 @@ const isUnauthorizedSessionError = (error) => {
   const url = error.config?.url || "";
   const isAuthCheckRequest = url.includes(ENDPOINTS.CUSTOMER.IS_LOGGED_IN);
   
-  // Return true if the endpoint is a protected customer endpoint other than /is-logged-in and status is 401 with an UNAUTHORIZED SERVER code
+  // Return true if the endpoint is a protected customer endpoint other than /is-logged-in and status is SERVER_STATUS_CODES.UNAUTHORIZED with an UNAUTHORIZED SERVER code
   return (
     !isAuthCheckRequest &&
-    [401].includes(status) &&
+    [SERVER_STATUS_CODES.UNAUTHORIZED].includes(status) &&
     errorCode === SERVER_ERROR_CODES.UNAUTHORIZED
   );
 };

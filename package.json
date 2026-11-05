@@ -9,6 +9,7 @@
     "build-dev": "vite build --mode dev",
     "build-prod": "vite build --mode prod",
     "lint": "eslint .",
+    "test:payments": "node --test tests/payment-reconciliation.test.mjs tests/checkout-recovery.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

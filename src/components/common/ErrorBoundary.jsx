@@ -1,6 +1,5 @@
 import { RefreshCcw } from "lucide-react";
 import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
-import { APP } from "@/utils";
 import {Footer} from "@/components";
 
 function ErrorFallback({ resetErrorBoundary }) {

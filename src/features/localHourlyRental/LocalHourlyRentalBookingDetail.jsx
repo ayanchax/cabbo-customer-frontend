@@ -28,6 +28,7 @@ function LocalHourlyRentalBookingDetail({ bookingDetail = {} }) {
     location?.state?.fromBookingConfirmation || false;
   const handleBack = useBookingDetailBackNavigation(
     comingFromBookingPaymentPage,
+    ROUTES.LOCAL,
   );
 
   const {

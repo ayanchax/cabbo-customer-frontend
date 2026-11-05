@@ -14,57 +14,50 @@ import { ThumbsUp } from "lucide-react";
  * - onComplete: callback after duration
  * - icon: optional React node (defaults to tick)
  * - iconSize: size of the icon (default 80)
- * - showRedirecting: boolean to show "Redirecting..." text (default false)
  * - children: optional React node(s) to show below the message
  * - route: optional string path to navigate to after duration
  * - routeState: optional state object to pass with navigation
- * - showCountdown: boolean to show countdown timer when route is provided (default false)
+ * - showCountdown: show countdown without navigating; routes show it automatically
+ * - countdownLabel: text before the countdown (default "Redirecting in")
  */
 
 function SuccessOverlay({
   visible = false,
   message = "Done!",
   duration = 3000, // ms
-  onComplete = () => {},
+  onComplete,
   icon,
   iconSize = 80,
   backgroundClassName = "bg-green-600",
   children,
   route=null,
   routeState=null,
+  showCountdown = false,
+  countdownLabel = "Redirecting in",
   
 }) {
   const navigate = useNavigate();
-  const canRedirect = route ? true : false; // If route is provided, we can redirect. Otherwise, rely on redirect prop to decide whether to show "Redirecting..." text.
-  const canShowCountdown = route ? true : false; // Only show countdown if we have a route to redirect to. If no route is provided, countdown doesn't make sense, so we ignore showCountdown in that case.
+  const canShowCountdown = Boolean(route) || showCountdown;
   const [countdown, setCountdown] = useState(() => Math.ceil(duration / 1000));
-
+  const canReplace = routeState?.replace ? true : false; // If routeState has replace=true, we will replace the history entry instead of pushing a new one.
   useEffect(() => {
     if (!visible) return;
-    let timer;
     let countdownInterval;
-    if (route) {
+    if (canShowCountdown) {
       countdownInterval = setInterval(() => {
         setCountdown((c) => (c > 1 ? c - 1 : 1));
-      }, 1000); // Update countdown every second so it behaves like a clock counting down to the redirect
-      timer = setTimeout(() => {
-        if (routeState) {
-          navigate(route, { state: routeState });
-        } else {
-          navigate(route);
-        }
-        if (onComplete) onComplete();
-      }, duration);
-    } else {
-      timer = setTimeout(() => {
-        if (onComplete) onComplete();
-      }, duration);
+      }, 1000);
     }
+    const timer = setTimeout(() => {
+      if (countdownInterval) clearInterval(countdownInterval);
+      if (route) navigate(route, { state: routeState, replace: canReplace });
+      onComplete?.();
+    }, duration);
     return () => {
       clearTimeout(timer);
       if (countdownInterval) clearInterval(countdownInterval);
     };
-  }, [visible, duration, onComplete, route, routeState, navigate]);
+  }, [visible, duration, onComplete, route, routeState, navigate, canReplace, canShowCountdown]);
 
   if (!visible) return null;
 
@@ -92,18 +85,10 @@ function SuccessOverlay({
           </div>
         )}
 
-        {canRedirect && (
-          <>
-            {canShowCountdown && route ? (
-              <div className="text-white text-base opacity-80 text-center mt-1">
-                Redirecting in {countdown} second{countdown !== 1 ? "s" : ""}...
-              </div>
-            ) : (
-              <div className="text-white text-base opacity-80 text-center mt-1">
-                Redirecting...
-              </div>
-            )}
-          </>
+        {canShowCountdown && (
+          <div className="text-white text-base opacity-80 text-center mt-1">
+            {countdownLabel} {countdown} second{countdown !== 1 ? "s" : ""}...
+          </div>
         )}
       </div>
     </div>
