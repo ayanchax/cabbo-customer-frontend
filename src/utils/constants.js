@@ -54,8 +54,6 @@ export const ENDPOINTS = {
             GET_PRIOR_BOOKING_WINDOW: `${API_VERSION}/trips/prior-booking-window`, 
             SEARCH: `${API_VERSION}/trips/search`,
             INITIATE_BOOKING: `${API_VERSION}/trips/initiate-booking`,
-            VERIFY_PAYMENT_AND_CONFIRM_TRIP: `${API_VERSION}/trips/confirm-booking`,
-            CLEANUP_STAGED_TRIP: `${API_VERSION}/trips/cleanup`,
             GET_BOOKING: `${API_VERSION}/trips/bookings`, // Append booking ID to get details for specific booking
             CANCEL_BOOKING: `${API_VERSION}/trips/bookings`, // Append booking ID and /cancel to cancel a booking
             UPDATE_NON_COST_IMPACTING_TRIP_DETAILS: `${API_VERSION}/trips/bookings`,
@@ -164,12 +162,4 @@ export const REFUND_STATUS={
 
 
 
-export const SERVER_ERROR_CODES = {
-    ALREADY_BOOKED_ON_THIS_SLOT: "ALREADY_BOOKED_ON_THIS_SLOT",
-    INVALID_BOOKING_DATA: "INVALID_BOOKING_DATA",
-    TRIP_NOT_FOUND: "TRIP_NOT_FOUND",
-    UNAUTHORIZED: "UNAUTHORIZED",
-    UNKNOWN_ERROR: "UNKNOWN_ERROR",
-    PAYMENT_VERIFIED_WITH_PENDING_CONFIRMATION:"PAYMENT_VERIFIED_WITH_PENDING_CONFIRMATION"
-}
-
+export { SERVER_ERROR_CODES, SERVER_STATUS_CODES } from "./serverConstants.js";

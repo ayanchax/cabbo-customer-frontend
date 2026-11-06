@@ -31,6 +31,7 @@ function OutstationBookingDetail({ bookingDetail = {} }) {
     location?.state?.fromBookingConfirmation || false;
   const handleBack = useBookingDetailBackNavigation(
     comingFromBookingPaymentPage,
+    ROUTES.OUTSTATION,
   );
 
   const {

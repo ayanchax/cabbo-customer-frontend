@@ -9,9 +9,11 @@ const useLocalStorage = () => {
       } else {
         localStorage.setItem(key, value);
       }
+      return true;
     } catch (error) {
       if (isDevMode)
         console.error(`useLocalStorage.setItem: failed to set "${key}"`, error);
+      return false;
     }
   }, []);
 

@@ -45,6 +45,7 @@ function AirportTransferBookingDetail({ bookingDetail = {} }) {
     location?.state?.fromBookingConfirmation || false;
   const handleBack = useBookingDetailBackNavigation(
     comingFromBookingPaymentPage,
+    ROUTES.AIRPORT,
   );
   const editTripApi = useEditNonCostImpactingTripFields();
   if (isDevMode) {
