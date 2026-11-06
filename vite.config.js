@@ -11,6 +11,12 @@ const __dirname = path.dirname(__filename)
 
 const normalizeBaseUrl = (value) => (value || 'https://app.cabbo.co.in').replace(/\/+$/, '')
 
+const isTestArtifact = (id) => {
+  const normalizedId = id.replace(/\\/g, '/').split('?')[0]
+  return /(^|\/)(tests|__tests__)(\/|$)/i.test(normalizedId) ||
+    /\.(test|spec)\.[cm]?[jt]sx?(\.map)?$/i.test(normalizedId)
+}
+
 const createRobotsTxt = ({ appBaseUrl, isProduction }) => {
   if (!isProduction) {
     return `User-agent: *
@@ -57,6 +63,22 @@ export default defineConfig(({ mode }) => {
     react(),
     tailwindcss(),
     {
+      name: 'prevent-test-artifacts',
+      apply: 'build',
+      generateBundle(_options, bundle) {
+        // Fail accidental test imports rather than externalizing them into runtime imports.
+        for (const output of Object.values(bundle)) {
+          if (isTestArtifact(output.fileName)) {
+            this.error(`Test artifact must not be emitted: ${output.fileName}`)
+          }
+          if (output.type === 'chunk') {
+            const testModule = Object.keys(output.modules).find(isTestArtifact)
+            if (testModule) this.error(`Test module must not be bundled: ${testModule}`)
+          }
+        }
+      },
+    },
+    {
       name: 'prepare-production-artifacts',
       apply: 'build',
       async closeBundle() {
@@ -91,6 +113,8 @@ export default defineConfig(({ mode }) => {
   },
   build: {
     rolldownOptions: {
+      // Only the application HTML is an entry; tests run separately with Node.
+      input: path.resolve(__dirname, 'index.html'),
       output: {
         manualChunks(id) {
           if (!id.includes('node_modules')) return
