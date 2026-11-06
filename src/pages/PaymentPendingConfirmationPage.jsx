@@ -1,18 +1,16 @@
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import {
   ArrowRight,
   CircleAlert,
   Clock3,
   LifeBuoy,
-  LoaderCircle,
   LockKeyhole,
   RefreshCw,
   SearchX,
-  ShieldCheck,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PaymentContext, PAYMENT_PHASE } from "@/payments";
-import { TripSupportCard, Footer } from "@/components";
+import { TripSupportCard, Footer, InfoOverlay } from "@/components";
 import { APP, ROUTES, SERVER_STATUS_CODES } from "@/utils";
 
 const actionClass =
@@ -28,6 +26,12 @@ export default function PaymentPendingConfirmationPage() {
   const { phase, status } = view;
   const reference = pending?.temp_trip_id || view.reference;
   const checking = phase === PAYMENT_PHASE.CHECKING && Boolean(reference);
+  const headingRef = useRef(null);
+
+  useEffect(() => {
+    // A new recovery outcome is a view change, not another polling announcement.
+    if (!checking) headingRef.current?.focus();
+  }, [checking, phase]);
   const review = phase === PAYMENT_PHASE.REVIEW;
   const missing = phase === PAYMENT_PHASE.MISSING;
   const bookingReference = status?.booking_id || pending?.booking_id;
@@ -44,13 +48,8 @@ export default function PaymentPendingConfirmationPage() {
   let message = `${paymentReassurance} If your booking is confirmed, it will appear in Upcoming Trips.`;
   let StatusIcon = Clock3;
 
-  // Checking, review, access, reference, auth, missing
-  if (checking) {
-    title = "Checking your payment";
-    label = "Payment status";
-    message = paymentReassurance;
-    StatusIcon = LoaderCircle;
-  } else if (review) {
+  // Review, access, reference, auth, missing
+  if (review) {
     title = "Your booking needs attention";
     label = "Support needed";
     message =
@@ -99,6 +98,16 @@ export default function PaymentPendingConfirmationPage() {
     PAYMENT_PHASE.AUTH,
   ].includes(phase);
 
+  if (checking) {
+    return (
+      <InfoOverlay
+        visible
+        message="Checking your payment"
+        subtext="Please don't pay again while we check."
+      />
+    );
+  }
+
   return (
     <div className="flex min-h-dvh flex-col bg-gray-50 text-secondary">
       <header className="mx-auto w-full max-w-6xl px-5 py-6 sm:px-8 sm:py-8">
@@ -128,7 +137,7 @@ export default function PaymentPendingConfirmationPage() {
                 <StatusIcon
                   aria-hidden="true"
                   strokeWidth={1.6}
-                  className={`size-8 ${checking ? "motion-safe:animate-spin" : ""}`}
+                  className="size-8"
                 />
               </div>
               <div
@@ -143,8 +152,10 @@ export default function PaymentPendingConfirmationPage() {
                   {label}
                 </p>
                 <h1
+                  ref={headingRef}
+                  tabIndex={-1}
                   id="payment-status-title"
-                  className="mt-2 text-2xl font-bold tracking-tight text-gray-950 sm:text-[28px] sm:leading-tight"
+                  className="mt-2 text-2xl font-bold tracking-tight text-gray-950 outline-none sm:text-[28px] sm:leading-tight"
                 >
                   {title}
                 </h1>
@@ -175,13 +186,10 @@ export default function PaymentPendingConfirmationPage() {
                   <button
                     type="button"
                     onClick={checkAgain}
-                    disabled={checking}
                     className={`${primaryActionClass} sm:flex-1`}
                   >
-                    {!checking && (
-                      <RefreshCw aria-hidden="true" className="size-4" />
-                    )}
-                    {checking ? "Checking..." : "Check status again"}
+                    <RefreshCw aria-hidden="true" className="size-4" />
+                    Check status again
                   </button>
                 )}
                 {missing && (
@@ -210,18 +218,6 @@ export default function PaymentPendingConfirmationPage() {
               </div>
             </div>
 
-            {checking && (
-              <div className="flex items-start justify-center gap-2 border-t border-gray-100 bg-gray-50/60 px-5 py-4 text-xs leading-5 text-gray-500 sm:px-8">
-                <ShieldCheck
-                  aria-hidden="true"
-                  className="mt-0.5 size-4 shrink-0 text-primary"
-                />
-                <p>
-                  You can leave this page. Confirmed bookings appear in Upcoming
-                  Trips.
-                </p>
-              </div>
-            )}
           </section>
 
           {canShowSupport ? (

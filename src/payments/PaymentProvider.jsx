@@ -60,7 +60,7 @@ function CustomerPaymentSession({ owner, children }) {
       // Background recovery must not pull a customer away from a new booking/search/browsing activity unless they are on the confirmation page. The coordinator may still be running in the background, but the customer is not interrupted.
       if (locationRef.current.pathname !== ROUTES.PAYMENT_PENDING_CONFIRMATION) return;
       if (status.trip_status === TRIP_STATUS.CONFIRMED) {
-        setConfirmedBooking(status);
+        setConfirmedBooking(status); // At this moment the SuccessOverlay is visible, but the booking details are not yet loaded. The overlay will remain until we navigate the customer to the booking detail page.
         track(ANALYTICS_EVENTS.BOOKING_CONFIRMED, { booking_id: status.booking_id, trip_id: status.trip_id });
       }
       // Open details immediately so refreshing during the success overlay
@@ -194,7 +194,7 @@ function CustomerPaymentSession({ owner, children }) {
           email: orderData.customer?.email || "",
           contact: orderData.customer?.contact || "",
         },
-        handler: finish,
+        handler: finish, // The handler is called when the payment is completed successfully. It will call the finish function to proceed with the next steps in the payment process.
         modal: { ondismiss: finish },
       });
       checkoutRef.current = checkout;
@@ -215,7 +215,10 @@ function CustomerPaymentSession({ owner, children }) {
   };
   return (
     <PaymentContext.Provider value={{ pending, view, onPay, checkAgain, supportContext, recoveryState }}>
-      {children}
+      <div inert={confirmedBooking ? true : undefined}>
+        {children}
+      </div>
+       
       {confirmedBooking && (
         <SuccessOverlay
           visible
@@ -225,8 +228,8 @@ function CustomerPaymentSession({ owner, children }) {
           duration={BOOKING_SUCCESS_DURATION_MS}
           onComplete={dismissBookingSuccess}
         >
-          <p className="px-5 text-center text-sm text-white/90">You're all set. Your booking details are ready.</p>
-          <p className="mt-3 max-w-sm break-all px-5 text-center font-mono text-xs text-white/75">
+          <p className="px-5 text-center text-sm text-white">You're all set. Your booking details are ready.</p>
+          <p className="mt-3 max-w-sm break-all px-5 text-center font-mono text-xs text-white">
             Booking ID: {confirmedBooking.booking_id}
           </p>
           

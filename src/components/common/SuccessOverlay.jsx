@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThumbsUp } from "lucide-react";
 
@@ -28,7 +28,7 @@ function SuccessOverlay({
   onComplete,
   icon,
   iconSize = 80,
-  backgroundClassName = "bg-green-600",
+  backgroundClassName = "bg-green-700",
   children,
   route=null,
   routeState=null,
@@ -37,9 +37,27 @@ function SuccessOverlay({
   
 }) {
   const navigate = useNavigate();
+  const screenRef = useRef(null);
+  const messageId = useId();
   const canShowCountdown = Boolean(route) || showCountdown;
   const [countdown, setCountdown] = useState(() => Math.ceil(duration / 1000));
   const canReplace = routeState?.replace ? true : false; // If routeState has replace=true, we will replace the history entry instead of pushing a new one.
+  useEffect(() => {
+    if (!visible) return;
+    const screen = screenRef.current;
+    const previousFocus = document.activeElement;
+    screen?.focus({ preventScroll: true });
+    return () => {
+      if (document.activeElement !== screen && document.activeElement !== document.body) return;
+      const target = previousFocus instanceof HTMLElement && previousFocus.isConnected
+        ? previousFocus : document.querySelector("main h1, h1, main");
+      if (!(target instanceof HTMLElement)) return;
+      const hadTabIndex = target.hasAttribute("tabindex");
+      if (!hadTabIndex) target.setAttribute("tabindex", "-1");
+      target.focus({ preventScroll: true });
+      if (!hadTabIndex) target.removeAttribute("tabindex");
+    };
+  }, [visible]);
   useEffect(() => {
     if (!visible) return;
     let countdownInterval;
@@ -63,11 +81,14 @@ function SuccessOverlay({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center ${backgroundClassName} bg-opacity-95 transition-opacity duration-300`}
-      style={{ minHeight: "100vh" }}
+      ref={screenRef}
+      tabIndex={-1}
+      role="region"
+      aria-labelledby={messageId}
+      className={`fixed inset-0 z-50 flex overflow-y-auto overscroll-contain px-6 py-12 text-white outline-none ${backgroundClassName}`}
     >
-      <div className="flex flex-col items-center">
-        <div className="animate-success mb-6">
+      <div className="m-auto flex w-full max-w-lg flex-col items-center text-center">
+        <div aria-hidden="true" className="mb-6 motion-safe:animate-[icon-pop-settle_0.55s_ease-out_both]">
           {icon || (
             <ThumbsUp
               size={iconSize}
@@ -76,7 +97,7 @@ function SuccessOverlay({
             />
           )}
         </div>
-        <div className="text-2xl font-bold text-white mb-2 text-center">
+        <div id={messageId} role="status" aria-live="polite" aria-atomic="true" className="text-2xl font-bold text-white mb-2 text-center">
           {message}
         </div>
         {children && (
@@ -86,7 +107,7 @@ function SuccessOverlay({
         )}
 
         {canShowCountdown && (
-          <div className="text-white text-base opacity-80 text-center mt-1">
+          <div aria-hidden="true" className="text-white text-base text-center mt-1">
             {countdownLabel} {countdown} second{countdown !== 1 ? "s" : ""}...
           </div>
         )}

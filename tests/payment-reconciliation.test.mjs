@@ -3,10 +3,11 @@ import assert from "node:assert/strict";
 import { resolveBookingReturn } from "../src/payments/bookingNavigation.js";
 import { restoreSupportContext } from "../src/payments/supportRecovery.js";
 import { PAYMENT_PHASE, PAYMENT_FOREGROUND_LIMIT_MS } from "../src/payments/constants.js";
-import {
+import { withAppServer } from "./app-module-loader.mjs";
+const {
   PaymentReconciliation,
   paymentPollDelay, readPending, pendingStorageKey,
-} from "../src/payments/reconciliation.js";
+} = await withAppServer((server) => server.ssrLoadModule("/src/payments/reconciliation.js"));
 
 const flush = async () => { for (let i = 0; i < 12; i += 1) await Promise.resolve(); };
 const checking = { state: "checking", retry_after_seconds: 3 };

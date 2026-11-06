@@ -54,8 +54,6 @@ export const ENDPOINTS = {
             GET_PRIOR_BOOKING_WINDOW: `${API_VERSION}/trips/prior-booking-window`, 
             SEARCH: `${API_VERSION}/trips/search`,
             INITIATE_BOOKING: `${API_VERSION}/trips/initiate-booking`,
-            VERIFY_PAYMENT_AND_CONFIRM_TRIP: `${API_VERSION}/trips/confirm-booking`,
-            CLEANUP_STAGED_TRIP: `${API_VERSION}/trips/cleanup`,
             GET_BOOKING: `${API_VERSION}/trips/bookings`, // Append booking ID to get details for specific booking
             CANCEL_BOOKING: `${API_VERSION}/trips/bookings`, // Append booking ID and /cancel to cancel a booking
             UPDATE_NON_COST_IMPACTING_TRIP_DETAILS: `${API_VERSION}/trips/bookings`,
