@@ -102,8 +102,8 @@ export default function PaymentPendingConfirmationPage() {
     return (
       <InfoOverlay
         visible
-        message="Checking your payment"
-        subtext="Please don't pay again while we check."
+        message="Confirming your booking"
+        subtext="Please keep this page open while we check your booking."
       />
     );
   }

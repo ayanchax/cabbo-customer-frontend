@@ -2,6 +2,8 @@
 export const PAYMENT_PHASE = Object.freeze({
   IDLE: "idle",
   CHECKOUT: "checkout",
+  DISMISSED: "dismissed",
+  RETRY_READY: "retry_ready",
   CHECKING: "checking",
   WAITING: "waiting",
   BOOKED: "booked",

@@ -11,10 +11,10 @@ export async function reconcilePayment(tempTripId, signal) {
   return data;
 }
 
-export async function getPaymentStatus(tempTripId, signal) {
+export async function getPaymentStatus(tempTripId, signal, queryParams = {}) {
   const { data } = await api.get(
     `${ENDPOINTS.TRIP.GET_BOOKING}/payment/status/${encodeURIComponent(tempTripId)}`,
-    { signal, timeout: PAYMENT_REQUEST_TIMEOUT_MS },
+    { signal, timeout: PAYMENT_REQUEST_TIMEOUT_MS, params: queryParams },
   );
   return data;
 }
