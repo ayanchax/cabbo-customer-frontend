@@ -7,7 +7,7 @@ import { withAppServer } from "./app-module-loader.mjs";
 test("checking overlay is accessible and recovery details appear only after checking ends", () => withAppServer(async (server) => {
   const { InfoOverlay } = await server.ssrLoadModule("/src/components/common/InfoOverlay.jsx");
   const html = renderToStaticMarkup(createElement(InfoOverlay, {
-    visible: true, message: "Checking your payment", subtext: "Please don't pay again while we check.",
+    visible: true, message: "Confirming your booking", subtext: "Please keep this page open while we check your booking.",
   }));
   assert.match(html, /role="status"/);
   assert.match(html, /aria-live="polite"/);
@@ -24,7 +24,7 @@ test("checking overlay is accessible and recovery details appear only after chec
       pending: { temp_trip_id: "test-temp" }, view: { phase }, checkAgain() {}, supportContext: null,
     } }, createElement(PendingPage))));
   const checking = renderPage(PAYMENT_PHASE.CHECKING);
-  assert.match(checking, /Checking your payment/);
+  assert.match(checking, /Confirming your booking/);
   assert.doesNotMatch(checking, /test-temp|Upcoming Trips|Check status again|Contact support|<button|<a /);
   for (const phase of [PAYMENT_PHASE.WAITING, PAYMENT_PHASE.REVIEW, PAYMENT_PHASE.ACCESS, PAYMENT_PHASE.REFERENCE, PAYMENT_PHASE.AUTH, PAYMENT_PHASE.MISSING]) {
     const details = renderPage(phase);

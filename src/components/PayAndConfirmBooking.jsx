@@ -12,7 +12,9 @@ function PayAndConfirmBooking({
 }) {
   const { status } = orderData;
   const payment = useContext(PaymentContext);
-  const recoveryAction = checkoutRecoveryAction(payment?.pending, orderData.trip_id, payment?.view.phase === PAYMENT_PHASE.CHECKOUT);
+  const recoveryAction = checkoutRecoveryAction(payment?.pending, orderData.trip_id,
+    payment?.view.phase === PAYMENT_PHASE.CHECKOUT,
+    [PAYMENT_PHASE.DISMISSED, PAYMENT_PHASE.RETRY_READY].includes(payment?.view.phase) ? payment.view.reference : null);
   const unresolved = recoveryAction === CHECKOUT_RECOVERY_ACTION.RECOVER;
   const paymentBlocked = recoveryAction !== CHECKOUT_RECOVERY_ACTION.START;
   return (
@@ -28,7 +30,7 @@ function PayAndConfirmBooking({
         : "Payment Complete"}
     </button>
     {unresolved && (
-      <Link to={ROUTES.PAYMENT_PENDING_CONFIRMATION} state={payment.recoveryState} onClick={payment.checkAgain}
+      <Link to={ROUTES.PAYMENT_PENDING_CONFIRMATION} state={payment.recoveryState}
         className="mt-3 block rounded text-center text-sm font-semibold text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-primary">
         Check booking status
       </Link>

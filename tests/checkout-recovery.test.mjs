@@ -29,3 +29,11 @@ test("a new checkout becomes the recovery target without blocking the older back
 test("without a saved checkout a new reservation can start", () => {
   assert.equal(checkoutRecoveryAction(null, "new-trip"), CHECKOUT_RECOVERY_ACTION.START);
 });
+
+test("an observed dismissal permits reopening only its own order, while refresh still recovers", () => {
+  const pending = { temp_trip_id: "dismissed-trip" };
+  assert.equal(checkoutRecoveryAction(pending, "dismissed-trip", false, "dismissed-trip"), CHECKOUT_RECOVERY_ACTION.START);
+  assert.equal(checkoutRecoveryAction(pending, "dismissed-trip", true, "dismissed-trip"), CHECKOUT_RECOVERY_ACTION.BUSY);
+  assert.equal(checkoutRecoveryAction(pending, "dismissed-trip", false, "other-trip"), CHECKOUT_RECOVERY_ACTION.RECOVER);
+  assert.equal(checkoutRecoveryAction(pending, "dismissed-trip"), CHECKOUT_RECOVERY_ACTION.RECOVER);
+});

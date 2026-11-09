@@ -8,6 +8,7 @@ export const SERVER_ERROR_CODES = {
 }
 
 export const SERVER_STATUS_CODES = {
+    CONFLICT: 409,
     UNAUTHORIZED: 401,
     FORBIDDEN: 403,
     NOT_FOUND: 404,

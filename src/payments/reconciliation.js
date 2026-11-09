@@ -111,6 +111,9 @@ export class PaymentReconciliation {
           void request(); // Read immediately after an accepted/checking POST.
           return;
         }
+        // Recovery does not require postFirst: a GET that is still checking can
+        // schedule reconciliation unless a POST was accepted or blocked. Ambiguous
+        // POST failures may also retry, within the same attempt limit.
         if ((!this.postAccepted && !this.postBlocked) || retryPost) {
           retryPost = false;
           if (this.postAttempts < MAX_RECONCILIATION_ATTEMPTS) {
