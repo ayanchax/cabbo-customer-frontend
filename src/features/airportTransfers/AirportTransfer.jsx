@@ -354,7 +354,7 @@ const getOverlaySubtext = () => {
         searchResults?.refund_and_cancellation_policy || [],
       trip_type,
     };
-    navigate(ROUTES.BOOKING, { state: { bookingPayload: payload } });
+    navigate(ROUTES.BOOKING, { state: { bookingPayload: payload, bookingReturnTo: { pathname: location.pathname, search: location.search, hash: location.hash, state: location.state } } });
     setInProgress(false);
   };
 
@@ -551,7 +551,7 @@ const getOverlaySubtext = () => {
           {/* Header: Back Button + Title */}
 
           <PageHeader
-            onBack={() => navigate(-1)}
+            onBack={() => navigate(ROUTES.HOME, { replace: true })}
             title={getPageHeaderTitle()}
             subtitle={getPageHeaderInitialSubtitle()}
             className="px-0 mb-4"

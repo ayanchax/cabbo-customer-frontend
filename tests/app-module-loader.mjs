@@ -1,0 +1,17 @@
+import { createServer } from "vite";
+
+// Use the app's JSX, aliases, and environment transforms without a browser/backend.
+export async function withAppServer(run, overrides = {}) {
+  const server = await createServer({
+    server: { middlewareMode: true, hmr: false, ws: false },
+    optimizeDeps: { noDiscovery: true, include: [] },
+    appType: "custom",
+    logLevel: "error",
+    ...overrides,
+  });
+  try {
+    return await run(server);
+  } finally {
+    await server.close();
+  }
+}

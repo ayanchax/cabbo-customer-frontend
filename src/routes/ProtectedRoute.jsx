@@ -3,6 +3,7 @@ import { ROUTES } from "@/utils";
 import { useIsLoggedInQuery } from "@/hooks";
 import { Splash } from "@/components";
 import { CustomerProvider } from "@/context";
+import { PaymentProvider } from "@/payments";
 
 const ProtectedRoute = () => {
   const { 
@@ -21,7 +22,7 @@ const ProtectedRoute = () => {
   }
 
   // Valid session, allow access to protected pages
-  return <CustomerProvider isLoggedIn={isCustomerLoggedIn}>{<Outlet />}</CustomerProvider>;
+  return <CustomerProvider isLoggedIn={isCustomerLoggedIn}><PaymentProvider><Outlet /></PaymentProvider></CustomerProvider>;
 };
 
 export default ProtectedRoute;

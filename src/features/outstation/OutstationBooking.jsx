@@ -17,7 +17,7 @@ import {
   OutstationPackage,
 } from "@/features/outstation/components";
 import { isDevMode } from "@/api";
-import { SuccessOverlay } from "@/components";
+
 import { DEFAULT_USER_TIMEZONE } from "@/utils";
 
 function OutstationBooking({ orderData, bookingData }) {
@@ -28,10 +28,7 @@ function OutstationBooking({ orderData, bookingData }) {
   const { showToast } = useToast();
   const [inProgressPayment, setInProgressPayment] = useState(false);
 
-  const [paymentSuccessData, setPaymentSuccessData] = useState({
-    showPaymentSuccessOverlay: false,
-    data: null, // Mock data for testing, replace with actual data from payment result
-  });
+
   const origin = bookingData?.preferences?.origin || null;
   const dropOff = bookingData?.preferences?.destination || null;
   const fetchedHops = bookingData?.preferences?.hops || null;
@@ -93,40 +90,19 @@ function OutstationBooking({ orderData, bookingData }) {
         subtext:
           "Hang tight! We're confirming your booking and processing your payment.",
       };
-      const result = await onPay(orderData, overlayProps, {
+      await onPay(orderData, overlayProps, {
         origin,
         tripType: bookingData?.preferences?.trip_type,
         tripLabel: "Outstation",
       });
-      if (result?.paymentPendingConfirmation) {
-        return;
-      }
-      if (result && result?.data) {
-        setPaymentSuccessData({
-          showPaymentSuccessOverlay: true,
-          data: result?.data || null,
-        });
-        if (isDevMode) {
-          console.log("Payment successful and verified:", result);
-        }
-      } else {
-        if (isDevMode) {
-          console.error(result?.message || "Payment failed");
-        }
-        throw result instanceof Error ? result : new Error("Payment failed");
-      }
     } catch (error) {
       if (isDevMode) {
         console.error("Payment process encountered an error:", error);
       }
-      setPaymentSuccessData({
-        showPaymentSuccessOverlay: false,
-        data: null,
-      });
       const msg =
-        "Payment failed. Please try again. If you were charged, contact support.";
+        "We could not open checkout. Please check your booking status before trying again, or contact support.";
       showToast(msg, "error", { position: "top-center" });
-      // User stays on the same screen and can retry
+      // Checkout recovery is owned by the shared payment coordinator.
     } finally {
       setInProgressPayment(false);
     }
@@ -217,28 +193,7 @@ function OutstationBooking({ orderData, bookingData }) {
         </div>
       </div>
 
-      {/* Success overlay */}
-      {paymentSuccessData?.showPaymentSuccessOverlay && (
-        <SuccessOverlay
-          visible={paymentSuccessData?.showPaymentSuccessOverlay}
-          message="Booking Confirmed"
-          route={`/booking/${paymentSuccessData?.data?.booking_id}`}
-          routeState={{
-            fromBookingConfirmation: true,
-            data: paymentSuccessData?.data || null,
-            tripId: orderData?.trip_id || null,
-          }}
-        >
-          {paymentSuccessData?.data?.booking_id && (
-            <div className="text-white text-sm opacity-90">
-              Booking ID: {paymentSuccessData?.data?.booking_id || "N/A"}
-            </div>
-          )}
-          <div className="text-white text-xs opacity-70 mt-1">
-            You'll be redirected to your booking details shortly…
-          </div>
-        </SuccessOverlay>
-      )}
+
     </div>
   );
 }

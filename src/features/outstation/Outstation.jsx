@@ -378,7 +378,7 @@ function Outstation() {
     
     // 
     
-    navigate(ROUTES.BOOKING, { state: { bookingPayload: payload } });
+    navigate(ROUTES.BOOKING, { state: { bookingPayload: payload, bookingReturnTo: { pathname: location.pathname, search: location.search, hash: location.hash, state: location.state } } });
     setInProgress(false);
   };
 
@@ -629,7 +629,7 @@ function Outstation() {
           {/* Header: Back Button + Title */}
 
           <PageHeader
-            onBack={() => navigate(-1)}
+            onBack={() => navigate(ROUTES.HOME, { replace: true })}
             title="Plan your outstation trip"
             className="px-0 mb-4"
           />

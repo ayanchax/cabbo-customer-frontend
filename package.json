@@ -9,6 +9,7 @@
     "build-dev": "vite build --mode dev",
     "build-prod": "vite build --mode prod",
     "lint": "eslint .",
+    "test:payments": "node --test tests/payment-reconciliation.test.mjs tests/checkout-recovery.test.mjs tests/payment-overlays.test.mjs tests/payment-provider.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -38,6 +39,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "happy-dom": "^21.0.4",
     "postcss": "^8.5.9",
     "tailwindcss": "^4.2.2",
     "vite": "^8.0.4"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, lazy, Suspense } from "react";
+import React, { useContext, useEffect, useState, useRef, lazy, Suspense } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAnalytics, useInitiateTripBookingMutation } from "@/hooks";
 import { FeedbackState, Loader } from "@/components";
@@ -6,15 +6,18 @@ import {
   TRIP_TYPES,
   CAB_TYPES,
   SERVER_ERROR_CODES,
+  SERVER_STATUS_CODES,
   ROUTES,
 } from "@/utils";
 import { ANALYTICS_EVENTS } from "@/analytics";
+import { PaymentContext } from "@/payments";
 
 function BookingPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const bookingPayload = location.state?.bookingPayload;
   const { track } = useAnalytics();
+  const { restoreCheckout, pending, recoveryState } = useContext(PaymentContext);
 
   const [bookingError, setBookingError] = useState(null); // <-- Add this
 
@@ -92,6 +95,9 @@ function BookingPage() {
           order_id: response?.data?.order_id,
           car_type,
         });
+        // Only a matching saved checkout needs a status GET. New reservations
+        // proceed normally; interrupted ones require backend permission to retry.
+        await restoreCheckout(response?.data);
         setBookingOrderData(response?.data || null);
       } catch (error) {
         track(ANALYTICS_EVENTS.BOOKING_INITIATION_FAILED, {
@@ -106,6 +112,7 @@ function BookingPage() {
           },
         );
         bookingInitiationError.name = "BookingInitiationError";
+        bookingInitiationError.status = error?.response?.status;
         setBookingError(bookingInitiationError); // <-- Set error state
       }
     };
@@ -142,7 +149,39 @@ function BookingPage() {
         />
       );
     }
-    // For other issues, we will throw the error to be caught by the Error Boundary, which will show a user-friendly fallback UI.
+    if (bookingError.status === SERVER_STATUS_CODES.CONFLICT) {
+      // A conflict is an expected booking outcome, not an application crash.
+      // The legacy response has no trip ID: offer saved recovery explicitly
+      // rather than assuming that any stored checkout caused this conflict.
+      return (
+        <FeedbackState
+          variant="warning"
+          title="We couldn't continue this booking"
+          message="We couldn't confirm your booking yet. Please check your booking status or Upcoming Trips before starting a new booking."
+          primaryAction={
+            <button
+              type="button"
+              onClick={() => pending?.temp_trip_id
+                ? navigate(ROUTES.PAYMENT_PENDING_CONFIRMATION, { replace: true, state: recoveryState })
+                : navigate(`${ROUTES.MY_TRIPS}?tab=upcoming`)}
+              className="cursor-pointer inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-5 py-2 text-sm font-semibold text-white hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              {pending?.temp_trip_id ? "Check booking status" : "Upcoming Trips"}
+            </button>
+          }
+          secondaryAction={
+            <button
+              type="button"
+              onClick={() => navigate(pending?.temp_trip_id ? `${ROUTES.MY_TRIPS}?tab=upcoming` : ROUTES.HOME)}
+              className="cursor-pointer inline-flex min-h-11 items-center justify-center rounded-md border border-gray-200 bg-white px-5 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              {pending?.temp_trip_id ? "Upcoming Trips" : "Back to home"}
+            </button>
+          }
+        />
+      );
+    }
+    // Unexpected failures still use the application error boundary.
     throw bookingError;
     // Error Boundary can catch this and show user-friendly fallback UI
   }
